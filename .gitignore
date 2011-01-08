@@ -1,0 +1,6 @@
+*~
+*.dSYM
+*.o
+ebiten
+!src/ebiten
+ebiten_test
