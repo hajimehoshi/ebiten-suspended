@@ -10,7 +10,7 @@ namespace video {
 
 class drawing_region : private boost::noncopyable {
 public:
-  // TODO: implements by std::array?
+  // TODO: implements by std::unique_ptr<std::array<double, 6> >?
   double src_x, src_y, dst_x, dst_y, width, height;
   drawing_region(double src_x_,
                  double src_y_,
@@ -34,30 +34,10 @@ public:
     this->height = rhs.height;
     return *this;
   }
-  /*void
-  swap(drawing_region& rhs) throw() {
-    std::swap(this->src_x, rhs.src_x);
-    std::swap(this->src_y, rhs.src_y);
-    std::swap(this->dst_x, rhs.dst_x);
-    std::swap(this->dst_y, rhs.dst_y);
-    std::swap(this->width, rhs.width);
-    std::swap(this->height, rhs.height);
-    }*/
 };
 
 }
 }
 }
-
-/*namespace std {
-
-template<>
-void
-swap(ebiten::game::video::drawing_region& dr1,
-     ebiten::game::video::drawing_region& dr2) throw() {
-  dr1.swap(dr2);
-}
-
-}*/
 
 #endif
