@@ -6,6 +6,7 @@
 #include <boost/range.hpp>
 #include <boost/static_assert.hpp>
 #include <algorithm>
+#include <array>
 #include <cassert>
 #include <initializer_list>
 
@@ -18,13 +19,13 @@ class affine_matrix : private boost::noncopyable {
   BOOST_STATIC_ASSERT(0 < Dimension);
 private:
   static const std::size_t size = Dimension * (Dimension - 1);
-  Float elements_[size];
+  std::array<Float, size> elements_;
 public:
   // TODO: accepts iterators
-  affine_matrix(const std::initializer_list<Float>& elements_)
-    : elements_{} {
+  affine_matrix(const std::initializer_list<Float>& elements_) {
     assert(static_cast<std::size_t>(boost::size(elements_)) <= size);
-    std::copy(boost::begin(elements_), boost::end(elements_), this->elements_);
+    this->elements_.fill(0);
+    std::copy(boost::begin(elements_), boost::end(elements_), this->elements_.begin());
   }
   template<int I, int J>
   Float
