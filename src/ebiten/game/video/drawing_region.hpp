@@ -8,10 +8,13 @@ namespace ebiten {
 namespace game {
 namespace video {
 
-class drawing_region : private boost::noncopyable {
-public:
+struct drawing_region : private boost::noncopyable {
   // TODO: implements by std::unique_ptr<std::array<double, 6> >?
   double src_x, src_y, dst_x, dst_y, width, height;
+  drawing_region()
+    : src_x(0), src_y(0), dst_x(0), dst_y(0),
+      width(0), height(0) {
+  }
   drawing_region(double src_x_,
                  double src_y_,
                  double dst_x_,
@@ -25,7 +28,8 @@ public:
     : src_x(rhs.src_x), src_y(rhs.src_y), dst_x(rhs.dst_x), dst_y(rhs.dst_y),
       width(rhs.width), height(rhs.height) {
   }
-  drawing_region& operator=(drawing_region&& rhs) {
+  drawing_region&
+  operator=(drawing_region&& rhs) {
     this->src_x = rhs.src_x;
     this->src_y = rhs.src_y;
     this->dst_x = rhs.dst_x;

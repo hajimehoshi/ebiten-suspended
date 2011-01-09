@@ -30,7 +30,7 @@ public:
       is_visible_(true) {
     drawing_regions_.reserve(drawing_regions_count);
     for (std::size_t i = 0; i < drawing_regions_count; ++i) {
-      drawing_regions_.emplace_back(0, 0, 0, 0, 0, 0);
+      drawing_regions_.emplace_back();
     }
   }
   template<class GraphicsContext>
