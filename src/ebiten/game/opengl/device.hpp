@@ -100,6 +100,7 @@ public:
                       [&](const sprite_cref& sprite) {
                         sprite.get().draw(graphics_context::instance());
                       });
+        // TODO: この時点でもう sprites 共有は終わっているので、ロジックを実行して良い?
         ::glFlush();
         ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
       }

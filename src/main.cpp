@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "ebiten/game/opengl/device.hpp"
+#include "ebiten/game/video/drawing_region.hpp"
 #include "ebiten/game/video/sprite.hpp"
 #include "ebiten/game/video/texture.hpp"
 #include <deque>
@@ -20,8 +21,12 @@ public:
   void
   initialize(texture_factory& tf) {
     this->texture_ = tf.from_file("test.png");
-    std::vector<ebiten::game::video::texel_rect> texel_rects;
-    this->sprites_.emplace_back(*this->texture_, texel_rects);
+    typedef ebiten::game::video::drawing_region drawing_region;
+    this->sprites_.emplace_back(*this->texture_, 4);
+    this->sprites_.at(0).drawing_region_at(0) = std::move(drawing_region(0, 0, 32, 32, 32, 32));
+    this->sprites_.at(0).drawing_region_at(1) = std::move(drawing_region(0, 0, 132, 32, 32, 32));
+    this->sprites_.at(0).drawing_region_at(2) = std::move(drawing_region(0, 0, 32, 132, 32, 32));
+    this->sprites_.at(0).drawing_region_at(3) = std::move(drawing_region(0, 0, 132, 132, 32, 32));
   }
   const decltype(sprites_)&
   sprites() {
@@ -29,17 +34,19 @@ public:
   }
   void
   update(int frame_index) {
-    auto& geo = this->sprites_[0].geometry_matrix();
-    geo.set_ty(geo.ty() + 0.01);
+    auto& drawing_region = this->sprites_.at(0).drawing_region_at(0);
+    drawing_region.dst_x += 0.01;
     if (frame_index % 600 == 0) {
       std::cout << "foo!" << std::endl;
     }
   }
-  int
+  // TODO: 定数にすべき?
+  std::size_t
   screen_width() const {
     return 320;
   }
-  int
+  // TODO: 定数にすべき?
+  std::size_t
   screen_height() const {
     return 240;
   }
@@ -52,6 +59,7 @@ main(int, char**) {
     auto& device = ebiten::game::opengl::device::instance();
     device.run(game, 600, 2);
   } catch (const std::string& message) {
+    // TODO: use boost::diagnostic_information?
     std::cerr << message << std::endl;
     return EXIT_FAILURE;
   }

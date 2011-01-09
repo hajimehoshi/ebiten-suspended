@@ -4,7 +4,6 @@
 
 #include "ebiten/game/opengl/texture_factory.hpp"
 #include "ebiten/game/video/affine_matrix.hpp"
-#include "ebiten/game/video/color.hpp"
 #include "ebiten/game/video/color_matrix.hpp"
 #include "ebiten/game/video/geometry_matrix.hpp"
 #include "ebiten/game/video/texture.hpp"
