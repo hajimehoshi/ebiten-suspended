@@ -22,6 +22,7 @@ private:
   std::array<Float, size> elements_;
 public:
   // TODO: accepts iterators
+  // TODO: constructor's arugments?
   affine_matrix(const std::initializer_list<Float>& elements_) {
     assert(static_cast<std::size_t>(boost::size(elements_)) <= size);
     this->elements_.fill(0);
