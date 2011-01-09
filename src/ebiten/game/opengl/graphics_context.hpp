@@ -9,6 +9,8 @@
 #include <boost/range.hpp>
 #include <GLUT/glut.h>
 #include <algorithm>
+#include <array>
+#include <cassert>
 
 namespace ebiten {
 namespace game {
@@ -16,6 +18,8 @@ namespace opengl {
 
 class graphics_context : public util::singleton<graphics_context> {
   friend class util::singleton<graphics_context>;
+private:
+  GLuint shader_program;
 public:
   template<class DrawingRegions>
   void
@@ -25,6 +29,12 @@ public:
                 int z,
                 const video::color_matrix&) {
     // TODO: use color matrix
+    if (!this->shader_program) {
+      this->shader_program = compile_shader_program();
+      assert(this->shader_program);
+    }
+    ::glUseProgram(this->shader_program);
+
     const float gl_geo[] = {geo.a(),  geo.c(),  0, 0,
                             geo.b(),  geo.d(),  0, 0,
                             0,        0,        1, 0,
@@ -65,9 +75,57 @@ public:
     //::glPopMatrix();
   }
 private:
-  graphics_context() {
+  graphics_context()
+    : shader_program(0) {
   }
   ~graphics_context() {
+  }
+  GLuint
+  compile_shader_program() {
+    const std::string sharder_source("void main(void) {\n"
+                                     " hage \n"
+                                     "}\n");
+    // TODO: ARB?
+    GLuint fragment_shader;
+    fragment_shader = ::glCreateShader(GL_FRAGMENT_SHADER);
+    assert(fragment_shader);
+    const char* shader_source_p = sharder_source.c_str();
+    ::glShaderSource(fragment_shader, 1, &shader_source_p, nullptr);
+    ::glCompileShader(fragment_shader);
+    // check status
+    GLint compiled;
+    ::glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &compiled);
+    this->show_log(fragment_shader);
+    if (compiled == GL_FALSE) {
+      throw "shader compile error";
+    }
+
+    GLuint program;
+    program = ::glCreateProgram();
+    assert(program);
+    ::glAttachShader(program, fragment_shader);
+    ::glDeleteShader(fragment_shader);
+    ::glLinkProgram(program);
+    // check status
+    GLint linked;
+    ::glGetProgramiv(program, GL_LINK_STATUS, &linked);
+    if (linked == GL_FALSE) {
+      throw "program error";
+    }
+
+    return program;
+  }
+  void
+  show_log(GLuint shader) {
+    int log_size = 0;
+    int length;
+    std::array<char, 1024> buffer;
+    ::glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &log_size);
+    if (log_size) {
+      // TODO: バッファ確認
+      ::glGetShaderInfoLog(shader, buffer.size(), &length, buffer.data());
+      std::cerr << buffer.data() << std::endl;
+    }
   }
 };
 
