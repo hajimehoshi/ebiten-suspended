@@ -34,7 +34,8 @@ public:
       assert(this->shader_program);
     }
     ::glUseProgram(this->shader_program);
-
+    // TODO: What?
+    ::glUniform1i(glGetUniformLocation(this->shader_program, "texture"), 0);
     const float gl_geo[] = {geo.a(),  geo.c(),  0, 0,
                             geo.b(),  geo.d(),  0, 0,
                             0,        0,        1, 0,
@@ -72,7 +73,7 @@ public:
                   });
     ::glEnd();
     ::glBindTexture(GL_TEXTURE_2D, 0);
-    //::glPopMatrix();
+    ::glUseProgram(0);
   }
 private:
   graphics_context()
@@ -82,8 +83,13 @@ private:
   }
   GLuint
   compile_shader_program() {
-    const std::string sharder_source("void main(void) {\n"
-                                     " hage \n"
+    const std::string sharder_source("uniform sampler2D texture;\n"
+                                     "uniform mat4 color_matrix;\n"
+                                     "uniform vec4 color_matrix_translation;\n"
+                                     "\n"
+                                     "void main(void) {\n"
+                                     "  vec4 color = texture2DProj(texture, gl_TexCoord[0]);\n"
+                                     "  gl_FragColor = color;\n"
                                      "}\n");
     // TODO: ARB?
     GLuint fragment_shader;
