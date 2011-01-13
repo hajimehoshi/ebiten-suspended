@@ -1,11 +1,20 @@
 PROG=ebiten
+CC=gcc
 CXX=g++-mp-4.5
-CXXFLAGS=-g -std=c++0x \
-	-W -Wall -Wextra -fno-deduce-init-list \
+
+CFLAGS= \
+	-W -Wall -Wextra \
+	-g \
+	-fPIC \
 	-L/opt/local/lib \
-	-lboost_thread -lpng \
+	-isystem/usr/local/include -I/opt/local/include -Isrc \
+
+CXXFLAGS= \
+	$(CFLAGS) \
+	-std=c++0x \
+	-fno-deduce-init-list \
 	-framework Cocoa -framework OpenGL -framework GLUT \
-	-isystem/usr/local/include -Isrc
+	-lboost_thread -lpng \
 
 SRC=$(shell find src -name "*.hpp" -or -name "*.cpp")
 
@@ -21,16 +30,16 @@ $(PROG): $(SRC) cocoa.o
 $(PROG)_test: $(SRC) cocoa.o
 	$(CXX) \
 		$(CXXFLAGS) \
-		-lboost_unit_test_framework \
-		-DEBITEN_TEST \
 		-o $@ \
+		-lgtest \
 		cocoa.o src/main_test.cpp
 
 cocoa.o: src/ebiten/game/opengl/cocoa.m src/ebiten/game/opengl/cocoa.h
-	gcc \
-		-c -g -W -Wall -Wextra \
+	$(CC) \
+		$(CFLAGS) \
+		-x objective-c \
+		-c \
 		-o $@ \
-		-isystem/usr/local/include -Isrc \
 		$<
 
 clean:

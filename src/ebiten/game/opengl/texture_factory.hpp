@@ -102,16 +102,14 @@ private:
 
 #ifdef EBITEN_TEST
 
-#include <boost/test/unit_test.hpp>
-
 namespace ebiten {
 namespace game {
 namespace opengl {
 
-BOOST_AUTO_TEST_CASE(test_clp2) {
-  BOOST_CHECK_EQUAL(256, clp2(255));
-  BOOST_CHECK_EQUAL(256, clp2(256));
-  BOOST_CHECK_EQUAL(512, clp2(257));
+TEST(clp2, calling) {
+  EXPECT_EQ(256, clp2(255));
+  EXPECT_EQ(256, clp2(256));
+  EXPECT_EQ(512, clp2(257));
 }
 
 }

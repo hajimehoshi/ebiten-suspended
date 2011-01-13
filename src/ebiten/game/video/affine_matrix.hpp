@@ -67,49 +67,47 @@ private:
 
 #ifdef EBITEN_TEST
 
-#include <boost/test/unit_test.hpp>
-
 namespace ebiten {
 namespace game {
 namespace video {
 
-BOOST_AUTO_TEST_CASE(test_affine_matrix) {
+TEST(affine_matrix, element) {
   affine_matrix<double, 4> m{1, 2, 3};
-  BOOST_CHECK_EQUAL(1, (m.element<0, 0>()));
-  BOOST_CHECK_EQUAL(2, (m.element<0, 1>()));
-  BOOST_CHECK_EQUAL(3, (m.element<0, 2>()));
-  BOOST_CHECK_EQUAL(0, (m.element<0, 3>()));
-  BOOST_CHECK_EQUAL(0, (m.element<1, 0>()));
-  BOOST_CHECK_EQUAL(0, (m.element<1, 1>()));
-  BOOST_CHECK_EQUAL(0, (m.element<1, 2>()));
-  BOOST_CHECK_EQUAL(0, (m.element<1, 3>()));
-  BOOST_CHECK_EQUAL(0, (m.element<2, 0>()));
-  BOOST_CHECK_EQUAL(0, (m.element<2, 1>()));
-  BOOST_CHECK_EQUAL(0, (m.element<2, 2>()));
-  BOOST_CHECK_EQUAL(0, (m.element<2, 3>()));
-  BOOST_CHECK_EQUAL(0, (m.element<3, 0>()));
-  BOOST_CHECK_EQUAL(0, (m.element<3, 1>()));
-  BOOST_CHECK_EQUAL(0, (m.element<3, 2>()));
-  BOOST_CHECK_EQUAL(1, (m.element<3, 3>()));
+  EXPECT_EQ(1, (m.element<0, 0>()));
+  EXPECT_EQ(2, (m.element<0, 1>()));
+  EXPECT_EQ(3, (m.element<0, 2>()));
+  EXPECT_EQ(0, (m.element<0, 3>()));
+  EXPECT_EQ(0, (m.element<1, 0>()));
+  EXPECT_EQ(0, (m.element<1, 1>()));
+  EXPECT_EQ(0, (m.element<1, 2>()));
+  EXPECT_EQ(0, (m.element<1, 3>()));
+  EXPECT_EQ(0, (m.element<2, 0>()));
+  EXPECT_EQ(0, (m.element<2, 1>()));
+  EXPECT_EQ(0, (m.element<2, 2>()));
+  EXPECT_EQ(0, (m.element<2, 3>()));
+  EXPECT_EQ(0, (m.element<3, 0>()));
+  EXPECT_EQ(0, (m.element<3, 1>()));
+  EXPECT_EQ(0, (m.element<3, 2>()));
+  EXPECT_EQ(1, (m.element<3, 3>()));
   m.set_element<1, 0>(4);
   m.set_element<1, 1>(5);
   m.set_element<2, 3>(6);
-  BOOST_CHECK_EQUAL(1, (m.element<0, 0>()));
-  BOOST_CHECK_EQUAL(2, (m.element<0, 1>()));
-  BOOST_CHECK_EQUAL(3, (m.element<0, 2>()));
-  BOOST_CHECK_EQUAL(0, (m.element<0, 3>()));
-  BOOST_CHECK_EQUAL(4, (m.element<1, 0>()));
-  BOOST_CHECK_EQUAL(5, (m.element<1, 1>()));
-  BOOST_CHECK_EQUAL(0, (m.element<1, 2>()));
-  BOOST_CHECK_EQUAL(0, (m.element<1, 3>()));
-  BOOST_CHECK_EQUAL(0, (m.element<2, 0>()));
-  BOOST_CHECK_EQUAL(0, (m.element<2, 1>()));
-  BOOST_CHECK_EQUAL(0, (m.element<2, 2>()));
-  BOOST_CHECK_EQUAL(6, (m.element<2, 3>()));
-  BOOST_CHECK_EQUAL(0, (m.element<3, 0>()));
-  BOOST_CHECK_EQUAL(0, (m.element<3, 1>()));
-  BOOST_CHECK_EQUAL(0, (m.element<3, 2>()));
-  BOOST_CHECK_EQUAL(1, (m.element<3, 3>()));
+  EXPECT_EQ(1, (m.element<0, 0>()));
+  EXPECT_EQ(2, (m.element<0, 1>()));
+  EXPECT_EQ(3, (m.element<0, 2>()));
+  EXPECT_EQ(0, (m.element<0, 3>()));
+  EXPECT_EQ(4, (m.element<1, 0>()));
+  EXPECT_EQ(5, (m.element<1, 1>()));
+  EXPECT_EQ(0, (m.element<1, 2>()));
+  EXPECT_EQ(0, (m.element<1, 3>()));
+  EXPECT_EQ(0, (m.element<2, 0>()));
+  EXPECT_EQ(0, (m.element<2, 1>()));
+  EXPECT_EQ(0, (m.element<2, 2>()));
+  EXPECT_EQ(6, (m.element<2, 3>()));
+  EXPECT_EQ(0, (m.element<3, 0>()));
+  EXPECT_EQ(0, (m.element<3, 1>()));
+  EXPECT_EQ(0, (m.element<3, 2>()));
+  EXPECT_EQ(1, (m.element<3, 3>()));
 }
 
 }

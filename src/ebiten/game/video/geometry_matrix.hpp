@@ -71,32 +71,30 @@ typedef geometry_matrix_base<float> geometry_matrix;
 
 #ifdef EBITEN_TEST
 
-#include <boost/test/unit_test.hpp>
-
 namespace ebiten {
 namespace game {
 namespace video {
 
-BOOST_AUTO_TEST_CASE(test_geometry_matrix) {
+TEST(geometry_matrix, member_functions) {
   geometry_matrix m{1, 2, 3, 4, 5, 6};
-  BOOST_CHECK_EQUAL(1, m.a());
-  BOOST_CHECK_EQUAL(2, m.b());
-  BOOST_CHECK_EQUAL(3, m.c());
-  BOOST_CHECK_EQUAL(4, m.d());
-  BOOST_CHECK_EQUAL(5, m.tx());
-  BOOST_CHECK_EQUAL(6, m.ty());
+  EXPECT_EQ(1, m.a());
+  EXPECT_EQ(2, m.b());
+  EXPECT_EQ(3, m.c());
+  EXPECT_EQ(4, m.d());
+  EXPECT_EQ(5, m.tx());
+  EXPECT_EQ(6, m.ty());
   m.set_a(7);
   m.set_b(8);
   m.set_c(9);
   m.set_d(10);
   m.set_tx(11);
   m.set_ty(12);
-  BOOST_CHECK_EQUAL(7,  m.a());
-  BOOST_CHECK_EQUAL(8,  m.b());
-  BOOST_CHECK_EQUAL(9,  m.c());
-  BOOST_CHECK_EQUAL(10, m.d());
-  BOOST_CHECK_EQUAL(11, m.tx());
-  BOOST_CHECK_EQUAL(12, m.ty());
+  EXPECT_EQ(7,  m.a());
+  EXPECT_EQ(8,  m.b());
+  EXPECT_EQ(9,  m.c());
+  EXPECT_EQ(10, m.d());
+  EXPECT_EQ(11, m.tx());
+  EXPECT_EQ(12, m.ty());
 }
 
 }

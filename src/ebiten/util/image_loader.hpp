@@ -39,15 +39,13 @@ private:
 
 #ifdef EBITEN_TEST
 
-#include <boost/test/unit_test.hpp>
-
 namespace ebiten {
 namespace util {
 
-BOOST_AUTO_TEST_CASE(test_texture_factory) {
+TEST(image_loader, load_file) {
   const auto image = image_loader::instance().load_file("test.png");
-  BOOST_CHECK_EQUAL(32, image->width());
-  BOOST_CHECK_EQUAL(32, image->height());
+  EXPECT_EQ(32, image->width());
+  EXPECT_EQ(32, image->height());
 }
 
 }

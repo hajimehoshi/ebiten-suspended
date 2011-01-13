@@ -48,12 +48,10 @@ public:
 
 #ifdef EBITEN_TEST
 
-#include <boost/test/unit_test.hpp>
-
 namespace ebiten {
 namespace util {
 
-BOOST_AUTO_TEST_CASE(test_channel) {
+TEST(channel, send_receive) {
   channel<int> ch;
   std::vector<int> results;
   boost::thread producer([&]{
@@ -72,22 +70,22 @@ BOOST_AUTO_TEST_CASE(test_channel) {
     });
   producer.join();
   consumer.join();
-  BOOST_REQUIRE_EQUAL(5, results.size());
-  BOOST_CHECK_EQUAL(1, results[0]);
-  BOOST_CHECK_EQUAL(2, results[1]);
-  BOOST_CHECK_EQUAL(3, results[2]);
-  BOOST_CHECK_EQUAL(4, results[3]);
-  BOOST_CHECK_EQUAL(5, results[4]);
+  ASSERT_EQ(5, results.size());
+  EXPECT_EQ(1, results[0]);
+  EXPECT_EQ(2, results[1]);
+  EXPECT_EQ(3, results[2]);
+  EXPECT_EQ(4, results[3]);
+  EXPECT_EQ(5, results[4]);
 }
 
-BOOST_AUTO_TEST_CASE(test_channel_is_receivable) {
+TEST(channel, is_receivable) {
   channel<int> ch;
   std::vector<int> results;
-  BOOST_CHECK_EQUAL(false, ch.is_receivable());
+  EXPECT_FALSE(ch.is_receivable());
   ch.send(1);
-  BOOST_CHECK_EQUAL(true, ch.is_receivable());
+  EXPECT_TRUE(ch.is_receivable());
   ch.receive();
-  BOOST_CHECK_EQUAL(false, ch.is_receivable());
+  EXPECT_FALSE(ch.is_receivable());
 }
 
 }
