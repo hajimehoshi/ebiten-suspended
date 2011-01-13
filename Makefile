@@ -5,16 +5,16 @@ CXX=g++-mp-4.5
 CFLAGS= \
 	-W -Wall -Wextra \
 	-g \
-	-fPIC \
+	-static-libgcc -fPIC \
 	-L/opt/local/lib \
-	-isystem/usr/local/include -I/opt/local/include -Isrc \
+	-I/opt/local/include -Isrc \
 
 CXXFLAGS= \
 	$(CFLAGS) \
 	-std=c++0x \
 	-fno-deduce-init-list \
 	-framework Cocoa -framework OpenGL -framework GLUT \
-	-lboost_thread -lpng \
+	-lboost_thread -lpng # TODO: link them statically
 
 SRC=$(shell find src -name "*.hpp" -or -name "*.cpp")
 
