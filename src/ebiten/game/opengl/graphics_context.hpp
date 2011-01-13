@@ -33,8 +33,8 @@ public:
       this->shader_program = compile_shader_program();
       assert(this->shader_program);
     }
+    // TODO: color matrix が単位行列の場合に処理を避ける
     ::glUseProgram(this->shader_program);
-    // TODO: What?
     ::glUniform1i(glGetUniformLocation(this->shader_program, "texture"), 0);
     const float gl_geo[] = {geo.a(),  geo.c(),  0, 0,
                             geo.b(),  geo.d(),  0, 0,
@@ -101,7 +101,7 @@ private:
     // check status
     GLint compiled;
     ::glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &compiled);
-    this->show_log(fragment_shader);
+    this->show_shader_log(fragment_shader);
     if (compiled == GL_FALSE) {
       throw "shader compile error";
     }
@@ -121,18 +121,21 @@ private:
 
     return program;
   }
+  // TODO: Debug Mode
   void
-  show_log(GLuint shader) {
+  show_shader_log(GLuint shader) {
     int log_size = 0;
-    int length;
-    std::array<char, 1024> buffer;
     ::glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &log_size);
     if (log_size) {
+      int length = 0;
+      // TODO: 動的確保のほうがよい?
+      std::array<char, 1024> buffer;
       // TODO: バッファ確認
       ::glGetShaderInfoLog(shader, buffer.size(), &length, buffer.data());
       std::cerr << buffer.data() << std::endl;
     }
   }
+  // TODO: show_program_log
 };
 
 }
