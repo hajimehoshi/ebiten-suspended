@@ -4,7 +4,6 @@ CXX=g++-mp-4.5
 
 CFLAGS= \
 	-W -Wall -Wextra \
-	-g \
 	-static-libgcc -fPIC \
 	-L/opt/local/lib \
 	-I/opt/local/include -Isrc \
@@ -18,7 +17,7 @@ CXXFLAGS= \
 
 SRC=$(shell find src -name "*.hpp" -or -name "*.cpp")
 
-all: $(PROG) $(PROG)_test
+all: $(PROG)_test
 	./$(PROG)_test
 
 $(PROG): $(SRC) cocoa.o
@@ -30,9 +29,11 @@ $(PROG): $(SRC) cocoa.o
 $(PROG)_test: $(SRC) cocoa.o
 	$(CXX) \
 		$(CXXFLAGS) \
+		-g \
 		-o $@ \
 		-lgtest \
-		cocoa.o src/main_test.cpp
+		-DEBITEN_TEST \
+		cocoa.o src/main.cpp
 
 cocoa.o: src/ebiten/game/opengl/cocoa.m src/ebiten/game/opengl/cocoa.h
 	$(CC) \

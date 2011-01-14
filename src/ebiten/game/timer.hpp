@@ -4,6 +4,7 @@
 #include <boost/noncopyable.hpp>
 #include <mach/mach_time.h>
 #include <cassert>
+#include <cstdlib>
 
 namespace ebiten {
 namespace game {
@@ -14,7 +15,8 @@ private:
   const uint64_t duration_per_frame_;
   uint64_t next_time_to_update_;
 public:
-  explicit timer(std::size_t fps)
+  explicit
+  timer(std::size_t fps)
     : duration_per_frame_([&]{
         assert(fps);
         mach_timebase_info_data_t timebase_info;

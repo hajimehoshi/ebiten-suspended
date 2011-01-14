@@ -2,7 +2,9 @@
 #define nullptr (0)
 #endif
 
-#include <iostream>
+#ifdef EBITEN_TEST
+#include <gtest/gtest.h>
+#endif
 
 #include "ebiten/game/opengl/device.hpp"
 #include "ebiten/game/video/drawing_region.hpp"
@@ -55,7 +57,16 @@ public:
 };
 
 int
-main(int, char**) {
+main(int argc, char** argv) {
+  (void)argc;
+  (void)argv;
+#ifdef EBITEN_TEST
+  testing::InitGoogleTest(&argc, argv);
+  const auto test_result = RUN_ALL_TESTS();
+  if (test_result != EXIT_SUCCESS) {
+    return test_result;
+  }
+#endif
   try {
     sample_game game;
     auto& device = ebiten::game::opengl::device::instance();
