@@ -77,6 +77,14 @@ public:
   z() const {
     return this->z_;
   }
+  video::color_matrix&
+  color_matrix() {
+    return this->color_matrix_;
+  }
+  const video::color_matrix&
+  color_matrix() const {
+    return this->color_matrix_;
+  }
 };
 
 }

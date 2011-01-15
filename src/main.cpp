@@ -26,11 +26,13 @@ public:
     typedef ebiten::game::video::drawing_region drawing_region;
     this->sprites_.emplace_back(*this->texture_, 4);
     // TODO: modify API
-    this->sprites_.at(0).geometry_matrix().set_a(1.5);
-    this->sprites_.at(0).drawing_region_at(0) = std::move(drawing_region(0, 0, 32, 32, 32, 32));
-    this->sprites_.at(0).drawing_region_at(1) = std::move(drawing_region(0, 0, 132, 32, 32, 32));
-    this->sprites_.at(0).drawing_region_at(2) = std::move(drawing_region(0, 0, 32, 132, 32, 32));
-    this->sprites_.at(0).drawing_region_at(3) = std::move(drawing_region(0, 0, 132, 132, 32, 32));
+    auto& s = this->sprites_.at(0);
+    s.geometry_matrix().set_a(1.5);
+    s.drawing_region_at(0) = std::move(drawing_region(0, 0, 32, 32, 32, 32));
+    s.drawing_region_at(1) = std::move(drawing_region(0, 0, 132, 32, 32, 32));
+    s.drawing_region_at(2) = std::move(drawing_region(0, 0, 32, 132, 32, 32));
+    s.drawing_region_at(3) = std::move(drawing_region(0, 0, 132, 132, 32, 32));
+    //s.color_matrix().set_element<1, 1>(0);
   }
   const decltype(sprites_)&
   sprites() {

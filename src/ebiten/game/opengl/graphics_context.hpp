@@ -28,8 +28,7 @@ public:
                 const DrawingRegions& drawing_regions,
                 const video::geometry_matrix& geo,
                 int z,
-                const video::color_matrix&) {
-    // TODO: use color matrix
+                const video::color_matrix& color_mat) {
     if (!this->shader_program) {
       this->shader_program = compile_shader_program();
       assert(this->shader_program);
@@ -37,6 +36,34 @@ public:
     // TODO: color matrix が単位行列の場合に処理を避ける
     ::glUseProgram(this->shader_program);
     ::glUniform1i(glGetUniformLocation(this->shader_program, "texture"), 0);
+    const float color_mat_gl[] = {
+      static_cast<float>(color_mat.element<0, 0>()),
+      static_cast<float>(color_mat.element<0, 1>()),
+      static_cast<float>(color_mat.element<0, 2>()),
+      static_cast<float>(color_mat.element<0, 3>()),
+      static_cast<float>(color_mat.element<1, 0>()),
+      static_cast<float>(color_mat.element<1, 1>()),
+      static_cast<float>(color_mat.element<1, 2>()),
+      static_cast<float>(color_mat.element<1, 3>()),
+      static_cast<float>(color_mat.element<2, 0>()),
+      static_cast<float>(color_mat.element<2, 1>()),
+      static_cast<float>(color_mat.element<2, 2>()),
+      static_cast<float>(color_mat.element<2, 3>()),
+      static_cast<float>(color_mat.element<3, 0>()),
+      static_cast<float>(color_mat.element<3, 1>()),
+      static_cast<float>(color_mat.element<3, 2>()),
+      static_cast<float>(color_mat.element<3, 3>()),
+    };
+    ::glUniformMatrix4fv(glGetUniformLocation(this->shader_program, "color_matrix"),
+                         1, GL_FALSE, color_mat_gl);
+    const float color_mat_translation_gl[] = {
+      static_cast<float>(color_mat.element<0, 4>()),
+      static_cast<float>(color_mat.element<1, 4>()),
+      static_cast<float>(color_mat.element<2, 4>()),
+      static_cast<float>(color_mat.element<3, 4>()),
+    };
+    ::glUniform4fv(glGetUniformLocation(this->shader_program, "color_matrix_translation"),
+                   4, color_mat_translation_gl);
     const float gl_geo[] = {geo.a(),  geo.c(),  0, 0,
                             geo.b(),  geo.d(),  0, 0,
                             0,        0,        1, 0,
@@ -90,7 +117,7 @@ private:
                                      "\n"
                                      "void main(void) {\n"
                                      "  vec4 color = texture2DProj(texture, gl_TexCoord[0]);\n"
-                                     "  gl_FragColor = color;\n"
+                                     "  gl_FragColor = color_matrix * color + color_matrix_translation;\n"
                                      "}\n");
     // TODO: ARB?
     GLuint fragment_shader;
