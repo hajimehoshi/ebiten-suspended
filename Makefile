@@ -35,10 +35,9 @@ $(PROG)_test: $(SRC) cocoa.o
 		-DEBITEN_TEST \
 		cocoa.o src/main.cpp
 
-cocoa.o: src/ebiten/game/opengl/cocoa.m src/ebiten/game/opengl/cocoa.h
+cocoa.o: src/ebiten/game/opengl/cocoa.mm src/ebiten/game/opengl/cocoa.hpp
 	$(CC) \
 		$(CFLAGS) \
-		-x objective-c \
 		-c \
 		-o $@ \
 		$<

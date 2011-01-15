@@ -2,7 +2,7 @@
 #define EBITEN_GAME_OPENGL_DEVICE_HPP
 
 #include "ebiten/game/timer.hpp"
-#include "ebiten/game/opengl/cocoa.h"
+#include "ebiten/game/opengl/cocoa.hpp"
 #include "ebiten/game/opengl/graphics_context.hpp"
 #include "ebiten/game/opengl/texture_factory.hpp"
 #include "ebiten/game/video/sprite.hpp"
@@ -174,8 +174,8 @@ public:
       }
     };
     ::glutIdleFunc(idle_func::invoke);
-    if (!::ebiten_game_opengl_cocoa_initialize()) {
-      throw "::ebiten_game_opengl_cocoa_initialize() was failed";
+    if (!cocoa::initialize()) {
+      throw "ebiten::game::opengl::cocoa::initialize() was failed";
     }
 
     game.initialize(texture_factory::instance());
