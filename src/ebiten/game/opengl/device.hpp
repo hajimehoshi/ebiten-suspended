@@ -6,11 +6,11 @@
 #include "ebiten/game/opengl/graphics_context.hpp"
 #include "ebiten/game/opengl/texture_factory.hpp"
 #include "ebiten/game/video/sprite.hpp"
-#include "ebiten/util/channel.hpp"
 #include "ebiten/util/singleton.hpp"
 #include <boost/range.hpp>
 #include <boost/thread.hpp>
 #include <GLUT/glut.h>
+#include <atomic>
 #include <cassert>
 
 namespace ebiten {
@@ -134,19 +134,16 @@ public:
         }
         ::glBindTexture(GL_TEXTURE_2D, 0);
       }
-      
-      // TODO: use std::atomic<bool>?
-      util::channel<bool> ch;
+      std::atomic<bool> swap_completed(false);
       boost::thread game_loop([&]{
-          while (!ch.is_receivable()) {
+          while (!swap_completed.load()) {
             timer.wait_frame();
             game.update(frame_index);
             ++frame_index;
           }
-          ch.receive();
         });
       ::glutSwapBuffers();
-      ch.send(true);
+      swap_completed.store(true);
       game_loop.join();
       ::glutPostRedisplay();
     };
