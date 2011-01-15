@@ -1,7 +1,7 @@
 #ifndef EBITEN_GAME_VIDEO_AFFINE_MATRIX_HPP
 #define EBITEN_GAME_VIDEO_AFFINE_MATRIX_HPP
 
-#include <boost/mpl/int.hpp>
+#include <boost/mpl/size_t.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/range.hpp>
 #include <boost/static_assert.hpp>
@@ -14,7 +14,7 @@ namespace ebiten {
 namespace game {
 namespace video {
 
-template<class Float, int Dimension>
+template<class Float, std::size_t Dimension>
 class affine_matrix : private boost::noncopyable {
   BOOST_STATIC_ASSERT(0 < Dimension);
 private:
@@ -35,7 +35,7 @@ public:
     BOOST_STATIC_ASSERT(I < Dimension);
     BOOST_STATIC_ASSERT(0 <= J);
     BOOST_STATIC_ASSERT(J < Dimension);
-    return this->element(boost::mpl::int_<I>(), boost::mpl::int_<J>());
+    return this->element(boost::mpl::size_t<I>(), boost::mpl::size_t<J>());
   }
   template<int I, int J>
   Float
@@ -49,8 +49,8 @@ public:
   bool
   is_identity() const {
     auto it = this->elements_.cbegin();
-    for (int i = 0; i < Dimension - 1; ++i) {
-      for (int j = 0; j < Dimension; ++j, ++it) {
+    for (std::size_t i = 0; i < Dimension - 1; ++i) {
+      for (std::size_t j = 0; j < Dimension; ++j, ++it) {
         if (i == j) {
           if (*it != 1) {
             return false;
@@ -70,11 +70,11 @@ private:
     return this->elements_[i * Dimension + j];
   }
   Float
-  element(boost::mpl::int_<Dimension - 1>, int) const {
+  element(boost::mpl::size_t<Dimension - 1>, int) const {
     return 0;
   }
   Float
-  element(boost::mpl::int_<Dimension - 1>, boost::mpl::int_<Dimension - 1>) const {
+  element(boost::mpl::size_t<Dimension - 1>, boost::mpl::size_t<Dimension - 1>) const {
     return 1;
   }
 };
