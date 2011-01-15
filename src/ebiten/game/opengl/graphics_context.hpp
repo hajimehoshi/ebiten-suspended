@@ -26,50 +26,51 @@ public:
   void
   draw_textures(const video::texture& texture,
                 const DrawingRegions& drawing_regions,
-                const video::geometry_matrix& geo,
+                const video::geometry_matrix& geo_mat,
                 int z,
                 const video::color_matrix& color_mat) {
     if (!this->shader_program) {
       this->shader_program = compile_shader_program();
       assert(this->shader_program);
     }
-    // TODO: color matrix が単位行列の場合に処理を避ける
-    ::glUseProgram(this->shader_program);
-    ::glUniform1i(glGetUniformLocation(this->shader_program, "texture"), 0);
-    const float color_mat_gl[] = {
-      static_cast<float>(color_mat.element<0, 0>()),
-      static_cast<float>(color_mat.element<0, 1>()),
-      static_cast<float>(color_mat.element<0, 2>()),
-      static_cast<float>(color_mat.element<0, 3>()),
-      static_cast<float>(color_mat.element<1, 0>()),
-      static_cast<float>(color_mat.element<1, 1>()),
-      static_cast<float>(color_mat.element<1, 2>()),
-      static_cast<float>(color_mat.element<1, 3>()),
-      static_cast<float>(color_mat.element<2, 0>()),
-      static_cast<float>(color_mat.element<2, 1>()),
-      static_cast<float>(color_mat.element<2, 2>()),
-      static_cast<float>(color_mat.element<2, 3>()),
-      static_cast<float>(color_mat.element<3, 0>()),
-      static_cast<float>(color_mat.element<3, 1>()),
-      static_cast<float>(color_mat.element<3, 2>()),
-      static_cast<float>(color_mat.element<3, 3>()),
-    };
-    ::glUniformMatrix4fv(glGetUniformLocation(this->shader_program, "color_matrix"),
-                         1, GL_FALSE, color_mat_gl);
-    const float color_mat_translation_gl[] = {
-      static_cast<float>(color_mat.element<0, 4>()),
-      static_cast<float>(color_mat.element<1, 4>()),
-      static_cast<float>(color_mat.element<2, 4>()),
-      static_cast<float>(color_mat.element<3, 4>()),
-    };
-    ::glUniform4fv(glGetUniformLocation(this->shader_program, "color_matrix_translation"),
-                   4, color_mat_translation_gl);
-    const float gl_geo[] = {geo.a(),  geo.c(),  0, 0,
-                            geo.b(),  geo.d(),  0, 0,
-                            0,        0,        1, 0,
-                            geo.tx(), geo.ty(), 0, 1};
+    if (!color_mat.is_identity()) {
+      ::glUseProgram(this->shader_program);
+      ::glUniform1i(glGetUniformLocation(this->shader_program, "texture"), 0);
+      const float gl_color_mat[] = {
+        static_cast<float>(color_mat.element<0, 0>()),
+        static_cast<float>(color_mat.element<0, 1>()),
+        static_cast<float>(color_mat.element<0, 2>()),
+        static_cast<float>(color_mat.element<0, 3>()),
+        static_cast<float>(color_mat.element<1, 0>()),
+        static_cast<float>(color_mat.element<1, 1>()),
+        static_cast<float>(color_mat.element<1, 2>()),
+        static_cast<float>(color_mat.element<1, 3>()),
+        static_cast<float>(color_mat.element<2, 0>()),
+        static_cast<float>(color_mat.element<2, 1>()),
+        static_cast<float>(color_mat.element<2, 2>()),
+        static_cast<float>(color_mat.element<2, 3>()),
+        static_cast<float>(color_mat.element<3, 0>()),
+        static_cast<float>(color_mat.element<3, 1>()),
+        static_cast<float>(color_mat.element<3, 2>()),
+        static_cast<float>(color_mat.element<3, 3>()),
+      };
+      ::glUniformMatrix4fv(glGetUniformLocation(this->shader_program, "color_matrix"),
+                           1, GL_FALSE, gl_color_mat);
+      const float gl_color_mat_translation[] = {
+        static_cast<float>(color_mat.element<0, 4>()),
+        static_cast<float>(color_mat.element<1, 4>()),
+        static_cast<float>(color_mat.element<2, 4>()),
+        static_cast<float>(color_mat.element<3, 4>()),
+      };
+      ::glUniform4fv(glGetUniformLocation(this->shader_program, "color_matrix_translation"),
+                     4, gl_color_mat_translation);
+    }
+    const float gl_geo_mat[] = {geo_mat.a(),  geo_mat.c(),  0, 0,
+                                geo_mat.b(),  geo_mat.d(),  0, 0,
+                                0,            0,            1, 0,
+                                geo_mat.tx(), geo_mat.ty(), 0, 1};
     ::glMatrixMode(GL_MODELVIEW);
-    ::glLoadMatrixf(gl_geo);
+    ::glLoadMatrixf(gl_geo_mat);
     assert(texture.id());
     ::glBindTexture(GL_TEXTURE_2D, texture.id());
     ::glBegin(GL_QUADS);

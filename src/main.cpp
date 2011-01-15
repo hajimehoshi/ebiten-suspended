@@ -32,7 +32,8 @@ public:
     s.drawing_region_at(1) = std::move(drawing_region(0, 0, 132, 32, 32, 32));
     s.drawing_region_at(2) = std::move(drawing_region(0, 0, 32, 132, 32, 32));
     s.drawing_region_at(3) = std::move(drawing_region(0, 0, 132, 132, 32, 32));
-    //s.color_matrix().set_element<1, 1>(0);
+    s.color_matrix().set_element<0, 0>(0);
+    s.color_matrix().set_element<0, 3>(1);
   }
   const decltype(sprites_)&
   sprites() {

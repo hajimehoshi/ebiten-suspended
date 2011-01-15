@@ -46,6 +46,24 @@ public:
     BOOST_STATIC_ASSERT(J < Dimension);
     return this->elements_[I * Dimension + J] = element;
   }
+  bool
+  is_identity() const {
+    auto it = this->elements_.cbegin();
+    for (int i = 0; i < Dimension - 1; ++i) {
+      for (int j = 0; j < Dimension; ++j, ++it) {
+        if (i == j) {
+          if (*it != 1) {
+            return false;
+          }
+        } else {
+          if (*it != 0) {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  }
 private:
   Float
   element(int i, int j) const {
@@ -108,6 +126,13 @@ TEST(affine_matrix, element) {
   EXPECT_EQ(0, (m.element<3, 1>()));
   EXPECT_EQ(0, (m.element<3, 2>()));
   EXPECT_EQ(1, (m.element<3, 3>()));
+}
+
+TEST(affine_matrix, is_identity) {
+  affine_matrix<double, 4> m1{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0};
+  EXPECT_TRUE(m1.is_identity());
+  affine_matrix<double, 4> m2{1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0};
+  EXPECT_FALSE(m2.is_identity());
 }
 
 }
