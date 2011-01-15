@@ -19,15 +19,15 @@ private:
   std::unique_ptr<ebiten::game::video::texture> texture_;
   std::deque<ebiten::game::video::sprite> sprites_;
 public:
-  template<class texture_factory>
+  template<class TextureFactory>
   void
-  initialize(texture_factory& tf) {
+  initialize(TextureFactory& tf) {
     this->texture_ = tf.from_file("test.png");
     typedef ebiten::game::video::drawing_region drawing_region;
     this->sprites_.emplace_back(*this->texture_, 4);
     // TODO: modify API
     auto& s = this->sprites_.at(0);
-    s.geometry_matrix().set_a(1.5);
+    s.geometry_matrix().set_a(1);
     s.drawing_region_at(0) = std::move(drawing_region(0, 0, 32, 32, 32, 32));
     s.drawing_region_at(1) = std::move(drawing_region(0, 0, 132, 32, 32, 32));
     s.drawing_region_at(2) = std::move(drawing_region(0, 0, 32, 132, 32, 32));
@@ -58,6 +58,9 @@ main(int argc, char** argv) {
   const auto test_result = RUN_ALL_TESTS();
   if (test_result != EXIT_SUCCESS) {
     return test_result;
+  }
+  if (2 <= argc) {
+    return EXIT_SUCCESS;
   }
 #endif
   try {

@@ -6,7 +6,7 @@ CFLAGS= \
 	-W -Wall -Wextra \
 	-static-libgcc -fPIC \
 	-L/opt/local/lib \
-	-I/opt/local/include -Isrc \
+	-I/opt/local/include -Isrc
 
 CXXFLAGS= \
 	$(CFLAGS) \
@@ -18,7 +18,7 @@ CXXFLAGS= \
 SRC=$(shell find src -name "*.hpp" -or -name "*.cpp")
 
 all: $(PROG)_test
-	./$(PROG)_test
+	./$(PROG)_test --gtest_color=yes
 
 $(PROG): $(SRC) cocoa.o
 	$(CXX) \
