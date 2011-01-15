@@ -70,70 +70,37 @@ public:
                                    0,              0,              0, 1};
     display_func_ = [&]{
       // render sprites to the offscreen
-      {
-        ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebuffer);
-        ::glClearColor(0, 0, 0, 1);
-        ::glClear(GL_COLOR_BUFFER_BIT);        
-        ::glEnable(GL_TEXTURE_2D);
-        ::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        ::glEnable(GL_BLEND);
-        ::glViewport(0, 0, game.screen_width(), game.screen_height());
-        ::glMatrixMode(GL_PROJECTION);
-        ::glLoadIdentity();
-        ::glOrtho(0, game.screen_width(), 0, game.screen_height(), 0, 1);
-        const auto& sprites = game.sprites();
-        typedef video::sprite sprite;
-        typedef std::reference_wrapper<const sprite> sprite_cref;
-        std::vector<sprite_cref> sorted_sprites;
-        sorted_sprites.reserve(boost::size(sprites));
-        std::for_each(boost::begin(sprites), boost::end(sprites),
-                      [&](const sprite& sprite) {
-                        sorted_sprites.emplace_back(sprite);                        
-                      });
-        // sort the sprites in desceinding order of z
-        std::sort(sorted_sprites.begin(), sorted_sprites.end(),
-                  [](const sprite_cref& a, const sprite_cref& b) {
-                    const double diff = a.get().z() - b.get().z();
-                    return (0 < diff) ? -1 : ((diff < 0) ? 1 : 0);
-                  });
-        std::for_each(sorted_sprites.cbegin(), sorted_sprites.cend(),
-                      [&](const sprite_cref& sprite) {
-                        sprite.get().draw(graphics_context::instance());
-                      });
-        // TODO: この時点でもう sprites 共有は終わっているので、ロジックを実行して良い?
-        ::glFlush();
-        ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
-      }
+      ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebuffer);
+      ::glClearColor(0, 0, 0, 1);
+      ::glClear(GL_COLOR_BUFFER_BIT);        
+      ::glEnable(GL_TEXTURE_2D);
+      ::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+      ::glEnable(GL_BLEND);
+      ::glViewport(0, 0, game.screen_width(), game.screen_height());
+      ::glMatrixMode(GL_PROJECTION);
+      ::glLoadIdentity();
+      ::glOrtho(0, game.screen_width(), 0, game.screen_height(), 0, 1);
+      const auto& sprites = game.sprites();
+      typedef video::sprite sprite;
+      typedef std::reference_wrapper<const sprite> sprite_cref;
+      std::vector<sprite_cref> sorted_sprites;
+      sorted_sprites.reserve(boost::size(sprites));
+      std::for_each(boost::begin(sprites), boost::end(sprites),
+                    [&](const sprite& sprite) {
+                      sorted_sprites.emplace_back(sprite);                        
+                    });
+      // sort the sprites in desceinding order of z
+      std::sort(sorted_sprites.begin(), sorted_sprites.end(),
+                [](const sprite_cref& a, const sprite_cref& b) {
+                  const double diff = a.get().z() - b.get().z();
+                  return (0 < diff) ? -1 : ((diff < 0) ? 1 : 0);
+                });
+      std::for_each(sorted_sprites.cbegin(), sorted_sprites.cend(),
+                    [&](const sprite_cref& sprite) {
+                      sprite.get().draw(graphics_context::instance());
+                    });
 
-      // render the offscreen to the screen
-      {
-        ::glClearColor(0, 0, 0, 1);
-        ::glClear(GL_COLOR_BUFFER_BIT);
-        ::glEnable(GL_TEXTURE_2D);
-        ::glDisable(GL_BLEND);
-        ::glViewport(0, 0, game.screen_width() * window_scale, game.screen_height() * window_scale);
-        ::glMatrixMode(GL_PROJECTION);
-        ::glLoadIdentity();
-        ::glOrtho(0, game.screen_width() * window_scale, game.screen_height() * window_scale, 0, 0, 1);
-        ::glMatrixMode(GL_MODELVIEW);
-        ::glLoadMatrixf(offscreen_geo);
-        ::glBindTexture(GL_TEXTURE_2D, offscreen_texture->id());
-        ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        {
-          ::glBegin(GL_QUADS);
-          ::glTexCoord2f(0, 0);
-          ::glVertex3fv(offscreen_vertex[0]);
-          ::glTexCoord2f(offscreen_tu, 0);
-          ::glVertex3fv(offscreen_vertex[1]);
-          ::glTexCoord2f(offscreen_tu, offscreen_tv);
-          ::glVertex3fv(offscreen_vertex[2]);
-          ::glTexCoord2f(0, offscreen_tv);
-          ::glVertex3fv(offscreen_vertex[3]);
-          ::glEnd();
-        }
-        ::glBindTexture(GL_TEXTURE_2D, 0);
-      }
+      // start the logic loop
       std::atomic<bool> swap_completed(false);
       boost::thread game_loop([&]{
           while (!swap_completed.load()) {
@@ -142,9 +109,42 @@ public:
             ++frame_index;
           }
         });
+
+      ::glFlush();
+      ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+
+      // render the offscreen to the screen
+      ::glClearColor(0, 0, 0, 1);
+      ::glClear(GL_COLOR_BUFFER_BIT);
+      ::glEnable(GL_TEXTURE_2D);
+      ::glDisable(GL_BLEND);
+      ::glViewport(0, 0, game.screen_width() * window_scale, game.screen_height() * window_scale);
+      ::glMatrixMode(GL_PROJECTION);
+      ::glLoadIdentity();
+      ::glOrtho(0, game.screen_width() * window_scale, game.screen_height() * window_scale, 0, 0, 1);
+      ::glMatrixMode(GL_MODELVIEW);
+      ::glLoadMatrixf(offscreen_geo);
+      ::glBindTexture(GL_TEXTURE_2D, offscreen_texture->id());
+      ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+      ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+      {
+        ::glBegin(GL_QUADS);
+        ::glTexCoord2f(0, 0);
+        ::glVertex3fv(offscreen_vertex[0]);
+        ::glTexCoord2f(offscreen_tu, 0);
+        ::glVertex3fv(offscreen_vertex[1]);
+        ::glTexCoord2f(offscreen_tu, offscreen_tv);
+        ::glVertex3fv(offscreen_vertex[2]);
+        ::glTexCoord2f(0, offscreen_tv);
+        ::glVertex3fv(offscreen_vertex[3]);
+        ::glEnd();
+      }
+      ::glBindTexture(GL_TEXTURE_2D, 0);
       ::glutSwapBuffers();
+
       swap_completed.store(true);
       game_loop.join();
+
       ::glutPostRedisplay();
     };
     struct display_func {
