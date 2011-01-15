@@ -9,7 +9,6 @@
 #include <array>
 #include <cassert>
 #include <initializer_list>
-#include <type_traits>
 
 namespace ebiten {
 namespace game {
