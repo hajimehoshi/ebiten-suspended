@@ -44,16 +44,6 @@ public:
       std::cout << "foo!" << std::endl;
     }
   }
-  // TODO: 定数にすべき?
-  std::size_t
-  screen_width() const {
-    return 320;
-  }
-  // TODO: 定数にすべき?
-  std::size_t
-  screen_height() const {
-    return 240;
-  }
 };
 
 int
@@ -70,7 +60,7 @@ main(int argc, char** argv) {
   try {
     sample_game game;
     auto& device = ebiten::game::opengl::device::instance();
-    device.run(game, 600, 2);
+    device.run(game, 320, 240, 600, 2);
   } catch (const std::string& message) {
     // TODO: use boost::diagnostic_information?
     std::cerr << message << std::endl;

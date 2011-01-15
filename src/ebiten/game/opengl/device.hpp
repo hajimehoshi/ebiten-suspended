@@ -25,20 +25,24 @@ private:
 public:
   template<class Game>
   void
-  run(Game& game, std::size_t fps, std::size_t window_scale) {
+  run(Game& game,
+      std::size_t screen_width,
+      std::size_t screen_height,
+      std::size_t fps,
+      std::size_t window_scale) {
     assert(window_scale);
     // TODO: http://developer.apple.com/library/mac/#documentation/GraphicsImaging/Conceptual/OpenGL-MacProgGuide/opengl_general/opengl_gen_tasks.html#//apple_ref/doc/uid/TP40001987-CH211-SW1
     int argc = 1;
     char arg[] = "ebiten";
     char* argv[] = {arg, nullptr};
     ::glutInit(&argc, argv);
-    ::glutInitWindowSize(game.screen_width() * window_scale, game.screen_height() * window_scale);
+    ::glutInitWindowSize(screen_width * window_scale, screen_height * window_scale);
     ::glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
     ::glutCreateWindow("Ebiten");
 
     // offscreen
     auto& tf = texture_factory::instance();
-    auto offscreen_texture = tf.create(game.screen_width(), game.screen_height());
+    auto offscreen_texture = tf.create(screen_width, screen_height);
     GLuint framebuffer = 0;
     ::glGenFramebuffersEXT(1, &framebuffer);
     assert(framebuffer);
@@ -76,10 +80,10 @@ public:
       ::glEnable(GL_TEXTURE_2D);
       ::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       ::glEnable(GL_BLEND);
-      ::glViewport(0, 0, game.screen_width(), game.screen_height());
+      ::glViewport(0, 0, screen_width, screen_height);
       ::glMatrixMode(GL_PROJECTION);
       ::glLoadIdentity();
-      ::glOrtho(0, game.screen_width(), 0, game.screen_height(), 0, 1);
+      ::glOrtho(0, screen_width, 0, screen_height, 0, 1);
       const auto& sprites = game.sprites();
       typedef video::sprite sprite;
       typedef std::reference_wrapper<const sprite> sprite_cref;
@@ -118,10 +122,10 @@ public:
       ::glClear(GL_COLOR_BUFFER_BIT);
       ::glEnable(GL_TEXTURE_2D);
       ::glDisable(GL_BLEND);
-      ::glViewport(0, 0, game.screen_width() * window_scale, game.screen_height() * window_scale);
+      ::glViewport(0, 0, screen_width * window_scale, screen_height * window_scale);
       ::glMatrixMode(GL_PROJECTION);
       ::glLoadIdentity();
-      ::glOrtho(0, game.screen_width() * window_scale, game.screen_height() * window_scale, 0, 0, 1);
+      ::glOrtho(0, screen_width * window_scale, screen_height * window_scale, 0, 0, 1);
       ::glMatrixMode(GL_MODELVIEW);
       ::glLoadMatrixf(offscreen_geo);
       ::glBindTexture(GL_TEXTURE_2D, offscreen_texture->id());
