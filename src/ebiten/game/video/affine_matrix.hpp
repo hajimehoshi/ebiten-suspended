@@ -9,6 +9,7 @@
 #include <array>
 #include <cassert>
 #include <initializer_list>
+#include <type_traits>
 
 namespace ebiten {
 namespace game {
@@ -28,21 +29,17 @@ public:
     this->elements_.fill(0);
     std::copy(boost::begin(elements_), boost::end(elements_), this->elements_.begin());
   }
-  template<int I, int J>
+  template<std::size_t I, std::size_t J>
   Float
   element() const {
-    BOOST_STATIC_ASSERT(0 <= I);
     BOOST_STATIC_ASSERT(I < Dimension);
-    BOOST_STATIC_ASSERT(0 <= J);
     BOOST_STATIC_ASSERT(J < Dimension);
     return this->element(boost::mpl::size_t<I>(), boost::mpl::size_t<J>());
   }
-  template<int I, int J>
+  template<std::size_t I, std::size_t J>
   Float
   set_element(Float element) {
-    BOOST_STATIC_ASSERT(0 <= I);
     BOOST_STATIC_ASSERT(I < Dimension - 1);
-    BOOST_STATIC_ASSERT(0 <= J);
     BOOST_STATIC_ASSERT(J < Dimension);
     return this->elements_[I * Dimension + J] = element;
   }
@@ -66,11 +63,11 @@ public:
   }
 private:
   Float
-  element(int i, int j) const {
+  element(std::size_t i, std::size_t j) const {
     return this->elements_[i * Dimension + j];
   }
   Float
-  element(boost::mpl::size_t<Dimension - 1>, int) const {
+  element(boost::mpl::size_t<Dimension - 1>, std::size_t) const {
     return 0;
   }
   Float
