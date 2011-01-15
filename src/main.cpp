@@ -10,9 +10,9 @@
 #include "ebiten/game/video/drawing_region.hpp"
 #include "ebiten/game/video/sprite.hpp"
 #include "ebiten/game/video/texture.hpp"
+#include <cstdlib>
 #include <deque>
 #include <iostream>
-#include <stdlib.h>
 
 class sample_game : private boost::noncopyable {
 private:

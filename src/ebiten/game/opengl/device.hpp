@@ -8,10 +8,10 @@
 #include "ebiten/game/video/sprite.hpp"
 #include "ebiten/util/singleton.hpp"
 #include <boost/range.hpp>
-#include <boost/thread.hpp>
 #include <GLUT/glut.h>
 #include <atomic>
 #include <cassert>
+#include <pthread.h>
 
 namespace ebiten {
 namespace game {
@@ -105,14 +105,23 @@ public:
                     });
 
       // start the logic loop
+      struct logic_func {
+        static void* invoke(void* func_ptr) {
+          auto func = *(reinterpret_cast<std::function<void()>*>(func_ptr));
+          func();
+          return nullptr;
+        }
+      };
       std::atomic<bool> swap_completed(false);
-      boost::thread game_loop([&]{
-          while (!swap_completed.load()) {
-            timer.wait_frame();
-            game.update(frame_index);
-            ++frame_index;
-          }
-        });
+      std::function<void()> logic_func = [&]{
+        while (!swap_completed.load()) {
+          timer.wait_frame();
+          game.update(frame_index);
+          ++frame_index;
+        }
+      };
+      pthread_t logic_thread;
+      ::pthread_create(&logic_thread, nullptr, logic_func::invoke, &logic_func);
 
       ::glFlush();
       ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
@@ -147,7 +156,7 @@ public:
       ::glutSwapBuffers();
 
       swap_completed.store(true);
-      game_loop.join();
+      ::pthread_join(logic_thread, nullptr);
 
       ::glutPostRedisplay();
     };

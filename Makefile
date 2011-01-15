@@ -10,10 +10,10 @@ CFLAGS= \
 
 CXXFLAGS= \
 	$(CFLAGS) \
-	-std=c++0x \
+	-std=c++0x -pthread \
 	-fno-deduce-init-list \
 	-framework Cocoa -framework OpenGL -framework GLUT \
-	-lboost_thread -lpng # TODO: link them statically
+	-lpng # TODO: link them statically
 
 SRC=$(shell find src -name "*.hpp" -or -name "*.cpp")
 
