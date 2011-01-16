@@ -1,8 +1,9 @@
-#include "ebiten/game/opengl/cocoa.hpp"
+#include "ebiten/game/video/opengl/cocoa.hpp"
 #include <Cocoa/Cocoa.h>
 
 namespace ebiten {
 namespace game {
+namespace video {
 namespace opengl {
 namespace cocoa {
 
@@ -17,6 +18,7 @@ initialize() {
   return true;
 }
 
+}
 }
 }
 }

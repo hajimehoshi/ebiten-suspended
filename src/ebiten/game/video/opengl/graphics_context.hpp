@@ -15,6 +15,7 @@
 
 namespace ebiten {
 namespace game {
+namespace video {
 namespace opengl {
 
 class graphics_context : public util::singleton<graphics_context> {
@@ -167,6 +168,7 @@ private:
   // TODO: show_program_log
 };
 
+}
 }
 }
 }

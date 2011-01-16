@@ -37,7 +37,7 @@ $(PROG)_test: $(SRC) cocoa.o
 		-DEBITEN_TEST \
 		cocoa.o src/main.cpp
 
-cocoa.o: src/ebiten/game/opengl/cocoa.mm src/ebiten/game/opengl/cocoa.hpp
+cocoa.o: src/ebiten/game/video/opengl/cocoa.mm src/ebiten/game/video/opengl/cocoa.hpp
 	$(CC) \
 		$(CFLAGS) \
 		-c \

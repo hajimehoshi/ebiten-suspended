@@ -6,10 +6,10 @@
 #include <gtest/gtest.h>
 #endif
 
-#include "ebiten/game/opengl/device.hpp"
 #include "ebiten/game/video/drawing_region.hpp"
 #include "ebiten/game/video/sprite.hpp"
 #include "ebiten/game/video/texture.hpp"
+#include "ebiten/game/video/opengl/device.hpp"
 #include <cstdlib>
 #include <deque>
 #include <iostream>
@@ -65,7 +65,7 @@ main(int argc, char** argv) {
 #endif
   try {
     sample_game game;
-    auto& device = ebiten::game::opengl::device::instance();
+    auto& device = ebiten::game::video::opengl::device::instance();
     device.run(game, 320, 240, 600, 2);
   } catch (const std::string& message) {
     // TODO: use boost::diagnostic_information?

@@ -9,6 +9,7 @@
 
 namespace ebiten {
 namespace game {
+namespace video {
 namespace opengl {
 
 // TODO: implements for 32bit machine
@@ -99,11 +100,13 @@ private:
 }
 }
 }
+}
 
 #ifdef EBITEN_TEST
 
 namespace ebiten {
 namespace game {
+namespace video {
 namespace opengl {
 
 TEST(clp2, calling) {
@@ -112,6 +115,7 @@ TEST(clp2, calling) {
   EXPECT_EQ(512, clp2(257));
 }
 
+}
 }
 }
 }

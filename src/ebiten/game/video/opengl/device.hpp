@@ -2,9 +2,9 @@
 #define EBITEN_GAME_OPENGL_DEVICE_HPP
 
 #include "ebiten/game/timer.hpp"
-#include "ebiten/game/opengl/cocoa.hpp"
-#include "ebiten/game/opengl/graphics_context.hpp"
-#include "ebiten/game/opengl/texture_factory.hpp"
+#include "ebiten/game/video/opengl/cocoa.hpp"
+#include "ebiten/game/video/opengl/graphics_context.hpp"
+#include "ebiten/game/video/opengl/texture_factory.hpp"
 #include "ebiten/game/video/sprite.hpp"
 #include "ebiten/util/singleton.hpp"
 #include <boost/range.hpp>
@@ -15,6 +15,7 @@
 
 namespace ebiten {
 namespace game {
+namespace video {
 namespace opengl {
 
 class device : public util::singleton<device> {
@@ -175,7 +176,7 @@ public:
     };
     ::glutIdleFunc(idle_func::invoke);
     if (!cocoa::initialize()) {
-      throw "ebiten::game::opengl::cocoa::initialize() was failed";
+      throw "ebiten::game::video::opengl::cocoa::initialize() was failed";
     }
 
     game.initialize(texture_factory::instance());
@@ -190,6 +191,7 @@ private:
 
 std::function<void()> device::display_func_;
 
+}
 }
 }
 }

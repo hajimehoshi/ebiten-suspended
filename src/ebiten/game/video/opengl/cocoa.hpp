@@ -3,12 +3,14 @@
 
 namespace ebiten {
 namespace game {
+namespace video {
 namespace opengl {
 namespace cocoa {
 
 bool
 initialize();
 
+}
 }
 }
 }
