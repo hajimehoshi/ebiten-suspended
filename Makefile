@@ -24,6 +24,8 @@ $(PROG): $(SRC) cocoa.o
 	$(CXX) \
 		$(CXXFLAGS) \
 		-o $@ \
+		-O2 \
+		-DNDEBUG \
 		cocoa.o src/main.cpp
 
 $(PROG)_test: $(SRC) cocoa.o
