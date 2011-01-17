@@ -90,20 +90,18 @@ public:
       typedef std::reference_wrapper<const sprite> sprite_cref;
       std::vector<sprite_cref> sorted_sprites;
       sorted_sprites.reserve(boost::size(sprites));
-      std::for_each(boost::begin(sprites), boost::end(sprites),
-                    [&](const sprite& sprite) {
-                      sorted_sprites.emplace_back(sprite);                        
-                    });
+      for (const auto& sprite : sprites) {
+        sorted_sprites.emplace_back(sprite);
+      }
       // sort the sprites in desceinding order of z
       std::sort(sorted_sprites.begin(), sorted_sprites.end(),
                 [](const sprite_cref& a, const sprite_cref& b) {
                   const double diff = a.get().z() - b.get().z();
                   return (0 < diff) ? -1 : ((diff < 0) ? 1 : 0);
                 });
-      std::for_each(sorted_sprites.cbegin(), sorted_sprites.cend(),
-                    [&](const sprite_cref& sprite) {
-                      sprite.get().draw(graphics_context::instance());
-                    });
+      for (const auto& sprite : sorted_sprites) {
+        sprite.get().draw(graphics_context::instance());
+      }
 
       // start the logic loop
       struct logic_func {
@@ -168,7 +166,7 @@ public:
     };
     ::glutDisplayFunc(display_func::invoke);
     // converting lambda to a function pointer fails in a template member function
-    // in gcc 4.5
+    // in gcc 4.6
     struct idle_func {
       static void invoke() {
         ::glutPostRedisplay();

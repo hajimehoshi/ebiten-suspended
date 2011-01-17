@@ -9,6 +9,7 @@
 #include <array>
 #include <cassert>
 #include <initializer_list>
+#include <iterator>
 
 namespace ebiten {
 namespace game {

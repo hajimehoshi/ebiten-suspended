@@ -78,29 +78,28 @@ public:
     const float zf = static_cast<float>(z);
     const float texture_width  = texture.texture_width();
     const float texture_height = texture.texture_height();
-    std::for_each(boost::begin(drawing_regions), boost::end(drawing_regions),
-                  [&](const video::drawing_region& t) {
-                    const float tu1 = t.src_x              / texture_width;
-                    const float tu2 = (t.src_x + t.width)  / texture_width;
-                    const float tv1 = t.src_y              / texture_height;
-                    const float tv2 = (t.src_y + t.height) / texture_height;
-                    const float x1 = t.dst_x;
-                    const float x2 = t.dst_x + t.width;
-                    const float y1 = t.dst_y;
-                    const float y2 = t.dst_y + t.height;
-                    const float vertex[4][3] = {{x1, y1, zf},
-                                                {x2, y1, zf},
-                                                {x2, y2, zf},
-                                                {x1, y2, zf}};
-                    ::glTexCoord2f(tu1, tv1);
-                    ::glVertex3fv(vertex[0]);
-                    ::glTexCoord2f(tu2, tv1);
-                    ::glVertex3fv(vertex[1]);
-                    ::glTexCoord2f(tu2, tv2);
-                    ::glVertex3fv(vertex[2]);
-                    ::glTexCoord2f(tu1, tv2);
-                    ::glVertex3fv(vertex[3]);
-                  });
+    for (const auto& t : drawing_regions) {
+      const float tu1 = t.src_x              / texture_width;
+      const float tu2 = (t.src_x + t.width)  / texture_width;
+      const float tv1 = t.src_y              / texture_height;
+      const float tv2 = (t.src_y + t.height) / texture_height;
+      const float x1 = t.dst_x;
+      const float x2 = t.dst_x + t.width;
+      const float y1 = t.dst_y;
+      const float y2 = t.dst_y + t.height;
+      const float vertex[4][3] = {{x1, y1, zf},
+                                  {x2, y1, zf},
+                                  {x2, y2, zf},
+                                  {x1, y2, zf}};
+      ::glTexCoord2f(tu1, tv1);
+      ::glVertex3fv(vertex[0]);
+      ::glTexCoord2f(tu2, tv1);
+      ::glVertex3fv(vertex[1]);
+      ::glTexCoord2f(tu2, tv2);
+      ::glVertex3fv(vertex[2]);
+      ::glTexCoord2f(tu1, tv2);
+      ::glVertex3fv(vertex[3]);
+    }
     ::glEnd();
     ::glBindTexture(GL_TEXTURE_2D, 0);
     ::glUseProgram(0);
