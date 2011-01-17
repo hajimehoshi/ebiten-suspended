@@ -1,5 +1,5 @@
-#ifndef EBITEN_GAME_OPENGL_GRAPHICS_CONTEXT_HPP
-#define EBITEN_GAME_OPENGL_GRAPHICS_CONTEXT_HPP
+#ifndef EBITEN_GAME_VIDEO_OPENGL_GRAPHICS_CONTEXT_HPP
+#define EBITEN_GAME_VIDEO_OPENGL_GRAPHICS_CONTEXT_HPP
 
 #include "ebiten/game/video/color_matrix.hpp"
 #include "ebiten/game/video/drawing_region.hpp"

@@ -1,5 +1,5 @@
-#ifndef EBITEN_GAME_OPENGL_TEXTURE_FACTORY_HPP
-#define EBITEN_GAME_OPENGL_TEXTURE_FACTORY_HPP
+#ifndef EBITEN_GAME_VIDEO_OPENGL_TEXTURE_FACTORY_HPP
+#define EBITEN_GAME_VIDEO_OPENGL_TEXTURE_FACTORY_HPP
 
 #include "ebiten/game/video/texture.hpp"
 #include "ebiten/util/image_loader.hpp"

@@ -1,5 +1,5 @@
-#ifndef EBITEN_GAME_OPENGL_DEVICE_HPP
-#define EBITEN_GAME_OPENGL_DEVICE_HPP
+#ifndef EBITEN_GAME_VIDEO_OPENGL_DEVICE_HPP
+#define EBITEN_GAME_VIDEO_OPENGL_DEVICE_HPP
 
 #include "ebiten/game/timer.hpp"
 #include "ebiten/game/video/opengl/cocoa.hpp"

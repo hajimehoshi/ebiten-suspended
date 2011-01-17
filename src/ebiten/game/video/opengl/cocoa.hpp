@@ -1,5 +1,5 @@
-#ifndef EBITEN_GAME_OPENGL_COCOA_HPP
-#define EBITEN_GAME_OPENGL_COCOA_HPP
+#ifndef EBITEN_GAME_VIDEO_OPENGL_COCOA_HPP
+#define EBITEN_GAME_VIDEO_OPENGL_COCOA_HPP
 
 namespace ebiten {
 namespace game {
