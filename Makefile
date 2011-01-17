@@ -1,21 +1,26 @@
-PROG=ebiten
-CC=gcc
-CXX=g++-mp-4.5
+PROG:=ebiten
+CC:=gcc
+CXX:=g++-mp-4.6
 
-CFLAGS= \
+CFLAGS:= \
 	-W -Wall -Wextra \
-	-static-libgcc -fPIC \
+	-fPIC \
 	-L/opt/local/lib \
 	-I/opt/local/include -Isrc
 
-CXXFLAGS= \
+CXXFLAGS:= \
 	$(CFLAGS) \
-	-std=c++0x -pthread \
+	-std=c++0x \
 	-fno-deduce-init-list \
+
+LDFLAGS:= \
+	-pthread \
+	-static-libgcc \
 	-framework Cocoa -framework OpenGL -framework GLUT \
 	-lpng # TODO: link them statically
 
-SRC=$(shell find src -name "*.hpp" -or -name "*.cpp")
+SRC:=$(shell find src -name "*.hpp" -or -name "*.cpp")
+# SRC_MM=$(shell find src -name "*.mm")
 
 all: $(PROG)_test
 	./$(PROG)_test --gtest_color=yes
@@ -23,19 +28,21 @@ all: $(PROG)_test
 $(PROG): $(SRC) cocoa.o
 	$(CXX) \
 		$(CXXFLAGS) \
+		$(LDFLAGS) \
 		-o $@ \
 		-O2 \
 		-DNDEBUG \
-		cocoa.o src/main.cpp
+		src/main.cpp cocoa.o
 
 $(PROG)_test: $(SRC) cocoa.o
 	$(CXX) \
 		$(CXXFLAGS) \
+		$(LDFLAGS) \
 		-g \
 		-o $@ \
 		-lgtest \
 		-DEBITEN_TEST \
-		cocoa.o src/main.cpp
+		src/main.cpp cocoa.o
 
 cocoa.o: src/ebiten/game/video/opengl/cocoa.mm src/ebiten/game/video/opengl/cocoa.hpp
 	$(CC) \
