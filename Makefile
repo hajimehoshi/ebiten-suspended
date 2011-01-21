@@ -1,6 +1,6 @@
 PROG:=ebiten
 CC:=gcc
-CXX:=g++-mp-4.6
+CXX:=g++-mp-4.5
 
 CFLAGS:= \
 	-W -Wall -Wextra \

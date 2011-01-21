@@ -1,3 +1,7 @@
+#ifndef nullptr
+#define nullptr (0)
+#endif
+
 #ifdef EBITEN_TEST
 #include <gtest/gtest.h>
 #endif

@@ -90,18 +90,20 @@ public:
       typedef std::reference_wrapper<const sprite> sprite_cref;
       std::vector<sprite_cref> sorted_sprites;
       sorted_sprites.reserve(boost::size(sprites));
-      for (const auto& sprite : sprites) {
-        sorted_sprites.emplace_back(sprite);
-      }
+      std::for_each(boost::begin(sprites), boost::end(sprites),
+                    [&](const sprite& s) {
+                      sorted_sprites.emplace_back(s);
+                    });
       // sort the sprites in desceinding order of z
       std::sort(sorted_sprites.begin(), sorted_sprites.end(),
                 [](const sprite_cref& a, const sprite_cref& b) {
                   const double diff = a.get().z() - b.get().z();
                   return (0 < diff) ? -1 : ((diff < 0) ? 1 : 0);
                 });
-      for (const auto& sprite : sorted_sprites) {
-        sprite.get().draw(graphics_context::instance());
-      }
+      std::for_each(boost::begin(sorted_sprites), boost::end(sorted_sprites),
+                    [&](const sprite_cref& s) {
+                      s.get().draw(graphics_context::instance());
+                    });
 
       // start the logic loop
       struct logic_func {
