@@ -101,7 +101,7 @@ public:
                   return (0 < diff) ? -1 : ((diff < 0) ? 1 : 0);
                 });
       std::for_each(boost::begin(sorted_sprites), boost::end(sorted_sprites),
-                    [&](const sprite_cref& s) {
+                    [](const sprite_cref& s) {
                       s.get().draw(graphics_context::instance());
                     });
 
