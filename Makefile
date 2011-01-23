@@ -21,7 +21,6 @@ LDFLAGS:= \
 
 SRC:=$(shell find src -name "*.hpp" -or -name "*.cpp")
 SRC_COCOA=$(shell find src -name "*.mm")
-SRC_COCOA_HPP=$(SRC_COCOA:.mm=.hpp)
 OBJ_COCOA=$(SRC_COCOA:.mm=.o)
 
 all: $(PROG)_test
