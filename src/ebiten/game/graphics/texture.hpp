@@ -1,11 +1,11 @@
-#ifndef EBITEN_GAME_VIDEO_TEXTURE_HPP
-#define EBITEN_GAME_VIDEO_TEXTURE_HPP
+#ifndef EBITEN_GAME_GRAPHICS_TEXTURE_HPP
+#define EBITEN_GAME_GRAPHICS_TEXTURE_HPP
 
 #include <boost/noncopyable.hpp>
 
 namespace ebiten {
 namespace game {
-namespace video {
+namespace graphics {
 
 // texture というよりは texture_id?
 class texture : private boost::noncopyable {

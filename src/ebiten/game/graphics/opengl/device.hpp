@@ -1,11 +1,11 @@
-#ifndef EBITEN_GAME_VIDEO_OPENGL_DEVICE_HPP
-#define EBITEN_GAME_VIDEO_OPENGL_DEVICE_HPP
+#ifndef EBITEN_GAME_GRAPHICS_OPENGL_DEVICE_HPP
+#define EBITEN_GAME_GRAPHICS_OPENGL_DEVICE_HPP
 
 #include "ebiten/game/timer.hpp"
-#include "ebiten/game/video/opengl/cocoa.hpp"
-#include "ebiten/game/video/opengl/graphics_context.hpp"
-#include "ebiten/game/video/opengl/texture_factory.hpp"
-#include "ebiten/game/video/sprite.hpp"
+#include "ebiten/game/graphics/opengl/cocoa.hpp"
+#include "ebiten/game/graphics/opengl/graphics_context.hpp"
+#include "ebiten/game/graphics/opengl/texture_factory.hpp"
+#include "ebiten/game/graphics/sprite.hpp"
 #include "ebiten/util/singleton.hpp"
 #include <boost/range.hpp>
 #include <GLUT/glut.h>
@@ -15,7 +15,7 @@
 
 namespace ebiten {
 namespace game {
-namespace video {
+namespace graphics {
 namespace opengl {
 
 class device : public util::singleton<device> {
@@ -86,7 +86,7 @@ public:
       ::glLoadIdentity();
       ::glOrtho(0, screen_width, 0, screen_height, 0, 1);
       const auto& sprites = game.sprites();
-      typedef video::sprite sprite;
+      typedef graphics::sprite sprite;
       typedef std::reference_wrapper<const sprite> sprite_cref;
       std::vector<sprite_cref> sorted_sprites;
       sorted_sprites.reserve(boost::size(sprites));
@@ -176,7 +176,7 @@ public:
     };
     ::glutIdleFunc(idle_func::invoke);
     if (!cocoa::initialize()) {
-      throw "ebiten::game::video::opengl::cocoa::initialize() was failed";
+      throw "ebiten::game::graphics::opengl::cocoa::initialize() was failed";
     }
 
     game.initialize(texture_factory::instance());

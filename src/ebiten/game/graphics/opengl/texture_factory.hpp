@@ -1,7 +1,7 @@
-#ifndef EBITEN_GAME_VIDEO_OPENGL_TEXTURE_FACTORY_HPP
-#define EBITEN_GAME_VIDEO_OPENGL_TEXTURE_FACTORY_HPP
+#ifndef EBITEN_GAME_GRAPHICS_OPENGL_TEXTURE_FACTORY_HPP
+#define EBITEN_GAME_GRAPHICS_OPENGL_TEXTURE_FACTORY_HPP
 
-#include "ebiten/game/video/texture.hpp"
+#include "ebiten/game/graphics/texture.hpp"
 #include "ebiten/util/image_loader.hpp"
 #include "ebiten/util/singleton.hpp"
 #include <GLUT/glut.h>
@@ -9,7 +9,7 @@
 
 namespace ebiten {
 namespace game {
-namespace video {
+namespace graphics {
 namespace opengl {
 
 // TODO: implements for 32bit machine
@@ -31,7 +31,7 @@ clp2(uint64_t x) {
 class texture_factory : public util::singleton<texture_factory> {
   friend class util::singleton<texture_factory>;
 public:
-  std::unique_ptr<video::texture>
+  std::unique_ptr<graphics::texture>
   from_file(const std::string& filename) {
     const auto image = util::image_loader::instance().load_file(filename);
     const auto width  = image->width();
@@ -55,14 +55,14 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     ::glBindTexture(GL_TEXTURE_2D, 0);
-    typedef video::texture texture;
+    typedef graphics::texture texture;
     return std::unique_ptr<texture>(new texture(texture_id,
                                                 width,
                                                 height,
                                                 width,
                                                 height));
   }
-  std::unique_ptr<video::texture>
+  std::unique_ptr<graphics::texture>
   create(std::size_t width, std::size_t height) {
     const auto texture_width  = clp2(width);
     const auto texture_height = clp2(height);
@@ -83,7 +83,7 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     ::glBindTexture(GL_TEXTURE_2D, 0);
-    typedef video::texture texture;
+    typedef graphics::texture texture;
     return std::unique_ptr<texture>(new texture(texture_id,
                                                 width,
                                                 height,
@@ -106,7 +106,7 @@ private:
 
 namespace ebiten {
 namespace game {
-namespace video {
+namespace graphics {
 namespace opengl {
 
 TEST(clp2, calling) {

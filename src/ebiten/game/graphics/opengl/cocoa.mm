@@ -1,9 +1,9 @@
-#include "ebiten/game/video/opengl/cocoa.hpp"
+#include "ebiten/game/graphics/opengl/cocoa.hpp"
 #include <Cocoa/Cocoa.h>
 
 namespace ebiten {
 namespace game {
-namespace video {
+namespace graphics {
 namespace opengl {
 namespace cocoa {
 

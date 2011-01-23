@@ -1,11 +1,11 @@
-#ifndef EBITEN_GAME_VIDEO_GEOMETRY_MATRIX_HPP
-#define EBITEN_GAME_VIDEO_GEOMETRY_MATRIX_HPP
+#ifndef EBITEN_GAME_GRAPHICS_GEOMETRY_MATRIX_HPP
+#define EBITEN_GAME_GRAPHICS_GEOMETRY_MATRIX_HPP
 
-#include "ebiten/game/video/affine_matrix.hpp"
+#include "ebiten/game/graphics/affine_matrix.hpp"
 
 namespace ebiten {
 namespace game {
-namespace video {
+namespace graphics {
 
 template<class Float>
 class geometry_matrix_base : public affine_matrix<Float, 3> {
@@ -73,7 +73,7 @@ typedef geometry_matrix_base<float> geometry_matrix;
 
 namespace ebiten {
 namespace game {
-namespace video {
+namespace graphics {
 
 TEST(geometry_matrix, member_functions) {
   geometry_matrix m{1, 2, 3, 4, 5, 6};

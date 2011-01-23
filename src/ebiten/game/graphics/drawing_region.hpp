@@ -1,12 +1,12 @@
-#ifndef EBITEN_GAME_VIDEO_DRAWING_REGION_HPP
-#define EBITEN_GAME_VIDEO_DRAWING_REGION_HPP
+#ifndef EBITEN_GAME_GRAPHICS_DRAWING_REGION_HPP
+#define EBITEN_GAME_GRAPHICS_DRAWING_REGION_HPP
 
 #include <boost/noncopyable.hpp>
 #include <algorithm>
 
 namespace ebiten {
 namespace game {
-namespace video {
+namespace graphics {
 
 struct drawing_region : private boost::noncopyable {
   // TODO: implements by std::unique_ptr<std::array<double, 6> >?

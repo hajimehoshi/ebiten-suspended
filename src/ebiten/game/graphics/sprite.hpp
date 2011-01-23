@@ -1,25 +1,25 @@
-#ifndef EBITEN_GAME_VIDEO_SPRITE_HPP
-#define EBITEN_GAME_VIDEO_SPRITE_HPP
+#ifndef EBITEN_GAME_GRAPHICS_SPRITE_HPP
+#define EBITEN_GAME_GRAPHICS_SPRITE_HPP
 
-#include "ebiten/game/video/color_matrix.hpp"
-#include "ebiten/game/video/drawing_region.hpp"
-#include "ebiten/game/video/geometry_matrix.hpp"
-#include "ebiten/game/video/texture.hpp"
+#include "ebiten/game/graphics/color_matrix.hpp"
+#include "ebiten/game/graphics/drawing_region.hpp"
+#include "ebiten/game/graphics/geometry_matrix.hpp"
+#include "ebiten/game/graphics/texture.hpp"
 #include <boost/noncopyable.hpp>
 #include <boost/range.hpp>
 
 namespace ebiten {
 namespace game {
-namespace video {
+namespace graphics {
 
 class sprite : private boost::noncopyable {
 private:
   const texture& texture_;
   typedef std::vector<drawing_region> drawing_regions_type;
   drawing_regions_type drawing_regions_;
-  video::geometry_matrix geometry_matrix_;
+  graphics::geometry_matrix geometry_matrix_;
   double z_;
-  video::color_matrix color_matrix_;
+  graphics::color_matrix color_matrix_;
   bool is_visible_;
 public:
   sprite(const texture& texture_, std::size_t drawing_regions_count)
@@ -45,11 +45,11 @@ public:
                      this->z_,
                      this->color_matrix_);
   }
-  video::drawing_region&
+  graphics::drawing_region&
   drawing_region_at(std::size_t i) {
     return this->drawing_regions_.at(i);
   }
-  const video::drawing_region&
+  const graphics::drawing_region&
   drawing_region_at(std::size_t i) const {
     return this->drawing_regions_.at(i);
   }
@@ -57,11 +57,11 @@ public:
   drawing_regions() const {
     return this->drawing_regions_;
   }
-  video::geometry_matrix&
+  graphics::geometry_matrix&
   geometry_matrix() {
     return this->geometry_matrix_;
   }
-  const video::geometry_matrix&
+  const graphics::geometry_matrix&
   geometry_matrix() const {
     return this->geometry_matrix_;
   }
@@ -77,11 +77,11 @@ public:
   z() const {
     return this->z_;
   }
-  video::color_matrix&
+  graphics::color_matrix&
   color_matrix() {
     return this->color_matrix_;
   }
-  const video::color_matrix&
+  const graphics::color_matrix&
   color_matrix() const {
     return this->color_matrix_;
   }

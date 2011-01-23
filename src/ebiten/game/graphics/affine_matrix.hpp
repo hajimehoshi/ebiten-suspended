@@ -1,5 +1,5 @@
-#ifndef EBITEN_GAME_VIDEO_AFFINE_MATRIX_HPP
-#define EBITEN_GAME_VIDEO_AFFINE_MATRIX_HPP
+#ifndef EBITEN_GAME_GRAPHICS_AFFINE_MATRIX_HPP
+#define EBITEN_GAME_GRAPHICS_AFFINE_MATRIX_HPP
 
 #include <boost/mpl/size_t.hpp>
 #include <boost/noncopyable.hpp>
@@ -12,7 +12,7 @@
 
 namespace ebiten {
 namespace game {
-namespace video {
+namespace graphics {
 
 template<class Float, std::size_t Dimension>
 class affine_matrix : private boost::noncopyable {
@@ -83,7 +83,7 @@ private:
 
 namespace ebiten {
 namespace game {
-namespace video {
+namespace graphics {
 
 TEST(affine_matrix, element) {
   affine_matrix<double, 4> m{1, 2, 3};

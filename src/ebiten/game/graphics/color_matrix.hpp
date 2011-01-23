@@ -1,11 +1,11 @@
-#ifndef EBITEN_GAME_VIDEO_COLOR_MATRIX_HPP
-#define EBITEN_GAME_VIDEO_COLOR_MATRIX_HPP
+#ifndef EBITEN_GAME_GRAPHICS_COLOR_MATRIX_HPP
+#define EBITEN_GAME_GRAPHICS_COLOR_MATRIX_HPP
 
-#include "ebiten/game/video/affine_matrix.hpp"
+#include "ebiten/game/graphics/affine_matrix.hpp"
 
 namespace ebiten {
 namespace game {
-namespace video {
+namespace graphics {
 
 template<class Float>
 class color_matrix_base : public affine_matrix<Float, 5> {

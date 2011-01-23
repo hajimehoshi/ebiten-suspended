@@ -1,10 +1,10 @@
-#ifndef EBITEN_GAME_VIDEO_OPENGL_GRAPHICS_CONTEXT_HPP
-#define EBITEN_GAME_VIDEO_OPENGL_GRAPHICS_CONTEXT_HPP
+#ifndef EBITEN_GAME_GRAPHICS_OPENGL_GRAPHICS_CONTEXT_HPP
+#define EBITEN_GAME_GRAPHICS_OPENGL_GRAPHICS_CONTEXT_HPP
 
-#include "ebiten/game/video/color_matrix.hpp"
-#include "ebiten/game/video/drawing_region.hpp"
-#include "ebiten/game/video/geometry_matrix.hpp"
-#include "ebiten/game/video/texture.hpp"
+#include "ebiten/game/graphics/color_matrix.hpp"
+#include "ebiten/game/graphics/drawing_region.hpp"
+#include "ebiten/game/graphics/geometry_matrix.hpp"
+#include "ebiten/game/graphics/texture.hpp"
 #include "ebiten/util/singleton.hpp"
 #include <boost/range.hpp>
 #include <GLUT/glut.h>
@@ -15,7 +15,7 @@
 
 namespace ebiten {
 namespace game {
-namespace video {
+namespace graphics {
 namespace opengl {
 
 class graphics_context : public util::singleton<graphics_context> {
@@ -25,11 +25,11 @@ private:
 public:
   template<class DrawingRegions>
   void
-  draw_textures(const video::texture& texture,
+  draw_textures(const graphics::texture& texture,
                 const DrawingRegions& drawing_regions,
-                const video::geometry_matrix& geo_mat,
+                const graphics::geometry_matrix& geo_mat,
                 int z,
-                const video::color_matrix& color_mat) {
+                const graphics::color_matrix& color_mat) {
     if (!this->shader_program) {
       this->shader_program = compile_shader_program();
       assert(this->shader_program);
