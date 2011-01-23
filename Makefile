@@ -20,21 +20,23 @@ LDFLAGS:= \
 	-lpng # TODO: link them statically
 
 SRC:=$(shell find src -name "*.hpp" -or -name "*.cpp")
-# SRC_MM=$(shell find src -name "*.mm")
+SRC_COCOA=$(shell find src -name "*.mm")
+SRC_COCOA_HPP=$(SRC_COCOA:.mm=.hpp)
+OBJ_COCOA=$(SRC_COCOA:.mm=.o)
 
 all: $(PROG)_test
 	./$(PROG)_test --gtest_color=yes
 
-$(PROG): $(SRC) cocoa.o
+$(PROG): $(SRC) $(OBJ_COCOA)
 	$(CXX) \
 		$(CXXFLAGS) \
 		$(LDFLAGS) \
 		-o $@ \
 		-O2 \
 		-DNDEBUG \
-		src/main.cpp cocoa.o
+		src/main.cpp $(OBJ_COCOA)
 
-$(PROG)_test: $(SRC) cocoa.o
+$(PROG)_test: $(SRC) $(OBJ_COCOA)
 	$(CXX) \
 		$(CXXFLAGS) \
 		$(LDFLAGS) \
@@ -42,16 +44,17 @@ $(PROG)_test: $(SRC) cocoa.o
 		-o $@ \
 		-lgtest \
 		-DEBITEN_TEST \
-		src/main.cpp cocoa.o
+		src/main.cpp $(OBJ_COCOA)
 
-cocoa.o: src/ebiten/game/graphics/opengl/cocoa.mm src/ebiten/game/graphics/opengl/cocoa.hpp
+$(OBJ_COCOA): %.o: %.mm %.hpp
 	$(CC) \
 		$(CFLAGS) \
 		-c \
 		-o $@ \
 		$<
 
+.PHONY: clean
 clean:
 	rm -f $(PROG)
 	rm -f $(PROG)_test
-	rm -f *.o
+	find . -name "*.o" | xargs rm -f
