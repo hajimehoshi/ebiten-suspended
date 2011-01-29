@@ -1,7 +1,6 @@
 #ifndef EBITEN_GAME_GRAPHICS_OPENGL_DEVICE_HPP
 #define EBITEN_GAME_GRAPHICS_OPENGL_DEVICE_HPP
 
-#include "ebiten/game/timer.hpp"
 #include "ebiten/game/graphics/opengl/cocoa.hpp"
 #include "ebiten/game/graphics/opengl/graphics_context.hpp"
 #include "ebiten/game/graphics/opengl/texture_factory.hpp"
@@ -24,13 +23,13 @@ private:
   // TODO: move it into the 'run' function
   static std::function<void()> display_func_;
 public:
-  template<class Game>
+  template<class Game, class Timer>
   void
   run(Game& game,
       std::size_t screen_width,
       std::size_t screen_height,
-      std::size_t fps,
-      std::size_t window_scale) {
+      std::size_t window_scale,
+      Timer& timer) {
     assert(window_scale);
     // TODO: http://developer.apple.com/library/mac/#documentation/GraphicsImaging/Conceptual/OpenGL-MacProgGuide/opengl_general/opengl_gen_tasks.html#//apple_ref/doc/uid/TP40001987-CH211-SW1
     int argc = 1;
@@ -59,7 +58,6 @@ public:
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
     
     int frame_index = 0;
-    timer timer(fps);
     const float offscreen_width  = static_cast<float>(offscreen_texture->width());
     const float offscreen_height = static_cast<float>(offscreen_texture->height());
     const float offscreen_tu     = offscreen_width  / offscreen_texture->texture_width();

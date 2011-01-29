@@ -2,6 +2,7 @@
 #define EBITEN_GAME_KERNELS_MACOSX_KERNEL_HPP
 
 #include "ebiten/game/graphics/opengl/device.hpp"
+#include "ebiten/game/timers/macosx_timer.hpp"
 #include "ebiten/util/singleton.hpp"
 
 namespace ebiten {
@@ -19,7 +20,8 @@ public:
       std::size_t fps,
       std::size_t window_scale) {
     auto& device = ebiten::game::graphics::opengl::device::instance();
-    device.run(game, screen_width, screen_height, fps, window_scale);
+    timers::macosx_timer timer(fps);
+    device.run(game, screen_width, screen_height, window_scale, timer);
   }
 };
 
