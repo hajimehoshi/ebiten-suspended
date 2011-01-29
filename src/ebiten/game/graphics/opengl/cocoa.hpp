@@ -5,12 +5,13 @@ namespace ebiten {
 namespace game {
 namespace graphics {
 namespace opengl {
-namespace cocoa {
 
-bool
-initialize();
+class cocoa {
+public:
+  static bool
+  initialize();
+};
 
-}
 }
 }
 }

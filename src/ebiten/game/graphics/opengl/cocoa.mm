@@ -5,10 +5,9 @@ namespace ebiten {
 namespace game {
 namespace graphics {
 namespace opengl {
-namespace cocoa {
 
 bool
-initialize() {
+cocoa::initialize() {
   NSOpenGLContext* context = [NSOpenGLContext currentContext];
   if (context == nil) {
     return false;
@@ -18,7 +17,6 @@ initialize() {
   return true;
 }
 
-}
 }
 }
 }
