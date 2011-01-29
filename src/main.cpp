@@ -9,7 +9,7 @@
 #include "ebiten/game/graphics/drawing_region.hpp"
 #include "ebiten/game/graphics/sprite.hpp"
 #include "ebiten/game/graphics/texture.hpp"
-#include "ebiten/game/graphics/opengl/device.hpp"
+#include "ebiten/game/kernels/macosx_kernel.hpp"
 #include <cstdlib>
 #include <deque>
 #include <iostream>
@@ -65,8 +65,8 @@ main(int argc, char** argv) {
 #endif
   try {
     sample_game game;
-    auto& device = ebiten::game::graphics::opengl::device::instance();
-    device.run(game, 320, 240, 600, 2);
+    auto& kernel = ebiten::game::kernels::macosx_kernel::instance();
+    kernel.run(game, 320, 240, 600, 2);
   } catch (const std::string& message) {
     // TODO: use boost::diagnostic_information?
     std::cerr << message << std::endl;
