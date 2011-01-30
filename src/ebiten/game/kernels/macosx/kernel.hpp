@@ -3,6 +3,7 @@
 
 #include "ebiten/game/frames/cocoa/frame.hpp"
 #include "ebiten/game/graphics/opengl/device.hpp"
+#include "ebiten/game/kernels/macosx/application.hpp"
 #include "ebiten/game/timers/mach/timer.hpp"
 #include "ebiten/util/singleton.hpp"
 
@@ -20,7 +21,7 @@ public:
       std::size_t screen_width,
       std::size_t screen_height,
       std::size_t fps,
-      std::size_t window_scale) {*/
+      std::size_t window_scale);*/
   run(Game&,
       std::size_t screen_width,
       std::size_t screen_height,
@@ -30,7 +31,7 @@ public:
     timers::mach::timer timer(fps);
     device.run(game, screen_width, screen_height, window_scale, timer);*/
     ebiten::game::frames::cocoa::frame frame(screen_width * window_scale, screen_height * window_scale);
-    frame.run();
+    application::instance().run();
   }
 };
 

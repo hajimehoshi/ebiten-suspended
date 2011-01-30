@@ -12,7 +12,10 @@ namespace cocoa {
 class frame : private boost::noncopyable {
 public:
   frame(std::size_t width, std::size_t height);
+  std::ptrdiff_t native_frame() const;
   int run();
+private:
+  void* controller_;
 };
 
 }
