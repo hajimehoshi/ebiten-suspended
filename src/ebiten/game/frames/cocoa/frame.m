@@ -45,8 +45,6 @@
 
 @interface EbitenController : NSObject<NSApplicationDelegate> {
 @private
-  size_t width_;
-  size_t height_;
   NSWindow* window_;
 }
 
@@ -61,34 +59,34 @@
 - (id)initWithWidth:(size_t)width height:(size_t)height {
   self = [super init];
   if (self != nil) {
-    self->width_ = width;
-    self->height_ = height;
+    [NSApplication sharedApplication];
     self->window_ = nil;
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+    NSRect contentRect = NSMakeRect(0, 0, width, height);
+    const NSUInteger style = (NSTitledWindowMask | NSClosableWindowMask |
+                              NSMiniaturizableWindowMask);
+    NSRect windowRect = [NSWindow frameRectForContentRect:contentRect
+                                  styleMask:style];
+    NSScreen* screen = [[NSScreen screens] objectAtIndex:0];
+    NSSize screenSize = [screen visibleFrame].size;
+    contentRect.origin = NSMakePoint((screenSize.width - windowRect.size.width) / 2,
+                                     (screenSize.height - windowRect.size.height) / 2);
+    NSWindow* window = [[NSWindow alloc] initWithContentRect:contentRect
+                                         styleMask:style backing:NSBackingStoreBuffered defer:YES];
+    [window setReleasedWhenClosed:YES];
+    EbitenWindowController* controller = [[EbitenWindowController alloc] init];
+    [window setDelegate:controller];
+    [window setDocumentEdited:YES];
+    [pool release];
+    self->window_ = window;
   }
   return self;
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification*)aNotification {
   (void)aNotification;
-  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-  NSRect contentRect = NSMakeRect(0, 0, self->width_, self->height_);
-  const NSUInteger style = (NSTitledWindowMask | NSClosableWindowMask |
-                            NSMiniaturizableWindowMask);
-  NSRect windowRect = [NSWindow frameRectForContentRect:contentRect
-                                styleMask:style];
-  NSScreen* screen = [[NSScreen screens] objectAtIndex:0];
-  NSSize screenSize = [screen visibleFrame].size;
-  contentRect.origin = NSMakePoint((screenSize.width - windowRect.size.width) / 2,
-                                   (screenSize.height - windowRect.size.height) / 2);
-  NSWindow* window = [[NSWindow alloc] initWithContentRect:contentRect
-                      styleMask:style backing:NSBackingStoreBuffered defer:YES];
-  [window setReleasedWhenClosed:YES];
-  EbitenWindowController* controller = [[EbitenWindowController alloc] init];
-  [window setDelegate:controller];
-  [window setDocumentEdited:YES];
+  NSWindow* window = self->window_;
   [window makeKeyAndOrderFront:nil];
-  self->window_ = window;
-  [pool release];
 }
 
 - (NSWindow*)window {

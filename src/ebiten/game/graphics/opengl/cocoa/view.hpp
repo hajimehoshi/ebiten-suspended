@@ -1,17 +1,23 @@
 #ifndef EBITEN_GAME_GRAPHICS_OPENGL_COCOA_HPP
 #define EBITEN_GAME_GRAPHICS_OPENGL_COCOA_HPP
 
+#include <boost/noncopyable.hpp>
+#include <cstdlib>
+
 namespace ebiten {
 namespace game {
 namespace graphics {
 namespace opengl {
+namespace cocoa {
 
-class cocoa {
+class view : private boost::noncopyable {
 public:
-  static bool
-  initialize();
+  explicit view(std::ptrdiff_t native_frame);
+private:
+  void* gl_view_;
 };
 
+}
 }
 }
 }

@@ -1,5 +1,6 @@
 #include "ebiten/game/frames/cocoa/frame.hpp"
 #import "ebiten/game/frames/cocoa/frame.m"
+#include <cassert>
 
 namespace ebiten {
 namespace game {
