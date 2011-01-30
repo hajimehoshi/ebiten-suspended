@@ -10,9 +10,15 @@
 @implementation EbitenWindowController
 
 - (BOOL)windowShouldClose:(id)sender {
-  (void)sender;
-  [NSApp terminate:self];
-  return YES;
+  BOOL willClose = YES;
+  if ([sender isDocumentEdited]) {
+    willClose = (NSRunAlertPanel(@"Quit the game?", @"", @"Quit", @"Cancel", nil, @"") ==
+                 NSAlertDefaultReturn);
+  }
+  if (willClose) {
+    [NSApp terminate:self];
+  }
+  return willClose; 
 }
 
 @end
@@ -45,6 +51,7 @@
   [window setReleasedWhenClosed:YES];
   EbitenWindowController* controller = [[EbitenWindowController alloc] init];
   [window setDelegate:controller];
+  [window setDocumentEdited:YES];
   [window makeKeyAndOrderFront:NSApp];
   self->window_ = window;
   [pool release];
