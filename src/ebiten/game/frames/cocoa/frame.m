@@ -3,6 +3,9 @@
 @interface EbitenWindowController : NSObject<NSWindowDelegate> {
 }
 
+- (void)alertDidEnd:(NSAlert*)alert
+         returnCode:(NSInteger)returnCode
+        contextInfo:(void*)contextInfo;
 - (BOOL)windowShouldClose:(id)sender;
 
 @end
@@ -10,15 +13,32 @@
 @implementation EbitenWindowController
 
 - (BOOL)windowShouldClose:(id)sender {
-  BOOL willClose = YES;
+  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   if ([sender isDocumentEdited]) {
-    willClose = (NSRunAlertPanel(@"Quit the game?", @"", @"Quit", @"Cancel", nil, @"") ==
-                 NSAlertDefaultReturn);
+    NSAlert* alert = [NSAlert alertWithMessageText:@"Quit the game?"
+                              defaultButton:@"Quit"
+                              alternateButton:nil
+                              otherButton:@"Cancel"
+                              informativeTextWithFormat:@""];
+    [alert beginSheetModalForWindow:sender
+           modalDelegate:self
+           didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:)
+           contextInfo:nil];
   }
-  if (willClose) {
+  [pool release];
+  return NO;
+}
+
+- (void)alertDidEnd:(NSAlert*)alert
+         returnCode:(NSInteger)returnCode
+        contextInfo:(void*)contextInfo {
+  (void)alert;
+  (void)contextInfo;
+  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+  if (returnCode == NSAlertDefaultReturn) {
     [NSApp terminate:self];
   }
-  return willClose; 
+  [pool release];
 }
 
 @end
@@ -35,8 +55,8 @@
 @implementation EbitenController
 
 - (void)applicationDidFinishLaunching:(NSNotification*)aNotification {
-  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   (void)aNotification;
+  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   NSRect contentRect = NSMakeRect(0, 0, 320 * 2, 240 * 2);
   const NSUInteger style = (NSTitledWindowMask | NSClosableWindowMask |
                             NSMiniaturizableWindowMask);
