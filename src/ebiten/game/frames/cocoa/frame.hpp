@@ -15,7 +15,7 @@ public:
   std::ptrdiff_t native_frame() const;
   int run();
 private:
-  void* controller_;
+  void* window_;
 };
 
 }

@@ -8,20 +8,17 @@ namespace frames {
 namespace cocoa {
 
 frame::frame(std::size_t width, std::size_t height)
-  : controller_(0) {
+  : window_(0) {
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-  EbitenController* controller = [[EbitenController alloc]
-                                  initWithWidth:width height:height];
-  [[NSApplication sharedApplication] setDelegate:controller];
+  EbitenWindow* window = [[EbitenWindow alloc]
+                          initWithSize:NSMakeSize(width, height)];
   [pool release];
-  this->controller_ = static_cast<void*>(controller);
+  this->window_ = static_cast<void*>(window);
 }
 
 std::ptrdiff_t
 frame::native_frame() const {
-  EbitenController* controller = static_cast<EbitenController*>(this->controller_);
-  NSWindow* window = [controller window];
-  return reinterpret_cast<std::ptrdiff_t>(window);
+  return reinterpret_cast<std::ptrdiff_t>(this->window_);
 }
 
 }
