@@ -22,9 +22,10 @@ view::view(std::ptrdiff_t native_frame)
   };
   NSOpenGLPixelFormat* format = [[[NSOpenGLPixelFormat alloc] initWithAttributes:attributes]
                                  autorelease];
-  //NSOpenGLContext* context = [[NSOpenGLContext alloc] initWithFormat:format shareContext:nil];
+  NSOpenGLContext* context = [[NSOpenGLContext alloc] initWithFormat:format shareContext:nil];
   NSOpenGLView* glView = [[NSOpenGLView alloc] initWithFrame:rect pixelFormat:format];
-  NSWindow* window = reinterpret_cast<NSWindow*>(native_frame);
+  id window = reinterpret_cast<id>(native_frame);
+  assert(window != nil);
   [window setContentView:glView];
   [pool release];
   this->gl_view_ = static_cast<void*>(glView);
@@ -35,4 +36,3 @@ view::view(std::ptrdiff_t native_frame)
 }
 }
 }
-
