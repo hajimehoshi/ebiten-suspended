@@ -6,7 +6,7 @@
 #include <gtest/gtest.h>
 #endif
 
-#include "ebiten/game/kernels/macosx_kernel.hpp"
+#include "ebiten/game/kernels/macosx/kernel.hpp"
 #include "sample_game.hpp"
 
 int
@@ -25,7 +25,7 @@ main(int argc, char** argv) {
 #endif
   try {
     sample_game game;
-    auto& kernel = ebiten::game::kernels::macosx_kernel::instance();
+    auto& kernel = ebiten::game::kernels::macosx::kernel::instance();
     kernel.run(game, 320, 240, 600, 2);
   } catch (const std::string& message) {
     // TODO: use boost::diagnostic_information?

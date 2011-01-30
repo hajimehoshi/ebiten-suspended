@@ -2,15 +2,16 @@
 #define EBITEN_GAME_KERNELS_MACOSX_KERNEL_HPP
 
 #include "ebiten/game/graphics/opengl/device.hpp"
-#include "ebiten/game/timers/macosx_timer.hpp"
+#include "ebiten/game/timers/mach/timer.hpp"
 #include "ebiten/util/singleton.hpp"
 
 namespace ebiten {
 namespace game {
 namespace kernels {
+namespace macosx {
 
-class macosx_kernel : public util::singleton<macosx_kernel> {
-  friend class util::singleton<macosx_kernel>;
+class kernel : public util::singleton<kernel> {
+  friend class util::singleton<kernel>;
 public:
   template<class Game>
   void
@@ -20,11 +21,12 @@ public:
       std::size_t fps,
       std::size_t window_scale) {
     auto& device = ebiten::game::graphics::opengl::device::instance();
-    timers::macosx_timer timer(fps);
+    timers::mach::timer timer(fps);
     device.run(game, screen_width, screen_height, window_scale, timer);
   }
 };
 
+}
 }
 }
 }

@@ -1,5 +1,5 @@
-#ifndef EBITEN_GAME_TIMERS_MACOSX_TIMER_HPP
-#define EBITEN_GAME_TIMERS_MACOSX_TIMER_HPP
+#ifndef EBITEN_GAME_TIMERS_MACH_TIMER_HPP
+#define EBITEN_GAME_TIMERS_MACH_TIMER_HPP
 
 #include <boost/noncopyable.hpp>
 #include <mach/mach_time.h>
@@ -9,14 +9,15 @@
 namespace ebiten {
 namespace game {
 namespace timers {
+namespace mach {
 
-class macosx_timer : private boost::noncopyable {
+class timer : private boost::noncopyable {
 private:
   const uint64_t duration_per_frame_;
   uint64_t next_time_to_update_;
 public:
   explicit
-  macosx_timer(std::size_t fps)
+  timer(std::size_t fps)
     : duration_per_frame_([&]{
         assert(fps);
         mach_timebase_info_data_t timebase_info;
@@ -35,6 +36,7 @@ public:
   }
 };
 
+}
 }
 }
 }
