@@ -1,5 +1,5 @@
 #include "ebiten/game/graphics/opengl/cocoa.hpp"
-#include <Cocoa/Cocoa.h>
+#import "ebiten/game/graphics/opengl/cocoa.m"
 
 namespace ebiten {
 namespace game {

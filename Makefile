@@ -45,7 +45,7 @@ $(PROG)_test: $(SRC) $(OBJ_COCOA)
 		-DEBITEN_TEST \
 		src/main.cpp $(OBJ_COCOA)
 
-$(OBJ_COCOA): %.o: %.mm %.hpp
+$(OBJ_COCOA): %.o: %.mm %.m %.hpp
 	$(CC) \
 		$(CFLAGS) \
 		-c \
