@@ -33,7 +33,7 @@ public:
     device.run(game, screen_width, screen_height, window_scale, timer);*/
     frames::cocoa::frame frame(screen_width * window_scale, screen_height * window_scale);
     graphics::opengl::cocoa::view view(frame.native_frame());
-    application::instance().run(static_cast<std::ptrdiff_t>(frame.native_frame()));
+    application::instance().run(frame.native_frame());
   }
 };
 

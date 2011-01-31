@@ -23,9 +23,11 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification*)aNotification {
   (void)aNotification;
+  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   NSWindow* window = self->window_;
   assert(window);
   [window makeKeyAndOrderFront:nil];
+  [pool release];
 }
 
 @end
