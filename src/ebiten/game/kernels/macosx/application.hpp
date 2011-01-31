@@ -2,6 +2,7 @@
 #define EBITEN_GAME_KERNELS_MACOSX_APPLICATION_HPP
 
 #include "ebiten/util/singleton.hpp"
+#include <cstdlib>
 
 namespace ebiten {
 namespace game {
@@ -11,7 +12,7 @@ namespace macosx {
 class application : public util::singleton<application> {
   friend class util::singleton<application>;
 public:
-  int run();
+  int run(const std::ptrdiff_t window);
 };
 
 }

@@ -71,7 +71,6 @@
     EbitenWindowController* controller = [[EbitenWindowController alloc] init];
     [self setDelegate:controller];
     [self setDocumentEdited:YES];
-    [self makeKeyAndOrderFront:nil];
   }
   [pool release];
   return self;

@@ -7,9 +7,15 @@ namespace kernels {
 namespace macosx {
 
 int
-application::run() {
+application::run(const std::ptrdiff_t window_) {
+  assert(window_);
+  NSWindow* window = reinterpret_cast<NSWindow*>(window_);
+  assert(window != nil);
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-  [[NSApplication sharedApplication] run];
+  EbitenController* controller = [[EbitenController alloc] initWithWindow:window];
+  NSApplication* app = [NSApplication sharedApplication];
+  [app setDelegate:controller];
+  [app run];
   [pool release];
   return 0;
 }
