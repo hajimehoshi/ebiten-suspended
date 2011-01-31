@@ -2,7 +2,7 @@
 #define EBITEN_GAME_KERNELS_MACOSX_APPLICATION_HPP
 
 #include "ebiten/util/singleton.hpp"
-#include <cstdlib>
+#include <cstddef>
 
 namespace ebiten {
 namespace game {

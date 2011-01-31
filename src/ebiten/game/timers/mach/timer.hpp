@@ -4,7 +4,7 @@
 #include <boost/noncopyable.hpp>
 #include <mach/mach_time.h>
 #include <cassert>
-#include <cstdlib>
+#include <cstddef>
 
 namespace ebiten {
 namespace game {

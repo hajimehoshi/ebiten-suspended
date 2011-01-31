@@ -2,7 +2,7 @@
 #define EBITEN_GAME_GRAPHICS_OPENGL_COCOA_HPP
 
 #include <boost/noncopyable.hpp>
-#include <cstdlib>
+#include <cstddef>
 
 namespace ebiten {
 namespace game {
@@ -12,7 +12,7 @@ namespace cocoa {
 
 class view : private boost::noncopyable {
 public:
-  explicit view(std::ptrdiff_t native_frame);
+  explicit view(const std::ptrdiff_t native_frame);
 private:
   void* gl_view_;
 };

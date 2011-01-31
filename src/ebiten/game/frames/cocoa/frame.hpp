@@ -2,7 +2,7 @@
 #define EBITEN_GAME_FRAMES_FRAME_HPP
 
 #include <boost/noncopyable.hpp>
-#include <cstdlib>
+#include <cstddef>
 
 namespace ebiten {
 namespace game {

@@ -8,7 +8,7 @@ namespace graphics {
 namespace opengl {
 namespace cocoa {
 
-view::view(std::ptrdiff_t native_frame)
+view::view(const std::ptrdiff_t native_frame)
   : gl_view_(0) {
   assert(native_frame);
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
