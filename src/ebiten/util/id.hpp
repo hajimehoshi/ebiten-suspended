@@ -15,7 +15,7 @@ public:
   template<class T>
   T
   get() const {
-    return reinterpret_cast<T>(this->value_);
+    return static_cast<T>(this->value_);
   }
 private:
   void* value_;
