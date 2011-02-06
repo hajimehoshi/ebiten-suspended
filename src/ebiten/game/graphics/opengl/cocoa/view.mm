@@ -11,7 +11,7 @@ namespace cocoa {
 namespace detail {
 
 void
-initialize(id window) {
+initialize(NSWindow* window) {
   assert(window != nil);
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   NSRect rect = NSMakeRect(0, 0, 640, 480);
@@ -32,7 +32,7 @@ initialize(id window) {
 
 void
 initialize(const util::id_& native_frame) {
-  initialize(native_frame.get<id>());
+  initialize(native_frame.get<NSWindow*>());
 }
 
 }
