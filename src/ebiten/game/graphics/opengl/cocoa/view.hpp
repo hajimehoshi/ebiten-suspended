@@ -11,13 +11,22 @@ namespace graphics {
 namespace opengl {
 namespace cocoa {
 
+namespace detail {
+
+void initialize(std::ptrdiff_t native_frame);
+
+}
+
+template<class Frame, class Device>
 class view : private boost::noncopyable {
 public:
-  explicit view(const std::ptrdiff_t native_frame);
-  ~view();
+  explicit
+  view(Frame& frame, Device& device)
+    : device_(device) {
+    detail::initialize(frame.native_frame());
+  }
 private:
-  struct impl;
-  boost::scoped_ptr<impl> pimpl_;
+  Device& device_;
 };
 
 }

@@ -1,15 +1,16 @@
 #include "ebiten/game/kernels/macosx/application.hpp"
 #import "ebiten/game/kernels/macosx/application.m"
+#include <cassert>
 
 namespace ebiten {
 namespace game {
 namespace kernels {
 namespace macosx {
 
+namespace detail {
+
 int
-application::run(const std::ptrdiff_t window_) {
-  assert(window_);
-  NSWindow* window = reinterpret_cast<NSWindow*>(window_);
+run(NSWindow* window) {
   assert(window != nil);
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   EbitenController* controller = [[EbitenController alloc] initWithWindow:window];
@@ -18,6 +19,14 @@ application::run(const std::ptrdiff_t window_) {
   [app run];
   [pool release];
   return 0;
+}
+
+int
+run(const std::ptrdiff_t native_frame) {
+  assert(native_frame);
+  return run(reinterpret_cast<NSWindow*>(native_frame));
+}
+
 }
 
 }

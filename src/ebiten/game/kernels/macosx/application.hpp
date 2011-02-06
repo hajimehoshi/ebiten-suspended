@@ -9,10 +9,19 @@ namespace game {
 namespace kernels {
 namespace macosx {
 
+namespace detail {
+
+int run(const std::ptrdiff_t native_frame);
+
+}
+
 class application : public util::singleton<application> {
   friend class util::singleton<application>;
 public:
-  int run(const std::ptrdiff_t window);
+  template<class Frame>
+  int run(Frame& frame) {
+    return detail::run(frame.native_frame());
+  }
 };
 
 }

@@ -8,12 +8,11 @@ namespace graphics {
 namespace opengl {
 namespace cocoa {
 
-struct view::impl {
-};
+namespace detail {
 
-view::view(const std::ptrdiff_t native_frame)
-  : pimpl_(new impl) {
-  assert(native_frame);
+void
+initialize(id window) {
+  assert(window != nil);
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   NSRect rect = NSMakeRect(0, 0, 640, 480);
   NSOpenGLPixelFormatAttribute attributes[] = {
@@ -27,13 +26,17 @@ view::view(const std::ptrdiff_t native_frame)
                                  autorelease];
   //NSOpenGLContext* context = [[NSOpenGLContext alloc] initWithFormat:format shareContext:nil];
   EbitenOpenGLView* glView = [[EbitenOpenGLView alloc] initWithFrame:rect pixelFormat:format];
-  id window = reinterpret_cast<id>(native_frame);
-  assert(window != nil);
   [window setContentView:glView];
   [pool release];
 }
 
-view::~view() {
+void
+initialize(std::ptrdiff_t native_frame) {
+  assert(native_frame);
+  id window = reinterpret_cast<id>(native_frame);
+  initialize(window);
+}
+
 }
 
 }

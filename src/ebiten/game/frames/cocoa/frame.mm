@@ -25,7 +25,7 @@ frame::~frame() {
 
 std::ptrdiff_t
 frame::native_frame() const {
-  return reinterpret_cast<std::ptrdiff_t>(this->pimpl_->window_);
+  return reinterpret_cast<std::ptrdiff_t>(this->pimpl_->window_);;
 }
 
 }

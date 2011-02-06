@@ -9,6 +9,7 @@
 #include "ebiten/util/singleton.hpp"
 
 namespace ebiten {
+
 namespace game {
 namespace kernels {
 namespace macosx {
@@ -32,8 +33,9 @@ public:
     timers::mach::timer timer(fps);
     device.run(game, screen_width, screen_height, window_scale, timer);*/
     frames::cocoa::frame frame(screen_width * window_scale, screen_height * window_scale);
-    graphics::opengl::cocoa::view view(frame.native_frame());
-    application::instance().run(frame.native_frame());
+    int i = 0;
+    graphics::opengl::cocoa::view<decltype(frame), decltype(i)> view(frame, i);
+    application::instance().run(frame);
   }
 };
 
