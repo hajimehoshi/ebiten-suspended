@@ -1,5 +1,6 @@
 #include "ebiten/game/frames/cocoa/frame.hpp"
 #import "ebiten/game/frames/cocoa/frame.m"
+#include <boost/scoped_ptr.hpp>
 #include <cassert>
 
 namespace ebiten {
@@ -8,7 +9,7 @@ namespace frames {
 namespace cocoa {
 
 struct frame::impl {
-  EbitenWindow* window_;
+  boost::scoped_ptr<util::id_> window_;
 };
 
 frame::frame(std::size_t width, std::size_t height)
@@ -17,15 +18,15 @@ frame::frame(std::size_t width, std::size_t height)
   EbitenWindow* window = [[EbitenWindow alloc]
                           initWithSize:NSMakeSize(width, height)];
   [pool release];
-  this->pimpl_->window_ = window;
+  this->pimpl_->window_.reset(new util::id_(window));
 }
 
 frame::~frame() {
 }
 
-std::ptrdiff_t
+const util::id_&
 frame::native_frame() const {
-  return reinterpret_cast<std::ptrdiff_t>(this->pimpl_->window_);;
+  return *(this->pimpl_->window_);
 }
 
 }

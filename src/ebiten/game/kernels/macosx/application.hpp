@@ -1,8 +1,8 @@
 #ifndef EBITEN_GAME_KERNELS_MACOSX_APPLICATION_HPP
 #define EBITEN_GAME_KERNELS_MACOSX_APPLICATION_HPP
 
+#include "ebiten/util/id.hpp"
 #include "ebiten/util/singleton.hpp"
-#include <cstddef>
 
 namespace ebiten {
 namespace game {
@@ -11,7 +11,7 @@ namespace macosx {
 
 namespace detail {
 
-int run(const std::ptrdiff_t native_frame);
+int run(const util::id_& native_frame);
 
 }
 

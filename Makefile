@@ -14,6 +14,7 @@ CXXFLAGS:= \
 	-fno-deduce-init-list \
 
 LDFLAGS:= \
+	-L/opt/local/lib \
 	-pthread \
 	-static-libgcc \
 	-framework Cocoa -framework OpenGL -framework GLUT \
@@ -35,20 +36,28 @@ $(PROG): $(SRC) $(OBJ_COCOA)
 		-DNDEBUG \
 		src/main.cpp $(OBJ_COCOA)
 
-$(PROG)_test: $(SRC) $(OBJ_COCOA)
+$(PROG)_test.o: $(SRC) $(OBJ_COCOA)
 	$(CXX) \
 		$(CXXFLAGS) \
+		-g \
+		-c \
+		-o $@ \
+		-DEBITEN_TEST \
+		src/main.cpp
+
+$(PROG)_test: $(PROG)_test.o
+	$(CXX) \
 		$(LDFLAGS) \
 		-g \
 		-o $@ \
 		-lgtest \
-		-DEBITEN_TEST \
-		src/main.cpp $(OBJ_COCOA)
+		$< $(OBJ_COCOA)
 
 $(OBJ_COCOA): %.o: %.mm %.m %.hpp
 	$(CC) \
 		$(CFLAGS) \
 		-c \
+		-g \
 		-o $@ \
 		$<
 
@@ -56,4 +65,5 @@ $(OBJ_COCOA): %.o: %.mm %.m %.hpp
 clean:
 	rm -f $(PROG)
 	rm -f $(PROG)_test
+	rm -rf *.dSYM
 	find . -name "*.o" | xargs rm -f

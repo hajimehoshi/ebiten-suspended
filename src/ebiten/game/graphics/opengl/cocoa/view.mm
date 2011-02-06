@@ -31,10 +31,8 @@ initialize(id window) {
 }
 
 void
-initialize(std::ptrdiff_t native_frame) {
-  assert(native_frame);
-  id window = reinterpret_cast<id>(native_frame);
-  initialize(window);
+initialize(const util::id_& native_frame) {
+  initialize(native_frame.get<id>());
 }
 
 }

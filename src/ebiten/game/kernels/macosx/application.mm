@@ -22,9 +22,8 @@ run(NSWindow* window) {
 }
 
 int
-run(const std::ptrdiff_t native_frame) {
-  assert(native_frame);
-  return run(reinterpret_cast<NSWindow*>(native_frame));
+run(const util::id_& native_frame) {
+  return run(native_frame.get<NSWindow*>());
 }
 
 }

@@ -1,6 +1,7 @@
 #ifndef EBITEN_GAME_GRAPHICS_TEXTURE_HPP
 #define EBITEN_GAME_GRAPHICS_TEXTURE_HPP
 
+#include <boost/any.hpp>
 #include <boost/noncopyable.hpp>
 
 namespace ebiten {
@@ -10,13 +11,13 @@ namespace graphics {
 // texture というよりは texture_id?
 class texture : private boost::noncopyable {
 private:
-  const std::ptrdiff_t id_;
+  const boost::any id_;
   const std::size_t width_;
   const std::size_t height_;
   const std::size_t texture_width_;
   const std::size_t texture_height_;
 public:
-  texture(std::ptrdiff_t id_,
+  texture(boost::any id_,
           std::size_t width_,
           std::size_t height_,
           std::size_t texture_width_,
@@ -27,7 +28,7 @@ public:
       texture_width_(texture_width_),
       texture_height_(texture_height_) {
   }
-  std::ptrdiff_t
+  boost::any
   id() const {
     return this->id_;
   }

@@ -1,9 +1,9 @@
 #ifndef EBITEN_GAME_GRAPHICS_OPENGL_COCOA_HPP
 #define EBITEN_GAME_GRAPHICS_OPENGL_COCOA_HPP
 
+#include "ebiten/util/id.hpp"
 #include <boost/noncopyable.hpp>
 #include <boost/scoped_ptr.hpp>
-#include <cstddef>
 
 namespace ebiten {
 namespace game {
@@ -13,7 +13,7 @@ namespace cocoa {
 
 namespace detail {
 
-void initialize(std::ptrdiff_t native_frame);
+void initialize(const util::id_& native_frame);
 
 }
 
