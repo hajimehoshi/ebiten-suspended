@@ -6,8 +6,8 @@
 #include "ebiten/game/graphics/geometry_matrix.hpp"
 #include "ebiten/game/graphics/texture.hpp"
 #include "ebiten/util/singleton.hpp"
+#include <OpenGL/gl.h>
 #include <boost/range.hpp>
-#include <GLUT/glut.h>
 #include <algorithm>
 #include <array>
 #include <cassert>
@@ -92,6 +92,7 @@ public:
                                                 {x2, y1, zf},
                                                 {x2, y2, zf},
                                                 {x1, y2, zf}};
+                    // TODO: use glDrawArrays?
                     ::glTexCoord2f(tu1, tv1);
                     ::glVertex3fv(vertex[0]);
                     ::glTexCoord2f(tu2, tv1);

@@ -2,6 +2,7 @@
 #define EBITEN_GAME_GRAPHICS_OPENGL_TEXTURE_FACTORY_HPP
 
 #include "ebiten/game/graphics/texture.hpp"
+#include "ebiten/util/id.hpp"
 #include "ebiten/util/image_loader.hpp"
 #include "ebiten/util/singleton.hpp"
 #include <GLUT/glut.h>
@@ -56,7 +57,7 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     ::glBindTexture(GL_TEXTURE_2D, 0);
     typedef graphics::texture texture;
-    return std::unique_ptr<texture>(new texture(texture_id,
+    return std::unique_ptr<texture>(new texture(util::id_(texture_id),
                                                 width,
                                                 height,
                                                 width,
@@ -84,7 +85,7 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     ::glBindTexture(GL_TEXTURE_2D, 0);
     typedef graphics::texture texture;
-    return std::unique_ptr<texture>(new texture(texture_id,
+    return std::unique_ptr<texture>(new texture(util::id_(texture_id),
                                                 width,
                                                 height,
                                                 texture_width,

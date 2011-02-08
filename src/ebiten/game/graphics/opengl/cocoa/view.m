@@ -1,11 +1,14 @@
 #import <Cocoa/Cocoa.h>
-#include <OpenGL/gl.h>
+#include <boost/function.hpp>
 
 @interface EbitenOpenGLView : NSOpenGLView {
+  boost::function<void()> updateDevice;
   int i;
 }
 
-- (id)initWithFrame:(NSRect)frame pixelFormat:(NSOpenGLPixelFormat*)format;
+- (id)initWithFrame:(NSRect)frame
+        pixelFormat:(NSOpenGLPixelFormat*)format
+       updateDevice:(boost::function<void()>)updateDevice_;
 - (void)prepareOpenGL;
 - (void)animationTimer:(NSTimer*)timer;
 - (void)drawRect:(NSRect)rect;
@@ -14,9 +17,12 @@
 
 @implementation EbitenOpenGLView
 
-- (id)initWithFrame:(NSRect)frame pixelFormat:(NSOpenGLPixelFormat*)format {
+- (id)initWithFrame:(NSRect)frame
+        pixelFormat:(NSOpenGLPixelFormat*)format
+       updateDevice:(boost::function<void()>)updateDevice_ {
   self = [super initWithFrame:frame pixelFormat:format];
   if (self != nil) {
+    self->updateDevice = updateDevice_;
     [self prepareOpenGL];
   }
   return self;
@@ -56,7 +62,7 @@
   //[context makeCurrentContext];
   //[context update]; ?
   {
-    ::glClearColor(0, 0, 0, 1);
+    /*::glClearColor(0, 0, 0, 1);
     ::glClear(GL_COLOR_BUFFER_BIT);        
     ::glEnable(GL_TEXTURE_2D);
     ::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -65,7 +71,8 @@
     ::glMatrixMode(GL_PROJECTION);
     ::glLoadIdentity();
     //::glOrtho(0, screen_width, 0, screen_height, 0, 1);
-    ::glFlush();
+    ::glFlush();*/
+    self->updateDevice();
   }
   //[context clearDrawable];
   // drawing

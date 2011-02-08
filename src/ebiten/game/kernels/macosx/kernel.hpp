@@ -2,7 +2,7 @@
 #define EBITEN_GAME_KERNELS_MACOSX_KERNEL_HPP
 
 #include "ebiten/game/frames/cocoa/frame.hpp"
-//#include "ebiten/game/graphics/opengl/device.hpp"
+#include "ebiten/game/graphics/opengl/device.hpp"
 #include "ebiten/game/graphics/opengl/cocoa/view.hpp"
 #include "ebiten/game/kernels/macosx/application.hpp"
 #include "ebiten/game/timers/mach/timer.hpp"
@@ -33,8 +33,8 @@ public:
     timers::mach::timer timer(fps);
     device.run(game, screen_width, screen_height, window_scale, timer);*/
     frames::cocoa::frame frame(screen_width * window_scale, screen_height * window_scale);
-    int i = 0;
-    graphics::opengl::cocoa::view<decltype(frame), decltype(i)> view(frame, i);
+    auto& device = graphics::opengl::device::instance();
+    graphics::opengl::cocoa::view<decltype(frame), decltype(device)> view(frame, device);
     application::instance().run(frame);
   }
 };
