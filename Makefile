@@ -17,7 +17,7 @@ LDFLAGS:= \
 	-L/opt/local/lib \
 	-pthread \
 	-static-libgcc \
-	-framework Cocoa -framework OpenGL -framework GLUT \
+	-framework Cocoa -framework OpenGL \
 	-lpng # TODO: link them statically
 
 SRC:=$(shell find src -name "*.hpp" -or -name "*.cpp")
