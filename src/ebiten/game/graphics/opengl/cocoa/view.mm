@@ -12,10 +12,13 @@ namespace cocoa {
 namespace detail {
 
 void
-initialize(NSWindow* window, boost::function<void()> update_device) {
+initialize(NSWindow* window,
+           std::size_t width,
+           std::size_t height,
+           boost::function<void()> update_device) {
   assert(window != nil);
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-  NSRect rect = NSMakeRect(0, 0, 640, 480);
+  NSRect rect = NSMakeRect(0, 0, width, height);
   NSOpenGLPixelFormatAttribute attributes[] = {
     NSOpenGLPFAWindow,
     NSOpenGLPFADoubleBuffer,
@@ -35,8 +38,11 @@ initialize(NSWindow* window, boost::function<void()> update_device) {
 }
 
 void
-initialize(const util::id_& native_frame, boost::function<void()> update_device) {
-  initialize(native_frame.get<NSWindow*>(), update_device);
+initialize(const util::id_& native_frame,
+           std::size_t width,
+           std::size_t height,
+           boost::function<void()> update_device) {
+  initialize(native_frame.get<NSWindow*>(), width, height, update_device);
 }
 
 }

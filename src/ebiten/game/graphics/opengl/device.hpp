@@ -17,12 +17,10 @@ class device : private boost::noncopyable {
 public:
   device(std::size_t screen_width,
          std::size_t screen_height,
-         std::size_t window_scale,
-         std::function<void()> draw_sprites)
+         std::size_t window_scale)
     : screen_width_(screen_width),
       screen_height_(screen_height),
       window_scale_(window_scale),
-      draw_sprites_(draw_sprites),
       framebuffer_(0) {
     // offscreen
     auto& tf = texture_factory::instance();
@@ -44,7 +42,7 @@ public:
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
   }
   void
-  update() {
+  update(std::function<void()> draw_sprites) {
     const float offscreen_width  = static_cast<float>(this->offscreen_texture_->width());
     const float offscreen_height = static_cast<float>(this->offscreen_texture_->height());
     const float offscreen_tu     = offscreen_width  / this->offscreen_texture_->texture_width();
@@ -69,7 +67,7 @@ public:
     ::glMatrixMode(GL_PROJECTION);
     ::glLoadIdentity();
     ::glOrtho(0, this->screen_width_, 0, this->screen_height_, 0, 1);
-    this->draw_sprites_();
+    draw_sprites();
     ::glFlush();
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
@@ -103,11 +101,14 @@ public:
     ::glBindTexture(GL_TEXTURE_2D, 0);
     ::glFlush();
   }
+  opengl::texture_factory&
+  texture_factory() const {
+    return opengl::texture_factory::instance();
+  }
 private:
   const std::size_t screen_width_;
   const std::size_t screen_height_;
   const std::size_t window_scale_;
-  std::function<void()> draw_sprites_;
   std::unique_ptr<texture> offscreen_texture_;
   GLuint framebuffer_;
 };

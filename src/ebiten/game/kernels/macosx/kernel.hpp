@@ -43,7 +43,8 @@ public:
     };
     pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-    frames::cocoa::frame frame(screen_width * window_scale, screen_height * window_scale);
+    frames::cocoa::frame frame(screen_width * window_scale,
+                               screen_height * window_scale);
     std::function<void()> draw_sprites = [&]{
       lock l(mutex);
       const auto& sprites = game.sprites();
@@ -61,7 +62,7 @@ public:
                   const double diff = a.get().z() - b.get().z();
                   return (0 < diff) ? -1 : ((diff < 0) ? 1 : 0);
                 });
-      std::for_each(boost::begin(sorted_sprites), boost::end(sorted_sprites),
+      std::for_each(sorted_sprites.begin(), sorted_sprites.end(),
                     [](const sprite_cref& s) {
                       s.get().draw(graphics::opengl::graphics_context::instance());
                     });
@@ -69,15 +70,17 @@ public:
 
     boost::optional<graphics::opengl::device> device;
     graphics::opengl::cocoa::view<decltype(frame)> view(frame,
+                                                        screen_width * window_scale,
+                                                        screen_height * window_scale,
                                                         [&]{
-                                                          device->update();
+                                                          device->update(draw_sprites);
                                                         });
-    device = boost::in_place(screen_width, screen_height, window_scale, draw_sprites);
+    device = boost::in_place(screen_width, screen_height, window_scale);
     // TODO: remove initialize...
-    game.initialize(graphics::opengl::texture_factory::instance());
+    game.initialize(device->texture_factory());
 
     // start the logic loop
-    struct logic_func {
+    struct logic_func_struct {
       static void* invoke(void* func_ptr) {
         auto func = *(reinterpret_cast<std::function<void()>*>(func_ptr));
         func();
@@ -96,7 +99,7 @@ public:
       }
     };
     pthread_t logic_thread;
-    ::pthread_create(&logic_thread, nullptr, logic_func::invoke, &logic_func);
+    ::pthread_create(&logic_thread, nullptr, logic_func_struct::invoke, &logic_func);
     application::instance().run(frame);
     game_terminated.store(true);
     ::pthread_join(logic_thread, nullptr);

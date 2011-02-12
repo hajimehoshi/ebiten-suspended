@@ -16,15 +16,21 @@ namespace cocoa {
 
 namespace detail {
 
-void initialize(const util::id_& native_frame, boost::function<void()> update_device);
+void initialize(const util::id_& native_frame,
+                std::size_t width,
+                std::size_t height,
+                boost::function<void()> update_device);
 
 }
 
 template<class Frame>
 class view : private boost::noncopyable {
 public:
-  view(Frame& frame, boost::function<void()> update_device) {
-    detail::initialize(frame.native_frame(), update_device);
+  view(Frame& frame,
+       std::size_t width,
+       std::size_t height,
+       boost::function<void()> update_device) {
+    detail::initialize(frame.native_frame(), width, height, update_device);
   }
 };
 
