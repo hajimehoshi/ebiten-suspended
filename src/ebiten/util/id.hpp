@@ -16,13 +16,10 @@ public:
   id_(std::ptrdiff_t value)
     : value_(reinterpret_cast<void*>(value)) {
   }
-  operator bool() const {
-    return (this->value_ != 0);
-  }
   template<class T>
   T
   get() const {
-    return static_cast<T>(this->value_);
+    return reinterpret_cast<T>(this->value_);
   }
 private:
   void* value_;

@@ -20,7 +20,7 @@ initialize(NSWindow* window, boost::function<void()> update_device) {
     NSOpenGLPFAWindow,
     NSOpenGLPFADoubleBuffer,
     NSOpenGLPFAAccelerated,
-    NSOpenGLPFADepthSize, 16,
+    NSOpenGLPFADepthSize, 32,
     nil,
   };
   NSOpenGLPixelFormat* format = [[[NSOpenGLPixelFormat alloc] initWithAttributes:attributes]

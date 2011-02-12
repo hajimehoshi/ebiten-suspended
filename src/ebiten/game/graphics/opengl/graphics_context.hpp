@@ -72,8 +72,9 @@ public:
                                 geo_mat.tx(), geo_mat.ty(), 0, 1};
     ::glMatrixMode(GL_MODELVIEW);
     ::glLoadMatrixf(gl_geo_mat);
-    assert(texture.id());
-    ::glBindTexture(GL_TEXTURE_2D, texture.id());
+    const auto texture_id = texture.id().get<std::ptrdiff_t>();
+    assert(texture_id);
+    ::glBindTexture(GL_TEXTURE_2D, texture_id);
     ::glBegin(GL_QUADS);
     const float zf = static_cast<float>(z);
     const float texture_width  = texture.texture_width();
@@ -114,14 +115,14 @@ private:
   }
   GLuint
   compile_shader_program() {
-    const std::string sharder_source("uniform sampler2D texture;\n"
-                                     "uniform mat4 color_matrix;\n"
-                                     "uniform vec4 color_matrix_translation;\n"
-                                     "\n"
-                                     "void main(void) {\n"
-                                     "  vec4 color = texture2DProj(texture, gl_TexCoord[0]);\n"
-                                     "  gl_FragColor = color_matrix * color + color_matrix_translation;\n"
-                                     "}\n");
+    static const std::string sharder_source("uniform sampler2D texture;\n"
+                                            "uniform mat4 color_matrix;\n"
+                                            "uniform vec4 color_matrix_translation;\n"
+                                            "\n"
+                                            "void main(void) {\n"
+                                            "  vec4 color = texture2DProj(texture, gl_TexCoord[0]);\n"
+                                            "  gl_FragColor = color_matrix * color + color_matrix_translation;\n"
+                                            "}\n");
     // TODO: ARB?
     GLuint fragment_shader;
     fragment_shader = ::glCreateShader(GL_FRAGMENT_SHADER);

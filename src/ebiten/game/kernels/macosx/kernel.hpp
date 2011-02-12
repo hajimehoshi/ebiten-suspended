@@ -19,22 +19,31 @@ class kernel : public util::singleton<kernel> {
 public:
   template<class Game>
   void
-  /*run(Game& game,
+  run(Game& game,
       std::size_t screen_width,
       std::size_t screen_height,
-      std::size_t fps,
-      std::size_t window_scale);*/
-  run(Game&,
-      std::size_t screen_width,
-      std::size_t screen_height,
-      std::size_t,
+      std::size_t /* fps */,
       std::size_t window_scale) {
-    /*auto& device = ebiten::game::graphics::opengl::device::instance();
-    timers::mach::timer timer(fps);
-    device.run(game, screen_width, screen_height, window_scale, timer);*/
+    //timers::mach::timer timer(fps);
     frames::cocoa::frame frame(screen_width * window_scale, screen_height * window_scale);
-    auto& device = graphics::opengl::device::instance();
-    graphics::opengl::cocoa::view<decltype(frame), decltype(device)> view(frame, device);
+    typedef decltype(game.sprites()) sprites_cref;
+    std::function<sprites_cref()> get_sprites = [&]()->sprites_cref {
+      return game.sprites();
+    };
+    int frame_count = 0;
+    std::function<void()> update_game = [&]{
+      game.update(frame_count);
+      ++frame_count;
+    };
+    graphics::opengl::device<sprites_cref> device(screen_width, screen_height, window_scale,
+                                                  get_sprites, update_game);
+    graphics::opengl::cocoa::view<decltype(frame)> view(frame,
+                                                        [&]{
+                                                          device.update();
+                                                        });
+    // TODO: remove initialize...
+    device.initialize();
+    game.initialize(graphics::opengl::texture_factory::instance());
     application::instance().run(frame);
   }
 };

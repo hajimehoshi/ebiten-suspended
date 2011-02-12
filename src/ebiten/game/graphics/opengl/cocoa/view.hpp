@@ -6,6 +6,7 @@
 #include <boost/function.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/scoped_ptr.hpp>
+#include <boost/type_traits.hpp>
 
 namespace ebiten {
 namespace game {
@@ -15,25 +16,16 @@ namespace cocoa {
 
 namespace detail {
 
-void initialize(const util::id_& native_frame,
-                boost::function<void()> update_device);
+void initialize(const util::id_& native_frame, boost::function<void()> update_device);
 
 }
 
-template<class Frame, class Device>
+template<class Frame>
 class view : private boost::noncopyable {
 public:
-  view(Frame& frame, Device& device)
-    : device_(device) {
-    detail::initialize(frame.native_frame(),
-                       boost::bind(&view<Frame, Device>::update, this));
+  view(Frame& frame, boost::function<void()> update_device) {
+    detail::initialize(frame.native_frame(), update_device);
   }
-  void
-  update() {
-    this->device_.update();
-  }
-private:
-  Device& device_;
 };
 
 }

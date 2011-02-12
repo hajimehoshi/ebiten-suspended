@@ -5,8 +5,8 @@
 #include "ebiten/util/id.hpp"
 #include "ebiten/util/image_loader.hpp"
 #include "ebiten/util/singleton.hpp"
-#include <GLUT/glut.h>
 #include <memory>
+#include <OpenGL/gl.h>
 
 namespace ebiten {
 namespace game {

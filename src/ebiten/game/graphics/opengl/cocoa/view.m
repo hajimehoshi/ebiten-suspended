@@ -3,7 +3,6 @@
 
 @interface EbitenOpenGLView : NSOpenGLView {
   boost::function<void()> updateDevice;
-  int i;
 }
 
 - (id)initWithFrame:(NSRect)frame
@@ -30,7 +29,6 @@
 
 - (void)prepareOpenGL {
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-  self->i = 0;
   NSOpenGLContext* context = [self openGLContext];
   assert(context != nil);
   const int swapInterval = 1;
@@ -52,28 +50,12 @@
 
 - (void)drawRect:(NSRect)rect {
   (void)rect;
-  self->i++;
-  if (self->i % 60 == 0) {
-    NSLog(@"hoge");
-  }
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   NSOpenGLContext* context = [self openGLContext];
   assert(context != nil);
   //[context makeCurrentContext];
   //[context update]; ?
-  {
-    /*::glClearColor(0, 0, 0, 1);
-    ::glClear(GL_COLOR_BUFFER_BIT);        
-    ::glEnable(GL_TEXTURE_2D);
-    ::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    ::glEnable(GL_BLEND);
-    //::glViewport(0, 0, screen_width, screen_height);
-    ::glMatrixMode(GL_PROJECTION);
-    ::glLoadIdentity();
-    //::glOrtho(0, screen_width, 0, screen_height, 0, 1);
-    ::glFlush();*/
-    self->updateDevice();
-  }
+  self->updateDevice();
   //[context clearDrawable];
   // drawing
   [context flushBuffer];
