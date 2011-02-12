@@ -7,7 +7,9 @@
 #include "ebiten/game/kernels/macosx/application.hpp"
 #include "ebiten/game/timers/mach/timer.hpp"
 #include "ebiten/util/singleton.hpp"
+#include <boost/optional.hpp>
 #include <boost/range.hpp>
+#include <boost/utility/in_place_factory.hpp>
 #include <atomic>
 #include <pthread.h>
 
@@ -65,13 +67,13 @@ public:
                     });
     };
 
-    graphics::opengl::device device(screen_width, screen_height, window_scale, draw_sprites);
+    boost::optional<graphics::opengl::device> device;
     graphics::opengl::cocoa::view<decltype(frame)> view(frame,
                                                         [&]{
-                                                          device.update();
+                                                          device->update();
                                                         });
+    device = boost::in_place(screen_width, screen_height, window_scale, draw_sprites);
     // TODO: remove initialize...
-    device.initialize();
     game.initialize(graphics::opengl::texture_factory::instance());
 
     // start the logic loop

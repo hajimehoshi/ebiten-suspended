@@ -24,9 +24,6 @@ public:
       window_scale_(window_scale),
       draw_sprites_(draw_sprites),
       framebuffer_(0) {
-  }
-  void
-  initialize() {
     // offscreen
     auto& tf = texture_factory::instance();
     this->offscreen_texture_ = tf.create(this->screen_width_, this->screen_height_);
