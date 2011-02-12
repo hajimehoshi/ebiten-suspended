@@ -6,29 +6,23 @@
 #include "ebiten/game/graphics/sprite.hpp"
 #include <OpenGL/gl.h>
 #include <boost/noncopyable.hpp>
-#include <boost/range.hpp>
-#include <atomic>
 #include <cassert>
-#include <pthread.h>
 
 namespace ebiten {
 namespace game {
 namespace graphics {
 namespace opengl {
 
-template<class Sprites>
 class device : private boost::noncopyable {
 public:
   device(std::size_t screen_width,
          std::size_t screen_height,
          std::size_t window_scale,
-         std::function<const Sprites&()> get_sprites,
-         std::function<void()> update_game)
+         std::function<void()> draw_sprites)
     : screen_width_(screen_width),
       screen_height_(screen_height),
       window_scale_(window_scale),
-      get_sprites_(get_sprites),
-      update_game_(update_game),
+      draw_sprites_(draw_sprites),
       framebuffer_(0) {
   }
   void
@@ -40,7 +34,7 @@ public:
     assert(this->framebuffer_);
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->framebuffer_);
     // TODO: std::ptrdiff_t?
-    const auto offscreen_texture_id = this->offscreen_texture_->id().template get<std::ptrdiff_t>();
+    const auto offscreen_texture_id = this->offscreen_texture_->id().get<std::ptrdiff_t>();
     assert(offscreen_texture_id);
     ::glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,
                                 GL_COLOR_ATTACHMENT0_EXT,
@@ -78,44 +72,7 @@ public:
     ::glMatrixMode(GL_PROJECTION);
     ::glLoadIdentity();
     ::glOrtho(0, this->screen_width_, 0, this->screen_height_, 0, 1);
-    const auto& sprites = this->get_sprites_();
-    typedef graphics::sprite sprite;
-    typedef std::reference_wrapper<const sprite> sprite_cref;
-    std::vector<sprite_cref> sorted_sprites;
-    sorted_sprites.reserve(boost::size(sprites));
-    std::for_each(boost::begin(sprites), boost::end(sprites),
-                  [&](const sprite& s) {
-                    sorted_sprites.emplace_back(s);
-                  });
-    // sort the sprites in desceinding order of z
-    std::sort(sorted_sprites.begin(), sorted_sprites.end(),
-              [](const sprite_cref& a, const sprite_cref& b) {
-                const double diff = a.get().z() - b.get().z();
-                return (0 < diff) ? -1 : ((diff < 0) ? 1 : 0);
-              });
-    std::for_each(boost::begin(sorted_sprites), boost::end(sorted_sprites),
-                  [](const sprite_cref& s) {
-                    s.get().draw(graphics_context::instance());
-                  });
-
-    // start the logic loop
-    struct logic_func {
-      static void* invoke(void* func_ptr) {
-        auto func = *(reinterpret_cast<std::function<void()>*>(func_ptr));
-        func();
-        return nullptr;
-      }
-    };
-    std::atomic<bool> swap_completed(false);
-    std::function<void()> logic_func = [&]{
-      while (!swap_completed.load()) {
-        //timer.wait_frame();
-        this->update_game_();
-      }
-    };
-    pthread_t logic_thread;
-    ::pthread_create(&logic_thread, nullptr, logic_func::invoke, &logic_func);
-
+    this->draw_sprites_();
     ::glFlush();
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
@@ -130,7 +87,7 @@ public:
     ::glOrtho(0, this->screen_width_ * this->window_scale_, this->screen_height_ * this->window_scale_, 0, 0, 1);
     ::glMatrixMode(GL_MODELVIEW);
     ::glLoadMatrixf(offscreen_geo);
-    const auto offscreen_texture_id = this->offscreen_texture_->id().template get<std::ptrdiff_t>();
+    const auto offscreen_texture_id = this->offscreen_texture_->id().get<std::ptrdiff_t>();
     ::glBindTexture(GL_TEXTURE_2D, offscreen_texture_id);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -148,15 +105,12 @@ public:
     }
     ::glBindTexture(GL_TEXTURE_2D, 0);
     ::glFlush();
-    swap_completed.store(true);
-    ::pthread_join(logic_thread, nullptr);
   }
 private:
   const std::size_t screen_width_;
   const std::size_t screen_height_;
   const std::size_t window_scale_;
-  std::function<const Sprites&()> get_sprites_;
-  std::function<void()> update_game_;
+  std::function<void()> draw_sprites_;
   std::unique_ptr<texture> offscreen_texture_;
   GLuint framebuffer_;
 };

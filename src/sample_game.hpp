@@ -35,12 +35,12 @@ public:
     return this->sprites_;
   }
   void
-  update(int /*frame_index*/) {
+  update(int frame_count) {
     auto& drawing_region = this->sprites_.at(0).drawing_region_at(0);
     drawing_region.dst_x += 0.01;
-    /*if (frame_index % 600 == 0) {
+    if (frame_count % 600 == 0) {
       std::cout << "foo!" << std::endl;
-      }*/
+    }
   }
 };
 
