@@ -27,10 +27,8 @@ template<class Frame>
 class view : private boost::noncopyable {
 public:
   view(Frame& frame,
-       std::size_t width,
-       std::size_t height,
        boost::function<void()> update_device) {
-    detail::initialize(frame.native_frame(), width, height, update_device);
+    detail::initialize(frame.native_frame(), frame.width(), frame.height(), update_device);
   }
 };
 

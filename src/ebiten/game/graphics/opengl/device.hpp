@@ -76,10 +76,14 @@ public:
     ::glClear(GL_COLOR_BUFFER_BIT);
     ::glEnable(GL_TEXTURE_2D);
     ::glDisable(GL_BLEND);
-    ::glViewport(0, 0, this->screen_width_ * this->window_scale_, this->screen_height_ * this->window_scale_);
+    ::glViewport(0, 0,
+                 this->screen_width_ * this->window_scale_,
+                 this->screen_height_ * this->window_scale_);
     ::glMatrixMode(GL_PROJECTION);
     ::glLoadIdentity();
-    ::glOrtho(0, this->screen_width_ * this->window_scale_, this->screen_height_ * this->window_scale_, 0, 0, 1);
+    ::glOrtho(0, this->screen_width_ * this->window_scale_,
+              this->screen_height_ * this->window_scale_, 0,
+              0, 1);
     ::glMatrixMode(GL_MODELVIEW);
     ::glLoadMatrixf(offscreen_geo);
     const auto offscreen_texture_id = this->offscreen_texture_->id().get<std::ptrdiff_t>();

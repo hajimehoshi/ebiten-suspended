@@ -8,6 +8,9 @@ namespace util {
 
 class id_ {
 public:
+  id_()
+    : value_(0) {
+  }
   explicit
   id_(void* value)
     : value_(value) {

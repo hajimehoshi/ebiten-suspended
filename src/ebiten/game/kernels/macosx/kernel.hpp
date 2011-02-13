@@ -43,8 +43,9 @@ public:
     };
     pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-    frames::cocoa::frame frame(screen_width * window_scale,
-                               screen_height * window_scale);
+    const std::size_t frame_width  = screen_width * window_scale;
+    const std::size_t frame_height = screen_height * window_scale;
+    frames::cocoa::frame frame(frame_width, frame_height);
     std::function<void()> draw_sprites = [&]{
       lock l(mutex);
       const auto& sprites = game.sprites();
@@ -70,8 +71,6 @@ public:
 
     boost::optional<graphics::opengl::device> device;
     graphics::opengl::cocoa::view<decltype(frame)> view(frame,
-                                                        screen_width * window_scale,
-                                                        screen_height * window_scale,
                                                         [&]{
                                                           device->update(draw_sprites);
                                                         });

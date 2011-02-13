@@ -8,17 +8,14 @@ namespace game {
 namespace frames {
 namespace cocoa {
 
-struct frame::impl {
-  boost::scoped_ptr<util::id_> window_;
-};
-
 frame::frame(std::size_t width, std::size_t height)
-  : pimpl_(new impl) {
+  : width_(width),
+    height_(height) {
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   EbitenWindow* window = [[EbitenWindow alloc]
                           initWithSize:NSMakeSize(width, height)];
   [pool release];
-  this->pimpl_->window_.reset(new util::id_(window));
+  this->window_ = util::id_(window);
 }
 
 frame::~frame() {
@@ -26,7 +23,7 @@ frame::~frame() {
 
 const util::id_&
 frame::native_frame() const {
-  return *(this->pimpl_->window_);
+  return this->window_;
 }
 
 }

@@ -16,10 +16,16 @@ public:
   frame(std::size_t width, std::size_t height);
   ~frame();
   const util::id_& native_frame() const;
-  int run();
+  std::size_t width() const {
+    return this->width_;
+  }
+  std::size_t height() const {
+    return this->height_;
+  }
 private:
-  struct impl;
-  boost::scoped_ptr<impl> pimpl_;
+  std::size_t width_;
+  std::size_t height_;
+  util::id_ window_;
 };
 
 }
