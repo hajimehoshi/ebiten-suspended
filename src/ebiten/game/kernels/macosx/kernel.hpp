@@ -47,33 +47,34 @@ public:
     };
     pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-    const std::size_t frame_width  = screen_width * window_scale;
-    const std::size_t frame_height = screen_height * window_scale;
+    std::size_t const frame_width  = screen_width * window_scale;
+    std::size_t const frame_height = screen_height * window_scale;
     frames::cocoa::frame frame(frame_width, frame_height);
     struct draw_sprites_func {
-      static void invoke(pthread_mutex_t& mutex, const Game& game) {
+      static void invoke(pthread_mutex_t& mutex, Game const& game) {
         lock l(mutex);
         typedef BOOST_TYPEOF(game.sprites()) sprites_type;
-        const sprites_type& sprites = game.sprites();
+        sprites_type const& sprites = game.sprites();
         typedef boost::shared_ptr<graphics::sprite> sprites_element_type;
-        BOOST_STATIC_ASSERT((boost::is_same<typename boost::range_value<sprites_type>::type, sprites_element_type>::value));
+        BOOST_STATIC_ASSERT((boost::is_same<typename boost::range_value<sprites_type>::type,
+                             sprites_element_type>::value));
         // TODO: use reference_wrapper?
         std::vector<sprites_element_type> sorted_sprites;
         sorted_sprites.reserve(boost::size(sprites));
-        BOOST_FOREACH(const sprites_element_type& s, sprites) {
+        BOOST_FOREACH(sprites_element_type const& s, sprites) {
           sorted_sprites.push_back(s);
         };
         // sort the sprites in desceinding order of z
         struct sprites_cmp {
-          static int invoke(const sprites_element_type& a,
-                            const sprites_element_type& b) {
+          static int invoke(sprites_element_type const& a,
+                            sprites_element_type const& b) {
             const double diff = a->z() - b->z();
             return (0 < diff) ? -1 : ((diff < 0) ? 1 : 0);
           }
         };
         std::sort(sorted_sprites.begin(), sorted_sprites.end(),
         sprites_cmp::invoke);
-        BOOST_FOREACH(const sprites_element_type& s, sorted_sprites) {
+        BOOST_FOREACH(sprites_element_type const& s, sorted_sprites) {
           s->draw(graphics::opengl::graphics_context::instance());
         };
       }

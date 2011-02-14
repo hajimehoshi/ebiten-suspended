@@ -12,7 +12,7 @@ main(int argc, char** argv) {
   (void)argv;
 #ifdef EBITEN_TEST
   testing::InitGoogleTest(&argc, argv);
-  const int test_result = RUN_ALL_TESTS();
+  int const test_result = RUN_ALL_TESTS();
   if (test_result != EXIT_SUCCESS) {
     return test_result;
   }
@@ -23,7 +23,7 @@ main(int argc, char** argv) {
   try {
     sample_game game;
     ebiten::game::kernels::macosx::kernel::instance().run(game, 320, 240, 600, 2);
-  } catch (const std::string& message) {
+  } catch (std::string const& message) {
     // TODO: use boost::diagnostic_information?
     std::cerr << message << std::endl;
     return EXIT_FAILURE;

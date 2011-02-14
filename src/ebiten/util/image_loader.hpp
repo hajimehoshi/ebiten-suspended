@@ -16,12 +16,12 @@ class image_loader : public singleton<image_loader> {
   friend class singleton<image_loader>;
 public:
   boost::shared_ptr<image>
-  load_file(const std::string& filename) {
+  load_file(std::string const& filename) {
     typedef boost::gil::rgba8_image_t gil_image_t;
     gil_image_t gil_image;
     boost::gil::png_read_image(filename, gil_image);
-    const std::size_t width  = gil_image.width();
-    const std::size_t height = gil_image.height();
+    std::size_t const width  = gil_image.width();
+    std::size_t const height = gil_image.height();
     boost::shared_ptr<std::vector<uint8_t> > pixels =
       boost::make_shared<std::vector<uint8_t> >(width * height * 4);
     boost::gil::rgba8_pixel_t* pixelsPtr =

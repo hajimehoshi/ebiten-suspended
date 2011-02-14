@@ -15,7 +15,7 @@ namespace graphics {
 
 class sprite : private boost::noncopyable {
 private:
-  const texture& texture_;
+  texture const& texture_;
   typedef boost::shared_ptr<drawing_region> drawing_region_ptr_type;
   typedef std::vector<drawing_region_ptr_type> drawing_regions_type;
   drawing_regions_type drawing_regions_;
@@ -24,7 +24,7 @@ private:
   graphics::color_matrix color_matrix_;
   bool is_visible_;
 public:
-  sprite(const texture& texture_, std::size_t drawing_regions_count)
+  sprite(texture const& texture_, std::size_t drawing_regions_count)
     : texture_(texture_),
       geometry_matrix_(1, 0, 0, 1, 0, 0),
       z_(0),
@@ -51,11 +51,11 @@ public:
   drawing_region_at(std::size_t i) {
     return *this->drawing_regions_.at(i);
   }
-  const graphics::drawing_region&
+  graphics::drawing_region const&
   drawing_region_at(std::size_t i) const {
     return *this->drawing_regions_.at(i);
   }
-  const drawing_regions_type&
+  drawing_regions_type const&
   drawing_regions() const {
     return this->drawing_regions_;
   }
@@ -63,7 +63,7 @@ public:
   geometry_matrix() {
     return this->geometry_matrix_;
   }
-  const graphics::geometry_matrix&
+  graphics::geometry_matrix const&
   geometry_matrix() const {
     return this->geometry_matrix_;
   }
@@ -83,7 +83,7 @@ public:
   color_matrix() {
     return this->color_matrix_;
   }
-  const graphics::color_matrix&
+  graphics::color_matrix const&
   color_matrix() const {
     return this->color_matrix_;
   }

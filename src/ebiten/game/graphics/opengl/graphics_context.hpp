@@ -26,11 +26,11 @@ private:
 public:
   template<class DrawingRegions>
   void
-  draw_textures(const graphics::texture& texture,
-                const DrawingRegions& drawing_regions,
-                const graphics::geometry_matrix& geo_mat,
+  draw_textures(graphics::texture const& texture,
+                DrawingRegions const& drawing_regions,
+                graphics::geometry_matrix const& geo_mat,
                 int z,
-                const graphics::color_matrix& color_mat) {
+                graphics::color_matrix const& color_mat) {
     if (!this->shader_program) {
       this->shader_program = compile_shader_program();
       assert(this->shader_program);
@@ -38,7 +38,7 @@ public:
     if (!color_mat.is_identity()) {
       ::glUseProgram(this->shader_program);
       ::glUniform1i(glGetUniformLocation(this->shader_program, "texture"), 0);
-      const float gl_color_mat[] = {
+      float const gl_color_mat[] = {
         static_cast<float>(color_mat.element<0, 0>()),
         static_cast<float>(color_mat.element<0, 1>()),
         static_cast<float>(color_mat.element<0, 2>()),
@@ -58,7 +58,7 @@ public:
       };
       ::glUniformMatrix4fv(glGetUniformLocation(this->shader_program, "color_matrix"),
                            1, GL_FALSE, gl_color_mat);
-      const float gl_color_mat_translation[] = {
+      float const gl_color_mat_translation[] = {
         static_cast<float>(color_mat.element<0, 4>()),
         static_cast<float>(color_mat.element<1, 4>()),
         static_cast<float>(color_mat.element<2, 4>()),
@@ -67,30 +67,31 @@ public:
       ::glUniform4fv(glGetUniformLocation(this->shader_program, "color_matrix_translation"),
                      4, gl_color_mat_translation);
     }
-    const float gl_geo_mat[] = {geo_mat.a(),  geo_mat.c(),  0, 0,
+    float const gl_geo_mat[] = {geo_mat.a(),  geo_mat.c(),  0, 0,
                                 geo_mat.b(),  geo_mat.d(),  0, 0,
                                 0,            0,            1, 0,
                                 geo_mat.tx(), geo_mat.ty(), 0, 1};
     ::glMatrixMode(GL_MODELVIEW);
     ::glLoadMatrixf(gl_geo_mat);
-    const std::ptrdiff_t texture_id = texture.id().get<std::ptrdiff_t>();
+    std::ptrdiff_t const texture_id = texture.id().get<std::ptrdiff_t>();
     assert(texture_id);
     ::glBindTexture(GL_TEXTURE_2D, texture_id);
     ::glBegin(GL_QUADS);
-    const float zf = static_cast<float>(z);
-    const float texture_width  = texture.texture_width();
-    const float texture_height = texture.texture_height();
+    float const zf = static_cast<float>(z);
+    float const texture_width  = texture.texture_width();
+    float const texture_height = texture.texture_height();
     typedef typename boost::range_value<DrawingRegions>::type drawing_region_type;
     BOOST_FOREACH(const drawing_region_type& dr, drawing_regions) {
-      const float tu1 = dr->src_x()                  / texture_width;
-      const float tu2 = (dr->src_x() + dr->width())  / texture_width;
-      const float tv1 = dr->src_y()                  / texture_height;
-      const float tv2 = (dr->src_y() + dr->height()) / texture_height;
-      const float x1 = dr->dst_x();
-      const float x2 = dr->dst_x() + dr->width();
-      const float y1 = dr->dst_y();
-      const float y2 = dr->dst_y() + dr->height();
-      const float vertex[4][3] = {{x1, y1, zf},
+      // TODO: move outside
+      float const tu1 = dr->src_x()                  / texture_width;
+      float const tu2 = (dr->src_x() + dr->width())  / texture_width;
+      float const tv1 = dr->src_y()                  / texture_height;
+      float const tv2 = (dr->src_y() + dr->height()) / texture_height;
+      float const x1 = dr->dst_x();
+      float const x2 = dr->dst_x() + dr->width();
+      float const y1 = dr->dst_y();
+      float const y2 = dr->dst_y() + dr->height();
+      float const vertex[4][3] = {{x1, y1, zf},
                                   {x2, y1, zf},
                                   {x2, y2, zf},
                                   {x1, y2, zf}};
@@ -116,7 +117,7 @@ private:
   }
   GLuint
   compile_shader_program() {
-    static const std::string sharder_source("uniform sampler2D texture;\n"
+    static std::string const sharder_source("uniform sampler2D texture;\n"
                                             "uniform mat4 color_matrix;\n"
                                             "uniform vec4 color_matrix_translation;\n"
                                             "\n"
@@ -128,7 +129,7 @@ private:
     GLuint fragment_shader;
     fragment_shader = ::glCreateShader(GL_FRAGMENT_SHADER);
     assert(fragment_shader);
-    const char* shader_source_p = sharder_source.c_str();
+    char const* shader_source_p = sharder_source.c_str();
     ::glShaderSource(fragment_shader, 1, &shader_source_p, 0);
     ::glCompileShader(fragment_shader);
     // check status

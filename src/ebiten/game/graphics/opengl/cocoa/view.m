@@ -31,7 +31,7 @@
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   NSOpenGLContext* context = [self openGLContext];
   assert(context != nil);
-  const int swapInterval = 1;
+  int const swapInterval = 1;
   [context setValues:&swapInterval forParameter:NSOpenGLCPSwapInterval];
   NSTimer* timer = [NSTimer timerWithTimeInterval:0
                             target:self

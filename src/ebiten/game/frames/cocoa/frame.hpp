@@ -13,13 +13,13 @@ namespace cocoa {
 
 class frame : private boost::noncopyable {
 private:
-  std::size_t width_;
-  std::size_t height_;
+  std::size_t const width_;
+  std::size_t const height_;
   util::id_ window_;
 public:
   frame(std::size_t width, std::size_t height);
   ~frame();
-  const util::id_& native_frame() const;
+  util::id_ const& native_frame() const;
   std::size_t width() const {
     return this->width_;
   }

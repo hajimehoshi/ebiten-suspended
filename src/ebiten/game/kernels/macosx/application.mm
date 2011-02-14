@@ -22,7 +22,7 @@ run(NSWindow* window) {
 }
 
 int
-run(const util::id_& native_frame) {
+run(util::id_ const& native_frame) {
   return run(native_frame.get<NSWindow*>());
 }
 

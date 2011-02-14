@@ -11,7 +11,7 @@ namespace macosx {
 
 namespace detail {
 
-int run(const util::id_& native_frame);
+int run(util::id_ const& native_frame);
 
 }
 

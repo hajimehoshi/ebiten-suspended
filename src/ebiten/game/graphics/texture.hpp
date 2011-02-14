@@ -12,13 +12,13 @@ namespace graphics {
 // texture というよりは texture_id?
 class texture : private boost::noncopyable {
 private:
-  const util::id_ id_;
-  const std::size_t width_;
-  const std::size_t height_;
-  const std::size_t texture_width_;
-  const std::size_t texture_height_;
+  util::id_ const id_;
+  std::size_t const width_;
+  std::size_t const height_;
+  std::size_t const texture_width_;
+  std::size_t const texture_height_;
 public:
-  texture(util::id_ id_,
+  texture(util::id_ const& id_,
           std::size_t width_,
           std::size_t height_,
           std::size_t texture_width_,

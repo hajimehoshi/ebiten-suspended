@@ -34,11 +34,11 @@ class texture_factory : public util::singleton<texture_factory> {
   friend class util::singleton<texture_factory>;
 public:
   boost::shared_ptr<graphics::texture>
-  from_file(const std::string& filename) {
-    const boost::shared_ptr<util::image> image =
+  from_file(std::string const& filename) {
+    boost::shared_ptr<util::image const> const image =
       util::image_loader::instance().load_file(filename);
-    const std::size_t width  = image->width();
-    const std::size_t height = image->height();
+    std::size_t const width  = image->width();
+    std::size_t const height = image->height();
     assert(width  == clp2(width));
     assert(height == clp2(height));
     GLuint texture_id = 0;
@@ -67,8 +67,8 @@ public:
   }
   boost::shared_ptr<graphics::texture>
   create(std::size_t width, std::size_t height) {
-    const std::size_t texture_width  = clp2(width);
-    const std::size_t texture_height = clp2(height);
+    std::size_t const texture_width  = clp2(width);
+    std::size_t const texture_height = clp2(height);
     GLuint texture_id = 0;
     ::glGenTextures(1, &texture_id);
     assert(texture_id);

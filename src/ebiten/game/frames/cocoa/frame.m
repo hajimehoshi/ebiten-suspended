@@ -56,7 +56,7 @@
   [NSApplication sharedApplication];
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   NSRect contentRect = NSMakeRect(0, 0, size.width, size.height);
-  const NSUInteger style = (NSTitledWindowMask | NSClosableWindowMask |
+  NSUInteger const style = (NSTitledWindowMask | NSClosableWindowMask |
                             NSMiniaturizableWindowMask);
   NSRect windowRect = [NSWindow frameRectForContentRect:contentRect
                                 styleMask:style];

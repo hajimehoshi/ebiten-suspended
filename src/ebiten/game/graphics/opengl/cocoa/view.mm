@@ -38,7 +38,7 @@ initialize(NSWindow* window,
 }
 
 void
-initialize(const util::id_& native_frame,
+initialize(util::id_ const& native_frame,
            std::size_t width,
            std::size_t height,
            boost::function<void()> update_device) {

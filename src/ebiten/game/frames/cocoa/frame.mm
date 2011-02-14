@@ -21,7 +21,7 @@ frame::frame(std::size_t width, std::size_t height)
 frame::~frame() {
 }
 
-const util::id_&
+util::id_ const&
 frame::native_frame() const {
   return this->window_;
 }

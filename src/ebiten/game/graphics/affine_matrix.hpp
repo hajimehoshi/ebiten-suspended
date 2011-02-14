@@ -18,13 +18,13 @@ template<class Float, std::size_t Dimension>
 class affine_matrix : private boost::noncopyable {
   BOOST_STATIC_ASSERT(0 < Dimension);
 private:
-  static const std::size_t size = Dimension * (Dimension - 1);
+  static std::size_t const size = Dimension * (Dimension - 1);
   boost::array<Float, size> elements_;
 public:
   // TODO: accepts iterators
   // TODO: constructor's arugments?
   template<class Elements>
-  affine_matrix(const Elements& elements) {
+  affine_matrix(Elements const& elements) {
     assert(static_cast<std::size_t>(boost::size(elements)) <= size);
     this->elements_.fill(0);
     std::copy(boost::begin(elements), boost::end(elements), this->elements_.begin());

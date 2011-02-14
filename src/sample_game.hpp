@@ -24,8 +24,8 @@ public:
     this->sprites_.push_back(boost::make_shared<sprite_type>(*this->texture_, 4));
     sprite_ptr_type& s = this->sprites_.at(0);
     s->geometry_matrix().set_a(1);
-    const sprite_type::drawing_regions_type& drs = s->drawing_regions();
-    BOOST_FOREACH(const boost::range_value<sprite_type::drawing_regions_type>::type& dr, drs) {
+    sprite_type::drawing_regions_type const& drs = s->drawing_regions();
+    BOOST_FOREACH(boost::range_value<sprite_type::drawing_regions_type>::type const& dr, drs) {
       dr->set_width(32);
       dr->set_height(32);
     }
@@ -44,7 +44,7 @@ public:
   sprites() {
     return this->sprites_;
   }
-  const sprites_type&
+  sprites_type const&
   sprites() const {
     return this->sprites_;
   }

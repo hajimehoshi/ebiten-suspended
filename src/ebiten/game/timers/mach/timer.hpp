@@ -13,7 +13,7 @@ namespace mach {
 
 class timer : private boost::noncopyable {
 private:
-  const uint64_t duration_per_frame_;
+  uint64_t const duration_per_frame_;
   uint64_t next_time_to_update_;
 public:
   explicit
