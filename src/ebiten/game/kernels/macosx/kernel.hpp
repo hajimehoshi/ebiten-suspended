@@ -53,27 +53,27 @@ public:
     struct draw_sprites_func {
       static void invoke(pthread_mutex_t& mutex, const Game& game) {
         lock l(mutex);
-        typedef BOOST_TYPEOF(game.sprites()) sprites_t;
-        const sprites_t& sprites = game.sprites();
-        typedef boost::shared_ptr<graphics::sprite> sprites_element_t;
-        BOOST_STATIC_ASSERT((boost::is_same<typename boost::range_value<sprites_t>::type, sprites_element_t>::value));
+        typedef BOOST_TYPEOF(game.sprites()) sprites_type;
+        const sprites_type& sprites = game.sprites();
+        typedef boost::shared_ptr<graphics::sprite> sprites_element_type;
+        BOOST_STATIC_ASSERT((boost::is_same<typename boost::range_value<sprites_type>::type, sprites_element_type>::value));
         // TODO: use reference_wrapper?
-        std::vector<sprites_element_t> sorted_sprites;
+        std::vector<sprites_element_type> sorted_sprites;
         sorted_sprites.reserve(boost::size(sprites));
-        BOOST_FOREACH(const sprites_element_t& s, sprites) {
+        BOOST_FOREACH(const sprites_element_type& s, sprites) {
           sorted_sprites.push_back(s);
         };
         // sort the sprites in desceinding order of z
         struct sprites_cmp {
-          static int invoke(const sprites_element_t& a,
-                            const sprites_element_t& b) {
+          static int invoke(const sprites_element_type& a,
+                            const sprites_element_type& b) {
             const double diff = a->z() - b->z();
             return (0 < diff) ? -1 : ((diff < 0) ? 1 : 0);
           }
         };
         std::sort(sorted_sprites.begin(), sorted_sprites.end(),
         sprites_cmp::invoke);
-        BOOST_FOREACH(const sprites_element_t& s, sorted_sprites) {
+        BOOST_FOREACH(const sprites_element_type& s, sorted_sprites) {
           s->draw(graphics::opengl::graphics_context::instance());
         };
       }
@@ -116,8 +116,8 @@ public:
                                                  boost::ref(game));
     struct logic_func_wrapper {
       static void* invoke(void* func_p) {
-        typedef boost::function<void*()> func_t;
-        func_t func = *(reinterpret_cast<func_t*>(func_p));
+        typedef boost::function<void*()> func_type;
+        func_type func = *(reinterpret_cast<func_type*>(func_p));
         return func();
       }
     };

@@ -80,8 +80,8 @@ public:
     const float zf = static_cast<float>(z);
     const float texture_width  = texture.texture_width();
     const float texture_height = texture.texture_height();
-    typedef typename boost::range_value<DrawingRegions>::type drawing_region_t;
-    BOOST_FOREACH(const drawing_region_t& dr, drawing_regions) {
+    typedef typename boost::range_value<DrawingRegions>::type drawing_region_type;
+    BOOST_FOREACH(const drawing_region_type& dr, drawing_regions) {
       const float tu1 = dr->src_x()                  / texture_width;
       const float tu2 = (dr->src_x() + dr->width())  / texture_width;
       const float tv1 = dr->src_y()                  / texture_height;

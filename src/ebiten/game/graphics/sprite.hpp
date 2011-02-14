@@ -16,11 +16,9 @@ namespace graphics {
 class sprite : private boost::noncopyable {
 private:
   const texture& texture_;
-  typedef boost::shared_ptr<drawing_region> drawing_region_ptr;
-public:
-  typedef std::vector<drawing_region_ptr> drawing_regions_t;
-private:
-  drawing_regions_t drawing_regions_;
+  typedef boost::shared_ptr<drawing_region> drawing_region_ptr_type;
+  typedef std::vector<drawing_region_ptr_type> drawing_regions_type;
+  drawing_regions_type drawing_regions_;
   graphics::geometry_matrix geometry_matrix_;
   double z_;
   graphics::color_matrix color_matrix_;
@@ -57,7 +55,7 @@ public:
   drawing_region_at(std::size_t i) const {
     return *this->drawing_regions_.at(i);
   }
-  const drawing_regions_t&
+  const drawing_regions_type&
   drawing_regions() const {
     return this->drawing_regions_;
   }

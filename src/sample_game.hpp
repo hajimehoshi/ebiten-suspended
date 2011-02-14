@@ -13,20 +13,19 @@
 #include <iostream>
 
 class sample_game : private boost::noncopyable {
-  typedef ebiten::game::graphics::sprite sprite_t;
-  typedef boost::shared_ptr<sprite_t> sprite_ptr_t;
-  typedef std::deque<sprite_ptr_t> sprites_t;
+  typedef ebiten::game::graphics::sprite sprite_type;
+  typedef boost::shared_ptr<sprite_type> sprite_ptr_type;
+  typedef std::deque<sprite_ptr_type> sprites_type;
 public:
   template<class TextureFactory>
   void
   initialize(TextureFactory& tf) {
     this->texture_ = tf.from_file("test.png");
-    this->sprites_.push_back(boost::make_shared<sprite_t>(*this->texture_, 4));
-    sprite_ptr_t& s = this->sprites_.at(0);
+    this->sprites_.push_back(boost::make_shared<sprite_type>(*this->texture_, 4));
+    sprite_ptr_type& s = this->sprites_.at(0);
     s->geometry_matrix().set_a(1);
-    typedef ebiten::game::graphics::drawing_region drawing_region_t;
-    const sprite_t::drawing_regions_t& drs = s->drawing_regions();
-    BOOST_FOREACH(const boost::range_value<sprite_t::drawing_regions_t>::type& dr, drs) {
+    const sprite_type::drawing_regions_type& drs = s->drawing_regions();
+    BOOST_FOREACH(const boost::range_value<sprite_type::drawing_regions_type>::type& dr, drs) {
       dr->set_width(32);
       dr->set_height(32);
     }
@@ -41,11 +40,11 @@ public:
     s->color_matrix().set_element<0, 0>(0);
     s->color_matrix().set_element<0, 3>(1);
   }
-  sprites_t&
+  sprites_type&
   sprites() {
     return this->sprites_;
   }
-  const sprites_t&
+  const sprites_type&
   sprites() const {
     return this->sprites_;
   }
@@ -59,7 +58,7 @@ public:
   }
 private:
   boost::shared_ptr<ebiten::game::graphics::texture> texture_;
-  sprites_t sprites_;
+  sprites_type sprites_;
 };
 
 #endif
