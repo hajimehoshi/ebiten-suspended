@@ -5,7 +5,9 @@
 #include "ebiten/game/graphics/opengl/texture_factory.hpp"
 #include "ebiten/game/graphics/sprite.hpp"
 #include <OpenGL/gl.h>
+#include <boost/function.hpp>
 #include <boost/noncopyable.hpp>
+#include <boost/shared_ptr.hpp>
 #include <cassert>
 
 namespace ebiten {
@@ -23,13 +25,13 @@ public:
       window_scale_(window_scale),
       framebuffer_(0) {
     // offscreen
-    auto& tf = texture_factory::instance();
-    this->offscreen_texture_ = tf.create(this->screen_width_, this->screen_height_);
+    this->offscreen_texture_ =
+      texture_factory::instance().create(this->screen_width_, this->screen_height_);
     ::glGenFramebuffersEXT(1, &this->framebuffer_);
     assert(this->framebuffer_);
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->framebuffer_);
     // TODO: std::ptrdiff_t?
-    const auto offscreen_texture_id = this->offscreen_texture_->id().get<std::ptrdiff_t>();
+    const std::ptrdiff_t offscreen_texture_id = this->offscreen_texture_->id().get<std::ptrdiff_t>();
     assert(offscreen_texture_id);
     ::glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,
                                 GL_COLOR_ATTACHMENT0_EXT,
@@ -42,7 +44,7 @@ public:
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
   }
   void
-  update(std::function<void()> draw_sprites) {
+  update(boost::function<void()> draw_sprites) {
     const float offscreen_width  = static_cast<float>(this->offscreen_texture_->width());
     const float offscreen_height = static_cast<float>(this->offscreen_texture_->height());
     const float offscreen_tu     = offscreen_width  / this->offscreen_texture_->texture_width();
@@ -86,7 +88,8 @@ public:
               0, 1);
     ::glMatrixMode(GL_MODELVIEW);
     ::glLoadMatrixf(offscreen_geo);
-    const auto offscreen_texture_id = this->offscreen_texture_->id().get<std::ptrdiff_t>();
+    const std::ptrdiff_t offscreen_texture_id =
+      this->offscreen_texture_->id().get<std::ptrdiff_t>();
     ::glBindTexture(GL_TEXTURE_2D, offscreen_texture_id);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -113,7 +116,7 @@ private:
   const std::size_t screen_width_;
   const std::size_t screen_height_;
   const std::size_t window_scale_;
-  std::unique_ptr<texture> offscreen_texture_;
+  boost::shared_ptr<texture> offscreen_texture_;
   GLuint framebuffer_;
 };
 

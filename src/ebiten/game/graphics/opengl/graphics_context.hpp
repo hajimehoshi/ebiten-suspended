@@ -7,9 +7,10 @@
 #include "ebiten/game/graphics/texture.hpp"
 #include "ebiten/util/singleton.hpp"
 #include <OpenGL/gl.h>
+#include <boost/array.hpp>
+#include <boost/foreach.hpp>
 #include <boost/range.hpp>
 #include <algorithm>
-#include <array>
 #include <cassert>
 #include <iostream>
 
@@ -72,37 +73,37 @@ public:
                                 geo_mat.tx(), geo_mat.ty(), 0, 1};
     ::glMatrixMode(GL_MODELVIEW);
     ::glLoadMatrixf(gl_geo_mat);
-    const auto texture_id = texture.id().get<std::ptrdiff_t>();
+    const std::ptrdiff_t texture_id = texture.id().get<std::ptrdiff_t>();
     assert(texture_id);
     ::glBindTexture(GL_TEXTURE_2D, texture_id);
     ::glBegin(GL_QUADS);
     const float zf = static_cast<float>(z);
     const float texture_width  = texture.texture_width();
     const float texture_height = texture.texture_height();
-    std::for_each(boost::begin(drawing_regions), boost::end(drawing_regions),
-                  [&](const drawing_region& t) {
-                    const float tu1 = t.src_x              / texture_width;
-                    const float tu2 = (t.src_x + t.width)  / texture_width;
-                    const float tv1 = t.src_y              / texture_height;
-                    const float tv2 = (t.src_y + t.height) / texture_height;
-                    const float x1 = t.dst_x;
-                    const float x2 = t.dst_x + t.width;
-                    const float y1 = t.dst_y;
-                    const float y2 = t.dst_y + t.height;
-                    const float vertex[4][3] = {{x1, y1, zf},
-                                                {x2, y1, zf},
-                                                {x2, y2, zf},
-                                                {x1, y2, zf}};
-                    // TODO: use glDrawArrays?
-                    ::glTexCoord2f(tu1, tv1);
-                    ::glVertex3fv(vertex[0]);
-                    ::glTexCoord2f(tu2, tv1);
-                    ::glVertex3fv(vertex[1]);
-                    ::glTexCoord2f(tu2, tv2);
-                    ::glVertex3fv(vertex[2]);
-                    ::glTexCoord2f(tu1, tv2);
-                    ::glVertex3fv(vertex[3]);
-                  });
+    typedef typename boost::range_value<DrawingRegions>::type drawing_region_t;
+    BOOST_FOREACH(const drawing_region_t& dr, drawing_regions) {
+      const float tu1 = dr->src_x()                  / texture_width;
+      const float tu2 = (dr->src_x() + dr->width())  / texture_width;
+      const float tv1 = dr->src_y()                  / texture_height;
+      const float tv2 = (dr->src_y() + dr->height()) / texture_height;
+      const float x1 = dr->dst_x();
+      const float x2 = dr->dst_x() + dr->width();
+      const float y1 = dr->dst_y();
+      const float y2 = dr->dst_y() + dr->height();
+      const float vertex[4][3] = {{x1, y1, zf},
+                                  {x2, y1, zf},
+                                  {x2, y2, zf},
+                                  {x1, y2, zf}};
+      // TODO: use glDrawArrays?
+      ::glTexCoord2f(tu1, tv1);
+      ::glVertex3fv(vertex[0]);
+      ::glTexCoord2f(tu2, tv1);
+      ::glVertex3fv(vertex[1]);
+      ::glTexCoord2f(tu2, tv2);
+      ::glVertex3fv(vertex[2]);
+      ::glTexCoord2f(tu1, tv2);
+      ::glVertex3fv(vertex[3]);
+    };
     ::glEnd();
     ::glBindTexture(GL_TEXTURE_2D, 0);
     ::glUseProgram(0);
@@ -128,7 +129,7 @@ private:
     fragment_shader = ::glCreateShader(GL_FRAGMENT_SHADER);
     assert(fragment_shader);
     const char* shader_source_p = sharder_source.c_str();
-    ::glShaderSource(fragment_shader, 1, &shader_source_p, nullptr);
+    ::glShaderSource(fragment_shader, 1, &shader_source_p, 0);
     ::glCompileShader(fragment_shader);
     // check status
     GLint compiled;
@@ -161,7 +162,7 @@ private:
     if (log_size) {
       int length = 0;
       // TODO: 動的確保のほうがよい?
-      std::array<char, 1024> buffer;
+      boost::array<char, 1024> buffer;
       // TODO: バッファ確認
       ::glGetShaderInfoLog(shader, buffer.size(), &length, buffer.data());
       std::cerr << buffer.data() << std::endl;

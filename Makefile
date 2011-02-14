@@ -1,6 +1,6 @@
 PROG:=ebiten
 CC:=gcc
-CXX:=g++-mp-4.5
+CXX:=g++
 
 CFLAGS:= \
 	-W -Wall -Wextra \
@@ -10,13 +10,11 @@ CFLAGS:= \
 
 CXXFLAGS:= \
 	$(CFLAGS) \
-	-std=c++0x \
-	-fno-deduce-init-list \
+	-std=c++98
 
 LDFLAGS:= \
 	-L/opt/local/lib \
 	-pthread \
-	-static-libgcc \
 	-framework Cocoa -framework OpenGL \
 	-lpng # TODO: link them statically
 

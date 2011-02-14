@@ -1,14 +1,14 @@
 #ifndef EBITEN_GAME_GRAPHICS_AFFINE_MATRIX_HPP
 #define EBITEN_GAME_GRAPHICS_AFFINE_MATRIX_HPP
 
+#include <boost/array.hpp>
 #include <boost/mpl/size_t.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/range.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/typeof/typeof.hpp>
 #include <algorithm>
-#include <array>
 #include <cassert>
-#include <initializer_list>
 
 namespace ebiten {
 namespace game {
@@ -19,14 +19,15 @@ class affine_matrix : private boost::noncopyable {
   BOOST_STATIC_ASSERT(0 < Dimension);
 private:
   static const std::size_t size = Dimension * (Dimension - 1);
-  std::array<Float, size> elements_;
+  boost::array<Float, size> elements_;
 public:
   // TODO: accepts iterators
   // TODO: constructor's arugments?
-  affine_matrix(const std::initializer_list<Float>& elements_) {
-    assert(static_cast<std::size_t>(boost::size(elements_)) <= size);
+  template<class Elements>
+  affine_matrix(const Elements& elements) {
+    assert(static_cast<std::size_t>(boost::size(elements)) <= size);
     this->elements_.fill(0);
-    std::copy(boost::begin(elements_), boost::end(elements_), this->elements_.begin());
+    std::copy(boost::begin(elements), boost::end(elements), this->elements_.begin());
   }
   template<std::size_t I, std::size_t J>
   Float
@@ -44,7 +45,7 @@ public:
   }
   bool
   is_identity() const {
-    auto it = this->elements_.cbegin();
+    BOOST_AUTO(it, this->elements_.begin());
     for (std::size_t i = 0; i < Dimension - 1; ++i) {
       for (std::size_t j = 0; j < Dimension; ++j, ++it) {
         if (i == j) {
@@ -86,7 +87,7 @@ namespace game {
 namespace graphics {
 
 TEST(affine_matrix, element) {
-  affine_matrix<double, 4> m{1, 2, 3};
+  affine_matrix<double, 4> m((double[]){1, 2, 3});
   EXPECT_EQ(1, (m.element<0, 0>()));
   EXPECT_EQ(2, (m.element<0, 1>()));
   EXPECT_EQ(3, (m.element<0, 2>()));
@@ -125,9 +126,9 @@ TEST(affine_matrix, element) {
 }
 
 TEST(affine_matrix, is_identity) {
-  affine_matrix<double, 4> m1{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0};
+  affine_matrix<double, 4> m1((double[]){1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0});
   EXPECT_TRUE(m1.is_identity());
-  affine_matrix<double, 4> m2{1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0};
+  affine_matrix<double, 4> m2((double[]){1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0});
   EXPECT_FALSE(m2.is_identity());
 }
 

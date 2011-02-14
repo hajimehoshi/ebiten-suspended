@@ -7,10 +7,14 @@
 #include "ebiten/game/kernels/macosx/application.hpp"
 #include "ebiten/game/timers/mach/timer.hpp"
 #include "ebiten/util/singleton.hpp"
+#include <algorithm>
+#include <boost/bind.hpp>
+#include <boost/function.hpp>
 #include <boost/optional.hpp>
 #include <boost/range.hpp>
+#include <boost/type_traits.hpp>
+#include <boost/typeof/typeof.hpp>
 #include <boost/utility/in_place_factory.hpp>
-#include <atomic>
 #include <pthread.h>
 
 namespace ebiten {
@@ -46,62 +50,82 @@ public:
     const std::size_t frame_width  = screen_width * window_scale;
     const std::size_t frame_height = screen_height * window_scale;
     frames::cocoa::frame frame(frame_width, frame_height);
-    std::function<void()> draw_sprites = [&]{
-      lock l(mutex);
-      const auto& sprites = game.sprites();
-      typedef graphics::sprite sprite;
-      typedef std::reference_wrapper<const sprite> sprite_cref;
-      std::vector<sprite_cref> sorted_sprites;
-      sorted_sprites.reserve(boost::size(sprites));
-      std::for_each(boost::begin(sprites), boost::end(sprites),
-                    [&](const sprite& s) {
-                      sorted_sprites.emplace_back(s);
-                    });
-      // sort the sprites in desceinding order of z
-      std::sort(sorted_sprites.begin(), sorted_sprites.end(),
-                [](const sprite_cref& a, const sprite_cref& b) {
-                  const double diff = a.get().z() - b.get().z();
-                  return (0 < diff) ? -1 : ((diff < 0) ? 1 : 0);
-                });
-      std::for_each(sorted_sprites.begin(), sorted_sprites.end(),
-                    [](const sprite_cref& s) {
-                      s.get().draw(graphics::opengl::graphics_context::instance());
-                    });
+    struct draw_sprites_func {
+      static void invoke(pthread_mutex_t& mutex, const Game& game) {
+        lock l(mutex);
+        typedef BOOST_TYPEOF(game.sprites()) sprites_t;
+        const sprites_t& sprites = game.sprites();
+        typedef boost::shared_ptr<graphics::sprite> sprites_element_t;
+        BOOST_STATIC_ASSERT((boost::is_same<typename boost::range_value<sprites_t>::type, sprites_element_t>::value));
+        // TODO: use reference_wrapper?
+        std::vector<sprites_element_t> sorted_sprites;
+        sorted_sprites.reserve(boost::size(sprites));
+        BOOST_FOREACH(const sprites_element_t& s, sprites) {
+          sorted_sprites.push_back(s);
+        };
+        // sort the sprites in desceinding order of z
+        struct sprites_cmp {
+          static int invoke(const sprites_element_t& a,
+                            const sprites_element_t& b) {
+            const double diff = a->z() - b->z();
+            return (0 < diff) ? -1 : ((diff < 0) ? 1 : 0);
+          }
+        };
+        std::sort(sorted_sprites.begin(), sorted_sprites.end(),
+        sprites_cmp::invoke);
+        BOOST_FOREACH(const sprites_element_t& s, sorted_sprites) {
+          s->draw(graphics::opengl::graphics_context::instance());
+        };
+      }
     };
-
+    boost::function<void()> draw_sprites = boost::bind(&draw_sprites_func::invoke,
+                                                       boost::ref(mutex),
+                                                       boost::ref(game));
+    struct update_device_func {
+      static void invoke(boost::optional<graphics::opengl::device>& device,
+                         boost::function<void()>& draw_sprites) {
+        device->update(draw_sprites);
+      }
+    };
     boost::optional<graphics::opengl::device> device;
-    graphics::opengl::cocoa::view<decltype(frame)> view(frame,
-                                                        [&]{
-                                                          device->update(draw_sprites);
-                                                        });
+    boost::function<void()> update_device = boost::bind(&update_device_func::invoke,
+                                                        boost::ref(device),
+                                                        boost::ref(draw_sprites));
+    graphics::opengl::cocoa::view<BOOST_TYPEOF(frame)> view(frame, update_device);
     device = boost::in_place(screen_width, screen_height, window_scale);
     // TODO: remove initialize...
     game.initialize(device->texture_factory());
 
     // start the logic loop
-    struct logic_func_struct {
-      static void* invoke(void* func_ptr) {
-        auto func = *(reinterpret_cast<std::function<void()>*>(func_ptr));
-        func();
-        return nullptr;
+    struct logic_func {
+      static void* invoke(std::size_t fps, pthread_mutex_t& mutex, Game& game) {
+        int frame_count = 0;
+        timers::mach::timer timer(fps);
+        for (;;) {
+          lock l(mutex);
+          timer.wait_frame();
+          game.update(frame_count);
+          ++frame_count;
+        }
+        return 0;
       }
     };
-    std::atomic<bool> game_terminated(false);
-    std::function<void()> logic_func = [&]{
-      int frame_count = 0;
-      timers::mach::timer timer(fps);
-      while (!game_terminated.load()) {
-        lock l(mutex);
-        timer.wait_frame();
-        game.update(frame_count);
-        ++frame_count;
+    boost::function<void*()> logic = boost::bind(logic_func::invoke,
+                                                 fps,
+                                                 boost::ref(mutex),
+                                                 boost::ref(game));
+    struct logic_func_wrapper {
+      static void* invoke(void* func_p) {
+        typedef boost::function<void*()> func_t;
+        func_t func = *(reinterpret_cast<func_t*>(func_p));
+        return func();
       }
     };
     pthread_t logic_thread;
-    ::pthread_create(&logic_thread, nullptr, logic_func_struct::invoke, &logic_func);
+    ::pthread_create(&logic_thread, 0, logic_func_wrapper::invoke, &logic);
     application::instance().run(frame);
-    game_terminated.store(true);
-    ::pthread_join(logic_thread, nullptr);
+    //game_terminated.store(true);
+    //::pthread_join(logic_thread, 0);
   }
 };
 

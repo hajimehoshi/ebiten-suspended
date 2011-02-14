@@ -11,7 +11,7 @@ template<class Float>
 class geometry_matrix_base : public affine_matrix<Float, 3> {
 public:
   geometry_matrix_base(Float a, Float b, Float c, Float d, Float tx, Float ty)
-    : affine_matrix<Float, 3>{a, b, tx, c, d, ty} {
+    : affine_matrix<Float, 3>((Float[]){a, b, tx, c, d, ty}) {
   }
   Float
   a() const {
@@ -76,7 +76,7 @@ namespace game {
 namespace graphics {
 
 TEST(geometry_matrix, member_functions) {
-  geometry_matrix m{1, 2, 3, 4, 5, 6};
+  geometry_matrix m(1, 2, 3, 4, 5, 6);
   EXPECT_EQ(1, m.a());
   EXPECT_EQ(2, m.b());
   EXPECT_EQ(3, m.c());

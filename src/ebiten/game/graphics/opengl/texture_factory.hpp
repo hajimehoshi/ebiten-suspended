@@ -5,8 +5,8 @@
 #include "ebiten/util/id.hpp"
 #include "ebiten/util/image_loader.hpp"
 #include "ebiten/util/singleton.hpp"
-#include <memory>
 #include <OpenGL/gl.h>
+#include <boost/shared_ptr.hpp>
 
 namespace ebiten {
 namespace game {
@@ -32,11 +32,12 @@ clp2(uint64_t x) {
 class texture_factory : public util::singleton<texture_factory> {
   friend class util::singleton<texture_factory>;
 public:
-  std::unique_ptr<graphics::texture>
+  boost::shared_ptr<graphics::texture>
   from_file(const std::string& filename) {
-    const auto image = util::image_loader::instance().load_file(filename);
-    const auto width  = image->width();
-    const auto height = image->height();
+    const boost::shared_ptr<util::image> image =
+      util::image_loader::instance().load_file(filename);
+    const std::size_t width  = image->width();
+    const std::size_t height = image->height();
     assert(width  == clp2(width));
     assert(height == clp2(height));
     GLuint texture_id = 0;
@@ -57,16 +58,16 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     ::glBindTexture(GL_TEXTURE_2D, 0);
     typedef graphics::texture texture;
-    return std::unique_ptr<texture>(new texture(util::id_(texture_id),
-                                                width,
-                                                height,
-                                                width,
-                                                height));
+    return boost::shared_ptr<texture>(new texture(util::id_(texture_id),
+                                                  width,
+                                                  height,
+                                                  width,
+                                                  height));
   }
-  std::unique_ptr<graphics::texture>
+  boost::shared_ptr<graphics::texture>
   create(std::size_t width, std::size_t height) {
-    const auto texture_width  = clp2(width);
-    const auto texture_height = clp2(height);
+    const std::size_t texture_width  = clp2(width);
+    const std::size_t texture_height = clp2(height);
     GLuint texture_id = 0;
     ::glGenTextures(1, &texture_id);
     assert(texture_id);
@@ -85,11 +86,11 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     ::glBindTexture(GL_TEXTURE_2D, 0);
     typedef graphics::texture texture;
-    return std::unique_ptr<texture>(new texture(util::id_(texture_id),
-                                                width,
-                                                height,
-                                                texture_width,
-                                                texture_height));
+    return boost::shared_ptr<texture>(new texture(util::id_(texture_id),
+                                                  width,
+                                                  height,
+                                                  texture_width,
+                                                  texture_height));
   }
 private:
   texture_factory() {
@@ -111,9 +112,9 @@ namespace graphics {
 namespace opengl {
 
 TEST(clp2, calling) {
-  EXPECT_EQ(256, clp2(255));
-  EXPECT_EQ(256, clp2(256));
-  EXPECT_EQ(512, clp2(257));
+  EXPECT_EQ(256u, clp2(255));
+  EXPECT_EQ(256u, clp2(256));
+  EXPECT_EQ(512u, clp2(257));
 }
 
 }

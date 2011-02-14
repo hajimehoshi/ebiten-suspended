@@ -10,7 +10,8 @@ namespace graphics {
 template<class Float>
 class color_matrix_base : public affine_matrix<Float, 5> {
 public:
-  color_matrix_base(std::initializer_list<Float> elements_)
+  template<class Elements>
+  color_matrix_base(const Elements& elements_)
     : affine_matrix<Float, 5>(elements_) {
   }
 };

@@ -15,8 +15,11 @@ namespace graphics {
 class sprite : private boost::noncopyable {
 private:
   const texture& texture_;
-  typedef std::vector<drawing_region> drawing_regions_type;
-  drawing_regions_type drawing_regions_;
+  typedef boost::shared_ptr<drawing_region> drawing_region_ptr;
+public:
+  typedef std::vector<drawing_region_ptr> drawing_regions_t;
+private:
+  drawing_regions_t drawing_regions_;
   graphics::geometry_matrix geometry_matrix_;
   double z_;
   graphics::color_matrix color_matrix_;
@@ -26,11 +29,11 @@ public:
     : texture_(texture_),
       geometry_matrix_(1, 0, 0, 1, 0, 0),
       z_(0),
-      color_matrix_({1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0}),
+      color_matrix_((double[]){1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0}),
       is_visible_(true) {
     drawing_regions_.reserve(drawing_regions_count);
     for (std::size_t i = 0; i < drawing_regions_count; ++i) {
-      drawing_regions_.emplace_back();
+      drawing_regions_.push_back(drawing_region_ptr(new drawing_region()));
     }
   }
   template<class GraphicsContext>
@@ -47,13 +50,13 @@ public:
   }
   graphics::drawing_region&
   drawing_region_at(std::size_t i) {
-    return this->drawing_regions_.at(i);
+    return *this->drawing_regions_.at(i);
   }
   const graphics::drawing_region&
   drawing_region_at(std::size_t i) const {
-    return this->drawing_regions_.at(i);
+    return *this->drawing_regions_.at(i);
   }
-  const drawing_regions_type&
+  const drawing_regions_t&
   drawing_regions() const {
     return this->drawing_regions_;
   }
