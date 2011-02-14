@@ -5,6 +5,7 @@
 #include "ebiten/game/graphics/drawing_region.hpp"
 #include "ebiten/game/graphics/geometry_matrix.hpp"
 #include "ebiten/game/graphics/texture.hpp"
+#include <boost/make_shared.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/range.hpp>
 
@@ -33,7 +34,7 @@ public:
       is_visible_(true) {
     drawing_regions_.reserve(drawing_regions_count);
     for (std::size_t i = 0; i < drawing_regions_count; ++i) {
-      drawing_regions_.push_back(drawing_region_ptr(new drawing_region()));
+      drawing_regions_.push_back(boost::make_shared<drawing_region>());
     }
   }
   template<class GraphicsContext>

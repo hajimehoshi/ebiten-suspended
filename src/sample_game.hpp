@@ -5,6 +5,7 @@
 #include "ebiten/game/graphics/sprite.hpp"
 #include "ebiten/game/graphics/texture.hpp"
 #include <boost/foreach.hpp>
+#include <boost/make_shared.hpp>
 #include <boost/range.hpp>
 #include <boost/shared_ptr.hpp>
 #include <cstdlib>
@@ -20,7 +21,7 @@ public:
   void
   initialize(TextureFactory& tf) {
     this->texture_ = tf.from_file("test.png");
-    this->sprites_.push_back(sprite_ptr_t(new sprite_t(*this->texture_, 4)));
+    this->sprites_.push_back(boost::make_shared<sprite_t>(*this->texture_, 4));
     sprite_ptr_t& s = this->sprites_.at(0);
     s->geometry_matrix().set_a(1);
     typedef ebiten::game::graphics::drawing_region drawing_region_t;

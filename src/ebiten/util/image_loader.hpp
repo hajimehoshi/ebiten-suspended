@@ -5,6 +5,7 @@
 #include "ebiten/util/singleton.hpp"
 #include <boost/gil/gil_all.hpp>
 #include <boost/gil/extension/io/png_io.hpp>
+#include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
 #include <vector>
 
@@ -21,13 +22,14 @@ public:
     boost::gil::png_read_image(filename, gil_image);
     const std::size_t width  = gil_image.width();
     const std::size_t height = gil_image.height();
-    boost::shared_ptr<std::vector<uint8_t> > pixels(new std::vector<uint8_t>(width * height * 4));
+    boost::shared_ptr<std::vector<uint8_t> > pixels =
+      boost::make_shared<std::vector<uint8_t> >(width * height * 4);
     boost::gil::rgba8_pixel_t* pixelsPtr =
       reinterpret_cast<boost::gil::rgba8_pixel_t*>(pixels->data());
     gil_image_t::view_t viewSrc = boost::gil::view(gil_image);
     gil_image_t::view_t viewDst = boost::gil::interleaved_view(width, height, pixelsPtr, width * 4);
     boost::gil::copy_pixels(viewSrc, viewDst);
-    return boost::shared_ptr<image>(new image(pixels, width, height));
+    return boost::make_shared<image>(pixels, width, height);
   }
 private:
   image_loader() {

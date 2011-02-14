@@ -6,6 +6,7 @@
 #include "ebiten/util/image_loader.hpp"
 #include "ebiten/util/singleton.hpp"
 #include <OpenGL/gl.h>
+#include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
 
 namespace ebiten {
@@ -58,11 +59,11 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     ::glBindTexture(GL_TEXTURE_2D, 0);
     typedef graphics::texture texture;
-    return boost::shared_ptr<texture>(new texture(util::id_(texture_id),
-                                                  width,
-                                                  height,
-                                                  width,
-                                                  height));
+    return boost::make_shared<texture>(util::id_(texture_id),
+                                       width,
+                                       height,
+                                       width,
+                                       height);
   }
   boost::shared_ptr<graphics::texture>
   create(std::size_t width, std::size_t height) {
@@ -86,11 +87,11 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     ::glBindTexture(GL_TEXTURE_2D, 0);
     typedef graphics::texture texture;
-    return boost::shared_ptr<texture>(new texture(util::id_(texture_id),
-                                                  width,
-                                                  height,
-                                                  texture_width,
-                                                  texture_height));
+    return boost::make_shared<texture>(util::id_(texture_id),
+                                       width,
+                                       height,
+                                       texture_width,
+                                       texture_height);
   }
 private:
   texture_factory() {
