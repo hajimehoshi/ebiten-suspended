@@ -3,14 +3,13 @@
 
 #include "ebiten/util/id.hpp"
 #include <boost/any.hpp>
-#include <boost/noncopyable.hpp>
 
 namespace ebiten {
 namespace game {
 namespace graphics {
 
 // texture というよりは texture_id?
-class texture : private boost::noncopyable {
+class texture {
 private:
   util::id_ const id_;
   std::size_t const width_;

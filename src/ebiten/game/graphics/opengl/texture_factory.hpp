@@ -33,7 +33,7 @@ clp2(uint64_t x) {
 class texture_factory : public util::singleton<texture_factory> {
   friend class util::singleton<texture_factory>;
 public:
-  boost::shared_ptr<graphics::texture>
+  graphics::texture
   from_file(std::string const& filename) {
     boost::shared_ptr<util::image const> const image =
       util::image_loader::instance().load_file(filename);
@@ -58,14 +58,13 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     ::glBindTexture(GL_TEXTURE_2D, 0);
-    typedef graphics::texture texture;
-    return boost::make_shared<texture>(util::id_(texture_id),
-                                       width,
-                                       height,
-                                       width,
-                                       height);
+    return graphics::texture(util::id_(texture_id),
+                             width,
+                             height,
+                             width,
+                             height);
   }
-  boost::shared_ptr<graphics::texture>
+  graphics::texture
   create(std::size_t width, std::size_t height) {
     std::size_t const texture_width  = clp2(width);
     std::size_t const texture_height = clp2(height);
@@ -86,12 +85,11 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     ::glBindTexture(GL_TEXTURE_2D, 0);
-    typedef graphics::texture texture;
-    return boost::make_shared<texture>(util::id_(texture_id),
-                                       width,
-                                       height,
-                                       texture_width,
-                                       texture_height);
+    return graphics::texture(util::id_(texture_id),
+                             width,
+                             height,
+                             texture_width,
+                             texture_height);
   }
 private:
   texture_factory() {
@@ -126,4 +124,3 @@ TEST(clp2, calling) {
 #endif
 
 #endif
-

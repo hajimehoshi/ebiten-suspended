@@ -6,6 +6,7 @@
 #include "ebiten/game/graphics/texture.hpp"
 #include <boost/foreach.hpp>
 #include <boost/make_shared.hpp>
+#include <boost/optional.hpp>
 #include <boost/range.hpp>
 #include <boost/shared_ptr.hpp>
 #include <cstdlib>
@@ -13,15 +14,18 @@
 #include <iostream>
 
 class sample_game : private boost::noncopyable {
+private:
   typedef ebiten::game::graphics::sprite sprite_type;
   typedef boost::shared_ptr<sprite_type> sprite_ptr_type;
   typedef std::deque<sprite_ptr_type> sprites_type;
+  boost::optional<ebiten::game::graphics::texture> texture_;
+  sprites_type sprites_;
 public:
   template<class TextureFactory>
   void
   initialize(TextureFactory& tf) {
-    this->texture_ = tf.from_file("test.png");
-    this->sprites_.push_back(boost::make_shared<sprite_type>(*this->texture_, 4));
+    this->texture_ = boost::in_place(tf.from_file("test.png"));
+    this->sprites_.push_back(boost::make_shared<sprite_type>(this->texture_.get(), 4));
     sprite_ptr_type& s = this->sprites_.at(0);
     s->geometry_matrix().set_a(1);
     sprite_type::drawing_regions_type const& drs = s->drawing_regions();
@@ -56,9 +60,6 @@ public:
       std::cout << "foo!" << std::endl;
     }
   }
-private:
-  boost::shared_ptr<ebiten::game::graphics::texture> texture_;
-  sprites_type sprites_;
 };
 
 #endif
