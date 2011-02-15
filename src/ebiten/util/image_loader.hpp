@@ -22,14 +22,13 @@ public:
     boost::gil::png_read_image(filename, gil_image);
     std::size_t const width  = gil_image.width();
     std::size_t const height = gil_image.height();
-    boost::shared_ptr<std::vector<uint8_t> > pixels =
-      boost::make_shared<std::vector<uint8_t> >(width * height * 4);
+    boost::shared_ptr<image> img = boost::make_shared<image>(width, height);
     boost::gil::rgba8_pixel_t* pixelsPtr =
-      reinterpret_cast<boost::gil::rgba8_pixel_t*>(pixels->data());
+      reinterpret_cast<boost::gil::rgba8_pixel_t*>(img->pixels().data());
     gil_image_t::view_t viewSrc = boost::gil::view(gil_image);
     gil_image_t::view_t viewDst = boost::gil::interleaved_view(width, height, pixelsPtr, width * 4);
     boost::gil::copy_pixels(viewSrc, viewDst);
-    return boost::make_shared<image>(pixels, width, height);
+    return img;
   }
 private:
   image_loader() {

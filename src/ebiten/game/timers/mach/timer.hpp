@@ -30,7 +30,7 @@ public:
     this->next_time_to_update_ += this->duration_per_frame_;
   }
 private:
-  uint64_t
+  static uint64_t
   calc_duration_per_frame(std::size_t fps) {
     assert(fps);
     mach_timebase_info_data_t timebase_info;

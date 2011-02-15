@@ -11,22 +11,23 @@ namespace util {
 
 class image : private boost::noncopyable {
 private:
-  boost::shared_ptr<std::vector<uint8_t> const> const pixels_;
   std::size_t const width_;
   std::size_t const height_;
+  std::vector<uint8_t> pixels_;
 public:
-  image(boost::shared_ptr<std::vector<uint8_t> const> const& pixels,
-        std::size_t width,
+  image(std::size_t width,
         std::size_t height)
-    : pixels_(pixels),
-      width_(width),
-      height_(height) {
-    assert(this->pixels_->size() == width * height * 4);
+    : width_(width),
+      height_(height),
+      pixels_(width * height * 4) {
+  }
+  std::vector<uint8_t>&
+  pixels() {
+    return this->pixels_;
   }
   std::vector<uint8_t> const&
   pixels() const {
-    assert(this->pixels_);
-    return *this->pixels_;
+    return this->pixels_;
   }
   std::size_t
   width() const {
