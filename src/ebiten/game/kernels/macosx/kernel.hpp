@@ -51,7 +51,8 @@ public:
     std::size_t const frame_height = screen_height * window_scale;
     frames::cocoa::frame frame(frame_width, frame_height);
     struct draw_sprites_func {
-      static void invoke(pthread_mutex_t& mutex, Game const& game) {
+      static void
+      invoke(pthread_mutex_t& mutex, Game const& game) {
         lock l(mutex);
         typedef BOOST_TYPEOF(game.sprites()) sprites_type;
         sprites_type const& sprites = game.sprites();
@@ -66,14 +67,15 @@ public:
         };
         // sort the sprites in desceinding order of z
         struct sprites_cmp {
-          static int invoke(sprites_element_type const& a,
-                            sprites_element_type const& b) {
+          static int
+          invoke(sprites_element_type const& a,
+                 sprites_element_type const& b) {
             const double diff = a->z() - b->z();
             return (0 < diff) ? -1 : ((diff < 0) ? 1 : 0);
           }
         };
         std::sort(sorted_sprites.begin(), sorted_sprites.end(),
-        sprites_cmp::invoke);
+                  sprites_cmp::invoke);
         BOOST_FOREACH(sprites_element_type const& s, sorted_sprites) {
           s->draw(graphics::opengl::graphics_context::instance());
         };
@@ -83,8 +85,9 @@ public:
                                                        boost::ref(mutex),
                                                        boost::ref(game));
     struct update_device_func {
-      static void invoke(boost::optional<graphics::opengl::device>& device,
-                         boost::function<void()>& draw_sprites) {
+      static void
+      invoke(boost::optional<graphics::opengl::device>& device,
+             boost::function<void()>& draw_sprites) {
         device->update(draw_sprites);
       }
     };
@@ -99,7 +102,8 @@ public:
 
     // start the logic loop
     struct logic_func {
-      static void* invoke(std::size_t fps, pthread_mutex_t& mutex, Game& game) {
+      static void
+      invoke(std::size_t fps, pthread_mutex_t& mutex, Game& game) {
         int frame_count = 0;
         timers::mach::timer timer(fps);
         for (;;) {
@@ -108,18 +112,19 @@ public:
           game.update(frame_count);
           ++frame_count;
         }
-        return 0;
       }
     };
-    boost::function<void*()> logic = boost::bind(logic_func::invoke,
-                                                 fps,
-                                                 boost::ref(mutex),
-                                                 boost::ref(game));
+    boost::function<void()> logic = boost::bind(logic_func::invoke,
+                                                fps,
+                                                boost::ref(mutex),
+                                                boost::ref(game));
     struct logic_func_wrapper {
-      static void* invoke(void* func_p) {
+      static void*
+      invoke(void* func_p) {
         typedef boost::function<void*()> func_type;
         func_type func = *(reinterpret_cast<func_type*>(func_p));
-        return func();
+        func();
+        return 0;
       }
     };
     pthread_t logic_thread;
