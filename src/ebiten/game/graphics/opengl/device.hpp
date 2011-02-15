@@ -20,8 +20,8 @@ private:
   std::size_t const screen_width_;
   std::size_t const screen_height_;
   std::size_t const window_scale_;
-  texture offscreen_texture_;
-  GLuint framebuffer_;
+  texture const offscreen_texture_;
+  GLuint const framebuffer_;
 public:
   device(std::size_t screen_width,
          std::size_t screen_height,
@@ -30,9 +30,7 @@ public:
       screen_height_(screen_height),
       window_scale_(window_scale),
       offscreen_texture_(texture_factory::instance().create(this->screen_width_, this->screen_height_)),
-      framebuffer_(0) {
-    ::glGenFramebuffersEXT(1, &this->framebuffer_);
-    assert(this->framebuffer_);
+      framebuffer_(generate_frame_buffer()) {
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->framebuffer_);
     // TODO: std::ptrdiff_t?
     std::ptrdiff_t const offscreen_texture_id =
@@ -116,6 +114,14 @@ public:
   opengl::texture_factory&
   texture_factory() const {
     return opengl::texture_factory::instance();
+  }
+private:
+  static GLuint
+  generate_frame_buffer() {
+    GLuint framebuffer = 0;
+    ::glGenFramebuffersEXT(1, &framebuffer);
+    assert(framebuffer);
+    return framebuffer;
   }
 };
 
