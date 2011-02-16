@@ -46,7 +46,8 @@ namespace ebiten {
 namespace util {
 
 TEST(image_loader, load_file) {
-  boost::shared_ptr<image> image = image_loader::instance().load_file("test.png");
+  boost::shared_ptr<image> image =
+    image_loader::instance().load_file("test.png");
   EXPECT_EQ(32u, image->width());
   EXPECT_EQ(32u, image->height());
 }

@@ -6,8 +6,6 @@
 #include "ebiten/game/graphics/sprite.hpp"
 #include <OpenGL/gl.h>
 #include <boost/function.hpp>
-#include <boost/noncopyable.hpp>
-#include <boost/shared_ptr.hpp>
 #include <cassert>
 
 namespace ebiten {

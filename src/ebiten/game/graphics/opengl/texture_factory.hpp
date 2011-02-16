@@ -6,7 +6,6 @@
 #include "ebiten/util/image_loader.hpp"
 #include "ebiten/util/singleton.hpp"
 #include <OpenGL/gl.h>
-#include <boost/make_shared.hpp>
 #include <boost/shared_ptr.hpp>
 
 namespace ebiten {
