@@ -54,30 +54,25 @@ public:
       static void
       invoke(pthread_mutex_t& mutex, Game const& game) {
         lock l(mutex);
-        typedef BOOST_TYPEOF(game.sprites()) sprites_type;
-        sprites_type const& sprites = game.sprites();
-        typedef boost::shared_ptr<graphics::sprite> sprites_element_type;
-        BOOST_STATIC_ASSERT((boost::is_same<typename boost::range_value<sprites_type>::type,
-                             sprites_element_type>::value));
-        // TODO: use reference_wrapper?
-        std::vector<sprites_element_type> sorted_sprites;
+        BOOST_AUTO(const& sprites, game.sprites());
+        typedef boost::reference_wrapper<graphics::sprite const> sprite_cref;
+        std::vector<sprite_cref> sorted_sprites;
         sorted_sprites.reserve(boost::size(sprites));
-        BOOST_FOREACH(sprites_element_type const& s, sprites) {
-          sorted_sprites.push_back(s);
+        BOOST_FOREACH(graphics::sprite const& s, sprites) {
+          sorted_sprites.push_back(boost::ref(s));
         };
         // sort the sprites in desceinding order of z
         struct sprites_cmp {
           static int
-          invoke(sprites_element_type const& a,
-                 sprites_element_type const& b) {
-            const double diff = a->z() - b->z();
+          invoke(sprite_cref const& a, sprite_cref const& b) {
+            const double diff = a.get().z() - b.get().z();
             return (0 < diff) ? -1 : ((diff < 0) ? 1 : 0);
           }
         };
         std::sort(sorted_sprites.begin(), sorted_sprites.end(),
                   sprites_cmp::invoke);
-        BOOST_FOREACH(sprites_element_type const& s, sorted_sprites) {
-          s->draw(graphics::opengl::graphics_context::instance());
+        BOOST_FOREACH(sprite_cref const& s, sorted_sprites) {
+          s.get().draw(graphics::opengl::graphics_context::instance());
         };
       }
     };
