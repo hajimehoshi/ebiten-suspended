@@ -6,7 +6,8 @@
 #include "ebiten/util/image_loader.hpp"
 #include "ebiten/util/singleton.hpp"
 #include <OpenGL/gl.h>
-#include <boost/shared_ptr.hpp>
+#include <boost/optional.hpp>
+#include <cassert>
 
 namespace ebiten {
 namespace game {
@@ -34,8 +35,9 @@ class texture_factory : public util::singleton<texture_factory> {
 public:
   graphics::texture
   from_file(std::string const& filename) {
-    boost::shared_ptr<util::image const> const image =
-      util::image_loader::instance().load_file(filename);
+    boost::optional<util::image> image;
+    util::image_loader::instance().load_file(image, filename);
+    assert(image);
     std::size_t const width  = image->width();
     std::size_t const height = image->height();
     assert(width  == clp2(width));
