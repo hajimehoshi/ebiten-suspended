@@ -6,8 +6,6 @@
 #include <boost/noncopyable.hpp>
 #include <boost/range.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/typeof/typeof.hpp>
-#include <algorithm>
 #include <cassert>
 
 namespace ebiten {
@@ -19,7 +17,8 @@ class affine_matrix : private boost::noncopyable {
   BOOST_STATIC_ASSERT(0 < Dimension);
 private:
   static std::size_t const size = Dimension * (Dimension - 1);
-  boost::array<Float, size> elements_;
+  typedef boost::array<Float, size> elements_type;
+  elements_type elements_;
 public:
   // TODO: accepts iterators
   // TODO: constructor's arugments?
@@ -45,7 +44,7 @@ public:
   }
   bool
   is_identity() const {
-    BOOST_AUTO(it, this->elements_.begin());
+    typename elements_type::const_iterator it = this->elements_.begin();
     for (std::size_t i = 0; i < Dimension - 1; ++i) {
       for (std::size_t j = 0; j < Dimension; ++j, ++it) {
         if (i == j) {

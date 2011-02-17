@@ -54,8 +54,9 @@ public:
   }
   void
   update(int frame_count) {
-    BOOST_AUTO(&drawing_region, this->sprites_.at(0)->drawing_region_at(0));
-    drawing_region.set_dst_x(drawing_region.dst_x() + 0.01);
+    ebiten::game::graphics::drawing_region& dr =
+      this->sprites_.at(0)->drawing_region_at(0);
+    dr.set_dst_x(dr.dst_x() + 0.01);
     if (frame_count % 600 == 0) {
       std::cout << "foo!" << std::endl;
     }
