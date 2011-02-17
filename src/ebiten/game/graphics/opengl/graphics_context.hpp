@@ -83,14 +83,14 @@ public:
     typedef typename boost::range_value<DrawingRegions>::type drawing_region_type;
     BOOST_FOREACH(const drawing_region_type& dr, drawing_regions) {
       // TODO: move outside
-      float const tu1 = dr->src_x()                  / texture_width;
-      float const tu2 = (dr->src_x() + dr->width())  / texture_width;
-      float const tv1 = dr->src_y()                  / texture_height;
-      float const tv2 = (dr->src_y() + dr->height()) / texture_height;
-      float const x1 = dr->dst_x();
-      float const x2 = dr->dst_x() + dr->width();
-      float const y1 = dr->dst_y();
-      float const y2 = dr->dst_y() + dr->height();
+      float const tu1 = dr.src_x()                  / texture_width;
+      float const tu2 = (dr.src_x() + dr.width())  / texture_width;
+      float const tv1 = dr.src_y()                  / texture_height;
+      float const tv2 = (dr.src_y() + dr.height()) / texture_height;
+      float const x1 = dr.dst_x();
+      float const x2 = dr.dst_x() + dr.width();
+      float const y1 = dr.dst_y();
+      float const y2 = dr.dst_y() + dr.height();
       float const vertex[4][3] = {{x1, y1, zf},
                                   {x2, y1, zf},
                                   {x2, y2, zf},

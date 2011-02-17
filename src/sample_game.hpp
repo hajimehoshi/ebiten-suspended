@@ -16,6 +16,7 @@ class sample_game : private boost::noncopyable {
 private:
   typedef ebiten::game::graphics::sprite sprite_type;
   typedef boost::ptr_vector<sprite_type> sprites_type;
+  typedef ebiten::game::graphics::drawing_region drawing_region_type;
   boost::optional<ebiten::game::graphics::texture> texture_;
   sprites_type sprites_;
 public:
@@ -26,10 +27,10 @@ public:
     this->sprites_.push_back(new sprite_type(this->texture_.get(), 4));
     sprite_type& s = this->sprites_.at(0);
     s.geometry_matrix().set_a(1);
-    sprite_type::drawing_regions_type const& drs = s.drawing_regions();
-    BOOST_FOREACH(boost::range_value<sprite_type::drawing_regions_type>::type const& dr, drs) {
-      dr->set_width(32);
-      dr->set_height(32);
+    sprite_type::drawing_regions_type& drs = s.drawing_regions();
+    BOOST_FOREACH(drawing_region_type& dr, drs) {
+      dr.set_width(32);
+      dr.set_height(32);
     }
     s.drawing_region_at(0).set_dst_x(32);
     s.drawing_region_at(0).set_dst_y(32);

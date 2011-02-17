@@ -5,8 +5,8 @@
 #include "ebiten/game/graphics/drawing_region.hpp"
 #include "ebiten/game/graphics/geometry_matrix.hpp"
 #include "ebiten/game/graphics/texture.hpp"
-#include <boost/make_shared.hpp>
 #include <boost/noncopyable.hpp>
+#include <boost/ptr_container/ptr_vector.hpp>
 #include <boost/range.hpp>
 
 namespace ebiten {
@@ -16,8 +16,7 @@ namespace graphics {
 class sprite : private boost::noncopyable {
 private:
   texture const& texture_;
-  typedef boost::shared_ptr<drawing_region> drawing_region_ptr_type;
-  typedef std::vector<drawing_region_ptr_type> drawing_regions_type;
+  typedef boost::ptr_vector<drawing_region> drawing_regions_type;
   drawing_regions_type drawing_regions_;
   graphics::geometry_matrix geometry_matrix_;
   double z_;
@@ -32,7 +31,7 @@ public:
       is_visible_(true) {
     drawing_regions_.reserve(drawing_regions_count);
     for (std::size_t i = 0; i < drawing_regions_count; ++i) {
-      drawing_regions_.push_back(boost::make_shared<drawing_region>());
+      drawing_regions_.push_back(new drawing_region());
     }
   }
   template<class GraphicsContext>
@@ -49,11 +48,15 @@ public:
   }
   graphics::drawing_region&
   drawing_region_at(std::size_t i) {
-    return *this->drawing_regions_.at(i);
+    return this->drawing_regions_.at(i);
   }
   graphics::drawing_region const&
   drawing_region_at(std::size_t i) const {
-    return *this->drawing_regions_.at(i);
+    return this->drawing_regions_.at(i);
+  }
+  drawing_regions_type &
+  drawing_regions() {
+    return this->drawing_regions_;
   }
   drawing_regions_type const&
   drawing_regions() const {
