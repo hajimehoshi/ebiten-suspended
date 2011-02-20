@@ -21,6 +21,7 @@ private:
   texture const offscreen_texture_;
   GLuint const framebuffer_;
 public:
+  typedef opengl::texture_factory texture_factory_type;
   device(std::size_t screen_width,
          std::size_t screen_height,
          std::size_t window_scale)

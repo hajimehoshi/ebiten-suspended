@@ -26,6 +26,7 @@ namespace macosx {
 class kernel : public util::singleton<kernel> {
   friend class util::singleton<kernel>;
 public:
+  typedef graphics::opengl::device device_type;
   template<class Game>
   void
   run(Game& game,
@@ -90,6 +91,7 @@ public:
     boost::function<void()> update_device = boost::bind(&update_device_func::invoke,
                                                         boost::ref(device),
                                                         boost::ref(draw_sprites));
+    // TODO: force calling order
     graphics::opengl::cocoa::view<BOOST_TYPEOF(frame)> view(frame, update_device);
     device = boost::in_place(screen_width, screen_height, window_scale);
     // TODO: remove initialize...
