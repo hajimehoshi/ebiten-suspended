@@ -26,9 +26,9 @@ initialize(NSWindow* window,
     NSOpenGLPFADepthSize, 32,
     nil,
   };
-  NSOpenGLPixelFormat* format = [[[NSOpenGLPixelFormat alloc] initWithAttributes:attributes]
+  NSOpenGLPixelFormat* format = [[[NSOpenGLPixelFormat alloc]
+                                  initWithAttributes:attributes]
                                  autorelease];
-  //NSOpenGLContext* context = [[NSOpenGLContext alloc] initWithFormat:format shareContext:nil];
   EbitenOpenGLView* glView = [[EbitenOpenGLView alloc]
                               initWithFrame:rect
                               pixelFormat:format

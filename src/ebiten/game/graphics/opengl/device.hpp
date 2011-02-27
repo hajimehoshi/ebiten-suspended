@@ -110,8 +110,12 @@ public:
     ::glBindTexture(GL_TEXTURE_2D, 0);
     ::glFlush();
   }
+  opengl::graphics_context&
+  graphics_context() {
+    return opengl::graphics_context::instance();
+  }
   opengl::texture_factory&
-  texture_factory() const {
+  texture_factory() {
     return opengl::texture_factory::instance();
   }
 private:
