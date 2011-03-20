@@ -16,7 +16,7 @@ public:
     : value_(value) {
   }
   explicit
-  id_(std::ptrdiff_t value)
+  id_(std::size_t value)
     : value_(reinterpret_cast<void*>(value)) {
   }
   template<class T>

@@ -73,7 +73,7 @@ public:
                                 geo_mat.tx(), geo_mat.ty(), 0, 1};
     ::glMatrixMode(GL_MODELVIEW);
     ::glLoadMatrixf(gl_geo_mat);
-    std::ptrdiff_t const texture_id = texture.id().get<std::ptrdiff_t>();
+    std::size_t const texture_id = texture.id().get<std::size_t>();
     assert(texture_id);
     ::glBindTexture(GL_TEXTURE_2D, texture_id);
     ::glBegin(GL_QUADS);

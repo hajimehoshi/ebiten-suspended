@@ -31,9 +31,8 @@ public:
       offscreen_texture_(texture_factory::instance().create(this->screen_width_, this->screen_height_)),
       framebuffer_(generate_frame_buffer()) {
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->framebuffer_);
-    // TODO: std::ptrdiff_t?
-    std::ptrdiff_t const offscreen_texture_id =
-      this->offscreen_texture_.id().get<std::ptrdiff_t>();
+    std::size_t const offscreen_texture_id =
+      this->offscreen_texture_.id().get<std::size_t>();
     assert(offscreen_texture_id);
     ::glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,
                                 GL_COLOR_ATTACHMENT0_EXT,
@@ -90,8 +89,8 @@ public:
               0, 1);
     ::glMatrixMode(GL_MODELVIEW);
     ::glLoadMatrixf(offscreen_geo);
-    std::ptrdiff_t const offscreen_texture_id =
-      this->offscreen_texture_.id().get<std::ptrdiff_t>();
+    std::size_t const offscreen_texture_id =
+      this->offscreen_texture_.id().get<std::size_t>();
     ::glBindTexture(GL_TEXTURE_2D, offscreen_texture_id);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
