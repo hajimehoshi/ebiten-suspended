@@ -19,13 +19,15 @@ namespace detail {
 void initialize(util::id_ const& native_frame,
                 std::size_t width,
                 std::size_t height,
-                boost::function<void()> update_device);
+                boost::function<void()>& update_device);
 
 }
 
+// TODO: singleton?
 template<class Frame>
 class view : private boost::noncopyable {
 public:
+  typedef Frame frame_type;
   view(Frame& frame,
        boost::function<void()> update_device) {
     detail::initialize(frame.native_frame(), frame.width(), frame.height(), update_device);

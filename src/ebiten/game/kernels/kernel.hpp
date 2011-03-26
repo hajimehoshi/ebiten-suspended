@@ -18,9 +18,9 @@ namespace ebiten {
 namespace game {
 namespace kernels {
 
-template<class Device, class Frame, class View, class Timer, class Application>
-class kernel : public util::singleton<kernel<Device, Frame, View, Timer, Application> > {
-  friend class util::singleton<kernel<Device, Frame, View, Timer, Application> >;
+template<class Device, class Timer, class Application>
+class kernel : public util::singleton<kernel<Device, Timer, Application> > {
+  friend class util::singleton<kernel<Device, Timer, Application> >;
 public:
   typedef Device device_type;
   template<class Game>
@@ -46,7 +46,7 @@ public:
 
     std::size_t const frame_width  = screen_width * window_scale;
     std::size_t const frame_height = screen_height * window_scale;
-    Frame frame(frame_width, frame_height);
+    typename Device::view_type::frame_type frame(frame_width, frame_height);
     struct draw_sprites_func {
       static void
       invoke(pthread_mutex_t& mutex,
@@ -90,9 +90,11 @@ public:
     boost::function<void()> update_device = boost::bind(&update_device_func::invoke,
                                                         boost::ref(device),
                                                         boost::ref(draw_sprites));
-    // TODO: force calling order
-    View view(frame, update_device);
-    device = boost::in_place(screen_width, screen_height, window_scale);
+    typename Device::view_type view(frame, update_device);
+    device = boost::in_place(screen_width,
+                             screen_height,
+                             window_scale,
+                             boost::ref(view));
     // TODO: remove initialize...
     game.initialize(device->texture_factory());
 

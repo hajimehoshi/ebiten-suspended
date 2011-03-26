@@ -13,6 +13,7 @@ namespace game {
 namespace graphics {
 namespace opengl {
 
+template<class View>
 class device : private boost::noncopyable {
 private:
   std::size_t const screen_width_;
@@ -21,10 +22,12 @@ private:
   texture const offscreen_texture_;
   GLuint const framebuffer_;
 public:
+  typedef View view_type;
   typedef opengl::texture_factory texture_factory_type;
   device(std::size_t screen_width,
          std::size_t screen_height,
-         std::size_t window_scale)
+         std::size_t window_scale,
+         View&)
     : screen_width_(screen_width),
       screen_height_(screen_height),
       window_scale_(window_scale),
@@ -32,7 +35,7 @@ public:
       framebuffer_(generate_frame_buffer()) {
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->framebuffer_);
     std::size_t const offscreen_texture_id =
-      this->offscreen_texture_.id().get<std::size_t>();
+      this->offscreen_texture_.id().template get<std::size_t>();
     assert(offscreen_texture_id);
     ::glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,
                                 GL_COLOR_ATTACHMENT0_EXT,
@@ -90,7 +93,7 @@ public:
     ::glMatrixMode(GL_MODELVIEW);
     ::glLoadMatrixf(offscreen_geo);
     std::size_t const offscreen_texture_id =
-      this->offscreen_texture_.id().get<std::size_t>();
+      this->offscreen_texture_.id().template get<std::size_t>();
     ::glBindTexture(GL_TEXTURE_2D, offscreen_texture_id);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

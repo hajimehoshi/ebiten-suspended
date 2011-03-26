@@ -15,9 +15,7 @@ namespace kernels {
 namespace macosx {
 
 typedef kernels::kernel<
-  graphics::opengl::device,
-  frames::cocoa::frame,
-  graphics::opengl::cocoa::view<frames::cocoa::frame>,
+  graphics::opengl::device<graphics::opengl::cocoa::view<frames::cocoa::frame> >,
   timers::mach::timer,
   kernels::macosx::application> kernel;
 

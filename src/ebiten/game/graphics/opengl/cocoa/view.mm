@@ -15,7 +15,7 @@ void
 initialize(NSWindow* window,
            std::size_t width,
            std::size_t height,
-           boost::function<void()> update_device) {
+           boost::function<void()>& update_device) {
   assert(window != nil);
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   NSRect rect = NSMakeRect(0, 0, width, height);
@@ -41,7 +41,7 @@ void
 initialize(util::id_ const& native_frame,
            std::size_t width,
            std::size_t height,
-           boost::function<void()> update_device) {
+           boost::function<void()>& update_device) {
   initialize(native_frame.get<NSWindow*>(), width, height, update_device);
 }
 
