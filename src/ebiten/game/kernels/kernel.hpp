@@ -44,9 +44,6 @@ public:
     };
     pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-    std::size_t const frame_width  = screen_width * window_scale;
-    std::size_t const frame_height = screen_height * window_scale;
-    typename Device::view_type::frame_type frame(frame_width, frame_height);
     struct draw_sprites_func {
       static void
       invoke(pthread_mutex_t& mutex,
@@ -90,11 +87,10 @@ public:
     boost::function<void()> update_device = boost::bind(&update_device_func::invoke,
                                                         boost::ref(device),
                                                         boost::ref(draw_sprites));
-    typename Device::view_type view(frame, update_device);
     device = boost::in_place(screen_width,
                              screen_height,
                              window_scale,
-                             boost::ref(view));
+                             boost::ref(update_device));
     // TODO: remove initialize...
     game.initialize(device->texture_factory());
 
@@ -127,7 +123,7 @@ public:
     };
     pthread_t logic_thread;
     ::pthread_create(&logic_thread, 0, logic_func_wrapper::invoke, &logic);
-    Application::instance().run(frame);
+    Application::instance().run(device);
     //game_terminated.store(true);
     //::pthread_join(logic_thread, 0);
   }

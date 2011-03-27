@@ -2,6 +2,7 @@
 #define EBITEN_GAME_GRAPHICS_OPENGL_TEXTURE_FACTORY_HPP
 
 #include "ebiten/game/graphics/texture.hpp"
+#include "ebiten/game/graphics/opengl/device.hpp"
 #include "ebiten/util/id.hpp"
 #include "ebiten/util/image_loader.hpp"
 #include "ebiten/util/singleton.hpp"
@@ -30,8 +31,13 @@ clp2(uint64_t x) {
   return x + 1;
 }
 
-class texture_factory : public util::singleton<texture_factory> {
-  friend class util::singleton<texture_factory>;
+template<class View>
+class texture_factory : public boost::noncopyable {
+  template<class View_>
+  friend class device;
+private:
+  texture_factory(View&) {
+  }
 public:
   graphics::texture
   from_file(std::string const& filename) {

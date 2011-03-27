@@ -18,9 +18,9 @@ int run(util::id_ const& native_frame);
 class application : public util::singleton<application> {
   friend class util::singleton<application>;
 public:
-  template<class Frame>
-  int run(Frame& frame) {
-    return detail::run(frame.native_frame());
+  template<class Device>
+  int run(Device& device) {
+    return detail::run(device->frame().native_frame());
   }
 };
 

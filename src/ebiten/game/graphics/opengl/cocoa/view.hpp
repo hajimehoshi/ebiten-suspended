@@ -23,14 +23,22 @@ void initialize(util::id_ const& native_frame,
 
 }
 
-// TODO: singleton?
+// TODO: private constructor?
 template<class Frame>
 class view : private boost::noncopyable {
+private:
+  Frame frame_;
 public:
   typedef Frame frame_type;
-  view(Frame& frame,
-       boost::function<void()> update_device) {
-    detail::initialize(frame.native_frame(), frame.width(), frame.height(), update_device);
+  view(std::size_t frame_width,
+       std::size_t frame_height,
+       boost::function<void()> update_device)
+    : frame_(frame_width, frame_height) {
+    detail::initialize(frame_.native_frame(), frame_.width(), frame_.height(), update_device);
+  }
+  Frame&
+  frame() {
+    return this->frame_;
   }
 };
 

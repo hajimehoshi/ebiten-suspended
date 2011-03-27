@@ -15,23 +15,29 @@ namespace opengl {
 
 template<class View>
 class device : private boost::noncopyable {
+public:
+  typedef View view_type;
+  typedef typename view_type::frame_type frame_type;
+  typedef typename opengl::texture_factory<View> texture_factory_type;
 private:
   std::size_t const screen_width_;
   std::size_t const screen_height_;
   std::size_t const window_scale_;
+  view_type view_;
+  texture_factory_type texture_factory_;
   texture const offscreen_texture_;
   GLuint const framebuffer_;
 public:
-  typedef View view_type;
-  typedef opengl::texture_factory texture_factory_type;
   device(std::size_t screen_width,
          std::size_t screen_height,
          std::size_t window_scale,
-         View&)
+         boost::function<void()>& update_device)
     : screen_width_(screen_width),
       screen_height_(screen_height),
       window_scale_(window_scale),
-      offscreen_texture_(texture_factory::instance().create(this->screen_width_, this->screen_height_)),
+      view_(screen_width * window_scale, screen_height * window_scale, update_device),
+      texture_factory_(view_),
+      offscreen_texture_(texture_factory().create(screen_width, screen_height)),
       framebuffer_(generate_frame_buffer()) {
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->framebuffer_);
     std::size_t const offscreen_texture_id =
@@ -112,13 +118,17 @@ public:
     ::glBindTexture(GL_TEXTURE_2D, 0);
     ::glFlush();
   }
+  frame_type&
+  frame() {
+    return this->view_.frame();
+  }
   opengl::graphics_context&
   graphics_context() {
     return opengl::graphics_context::instance();
   }
-  opengl::texture_factory&
+  texture_factory_type&
   texture_factory() {
-    return opengl::texture_factory::instance();
+    return this->texture_factory_;
   }
 private:
   static GLuint
