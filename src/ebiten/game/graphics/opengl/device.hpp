@@ -18,7 +18,8 @@ class device : private boost::noncopyable {
 public:
   typedef View view_type;
   typedef typename view_type::frame_type frame_type;
-  typedef typename opengl::texture_factory<View> texture_factory_type;
+  typedef typename opengl::texture_factory texture_factory_type;
+  typedef typename opengl::graphics_context graphics_context_type;
 private:
   std::size_t const screen_width_;
   std::size_t const screen_height_;
@@ -26,6 +27,7 @@ private:
   boost::function<void()> draw_sprites_;
   view_type view_;
   texture_factory_type texture_factory_;
+  graphics_context_type graphics_context_;
   texture const offscreen_texture_;
   GLuint const framebuffer_;
 public:
@@ -41,6 +43,7 @@ public:
             screen_height * window_scale,
             boost::bind(&device<View>::update, this)),
       texture_factory_(view_),
+      graphics_context_(view_),
       offscreen_texture_(texture_factory().create(screen_width, screen_height)),
       framebuffer_(generate_frame_buffer()) {
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->framebuffer_);
@@ -126,9 +129,9 @@ public:
   frame() {
     return this->view_.frame();
   }
-  opengl::graphics_context&
+  graphics_context_type&
   graphics_context() {
-    return opengl::graphics_context::instance();
+    return this->graphics_context_;
   }
   texture_factory_type&
   texture_factory() {

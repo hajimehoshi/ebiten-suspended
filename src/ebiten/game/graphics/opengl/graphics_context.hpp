@@ -5,10 +5,12 @@
 #include "ebiten/game/graphics/drawing_region.hpp"
 #include "ebiten/game/graphics/geometry_matrix.hpp"
 #include "ebiten/game/graphics/texture.hpp"
+#include "ebiten/game/graphics/opengl/device.hpp"
 #include "ebiten/util/singleton.hpp"
 #include <OpenGL/gl.h>
 #include <boost/array.hpp>
 #include <boost/foreach.hpp>
+#include <boost/noncopyable.hpp>
 #include <boost/range.hpp>
 #include <algorithm>
 #include <cassert>
@@ -19,10 +21,16 @@ namespace game {
 namespace graphics {
 namespace opengl {
 
-class graphics_context : public util::singleton<graphics_context> {
-  friend class util::singleton<graphics_context>;
+class graphics_context : private boost::noncopyable {
+  template<class View>
+  friend class device;
 private:
   GLuint shader_program;
+private:
+  template<class View>
+  graphics_context(View&)
+    : shader_program(0) {
+  }
 public:
   template<class DrawingRegions>
   void

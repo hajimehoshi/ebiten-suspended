@@ -31,11 +31,11 @@ clp2(uint64_t x) {
   return x + 1;
 }
 
-template<class View>
 class texture_factory : public boost::noncopyable {
-  template<class View_>
+  template<class View>
   friend class device;
 private:
+  template<class View>
   texture_factory(View&) {
   }
 public:
