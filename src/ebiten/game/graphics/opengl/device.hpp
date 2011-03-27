@@ -23,6 +23,7 @@ private:
   std::size_t const screen_width_;
   std::size_t const screen_height_;
   std::size_t const window_scale_;
+  boost::function<void()> draw_sprites_;
   view_type view_;
   texture_factory_type texture_factory_;
   texture const offscreen_texture_;
@@ -31,11 +32,14 @@ public:
   device(std::size_t screen_width,
          std::size_t screen_height,
          std::size_t window_scale,
-         boost::function<void()>& update_device)
+         boost::function<void()>& draw_sprites)
     : screen_width_(screen_width),
       screen_height_(screen_height),
       window_scale_(window_scale),
-      view_(screen_width * window_scale, screen_height * window_scale, update_device),
+      draw_sprites_(draw_sprites),
+      view_(screen_width * window_scale,
+            screen_height * window_scale,
+            boost::bind(&device<View>::update, this)),
       texture_factory_(view_),
       offscreen_texture_(texture_factory().create(screen_width, screen_height)),
       framebuffer_(generate_frame_buffer()) {
@@ -54,7 +58,7 @@ public:
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
   }
   void
-  update(boost::function<void()> draw_sprites) {
+  update() {
     float const offscreen_width  = static_cast<float>(this->offscreen_texture_.width());
     float const offscreen_height = static_cast<float>(this->offscreen_texture_.height());
     float const offscreen_tu     = offscreen_width  / this->offscreen_texture_.texture_width();
@@ -79,7 +83,7 @@ public:
     ::glMatrixMode(GL_PROJECTION);
     ::glLoadIdentity();
     ::glOrtho(0, this->screen_width_, 0, this->screen_height_, 0, 1);
-    draw_sprites();
+    this->draw_sprites_();
     ::glFlush();
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 

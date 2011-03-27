@@ -77,20 +77,10 @@ public:
                                                        boost::ref(mutex),
                                                        boost::ref(game),
                                                        boost::ref(device));
-    struct update_device_func {
-      static void
-      invoke(boost::optional<Device>& device,
-             boost::function<void()>& draw_sprites) {
-        device->update(draw_sprites);
-      }
-    };
-    boost::function<void()> update_device = boost::bind(&update_device_func::invoke,
-                                                        boost::ref(device),
-                                                        boost::ref(draw_sprites));
     device = boost::in_place(screen_width,
                              screen_height,
                              window_scale,
-                             boost::ref(update_device));
+                             boost::ref(draw_sprites));
     // TODO: remove initialize...
     game.initialize(device->texture_factory());
 
