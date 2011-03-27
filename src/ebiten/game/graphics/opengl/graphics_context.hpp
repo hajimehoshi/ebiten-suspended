@@ -27,8 +27,7 @@ class graphics_context : private boost::noncopyable {
 private:
   GLuint shader_program;
 private:
-  template<class View>
-  graphics_context(View&)
+  graphics_context()
     : shader_program(0) {
   }
 public:
@@ -118,11 +117,6 @@ public:
     ::glUseProgram(0);
   }
 private:
-  graphics_context()
-    : shader_program(0) {
-  }
-  ~graphics_context() {
-  }
   GLuint
   compile_shader_program() {
     static std::string const sharder_source("uniform sampler2D texture;\n"

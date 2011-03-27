@@ -35,8 +35,7 @@ class texture_factory : public boost::noncopyable {
   template<class View>
   friend class device;
 private:
-  template<class View>
-  texture_factory(View&) {
+  texture_factory() {
   }
 public:
   graphics::texture
@@ -97,11 +96,6 @@ public:
                              height,
                              texture_width,
                              texture_height);
-  }
-private:
-  texture_factory() {
-  }
-  ~texture_factory() {
   }
 };
 

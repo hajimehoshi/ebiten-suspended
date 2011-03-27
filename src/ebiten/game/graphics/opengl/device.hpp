@@ -42,8 +42,8 @@ public:
       view_(screen_width * window_scale,
             screen_height * window_scale,
             boost::bind(&device<View>::update, this)),
-      texture_factory_(view_),
-      graphics_context_(view_),
+      texture_factory_(),
+      graphics_context_(),
       offscreen_texture_(texture_factory().create(screen_width, screen_height)),
       framebuffer_(generate_frame_buffer()) {
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->framebuffer_);
