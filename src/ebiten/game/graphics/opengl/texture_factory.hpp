@@ -5,7 +5,6 @@
 #include "ebiten/game/graphics/opengl/device.hpp"
 #include "ebiten/util/id.hpp"
 #include "ebiten/util/image_loader.hpp"
-#include "ebiten/util/singleton.hpp"
 #include <OpenGL/gl.h>
 #include <boost/optional.hpp>
 #include <cassert>

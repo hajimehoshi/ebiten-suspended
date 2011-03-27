@@ -1,7 +1,7 @@
 #ifndef EBITEN_GAME_KERNELS_MACOSX_KERNEL_HPP
 #define EBITEN_GAME_KERNELS_MACOSX_KERNEL_HPP
 
-#include "ebiten/game/kernels/kernel.hpp"
+#include "ebiten/game/kernels/base_kernel.hpp"
 
 #include "ebiten/game/frames/cocoa/frame.hpp"
 #include "ebiten/game/graphics/opengl/device.hpp"
@@ -14,7 +14,7 @@ namespace game {
 namespace kernels {
 namespace macosx {
 
-typedef kernels::kernel<
+typedef base_kernel<
   graphics::opengl::device<graphics::opengl::cocoa::view<frames::cocoa::frame> >,
   timers::mach::timer,
   kernels::macosx::application> kernel;

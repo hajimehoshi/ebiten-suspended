@@ -6,7 +6,6 @@
 #include "ebiten/game/graphics/geometry_matrix.hpp"
 #include "ebiten/game/graphics/texture.hpp"
 #include "ebiten/game/graphics/opengl/device.hpp"
-#include "ebiten/util/singleton.hpp"
 #include <OpenGL/gl.h>
 #include <boost/array.hpp>
 #include <boost/foreach.hpp>

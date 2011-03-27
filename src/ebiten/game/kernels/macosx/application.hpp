@@ -1,8 +1,9 @@
 #ifndef EBITEN_GAME_KERNELS_MACOSX_APPLICATION_HPP
 #define EBITEN_GAME_KERNELS_MACOSX_APPLICATION_HPP
 
+#include "ebiten/game/kernels/base_kernel.hpp"
 #include "ebiten/util/id.hpp"
-#include "ebiten/util/singleton.hpp"
+#include <boost/noncopyable.hpp>
 
 namespace ebiten {
 namespace game {
@@ -15,8 +16,12 @@ int run(util::id_ const& native_frame);
 
 }
 
-class application : public util::singleton<application> {
-  friend class util::singleton<application>;
+class application : private boost::noncopyable {
+  template<class Device, class Timer, class Application>
+  friend class kernels::base_kernel;
+private:
+  application() {
+  }
 public:
   template<class Device>
   int run(Device& device) {
