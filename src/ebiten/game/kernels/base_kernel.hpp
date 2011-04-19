@@ -61,7 +61,7 @@ public:
         struct sprites_cmp {
           static int
           invoke(sprite_cref const& a, sprite_cref const& b) {
-            const double diff = a.get().z() - b.get().z();
+            double const diff = a.get().z() - b.get().z();
             return (0 < diff) ? -1 : ((diff < 0) ? 1 : 0);
           }
         };
@@ -91,8 +91,8 @@ public:
         int frame_count = 0;
         Timer timer(fps);
         for (;;) {
-          lock l(mutex);
           timer.wait_frame();
+          lock l(mutex);
           game.update(frame_count);
           ++frame_count;
         }
@@ -106,7 +106,7 @@ public:
       static void*
       invoke(void* func_p) {
         typedef boost::function<void*()> func_type;
-        func_type func = *(reinterpret_cast<func_type*>(func_p));
+        func_type& func = *(reinterpret_cast<func_type*>(func_p));
         func();
         return 0;
       }
