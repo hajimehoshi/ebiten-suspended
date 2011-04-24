@@ -4,9 +4,9 @@
 #include "ebiten/game/graphics/texture.hpp"
 #include "ebiten/game/graphics/opengl/device.hpp"
 #include "ebiten/util/id.hpp"
+#include "ebiten/util/image.hpp"
 #include "ebiten/util/image_loader.hpp"
 #include <OpenGL/gl.h>
-#include <boost/optional.hpp>
 #include <cassert>
 
 namespace ebiten {
@@ -39,11 +39,9 @@ private:
 public:
   graphics::texture
   from_file(std::string const& filename) {
-    boost::optional<util::image> image;
-    util::image_loader::instance().load_file(image, filename);
-    assert(image);
-    std::size_t const width  = image->width();
-    std::size_t const height = image->height();
+    util::image image(util::png_image_loader, filename);
+    std::size_t const width  = image.width();
+    std::size_t const height = image.height();
     assert(width  == clp2(width));
     assert(height == clp2(height));
     GLuint texture_id = 0;
@@ -59,7 +57,7 @@ public:
                    0,
                    GL_RGBA,
                    GL_UNSIGNED_BYTE,
-                   image->pixels().data());
+                   image.pixels().data());
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     ::glBindTexture(GL_TEXTURE_2D, 0);

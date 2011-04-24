@@ -9,8 +9,8 @@ namespace util {
 
 class image : private boost::noncopyable {
 private:
-  std::size_t const width_;
-  std::size_t const height_;
+  std::size_t width_;
+  std::size_t height_;
   std::vector<uint8_t> pixels_;
 public:
   image(std::size_t width,
@@ -18,6 +18,10 @@ public:
     : width_(width),
       height_(height),
       pixels_(width * height * 4) {
+  }
+  template<class Loader>
+  image(Loader const& loader, std::string const& filename) {
+    loader(filename, this->width_, this->height_, this->pixels_);
   }
   std::vector<uint8_t>&
   pixels() {
