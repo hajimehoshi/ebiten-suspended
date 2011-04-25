@@ -1,7 +1,7 @@
 #ifndef EBITEN_UTIL_IMAGE_LOADER_HPP
 #define EBITEN_UTIL_IMAGE_LOADER_HPP
 
-#include "ebiten/util/image.hpp"
+#include "ebiten/util/image.hpp" // TODO: remove it
 #include <boost/gil/gil_all.hpp>
 #include <boost/gil/extension/io/png_io.hpp>
 
@@ -20,7 +20,7 @@ public:
     boost::gil::png_read_image(filename, gil_image);
     width  = gil_image.width();
     height = gil_image.height();
-    pixels.resize(width * height * 4, 0);
+    pixels.resize(width * height * 4);
     boost::gil::rgba8_pixel_t* pixelsPtr =
       reinterpret_cast<boost::gil::rgba8_pixel_t*>(pixels.data());
     gil_image_t::view_t viewSrc =
