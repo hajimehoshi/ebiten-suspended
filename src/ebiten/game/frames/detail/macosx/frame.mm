@@ -1,12 +1,12 @@
-#include "ebiten/game/frames/cocoa/frame.hpp"
-#import "ebiten/game/frames/cocoa/frame.m"
+#include "ebiten/game/frames/detail/macosx/frame.hpp"
+#import "ebiten/game/frames/detail/macosx/frame.m"
 #include <boost/scoped_ptr.hpp>
 #include <cassert>
 
 namespace ebiten {
 namespace game {
 namespace frames {
-namespace cocoa {
+namespace detail {
 
 frame::frame(std::size_t width, std::size_t height)
   : width_(width),

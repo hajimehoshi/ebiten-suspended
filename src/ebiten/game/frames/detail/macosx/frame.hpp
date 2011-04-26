@@ -1,5 +1,5 @@
-#ifndef EBITEN_GAME_FRAMES_FRAME_HPP
-#define EBITEN_GAME_FRAMES_FRAME_HPP
+#ifndef EBITEN_GAME_FRAMES_DETAIL_MACOSX_FRAME_HPP
+#define EBITEN_GAME_FRAMES_DETAIL_MACOSX_FRAME_HPP
 
 #include "ebiten/util/id.hpp"
 #include <boost/noncopyable.hpp>
@@ -9,7 +9,7 @@
 namespace ebiten {
 namespace game {
 namespace frames {
-namespace cocoa {
+namespace detail {
 
 class frame : private boost::noncopyable {
 private:
