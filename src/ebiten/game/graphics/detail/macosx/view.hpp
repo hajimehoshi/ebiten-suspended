@@ -1,5 +1,5 @@
-#ifndef EBITEN_GAME_GRAPHICS_OPENGL_COCOA_HPP
-#define EBITEN_GAME_GRAPHICS_OPENGL_COCOA_HPP
+#ifndef EBITEN_GAME_GRAPHICS_DETAIL_MACOSX_COCOA_HPP
+#define EBITEN_GAME_GRAPHICS_DETAIL_MACOSX_COCOA_HPP
 
 #include "ebiten/util/id.hpp"
 #include <boost/bind.hpp>
@@ -11,17 +11,12 @@
 namespace ebiten {
 namespace game {
 namespace graphics {
-namespace opengl {
-namespace cocoa {
-
 namespace detail {
 
-void initialize(util::id_ const& native_frame,
-                std::size_t width,
-                std::size_t height,
-                boost::function<void()>& update_device);
-
-}
+void initialize_view(util::id_ const& native_frame,
+                     std::size_t width,
+                     std::size_t height,
+                     boost::function<void()>& update_device);
 
 // TODO: private constructor?
 template<class Frame>
@@ -34,7 +29,7 @@ public:
        std::size_t frame_height,
        boost::function<void()> update_device)
     : frame_(frame_width, frame_height) {
-    detail::initialize(frame_.native_frame(), frame_.width(), frame_.height(), update_device);
+    initialize_view(frame_.native_frame(), frame_.width(), frame_.height(), update_device);
   }
   Frame&
   frame() {
@@ -42,7 +37,6 @@ public:
   }
 };
 
-}
 }
 }
 }

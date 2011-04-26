@@ -6,7 +6,6 @@ namespace ebiten {
 namespace game {
 namespace kernels {
 namespace detail {
-namespace macosx {
 
 int
 do_run(NSWindow* window) {
@@ -25,7 +24,6 @@ do_run(util::id_ const& native_frame) {
   return do_run(native_frame.get<NSWindow*>());
 }
 
-}
 }
 }
 }

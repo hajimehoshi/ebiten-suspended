@@ -1,8 +1,8 @@
-#ifndef EBITEN_GAME_GRAPHICS_OPENGL_TEXTURE_FACTORY_HPP
-#define EBITEN_GAME_GRAPHICS_OPENGL_TEXTURE_FACTORY_HPP
+#ifndef EBITEN_GAME_GRAPHICS_DETAIL_MACOSX_TEXTURE_FACTORY_HPP
+#define EBITEN_GAME_GRAPHICS_DETAIL_MACOSX_TEXTURE_FACTORY_HPP
 
 #include "ebiten/game/graphics/texture.hpp"
-#include "ebiten/game/graphics/opengl/device.hpp"
+#include "ebiten/game/graphics/detail/macosx/device.hpp"
 #include "ebiten/util/id.hpp"
 #include "ebiten/util/image.hpp"
 #include "ebiten/util/image_loader.hpp"
@@ -12,7 +12,7 @@
 namespace ebiten {
 namespace game {
 namespace graphics {
-namespace opengl {
+namespace detail {
 
 // TODO: implements for 32bit machine
 BOOST_STATIC_ASSERT(sizeof(uint64_t) == sizeof(std::size_t));
@@ -106,7 +106,7 @@ public:
 namespace ebiten {
 namespace game {
 namespace graphics {
-namespace opengl {
+namespace detail {
 
 TEST(clp2, calling) {
   EXPECT_EQ(256u, clp2(255));

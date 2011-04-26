@@ -9,13 +9,12 @@ namespace ebiten {
 namespace game {
 namespace kernels {
 namespace detail {
-namespace macosx {
 
 int do_run(util::id_ const& native_frame);
 
 class application : private boost::noncopyable {
   template<class Device, class Timer, class Application>
-  friend class kernels::detail::kernel_;
+  friend class kernels::detail::kernel;
 private:
   application() {
   }
@@ -26,7 +25,6 @@ public:
   }
 };
 
-}
 }
 }
 }

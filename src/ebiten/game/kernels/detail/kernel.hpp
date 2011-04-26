@@ -20,8 +20,8 @@ namespace kernels {
 namespace detail {
 
 template<class Device, class Timer, class Application>
-class kernel_ : public util::singleton<kernel_<Device, Timer, Application> > {
-  friend class util::singleton<kernel_<Device, Timer, Application> >;
+class kernel : public util::singleton<kernel<Device, Timer, Application> > {
+  friend class util::singleton<kernel<Device, Timer, Application> >;
 public:
   typedef Device device_type;
   template<class Game>

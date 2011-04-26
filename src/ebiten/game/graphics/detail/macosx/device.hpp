@@ -1,8 +1,9 @@
-#ifndef EBITEN_GAME_GRAPHICS_OPENGL_DEVICE_HPP
-#define EBITEN_GAME_GRAPHICS_OPENGL_DEVICE_HPP
+#ifndef EBITEN_GAME_GRAPHICS_DETAIL_MACOSX_DEVICE_HPP
+#define EBITEN_GAME_GRAPHICS_DETAIL_MACOSX_DEVICE_HPP
 
-#include "ebiten/game/graphics/opengl/graphics_context.hpp"
-#include "ebiten/game/graphics/opengl/texture_factory.hpp"
+#include "ebiten/game/graphics/detail/macosx/graphics_context.hpp"
+#include "ebiten/game/graphics/detail/macosx/texture_factory.hpp"
+#include "ebiten/game/graphics/detail/macosx/view.hpp"
 #include "ebiten/game/graphics/sprite.hpp"
 #include <OpenGL/gl.h>
 #include <boost/function.hpp>
@@ -11,16 +12,16 @@
 namespace ebiten {
 namespace game {
 namespace graphics {
-namespace opengl {
+namespace detail {
 
-template<class View>
+template<class Frame>
 class device : private boost::noncopyable {
 public:
-  typedef View view_type;
-  typedef typename view_type::frame_type frame_type;
-  typedef typename opengl::texture_factory texture_factory_type;
-  typedef typename opengl::graphics_context graphics_context_type;
+  typedef Frame frame_type;
+  typedef typename detail::texture_factory texture_factory_type;
+  typedef typename detail::graphics_context graphics_context_type;
 private:
+  typedef typename detail::view<Frame> view_type;
   std::size_t const screen_width_;
   std::size_t const screen_height_;
   std::size_t const window_scale_;
@@ -41,7 +42,7 @@ public:
       draw_sprites_(draw_sprites),
       view_(screen_width * window_scale,
             screen_height * window_scale,
-            boost::bind(&device<View>::update, this)),
+            boost::bind(&device<Frame>::update, this)),
       texture_factory_(),
       graphics_context_(),
       offscreen_texture_(texture_factory().create(screen_width, screen_height)),
