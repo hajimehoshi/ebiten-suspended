@@ -7,7 +7,7 @@
 #include "ebiten/game/graphics/opengl/device.hpp"
 #include "ebiten/game/graphics/opengl/cocoa/view.hpp"
 #include "ebiten/game/kernels/detail/macosx/application.hpp"
-#include "ebiten/game/timers/mach/timer.hpp"
+#include "ebiten/game/timers/timer.hpp"
 
 namespace ebiten {
 namespace game {
@@ -16,7 +16,7 @@ namespace detail {
 
 typedef detail::kernel_<
   graphics::opengl::device<graphics::opengl::cocoa::view<frames::cocoa::frame> >,
-  timers::mach::timer,
+  timers::timer,
   kernels::detail::macosx::application> kernel;
 
 }

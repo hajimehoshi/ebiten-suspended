@@ -1,5 +1,5 @@
-#ifndef EBITEN_GAME_TIMERS_MACH_TIMER_HPP
-#define EBITEN_GAME_TIMERS_MACH_TIMER_HPP
+#ifndef EBITEN_GAME_TIMERS_DETAIL_MACOSX_TIMER_HPP
+#define EBITEN_GAME_TIMERS_DETAIL_MACOSX_TIMER_HPP
 
 #include <boost/noncopyable.hpp>
 #include <mach/mach_time.h>
@@ -9,7 +9,7 @@
 namespace ebiten {
 namespace game {
 namespace timers {
-namespace mach {
+namespace detail {
 
 class timer : private boost::noncopyable {
 private:
