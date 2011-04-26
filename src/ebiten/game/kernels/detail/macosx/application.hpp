@@ -1,34 +1,32 @@
-#ifndef EBITEN_GAME_KERNELS_MACOSX_APPLICATION_HPP
-#define EBITEN_GAME_KERNELS_MACOSX_APPLICATION_HPP
+#ifndef EBITEN_GAME_KERNELS_DETAIL_MACOSX_APPLICATION_HPP
+#define EBITEN_GAME_KERNELS_DETAIL_MACOSX_APPLICATION_HPP
 
-#include "ebiten/game/kernels/base_kernel.hpp"
+#include "ebiten/game/kernels/detail/kernel.hpp"
 #include "ebiten/util/id.hpp"
 #include <boost/noncopyable.hpp>
 
 namespace ebiten {
 namespace game {
 namespace kernels {
+namespace detail {
 namespace macosx {
 
-namespace detail {
-
-int run(util::id_ const& native_frame);
-
-}
+int do_run(util::id_ const& native_frame);
 
 class application : private boost::noncopyable {
   template<class Device, class Timer, class Application>
-  friend class kernels::base_kernel;
+  friend class kernels::detail::kernel_;
 private:
   application() {
   }
 public:
   template<class Device>
   int run(Device& device) {
-    return detail::run(device->frame().native_frame());
+    return do_run(device.frame().native_frame());
   }
 };
 
+}
 }
 }
 }

@@ -1,5 +1,5 @@
-#ifndef EBITEN_GAME_KERNELS_BASE_KERNEL_HPP
-#define EBITEN_GAME_KERNELS_BASE_KERNEL_HPP
+#ifndef EBITEN_GAME_KERNELS_DETAIL_KERNEL_HPP
+#define EBITEN_GAME_KERNELS_DETAIL_KERNEL_HPP
 
 #include "ebiten/game/graphics/sprite.hpp"
 #include "ebiten/util/singleton.hpp"
@@ -17,10 +17,11 @@
 namespace ebiten {
 namespace game {
 namespace kernels {
+namespace detail {
 
 template<class Device, class Timer, class Application>
-class base_kernel : public util::singleton<base_kernel<Device, Timer, Application> > {
-  friend class util::singleton<base_kernel<Device, Timer, Application> >;
+class kernel_ : public util::singleton<kernel_<Device, Timer, Application> > {
+  friend class util::singleton<kernel_<Device, Timer, Application> >;
 public:
   typedef Device device_type;
   template<class Game>
@@ -114,7 +115,7 @@ public:
     pthread_t logic_thread;
     ::pthread_create(&logic_thread, 0, logic_func_wrapper::invoke, &logic);
     Application application;
-    application.run(device);
+    application.run(*device);
     //game_terminated.store(true);
     //::pthread_join(logic_thread, 0);
   }
@@ -123,5 +124,7 @@ public:
 }
 }
 }
+}
 
 #endif
+

@@ -1,7 +1,6 @@
 #ifndef EBITEN_UTIL_IMAGE_LOADER_HPP
 #define EBITEN_UTIL_IMAGE_LOADER_HPP
 
-#include "ebiten/util/image.hpp" // TODO: remove it
 #include <boost/gil/gil_all.hpp>
 #include <boost/gil/extension/io/png_io.hpp>
 
@@ -35,6 +34,8 @@ public:
 }
 
 #ifdef EBITEN_TEST
+
+#include "ebiten/util/image.hpp"
 
 namespace ebiten {
 namespace util {

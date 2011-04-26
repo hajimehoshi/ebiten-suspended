@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #endif
 
-#include "ebiten/game/kernels/macosx/kernel.hpp"
+#include "ebiten/ebiten.hpp"
 #include "sample_game.hpp"
 
 int
@@ -20,7 +20,7 @@ main(int argc, char** argv) {
   }
 #endif
   try {
-    typedef ebiten::game::kernels::macosx::kernel kernel_type;
+    typedef ebiten::game::kernels::kernel kernel_type;
     kernel_type& kernel = kernel_type::instance();
     sample_game game;
     kernel.run(game, 320, 240, 600, 2);

@@ -1,9 +1,7 @@
 #ifndef SAMPLE_GAME_HPP
 #define SAMPLE_GAME_HPP
 
-#include "ebiten/game/graphics/drawing_region.hpp"
-#include "ebiten/game/graphics/sprite.hpp"
-#include "ebiten/game/graphics/texture.hpp"
+#include "ebiten/ebiten.hpp"
 #include <boost/foreach.hpp>
 #include <boost/optional.hpp>
 #include <boost/ptr_container/ptr_vector.hpp>

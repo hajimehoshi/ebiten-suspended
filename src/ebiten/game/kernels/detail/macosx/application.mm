@@ -1,16 +1,15 @@
-#include "ebiten/game/kernels/macosx/application.hpp"
-#import "ebiten/game/kernels/macosx/application.m"
+#include "ebiten/game/kernels/detail/macosx/application.hpp"
+#import "ebiten/game/kernels/detail/macosx/application.m"
 #include <cassert>
 
 namespace ebiten {
 namespace game {
 namespace kernels {
+namespace detail {
 namespace macosx {
 
-namespace detail {
-
 int
-run(NSWindow* window) {
+do_run(NSWindow* window) {
   assert(window != nil);
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   EbitenController* controller = [[EbitenController alloc] initWithWindow:window];
@@ -22,12 +21,11 @@ run(NSWindow* window) {
 }
 
 int
-run(util::id_ const& native_frame) {
-  return run(native_frame.get<NSWindow*>());
+do_run(util::id_ const& native_frame) {
+  return do_run(native_frame.get<NSWindow*>());
 }
 
 }
-
 }
 }
 }
