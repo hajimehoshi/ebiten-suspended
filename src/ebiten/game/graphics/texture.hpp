@@ -1,22 +1,27 @@
 #ifndef EBITEN_GAME_GRAPHICS_TEXTURE_HPP
 #define EBITEN_GAME_GRAPHICS_TEXTURE_HPP
 
-#include "ebiten/util/id.hpp"
+#include "ebiten/platform.hpp"
+
+#ifdef EBITEN_MACOSX
+#include "ebiten/game/graphics/detail/macosx/texture_id.hpp"
+#endif
 
 namespace ebiten {
 namespace game {
 namespace graphics {
 
-// texture というよりは texture_id?
 class texture {
+public:
+  typedef detail::texture_id id_type;
 private:
-  util::id_ const id_;
+  id_type const id_;
   std::size_t const width_;
   std::size_t const height_;
   std::size_t const texture_width_;
   std::size_t const texture_height_;
 public:
-  texture(util::id_ const& id_,
+  texture(id_type const& id_,
           std::size_t width_,
           std::size_t height_,
           std::size_t texture_width_,
@@ -27,7 +32,7 @@ public:
       texture_width_(texture_width_),
       texture_height_(texture_height_) {
   }
-  util::id_
+  id_type
   id() const {
     return this->id_;
   }

@@ -3,7 +3,6 @@
 
 #include "ebiten/game/graphics/texture.hpp"
 #include "ebiten/game/graphics/detail/macosx/device.hpp"
-#include "ebiten/util/id.hpp"
 #include "ebiten/util/image.hpp"
 #include "ebiten/util/image_loader.hpp"
 #include <OpenGL/gl.h>
@@ -61,7 +60,7 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     ::glBindTexture(GL_TEXTURE_2D, 0);
-    return graphics::texture(util::id_(texture_id),
+    return graphics::texture(texture_id,
                              width,
                              height,
                              width,
@@ -88,7 +87,7 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     ::glBindTexture(GL_TEXTURE_2D, 0);
-    return graphics::texture(util::id_(texture_id),
+    return graphics::texture(texture_id,
                              width,
                              height,
                              texture_width,

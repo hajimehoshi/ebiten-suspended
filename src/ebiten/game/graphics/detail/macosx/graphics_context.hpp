@@ -79,9 +79,7 @@ public:
                                 geo_mat.tx(), geo_mat.ty(), 0, 1};
     ::glMatrixMode(GL_MODELVIEW);
     ::glLoadMatrixf(gl_geo_mat);
-    std::size_t const texture_id = texture.id().get<std::size_t>();
-    assert(texture_id);
-    ::glBindTexture(GL_TEXTURE_2D, texture_id);
+    ::glBindTexture(GL_TEXTURE_2D, texture.id());
     ::glBegin(GL_QUADS);
     float const zf = static_cast<float>(z);
     float const texture_width  = texture.texture_width();
