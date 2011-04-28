@@ -24,6 +24,8 @@ class kernel : public util::singleton<kernel<Device, Timer, Application> > {
   friend class util::singleton<kernel<Device, Timer, Application> >;
 public:
   typedef Device device_type;
+  typedef Timer timer_type;
+  typedef Application application_type;
   template<class Game>
   void
   run(Game& game,
@@ -106,7 +108,7 @@ public:
     struct logic_func_wrapper {
       static void*
       invoke(void* func_p) {
-        typedef boost::function<void*()> func_type;
+        typedef boost::function<void()> func_type;
         func_type& func = *(reinterpret_cast<func_type*>(func_p));
         func();
         return 0;

@@ -2,7 +2,6 @@
 #define EBITEN_GAME_GRAPHICS_TEXTURE_HPP
 
 #include "ebiten/util/id.hpp"
-#include <boost/any.hpp>
 
 namespace ebiten {
 namespace game {
