@@ -3,7 +3,6 @@
 
 #include "ebiten/game/graphics/detail/macosx/graphics_context.hpp"
 #include "ebiten/game/graphics/detail/macosx/texture_factory.hpp"
-#include "ebiten/game/graphics/detail/macosx/texture_id.hpp"
 #include "ebiten/game/graphics/detail/macosx/view.hpp"
 #include "ebiten/game/graphics/sprite.hpp"
 #include <OpenGL/gl.h>

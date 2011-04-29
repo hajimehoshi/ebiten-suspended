@@ -11,6 +11,8 @@
 #include <boost/foreach.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/range.hpp>
+#include <boost/static_assert.hpp>
+#include <boost/type_traits.hpp>
 #include <algorithm>
 #include <cassert>
 #include <iostream>
@@ -37,6 +39,8 @@ public:
                 graphics::geometry_matrix const& geo_mat,
                 int z,
                 graphics::color_matrix const& color_mat) {
+    BOOST_STATIC_ASSERT((boost::is_same<typename boost::range_value<DrawingRegions>::type,
+                         drawing_region>::value));
     if (!this->shader_program) {
       this->shader_program = compile_shader_program();
       assert(this->shader_program);
@@ -84,9 +88,7 @@ public:
     float const zf = static_cast<float>(z);
     float const texture_width  = texture.texture_width();
     float const texture_height = texture.texture_height();
-    typedef typename boost::range_value<DrawingRegions>::type drawing_region_type;
-    BOOST_FOREACH(const drawing_region_type& dr, drawing_regions) {
-      // TODO: move outside
+    BOOST_FOREACH(drawing_region const& dr, drawing_regions) {
       float const tu1 = dr.src_x()                 / texture_width;
       float const tu2 = (dr.src_x() + dr.width())  / texture_width;
       float const tv1 = dr.src_y()                 / texture_height;
