@@ -8,7 +8,6 @@
 #endif
 
 #include "ebiten/game/kernels/detail/kernel.hpp"
-#include "ebiten/game/frames/frame.hpp"
 #include "ebiten/game/graphics/device.hpp"
 #include "ebiten/game/timers/timer.hpp"
 
@@ -17,7 +16,7 @@ namespace game {
 namespace kernels {
 
 typedef detail::kernel<
-  graphics::device<frames::frame>::type,
+  graphics::device,
   timers::timer,
   kernels::detail::application> kernel;
 

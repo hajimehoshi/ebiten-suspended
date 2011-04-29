@@ -136,7 +136,7 @@ private:
     ::glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &compiled);
     this->show_shader_log(fragment_shader);
     if (compiled == GL_FALSE) {
-      throw "shader compile error";
+      throw std::runtime_error("shader compile error");
     }
 
     GLuint program;
@@ -149,7 +149,7 @@ private:
     GLint linked;
     ::glGetProgramiv(program, GL_LINK_STATUS, &linked);
     if (linked == GL_FALSE) {
-      throw "program error";
+      throw std::runtime_error("program error");
     }
 
     return program;

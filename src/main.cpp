@@ -20,13 +20,11 @@ main(int argc, char** argv) {
   }
 #endif
   try {
-    typedef ebiten::game::kernels::kernel kernel_type;
-    kernel_type& kernel = kernel_type::instance();
-    sample_game game;
-    kernel.run(game, 320, 240, 600, 2);
-  } catch (std::string const& message) {
+    ebiten::game::kernels::kernel kernel;
+    kernel.run<sample_game>(320, 240, 600, 2);
+  } catch (std::runtime_error const& err) {
     // TODO: use boost::diagnostic_information?
-    std::cerr << message << std::endl;
+    std::cerr << err.what() << std::endl;
     return EXIT_FAILURE;
   }
   return EXIT_SUCCESS;

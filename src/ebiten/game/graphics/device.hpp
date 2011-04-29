@@ -7,15 +7,13 @@
 #include "ebiten/game/graphics/detail/macosx/device.hpp"
 #endif
 
+#include "ebiten/game/frames/frame.hpp"
+
 namespace ebiten {
 namespace game {
 namespace graphics {
 
-// TODO: change it!
-template<class Frame>
-struct device {
-  typedef detail::device<Frame> type;
-};
+typedef detail::device<frames::frame> device;
 
 }
 }

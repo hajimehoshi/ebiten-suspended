@@ -3,11 +3,8 @@
 
 #import "ebiten/game/graphics/detail/macosx/view.m"
 
-#include <boost/bind.hpp>
 #include <boost/function.hpp>
 #include <boost/noncopyable.hpp>
-#include <boost/scoped_ptr.hpp>
-#include <boost/type_traits.hpp>
 
 namespace ebiten {
 namespace game {

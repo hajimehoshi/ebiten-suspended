@@ -2,10 +2,10 @@
 #define EBITEN_GAME_KERNELS_DETAIL_KERNEL_HPP
 
 #include "ebiten/game/graphics/sprite.hpp"
-#include "ebiten/util/singleton.hpp"
 #include <boost/bind.hpp>
 #include <boost/foreach.hpp>
 #include <boost/function.hpp>
+#include <boost/noncopyable.hpp>
 #include <boost/optional.hpp>
 #include <boost/range.hpp>
 #include <boost/type_traits.hpp>
@@ -20,16 +20,14 @@ namespace kernels {
 namespace detail {
 
 template<class Device, class Timer, class Application>
-class kernel : public util::singleton<kernel<Device, Timer, Application> > {
-  friend class util::singleton<kernel<Device, Timer, Application> >;
+class kernel : boost::noncopyable {
 public:
   typedef Device device_type;
   typedef Timer timer_type;
   typedef Application application_type;
   template<class Game>
   void
-  run(Game& game,
-      std::size_t screen_width,
+  run(std::size_t screen_width,
       std::size_t screen_height,
       std::size_t fps,
       std::size_t window_scale) {
@@ -50,10 +48,10 @@ public:
     struct draw_sprites_func {
       static void
       invoke(pthread_mutex_t& mutex,
-             Game const& game,
+             boost::optional<Game> const& game,
              boost::optional<Device>& device) {
         lock l(mutex);
-        BOOST_AUTO(const& sprites, game.sprites());
+        BOOST_AUTO(const& sprites, game->sprites());
         typedef boost::reference_wrapper<graphics::sprite const> sprite_cref;
         std::vector<sprite_cref> sorted_sprites;
         sorted_sprites.reserve(boost::size(sprites));
@@ -75,18 +73,17 @@ public:
         };
       }
     };
+    boost::optional<Game> game;
     boost::optional<Device> device;
     boost::function<void()> draw_sprites = boost::bind(&draw_sprites_func::invoke,
                                                        boost::ref(mutex),
-                                                       boost::ref(game),
+                                                       boost::cref(game),
                                                        boost::ref(device));
     device = boost::in_place(screen_width,
                              screen_height,
                              window_scale,
                              boost::ref(draw_sprites));
-    // TODO: remove initialize...
-    game.initialize(device->texture_factory());
-
+    game = boost::in_place(boost::ref(device->texture_factory()));
     // start the logic loop
     struct logic_func {
       static void
@@ -104,7 +101,7 @@ public:
     boost::function<void()> logic = boost::bind(logic_func::invoke,
                                                 fps,
                                                 boost::ref(mutex),
-                                                boost::ref(game));
+                                                boost::ref(*game));
     struct logic_func_wrapper {
       static void*
       invoke(void* func_p) {

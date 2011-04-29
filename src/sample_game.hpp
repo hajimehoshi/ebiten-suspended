@@ -18,9 +18,8 @@ private:
   boost::optional<ebiten::game::graphics::texture> texture_;
   sprites_type sprites_;
 public:
-  template<class TextureFactory>
-  void
-  initialize(TextureFactory& tf) {
+  explicit
+  sample_game(ebiten::game::graphics::device::texture_factory_type& tf) {
     this->texture_ = boost::in_place(tf.from_file("test.png"));
     this->sprites_.push_back(new sprite_type(this->texture_.get(), 4));
     sprite_type& s = this->sprites_.at(0);

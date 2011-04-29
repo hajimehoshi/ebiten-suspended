@@ -55,7 +55,7 @@ public:
                                 this->offscreen_texture_.id(),
                                 0);
     if (::glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT) != GL_FRAMEBUFFER_COMPLETE_EXT) {
-      throw "framebuffer is not supported completely";
+      throw std::runtime_error("framebuffer is not supported completely");
     }
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
   }
