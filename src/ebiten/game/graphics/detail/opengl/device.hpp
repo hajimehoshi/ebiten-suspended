@@ -24,11 +24,10 @@ public:
   typedef typename detail::texture_factory texture_factory_type;
   typedef typename detail::graphics_context graphics_context_type;
 private:
-  typedef typename detail::view<Frame> view_type;
-  view_type view_;
   std::size_t const screen_width_;
   std::size_t const screen_height_;
   std::size_t const window_scale_;
+  Frame frame_;
   texture_factory_type texture_factory_;
   graphics_context_type graphics_context_;
   texture const offscreen_texture_;
@@ -38,16 +37,15 @@ public:
   device(std::size_t screen_width,
          std::size_t screen_height,
          std::size_t window_scale)
-    : view_(screen_width * window_scale,
-            screen_height * window_scale,
-            boost::bind(&device<Frame>::update, this)),
-      screen_width_(screen_width),
+    : screen_width_(screen_width),
       screen_height_(screen_height),
       window_scale_(window_scale),
+      frame_(screen_width * window_scale, screen_height * window_scale),
       texture_factory_(),
       graphics_context_(),
       offscreen_texture_(texture_factory().create(screen_width, screen_height)),
       framebuffer_(generate_frame_buffer()) {
+    this->frame_.connect_updating(boost::bind(&device<Frame>::update, this));
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->framebuffer_);
     ::glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,
                                 GL_COLOR_ATTACHMENT0_EXT,
@@ -124,7 +122,7 @@ public:
   }
   frame_type&
   frame() {
-    return this->view_.frame();
+    return this->frame_;
   }
   graphics_context_type&
   graphics_context() {

@@ -4,7 +4,7 @@
 #include <boost/signals2/signal.hpp>
 
 @interface EbitenOpenGLView : NSOpenGLView {
-  boost::signals2::signal<void()> updatingDevice;
+  boost::signals2::signal<void()> updating;
 }
 
 - (id)initWithFrame:(NSRect)frame
@@ -12,7 +12,7 @@
 - (void)prepareOpenGL;
 - (void)animationTimer:(NSTimer*)timer;
 - (void)drawRect:(NSRect)rect;
-- (void)connectUpdatingDevice:(boost::function<void()> const &)func;
+- (void)connectUpdating:(boost::function<void()> const &)func;
 
 @end
 
@@ -55,15 +55,15 @@
   assert(context != nil);
   //[context makeCurrentContext];
   //[context update]; ?
-  self->updatingDevice();
+  self->updating();
   //[context clearDrawable];
   // drawing
   [context flushBuffer];
   [pool release];
 }
 
-- (void)connectUpdatingDevice:(boost::function<void()> const &)func {
-  self->updatingDevice.connect(func);
+- (void)connectUpdating:(boost::function<void()> const &)func {
+  self->updating.connect(func);
 }
 
 @end
