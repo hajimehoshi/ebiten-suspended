@@ -1,4 +1,5 @@
 #import <Cocoa/Cocoa.h>
+#undef check # conflicts with boost
 #include <boost/function.hpp>
 
 @interface EbitenOpenGLView : NSOpenGLView {

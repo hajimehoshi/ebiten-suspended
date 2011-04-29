@@ -1,4 +1,5 @@
 #import <Cocoa/Cocoa.h>
+#undef check // conflicts with boost
 
 @interface EbitenWindowController : NSObject<NSWindowDelegate> {
 }

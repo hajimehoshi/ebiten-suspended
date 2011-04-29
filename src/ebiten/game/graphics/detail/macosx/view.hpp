@@ -1,6 +1,8 @@
 #ifndef EBITEN_GAME_GRAPHICS_DETAIL_MACOSX_COCOA_HPP
 #define EBITEN_GAME_GRAPHICS_DETAIL_MACOSX_COCOA_HPP
 
+#import "ebiten/game/graphics/detail/macosx/view.m"
+
 #include "ebiten/util/id.hpp"
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
@@ -13,10 +15,38 @@ namespace game {
 namespace graphics {
 namespace detail {
 
-void initialize_view(util::id_ const& native_frame,
+void initialize_view(NSWindow* window,
                      std::size_t width,
                      std::size_t height,
-                     boost::function<void()>& update_device);
+                     boost::function<void()>& update_device) {
+  assert(window != nil);
+  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+  NSRect rect = NSMakeRect(0, 0, width, height);
+  NSOpenGLPixelFormatAttribute attributes[] = {
+    NSOpenGLPFAWindow,
+    NSOpenGLPFADoubleBuffer,
+    NSOpenGLPFAAccelerated,
+    NSOpenGLPFADepthSize, 32,
+    nil,
+  };
+  NSOpenGLPixelFormat* format = [[[NSOpenGLPixelFormat alloc]
+                                  initWithAttributes:attributes]
+                                 autorelease];
+  EbitenOpenGLView* glView = [[EbitenOpenGLView alloc]
+                              initWithFrame:rect
+                              pixelFormat:format
+                              updateDevice: update_device];
+  [window setContentView:glView];
+  [pool release];
+}
+
+void
+initialize_view(util::id_ const& native_frame,
+                std::size_t width,
+                std::size_t height,
+                boost::function<void()>& update_device) {
+  initialize_view(native_frame.get<NSWindow*>(), width, height, update_device);
+}
 
 // TODO: private constructor?
 template<class Frame>
