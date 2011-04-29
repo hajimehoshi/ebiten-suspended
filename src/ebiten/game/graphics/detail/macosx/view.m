@@ -1,28 +1,27 @@
 #import <Cocoa/Cocoa.h>
 #undef check # conflicts with boost
 #include <boost/function.hpp>
+#include <boost/signals2/signal.hpp>
 
 @interface EbitenOpenGLView : NSOpenGLView {
-  boost::function<void()> updateDevice;
+  boost::signals2::signal<void()> updatingDevice;
 }
 
 - (id)initWithFrame:(NSRect)frame
-        pixelFormat:(NSOpenGLPixelFormat*)format
-       updateDevice:(boost::function<void()>)updateDevice_;
+        pixelFormat:(NSOpenGLPixelFormat*)format;
 - (void)prepareOpenGL;
 - (void)animationTimer:(NSTimer*)timer;
 - (void)drawRect:(NSRect)rect;
+- (void)connectUpdatingDevice:(boost::function<void()> const &)func;
 
 @end
 
 @implementation EbitenOpenGLView
 
 - (id)initWithFrame:(NSRect)frame
-        pixelFormat:(NSOpenGLPixelFormat*)format
-       updateDevice:(boost::function<void()>)updateDevice_ {
+        pixelFormat:(NSOpenGLPixelFormat*)format {
   self = [super initWithFrame:frame pixelFormat:format];
   if (self != nil) {
-    self->updateDevice = updateDevice_;
     [self prepareOpenGL];
   }
   return self;
@@ -56,11 +55,15 @@
   assert(context != nil);
   //[context makeCurrentContext];
   //[context update]; ?
-  self->updateDevice();
+  self->updatingDevice();
   //[context clearDrawable];
   // drawing
   [context flushBuffer];
   [pool release];
+}
+
+- (void)connectUpdatingDevice:(boost::function<void()> const &)func {
+  self->updatingDevice.connect(func);
 }
 
 @end
