@@ -4,7 +4,7 @@
 #include "ebiten/platform.hpp"
 
 #ifdef EBITEN_MACOSX
-#include "ebiten/game/graphics/detail/macosx/texture_id.hpp"
+#include "ebiten/game/graphics/detail/opengl/texture_id.hpp"
 #endif
 
 namespace ebiten {

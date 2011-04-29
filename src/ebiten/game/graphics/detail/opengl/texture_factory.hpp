@@ -1,8 +1,8 @@
-#ifndef EBITEN_GAME_GRAPHICS_DETAIL_MACOSX_TEXTURE_FACTORY_HPP
-#define EBITEN_GAME_GRAPHICS_DETAIL_MACOSX_TEXTURE_FACTORY_HPP
+#ifndef EBITEN_GAME_GRAPHICS_DETAIL_OPENGL_TEXTURE_FACTORY_HPP
+#define EBITEN_GAME_GRAPHICS_DETAIL_OPENGL_TEXTURE_FACTORY_HPP
 
 #include "ebiten/game/graphics/texture.hpp"
-#include "ebiten/game/graphics/detail/macosx/device.hpp"
+#include "ebiten/game/graphics/detail/opengl/device.hpp"
 #include "ebiten/util/image.hpp"
 #include "ebiten/util/image_loader.hpp"
 #include <OpenGL/gl.h>
@@ -14,7 +14,7 @@ namespace graphics {
 namespace detail {
 
 // TODO: implements for 32bit machine
-BOOST_STATIC_ASSERT(sizeof(uint64_t) == sizeof(std::size_t));
+BOOST_STATIC_ASSERT((sizeof(uint64_t) == sizeof(std::size_t)));
 
 // TODO: implements for 32bit machine
 uint64_t

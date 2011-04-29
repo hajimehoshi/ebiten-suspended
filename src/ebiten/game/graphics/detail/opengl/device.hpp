@@ -1,9 +1,12 @@
-#ifndef EBITEN_GAME_GRAPHICS_DETAIL_MACOSX_DEVICE_HPP
-#define EBITEN_GAME_GRAPHICS_DETAIL_MACOSX_DEVICE_HPP
+#ifndef EBITEN_GAME_GRAPHICS_DETAIL_OPENGL_DEVICE_HPP
+#define EBITEN_GAME_GRAPHICS_DETAIL_OPENGL_DEVICE_HPP
 
-#include "ebiten/game/graphics/detail/macosx/graphics_context.hpp"
-#include "ebiten/game/graphics/detail/macosx/texture_factory.hpp"
+#ifdef EBITEN_MACOSX
 #include "ebiten/game/graphics/detail/macosx/view.hpp"
+#endif
+
+#include "ebiten/game/graphics/detail/opengl/graphics_context.hpp"
+#include "ebiten/game/graphics/detail/opengl/texture_factory.hpp"
 #include "ebiten/game/graphics/sprite.hpp"
 #include <OpenGL/gl.h>
 #include <boost/signals2/signal.hpp>

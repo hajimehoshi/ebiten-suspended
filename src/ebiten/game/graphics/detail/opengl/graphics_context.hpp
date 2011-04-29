@@ -1,7 +1,7 @@
-#ifndef EBITEN_GAME_GRAPHICS_DETAIL_MACOSX_GRAPHICS_CONTEXT_HPP
-#define EBITEN_GAME_GRAPHICS_DETAIL_MACOSX_GRAPHICS_CONTEXT_HPP
+#ifndef EBITEN_GAME_GRAPHICS_DETAIL_OPENGL_GRAPHICS_CONTEXT_HPP
+#define EBITEN_GAME_GRAPHICS_DETAIL_OPENGL_GRAPHICS_CONTEXT_HPP
 
-#include "ebiten/game/graphics/detail/macosx/device.hpp"
+#include "ebiten/game/graphics/detail/opengl/device.hpp"
 #include "ebiten/game/graphics/color_matrix.hpp"
 #include "ebiten/game/graphics/drawing_region.hpp"
 #include "ebiten/game/graphics/geometry_matrix.hpp"
