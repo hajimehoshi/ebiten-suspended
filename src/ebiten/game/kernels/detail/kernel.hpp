@@ -49,7 +49,7 @@ public:
       static void
       invoke(pthread_mutex_t& mutex,
              boost::optional<Game> const& game,
-             boost::optional<Device>& device) {
+             Device& device) {
         lock l(mutex);
         BOOST_AUTO(const& sprites, game->sprites());
         typedef boost::reference_wrapper<graphics::sprite const> sprite_cref;
@@ -69,21 +69,19 @@ public:
         std::sort(sorted_sprites.begin(), sorted_sprites.end(),
                   sprites_cmp::invoke);
         BOOST_FOREACH(sprite_cref const& s, sorted_sprites) {
-          s.get().draw(device->graphics_context());
+          s.get().draw(device.graphics_context());
         };
       }
     };
     boost::optional<Game> game;
-    boost::optional<Device> device;
-    boost::function<void()> draw_sprites = boost::bind(&draw_sprites_func::invoke,
-                                                       boost::ref(mutex),
-                                                       boost::cref(game),
-                                                       boost::ref(device));
-    device = boost::in_place(screen_width,
-                             screen_height,
-                             window_scale,
-                             boost::ref(draw_sprites));
-    game = boost::in_place(boost::ref(device->texture_factory()));
+    Device device(screen_width,
+                  screen_height,
+                  window_scale);
+    device.connect_updating(boost::bind(&draw_sprites_func::invoke,
+                                        boost::ref(mutex),
+                                        boost::cref(game),
+                                        boost::ref(device)));
+    game = boost::in_place(boost::ref(device.texture_factory()));
     // start the logic loop
     struct logic_func {
       static void
@@ -113,7 +111,7 @@ public:
     };
     pthread_t logic_thread;
     ::pthread_create(&logic_thread, 0, logic_func_wrapper::invoke, &logic);
-    Application application(*device);
+    Application application(device);
     //game_terminated.store(true);
     //::pthread_join(logic_thread, 0);
   }

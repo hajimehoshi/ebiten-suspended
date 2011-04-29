@@ -7,7 +7,7 @@
 #include "ebiten/game/graphics/detail/macosx/view.hpp"
 #include "ebiten/game/graphics/sprite.hpp"
 #include <OpenGL/gl.h>
-#include <boost/function.hpp>
+#include <boost/signals2/signal.hpp>
 #include <cassert>
 
 namespace ebiten {
@@ -26,21 +26,19 @@ private:
   std::size_t const screen_width_;
   std::size_t const screen_height_;
   std::size_t const window_scale_;
-  boost::function<void()> draw_sprites_;
   view_type view_;
   texture_factory_type texture_factory_;
   graphics_context_type graphics_context_;
   texture const offscreen_texture_;
   GLuint const framebuffer_;
+  boost::signals2::signal<void()> updating_;
 public:
   device(std::size_t screen_width,
          std::size_t screen_height,
-         std::size_t window_scale,
-         boost::function<void()>& draw_sprites)
+         std::size_t window_scale)
     : screen_width_(screen_width),
       screen_height_(screen_height),
       window_scale_(window_scale),
-      draw_sprites_(draw_sprites),
       view_(screen_width * window_scale,
             screen_height * window_scale,
             boost::bind(&device<Frame>::update, this)),
@@ -85,7 +83,7 @@ public:
     ::glMatrixMode(GL_PROJECTION);
     ::glLoadIdentity();
     ::glOrtho(0, this->screen_width_, 0, this->screen_height_, 0, 1);
-    this->draw_sprites_();
+    this->updating_();
     ::glFlush();
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
@@ -133,6 +131,11 @@ public:
   texture_factory_type&
   texture_factory() {
     return this->texture_factory_;
+  }
+  template<class Func>
+  void
+  connect_updating(Func const& func) {
+    this->updating_.connect(func);
   }
 private:
   static GLuint
