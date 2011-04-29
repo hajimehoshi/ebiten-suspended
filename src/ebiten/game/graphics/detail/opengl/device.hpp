@@ -1,10 +1,6 @@
 #ifndef EBITEN_GAME_GRAPHICS_DETAIL_OPENGL_DEVICE_HPP
 #define EBITEN_GAME_GRAPHICS_DETAIL_OPENGL_DEVICE_HPP
 
-#ifdef EBITEN_MACOSX
-#include "ebiten/game/graphics/detail/macosx/view.hpp"
-#endif
-
 #include "ebiten/game/graphics/detail/opengl/graphics_context.hpp"
 #include "ebiten/game/graphics/detail/opengl/texture_factory.hpp"
 #include "ebiten/game/graphics/sprite.hpp"
