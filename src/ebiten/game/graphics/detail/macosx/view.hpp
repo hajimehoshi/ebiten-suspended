@@ -3,7 +3,6 @@
 
 #import "ebiten/game/graphics/detail/macosx/view.m"
 
-#include "ebiten/util/id.hpp"
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
 #include <boost/noncopyable.hpp>
@@ -38,14 +37,6 @@ void initialize_view(NSWindow* window,
                               updateDevice: update_device];
   [window setContentView:glView];
   [pool release];
-}
-
-void
-initialize_view(util::id_ const& native_frame,
-                std::size_t width,
-                std::size_t height,
-                boost::function<void()>& update_device) {
-  initialize_view(native_frame.get<NSWindow*>(), width, height, update_device);
 }
 
 // TODO: private constructor?

@@ -3,7 +3,6 @@
 
 #import "ebiten/game/kernels/detail/macosx/application.m"
 
-#include "ebiten/util/id.hpp"
 #include <boost/noncopyable.hpp>
 
 namespace ebiten {
@@ -21,11 +20,6 @@ do_run(NSWindow* window) {
   [app run];
   [pool release];
   return 0;
-}
-
-int
-do_run(util::id_ const& native_frame) {
-  return do_run(native_frame.get<NSWindow*>());
 }
 
 class application : private boost::noncopyable {

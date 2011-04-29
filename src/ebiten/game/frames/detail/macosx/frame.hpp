@@ -3,7 +3,6 @@
 
 #import "ebiten/game/frames/detail/macosx/frame.m"
 
-#include "ebiten/util/id.hpp"
 #include <boost/noncopyable.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <cstddef>
@@ -14,10 +13,12 @@ namespace frames {
 namespace detail {
 
 class frame : private boost::noncopyable {
+public:
+  typedef NSWindow* native_frame_type;
 private:
   std::size_t const width_;
   std::size_t const height_;
-  util::id_ window_;
+  NSWindow* native_window_;
 public:
   frame(std::size_t width, std::size_t height)
     : width_(width),
@@ -26,13 +27,13 @@ public:
     EbitenWindow* window = [[EbitenWindow alloc]
                             initWithSize:NSMakeSize(width, height)];
     [pool release];
-    this->window_ = util::id_(window);
+    this->native_window_ = window;
   }
   ~frame() {
   }
-  util::id_ const&
+  native_frame_type const&
   native_frame() const {
-    return this->window_;
+    return this->native_window_;
   }
   std::size_t
   width() const {
