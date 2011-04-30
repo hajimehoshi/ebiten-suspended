@@ -1,6 +1,12 @@
 #ifndef EBITEN_GAME_KERNELS_DETAIL_KERNEL_HPP
 #define EBITEN_GAME_KERNELS_DETAIL_KERNEL_HPP
 
+#include "ebiten/platform.hpp"
+
+#ifdef EBITEN_MACOSX
+#include "ebiten/game/kernels/detail/macosx/application.hpp"
+#endif
+
 #include "ebiten/game/graphics/sprite.hpp"
 #include <boost/bind.hpp>
 #include <boost/foreach.hpp>
@@ -19,12 +25,11 @@ namespace game {
 namespace kernels {
 namespace detail {
 
-template<class Device, class Timer, class Application>
+template<class Device, class Timer>
 class kernel : private boost::noncopyable {
 public:
   typedef Device device_type;
   typedef Timer timer_type;
-  typedef Application application_type;
   template<class Game>
   void
   run(std::size_t screen_width,
@@ -111,7 +116,7 @@ public:
     };
     pthread_t logic_thread;
     ::pthread_create(&logic_thread, 0, logic_func_wrapper::invoke, &logic);
-    Application application(device);
+    application app(device);
     //game_terminated.store(true);
     //::pthread_join(logic_thread, 0);
   }
