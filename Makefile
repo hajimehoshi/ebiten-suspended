@@ -20,8 +20,16 @@ LDFLAGS:= \
 
 SRC:=$(shell find src -name "*.hpp" -or -name "*.cpp" -or -name "*.m")
 
-all: $(PROG)_test
-	./$(PROG)_test --gtest_color=yes
+all: $(PROG)_test.app
+	open $(PROG)_test.app --args --gtest_color=yes
+
+$(PROG).app: $(PROG)
+	mkdir -p $@/Contents/MacOS
+	cp $< $@/Contents/MacOS/
+
+$(PROG)_test.app: $(PROG)_test
+	mkdir -p $@/Contents/MacOS
+	cp $< $@/Contents/MacOS/
 
 $(PROG): $(SRC)
 	$(CXX) \
@@ -45,5 +53,7 @@ $(PROG)_test: $(SRC)
 clean:
 	rm -f $(PROG)
 	rm -f $(PROG)_test
+	rm -rf $(PROG).app
+	rm -rf $(PROG)_test.app
 	rm -rf *.dSYM
 	find . -name "*.o" | xargs rm -f

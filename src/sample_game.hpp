@@ -20,7 +20,8 @@ private:
 public:
   explicit
   sample_game(ebiten::game::graphics::device::texture_factory_type& tf) {
-    this->texture_ = boost::in_place(tf.from_file("test.png"));
+    // TODO: カレントディレクトリについてどうにかする
+    this->texture_ = boost::in_place(tf.from_file("/Users/hajime/ebiten/test.png"));
     this->sprites_.push_back(new sprite_type(this->texture_.get(), 4));
     sprite_type& s = this->sprites_.at(0);
     s.geometry_matrix().set_a(1);

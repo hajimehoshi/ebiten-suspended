@@ -10,9 +10,13 @@
 - (id)initWithFrame:(NSRect)frame
         pixelFormat:(NSOpenGLPixelFormat*)format;
 - (void)prepareOpenGL;
+- (BOOL)acceptsFirstResponder;
+- (BOOL)becomeFirstResponder;
 - (void)animationTimer:(NSTimer*)timer;
 - (void)drawRect:(NSRect)rect;
 - (void)connectUpdating:(boost::function<void()> const &)func;
+- (void)mouseDown:(NSEvent*)theEvent;
+- (void)keyDown:(NSEvent*)theEvent;
 
 @end
 
@@ -43,6 +47,14 @@
   [pool release];
 }
 
+- (BOOL)acceptsFirstResponder {
+  return YES;
+}
+
+- (BOOL)becomeFirstResponder {
+  return YES;
+}
+
 - (void)animationTimer:(NSTimer*)timer {
   (void)timer;
   [self setNeedsDisplay:YES];
@@ -64,6 +76,15 @@
 
 - (void)connectUpdating:(boost::function<void()> const &)func {
   self->updating.connect(func);
+}
+
+- (void)mouseDown:(NSEvent*)theEvent {
+  NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+  NSLog(@"%@", NSStringFromPoint(location));
+}
+
+- (void)keyDown:(NSEvent*)theEvent {
+  NSLog(@"hoge");
 }
 
 @end

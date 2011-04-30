@@ -21,6 +21,15 @@ public:
     EbitenController* controller = [[EbitenController alloc] initWithWindow:window];
     NSApplication* app = [NSApplication sharedApplication];
     [app setDelegate:controller];
+    {
+      // menu
+      //[NSBundle loadNibNamed:@"MainMenu" owner:app];
+      //NSLog(@"%@", [app mainMenu]);
+      /*NSMenu* appleMenu = [[NSMenu alloc] initWithTitle:@"hoge"];
+      [app setAppleMenu:appleMenu];
+      [appleMenu release];*/
+    }
+    [app finishLaunching];
     [app run];
     [pool release];
   }

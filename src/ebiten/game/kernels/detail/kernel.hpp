@@ -82,10 +82,10 @@ public:
     Device device(screen_width,
                   screen_height,
                   window_scale);
-    device.connect_updating(boost::bind(&draw_sprites_func::invoke,
-                                        boost::ref(mutex),
-                                        boost::cref(game),
-                                        boost::ref(device)));
+    device.connect_drawing_sprites(boost::bind(&draw_sprites_func::invoke,
+                                               boost::ref(mutex),
+                                               boost::cref(game),
+                                               boost::ref(device)));
     game = boost::in_place(boost::ref(device.texture_factory()));
     // start the logic loop
     struct logic_func {

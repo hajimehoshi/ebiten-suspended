@@ -28,7 +28,7 @@ private:
   graphics_context_type graphics_context_;
   texture const offscreen_texture_;
   GLuint const framebuffer_;
-  boost::signals2::signal<void()> updating_;
+  boost::signals2::signal<void()> drawing_sprites_;
 public:
   device(std::size_t screen_width,
          std::size_t screen_height,
@@ -79,7 +79,7 @@ public:
     ::glMatrixMode(GL_PROJECTION);
     ::glLoadIdentity();
     ::glOrtho(0, this->screen_width_, 0, this->screen_height_, 0, 1);
-    this->updating_();
+    this->drawing_sprites_();
     ::glFlush();
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
@@ -130,8 +130,8 @@ public:
   }
   template<class Func>
   void
-  connect_updating(Func const& func) {
-    this->updating_.connect(func);
+  connect_drawing_sprites(Func const& func) {
+    this->drawing_sprites_.connect(func);
   }
 private:
   static GLuint

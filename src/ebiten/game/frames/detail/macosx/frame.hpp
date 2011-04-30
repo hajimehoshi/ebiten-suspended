@@ -45,6 +45,7 @@ public:
                                 initWithFrame:rect
                                 pixelFormat:format];
     [window setContentView:glView];
+    //[window makeFirstResponder:glView];
     [pool release];
   }
   ~frame() {
