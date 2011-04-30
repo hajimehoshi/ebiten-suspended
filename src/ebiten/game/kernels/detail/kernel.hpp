@@ -20,7 +20,7 @@ namespace kernels {
 namespace detail {
 
 template<class Device, class Timer, class Application>
-class kernel : boost::noncopyable {
+class kernel : private boost::noncopyable {
 public:
   typedef Device device_type;
   typedef Timer timer_type;
