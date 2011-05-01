@@ -48,8 +48,6 @@ public:
     //[window makeFirstResponder:glView];
     [pool release];
   }
-  ~frame() {
-  }
   native_frame_type const&
   native_frame() const {
     return this->native_window_;
