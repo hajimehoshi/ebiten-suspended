@@ -84,6 +84,7 @@
 }
 
 - (void)keyDown:(NSEvent*)theEvent {
+  (void)theEvent;
   NSLog(@"hoge");
 }
 
