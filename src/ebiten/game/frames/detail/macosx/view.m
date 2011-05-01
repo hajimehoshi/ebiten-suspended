@@ -84,8 +84,8 @@
 }
 
 - (void)keyDown:(NSEvent*)theEvent {
-  (void)theEvent;
-  NSLog(@"hoge");
+  NSString* chars = [theEvent characters];
+  NSLog(@"%@", chars);
 }
 
 @end

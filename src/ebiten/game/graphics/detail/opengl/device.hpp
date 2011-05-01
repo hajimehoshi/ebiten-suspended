@@ -1,10 +1,12 @@
 #ifndef EBITEN_GAME_GRAPHICS_DETAIL_OPENGL_DEVICE_HPP
 #define EBITEN_GAME_GRAPHICS_DETAIL_OPENGL_DEVICE_HPP
 
+#include "ebiten/game/frames/frame.hpp"
 #include "ebiten/game/graphics/detail/opengl/graphics_context.hpp"
 #include "ebiten/game/graphics/detail/opengl/texture_factory.hpp"
 #include "ebiten/game/graphics/sprite.hpp"
 #include <OpenGL/gl.h>
+#include <boost/noncopyable.hpp>
 #include <boost/signals2/signal.hpp>
 #include <cassert>
 
@@ -13,17 +15,16 @@ namespace game {
 namespace graphics {
 namespace detail {
 
-template<class Frame>
 class device : private boost::noncopyable {
 public:
-  typedef Frame frame_type;
-  typedef typename detail::texture_factory texture_factory_type;
-  typedef typename detail::graphics_context graphics_context_type;
+  typedef frames::frame frame_type;
+  typedef detail::texture_factory texture_factory_type;
+  typedef detail::graphics_context graphics_context_type;
 private:
   std::size_t const screen_width_;
   std::size_t const screen_height_;
   std::size_t const window_scale_;
-  Frame frame_;
+  frames::frame frame_;
   texture_factory_type texture_factory_;
   graphics_context_type graphics_context_;
   texture const offscreen_texture_;
@@ -41,7 +42,7 @@ public:
       graphics_context_(),
       offscreen_texture_(texture_factory().create(screen_width, screen_height)),
       framebuffer_(generate_frame_buffer()) {
-    this->frame_.connect_updating(boost::bind(&device<Frame>::update, this));
+    this->frame_.connect_updating(boost::bind(&device::update, this));
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->framebuffer_);
     ::glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,
                                 GL_COLOR_ATTACHMENT0_EXT,
@@ -128,9 +129,8 @@ public:
   texture_factory() {
     return this->texture_factory_;
   }
-  template<class Func>
   void
-  connect_drawing_sprites(Func const& func) {
+  connect_drawing_sprites(boost::function<void()> const& func) {
     this->drawing_sprites_.connect(func);
   }
 private:

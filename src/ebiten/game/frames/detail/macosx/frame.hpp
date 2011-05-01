@@ -62,9 +62,8 @@ public:
   height() const {
     return this->height_;
   }
-  template<class Func>
   void
-  connect_updating(Func const& func) {
+  connect_updating(boost::function<void()> const& func) {
     NSWindow* window = this->native_window_;
     EbitenOpenGLView* glView = [window contentView];
     [glView connectUpdating:func];

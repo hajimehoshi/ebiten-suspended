@@ -7,13 +7,11 @@
 #include "ebiten/game/graphics/detail/opengl/device.hpp"
 #endif
 
-#include "ebiten/game/frames/frame.hpp"
-
 namespace ebiten {
 namespace game {
 namespace graphics {
 
-typedef detail::device<frames::frame> device;
+typedef detail::device device;
 
 }
 }

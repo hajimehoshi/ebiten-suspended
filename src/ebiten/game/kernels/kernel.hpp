@@ -1,5 +1,5 @@
-#ifndef EBITEN_GAME_KERNELS_DETAIL_KERNEL_HPP
-#define EBITEN_GAME_KERNELS_DETAIL_KERNEL_HPP
+#ifndef EBITEN_GAME_KERNELS_KERNEL_HPP
+#define EBITEN_GAME_KERNELS_KERNEL_HPP
 
 #include "ebiten/platform.hpp"
 
@@ -114,7 +114,7 @@ public:
     };
     pthread_t logic_thread;
     ::pthread_create(&logic_thread, 0, logic_func_wrapper::invoke, &logic);
-    detail::application app(device);
+    detail::application app(device.frame());
     //game_terminated.store(true);
     //::pthread_join(logic_thread, 0);
   }

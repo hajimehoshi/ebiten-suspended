@@ -3,6 +3,7 @@
 
 #import "ebiten/game/kernels/detail/macosx/application.m"
 
+#include "ebiten/game/frames/frame.hpp"
 #include <boost/noncopyable.hpp>
 
 namespace ebiten {
@@ -12,23 +13,14 @@ namespace detail {
 
 class application : private boost::noncopyable {
 public:
-  template<class Device>
   explicit
-  application(Device& device) {
-    NSWindow* window = device.frame().native_frame();
+  application(frames::frame& frame) {
+    NSWindow* window = frame.native_frame();
     assert(window != nil);
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     EbitenController* controller = [[EbitenController alloc] initWithWindow:window];
     NSApplication* app = [NSApplication sharedApplication];
     [app setDelegate:controller];
-    {
-      // menu
-      //[NSBundle loadNibNamed:@"MainMenu" owner:app];
-      //NSLog(@"%@", [app mainMenu]);
-      /*NSMenu* appleMenu = [[NSMenu alloc] initWithTitle:@"hoge"];
-      [app setAppleMenu:appleMenu];
-      [appleMenu release];*/
-    }
     [app finishLaunching];
     [app run];
     [pool release];

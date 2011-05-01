@@ -23,7 +23,6 @@ namespace graphics {
 namespace detail {
 
 class graphics_context : private boost::noncopyable {
-  template<class View>
   friend class device;
 private:
   GLuint shader_program;

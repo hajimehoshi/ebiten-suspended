@@ -30,7 +30,6 @@ clp2(uint64_t x) {
 }
 
 class texture_factory : public boost::noncopyable {
-  template<class View>
   friend class device;
 private:
   texture_factory() {
