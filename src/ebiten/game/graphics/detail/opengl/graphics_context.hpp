@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <cassert>
 #include <iostream>
+#include <type_traits>
 
 namespace ebiten {
 namespace game {
@@ -37,8 +38,8 @@ public:
                 graphics::geometry_matrix const& geo_mat,
                 int z,
                 graphics::color_matrix const& color_mat) {
-    BOOST_STATIC_ASSERT((boost::is_same<typename boost::range_value<DrawingRegions>::type,
-                                        drawing_region>::value));
+    BOOST_STATIC_ASSERT((std::is_same<typename boost::range_value<DrawingRegions>::type,
+                                      drawing_region>::value));
     if (!this->shader_program) {
       this->shader_program = compile_shader_program();
       assert(this->shader_program);
