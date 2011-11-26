@@ -23,7 +23,7 @@ public:
   }
   void
   wait_frame() {
-    uint64_t now = mach_absolute_time();
+    uint64_t const now = mach_absolute_time();
     if (now < this->next_time_to_update_) {
       mach_wait_until(this->next_time_to_update_);
     }
