@@ -15,7 +15,6 @@
 #include <boost/noncopyable.hpp>
 #include <boost/optional.hpp>
 #include <boost/type_traits.hpp>
-#include <boost/typeof/typeof.hpp>
 #include <boost/utility/in_place_factory.hpp>
 #include <algorithm>
 #include <pthread.h>
@@ -52,7 +51,7 @@ public:
              boost::optional<Game> const& game,
              graphics::device& device) {
         lock l(mutex);
-        BOOST_AUTO(const& sprites, game->sprites());
+        auto const& sprites = game->sprites();
         typedef boost::reference_wrapper<graphics::sprite const> sprite_cref;
         std::vector<sprite_cref> sorted_sprites;
         sorted_sprites.reserve(boost::size(sprites));
