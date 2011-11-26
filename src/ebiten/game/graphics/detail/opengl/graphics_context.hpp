@@ -7,11 +7,11 @@
 #include "ebiten/game/graphics/geometry_matrix.hpp"
 #include "ebiten/game/graphics/texture.hpp"
 #include <OpenGL/gl.h>
-#include <boost/array.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/range.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits.hpp>
+#include <array>
 #include <algorithm>
 #include <cassert>
 #include <iostream>
@@ -162,7 +162,7 @@ private:
     if (log_size) {
       int length = 0;
       // TODO: 動的確保のほうがよい?
-      boost::array<char, 1024> buffer;
+      std::array<char, 1024> buffer;
       // TODO: バッファ確認
       ::glGetShaderInfoLog(shader, buffer.size(), &length, buffer.data());
       std::cerr << buffer.data() << std::endl;

@@ -1,10 +1,10 @@
 #ifndef EBITEN_GAME_GRAPHICS_AFFINE_MATRIX_HPP
 #define EBITEN_GAME_GRAPHICS_AFFINE_MATRIX_HPP
 
-#include <boost/array.hpp>
 #include <boost/mpl/size_t.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/static_assert.hpp>
+#include <array>
 #include <cassert>
 
 namespace ebiten {
@@ -16,7 +16,7 @@ class affine_matrix : private boost::noncopyable {
   BOOST_STATIC_ASSERT(0 < Dimension);
 private:
   static std::size_t const size = Dimension * (Dimension - 1);
-  typedef boost::array<Float, size> elements_type;
+  typedef std::array<Float, size> elements_type;
   elements_type elements_;
 public:
   // TODO: accepts iterators
