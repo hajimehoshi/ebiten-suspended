@@ -1,7 +1,6 @@
 #ifndef EBITEN_GAME_GRAPHICS_AFFINE_MATRIX_HPP
 #define EBITEN_GAME_GRAPHICS_AFFINE_MATRIX_HPP
 
-#include <boost/mpl/size_t.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/static_assert.hpp>
 #include <array>
@@ -22,6 +21,7 @@ public:
   // TODO: accepts iterators
   // TODO: constructor's arugments?
   template<class Elements>
+  explicit
   affine_matrix(Elements const& elements) {
     assert(static_cast<std::size_t>(boost::size(elements)) <= size);
     this->elements_.fill(0);
@@ -32,7 +32,7 @@ public:
   element() const {
     BOOST_STATIC_ASSERT(I < Dimension);
     BOOST_STATIC_ASSERT(J < Dimension);
-    return this->element(boost::mpl::size_t<I>(), boost::mpl::size_t<J>());
+    return this->element_<I, J>();
   }
   template<std::size_t I, std::size_t J>
   Float
@@ -60,17 +60,16 @@ public:
     return true;
   }
 private:
+  template<std::size_t I, std::size_t J>
   Float
-  element(std::size_t i, std::size_t j) const {
-    return this->elements_[i * Dimension + j];
-  }
-  Float
-  element(boost::mpl::size_t<Dimension - 1>, std::size_t) const {
-    return 0;
-  }
-  Float
-  element(boost::mpl::size_t<Dimension - 1>, boost::mpl::size_t<Dimension - 1>) const {
-    return 1;
+  element_() const {
+    if (I == Dimension - 1) {
+      if (J == Dimension - 1) {
+        return 1;
+      }
+      return 0;
+    }
+    return this->elements_[I * Dimension + J];
   }
 };
 
