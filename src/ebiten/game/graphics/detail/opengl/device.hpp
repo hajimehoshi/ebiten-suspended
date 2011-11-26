@@ -9,6 +9,7 @@
 #include <boost/noncopyable.hpp>
 #include <boost/signals2/signal.hpp>
 #include <cassert>
+#include <functional>
 
 namespace ebiten {
 namespace game {
@@ -130,7 +131,7 @@ public:
     return this->texture_factory_;
   }
   void
-  connect_drawing_sprites(boost::function<void()> const& func) {
+  connect_drawing_sprites(std::function<void()> const& func) {
     this->drawing_sprites_.connect(func);
   }
 private:

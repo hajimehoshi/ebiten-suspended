@@ -11,12 +11,12 @@
 #include "ebiten/game/graphics/sprite.hpp"
 #include "ebiten/game/timers/timer.hpp"
 #include <boost/bind.hpp>
-#include <boost/function.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/optional.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/utility/in_place_factory.hpp>
 #include <algorithm>
+#include <functional>
 #include <pthread.h>
 
 namespace ebiten {
@@ -96,14 +96,14 @@ public:
         }
       }
     };
-    boost::function<void()> logic = boost::bind(logic_func::invoke,
-                                                fps,
-                                                boost::ref(mutex),
-                                                boost::ref(*game));
+    std::function<void()> logic = boost::bind(logic_func::invoke,
+                                              fps,
+                                              boost::ref(mutex),
+                                              boost::ref(*game));
     struct logic_func_wrapper {
       static void*
       invoke(void* func_p) {
-        typedef boost::function<void()> func_type;
+        typedef std::function<void()> func_type;
         func_type& func = *(reinterpret_cast<func_type*>(func_p));
         func();
         return 0;

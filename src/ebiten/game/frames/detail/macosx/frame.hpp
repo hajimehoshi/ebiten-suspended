@@ -4,10 +4,9 @@
 #import "ebiten/game/frames/detail/macosx/frame.m"
 #import "ebiten/game/frames/detail/macosx/view.m"
 
-#include <boost/function.hpp>
 #include <boost/noncopyable.hpp>
-#include <boost/scoped_ptr.hpp>
 #include <cstddef>
+#include <functional>
 
 namespace ebiten {
 namespace game {
@@ -61,7 +60,7 @@ public:
     return this->height_;
   }
   void
-  connect_updating(boost::function<void()> const& func) {
+  connect_updating(std::function<void()> const& func) {
     NSWindow* window = this->native_window_;
     EbitenOpenGLView* glView = [window contentView];
     [glView connectUpdating:func];
