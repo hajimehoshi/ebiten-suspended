@@ -52,12 +52,6 @@
 
 @implementation EbitenWindow
 
-- (void)terminate:(id)sender {
-  (void)sender;
-  EbitenWindowController* controller = (EbitenWindowController*)[self delegate];
-  [controller windowShouldClose:self];
-}
-
 - (id)initWithSize:(NSSize)size {
   [NSApplication sharedApplication];
   // initialize

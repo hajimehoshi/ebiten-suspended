@@ -28,7 +28,7 @@
   NSMenu* mainMenu = [[NSMenu alloc] init];
   NSMenu* appleMenu = [[NSMenu alloc] init];
   [appleMenu addItemWithTitle:[@"Quit " stringByAppendingString:processName]
-                       action:@selector(terminate:)
+                       action:@selector(performClose:)
                 keyEquivalent:@"q"];
   {
     NSMenuItem* menuItem = [mainMenu insertItemWithTitle:@""
