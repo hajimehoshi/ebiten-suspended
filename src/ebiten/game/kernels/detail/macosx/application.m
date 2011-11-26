@@ -24,10 +24,10 @@
 
 - (void)initMenu {
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-  // TODO: add the application's name
-  NSMenu* mainMenu = [[NSMenu alloc] initWithTitle:@""];
-  NSMenu* appleMenu = [[NSMenu alloc] initWithTitle:@""];
-  [appleMenu addItemWithTitle:@"Quit" 
+  NSString* processName = [[NSProcessInfo processInfo] processName];
+  NSMenu* mainMenu = [[NSMenu alloc] init];
+  NSMenu* appleMenu = [[NSMenu alloc] init];
+  [appleMenu addItemWithTitle:[@"Quit " stringByAppendingString:processName]
                        action:@selector(terminate:)
                 keyEquivalent:@"q"];
   {
