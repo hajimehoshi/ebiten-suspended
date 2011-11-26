@@ -1,5 +1,5 @@
 #import <Cocoa/Cocoa.h>
-#undef check # conflicts with boost
+#undef check // conflicts with boost
 #include <boost/function.hpp>
 #include <boost/signals2/signal.hpp>
 
