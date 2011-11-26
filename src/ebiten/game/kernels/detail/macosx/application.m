@@ -2,10 +2,6 @@
 #undef check // conflicts with boost
 #include <cassert>
 
-@interface NSApplication(NSAppleMenu)
-- (void)setAppleMenu:(NSMenu*)menu;
-@end
-
 @interface EbitenController : NSObject<NSApplicationDelegate> {
 @private
   NSWindow* window_;

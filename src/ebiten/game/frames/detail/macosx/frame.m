@@ -1,8 +1,7 @@
 #import <Cocoa/Cocoa.h>
 #undef check // conflicts with boost
 
-@interface EbitenWindowController : NSObject<NSWindowDelegate> {
-}
+@interface EbitenWindowController : NSObject<NSWindowDelegate>
 
 - (void)alertDidEnd:(NSAlert*)alert
          returnCode:(NSInteger)returnCode
@@ -16,6 +15,7 @@
 - (BOOL)windowShouldClose:(id)sender {
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   if ([sender isDocumentEdited]) {
+    // TODO: add the application's name
     NSAlert* alert = [NSAlert alertWithMessageText:@"Quit the game?"
                               defaultButton:@"Quit"
                               alternateButton:nil
@@ -44,14 +44,19 @@
 
 @end
 
-@interface EbitenWindow : NSWindow {
-}
+@interface EbitenWindow : NSWindow
 
 - (id)initWithSize:(NSSize)size;
 
 @end
 
 @implementation EbitenWindow
+
+- (void)terminate:(id)sender {
+  (void)sender;
+  EbitenWindowController* controller = (EbitenWindowController*)[self delegate];
+  [controller windowShouldClose:self];
+}
 
 - (id)initWithSize:(NSSize)size {
   [NSApplication sharedApplication];
@@ -67,12 +72,22 @@
                                    (screenSize.height - windowRect.size.height) / 2);
   self = [super initWithContentRect:contentRect
                 styleMask:style backing:NSBackingStoreBuffered defer:YES];
-  if (self != nil) {
-    [self setReleasedWhenClosed:YES];
-    EbitenWindowController* controller = [[EbitenWindowController alloc] init];
-    [self setDelegate:controller];
-    [self setDocumentEdited:YES];
-  }
+  assert(self != nil);
+  [self setReleasedWhenClosed:YES];
+  EbitenWindowController* controller = [[EbitenWindowController alloc] init];
+  [self setDelegate:controller];
+  [self setDocumentEdited:YES];
+  [NSApp setMainMenu:[[NSMenu alloc] init]];
+  NSMenu* menu = [[NSMenu alloc] initWithTitle:@""];
+  [menu addItemWithTitle:@"Quit" // TODO: add the application's name
+                  action:@selector(terminate:)
+           keyEquivalent:@"q"];
+  NSMenuItem* menuItem = [[NSMenuItem alloc] initWithTitle:@""
+                                                    action:nil
+                                             keyEquivalent:@""];
+  [menuItem setSubmenu:menu];
+  [[NSApp mainMenu] addItem:menuItem];
+  [menu release];
   [pool release];
   return self;
 }
