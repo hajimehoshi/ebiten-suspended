@@ -2,18 +2,14 @@ PROG:=ebiten
 CC:=gcc
 CXX:=g++
 
-CFLAGS:= \
+CXXFLAGS:= \
 	-W -Wall -Wextra \
 	-fPIC \
-	-L/opt/local/lib \
-	-I/opt/local/include -Isrc
-
-CXXFLAGS:= \
-	$(CFLAGS) \
+	-I/usr/X11/include -Isrc \
 	-x objective-c++
 
 LDFLAGS:= \
-	-L/opt/local/lib \
+	-L/usr/X11/lib \
 	-pthread \
 	-framework Cocoa -framework OpenGL \
 	-lpng # TODO: link them statically
