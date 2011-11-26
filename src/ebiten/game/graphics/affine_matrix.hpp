@@ -13,7 +13,7 @@ namespace game {
 namespace graphics {
 
 template<class Float, std::size_t Dimension>
-class affine_matrix /* : private boost::noncopyable */ {
+class affine_matrix : private boost::noncopyable {
   BOOST_STATIC_ASSERT(0 < Dimension);
 private:
   static std::size_t const size = Dimension * (Dimension - 1);

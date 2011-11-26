@@ -8,7 +8,7 @@ namespace ebiten {
 namespace game {
 namespace graphics {
 
-class drawing_region /* : private boost::noncopyable */ {
+class drawing_region : private boost::noncopyable {
 
 private:
   // TODO: implements by std::unique_ptr<std::array<double, 6> >?
