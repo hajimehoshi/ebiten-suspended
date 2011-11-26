@@ -4,7 +4,6 @@
 #include <boost/array.hpp>
 #include <boost/mpl/size_t.hpp>
 #include <boost/noncopyable.hpp>
-#include <boost/range.hpp>
 #include <boost/static_assert.hpp>
 #include <cassert>
 
@@ -26,7 +25,7 @@ public:
   affine_matrix(Elements const& elements) {
     assert(static_cast<std::size_t>(boost::size(elements)) <= size);
     this->elements_.fill(0);
-    std::copy(boost::begin(elements), boost::end(elements), this->elements_.begin());
+    std::copy(std::begin(elements), std::end(elements), this->elements_.begin());
   }
   template<std::size_t I, std::size_t J>
   Float
