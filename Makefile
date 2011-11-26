@@ -1,5 +1,5 @@
 PROG:=ebiten
-CXX:=g++
+CXX:=clang++
 
 CXXFLAGS:= \
 	-W -Wall -Wextra \

@@ -13,7 +13,7 @@ namespace ebiten {
 namespace game {
 namespace graphics {
 
-class sprite : private boost::noncopyable {
+class sprite /*: private boost::noncopyable*/ {
 private:
   texture const& texture_;
   typedef boost::ptr_vector<drawing_region> drawing_regions_type;
