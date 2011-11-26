@@ -44,10 +44,10 @@ public:
 namespace ebiten {
 namespace util {
 
-TEST(image_loader, png_image_loader) {
+BOOST_AUTO_TEST_CASE(image_loader_png_image_loader) {
   image img(png_image_loader, "test.png");
-  EXPECT_EQ(32u, img.width());
-  EXPECT_EQ(32u, img.height());
+  BOOST_CHECK_EQUAL(32u, img.width());
+  BOOST_CHECK_EQUAL(32u, img.height());
 }
 
 }

@@ -1,5 +1,5 @@
 #ifdef EBITEN_TEST
-#include <gtest/gtest.h>
+#include <boost/test/unit_test.hpp>
 #endif
 
 #include "ebiten/ebiten.hpp"
@@ -9,16 +9,6 @@ int
 main(int argc, char** argv) {
   (void)argc;
   (void)argv;
-#ifdef EBITEN_TEST
-  testing::InitGoogleTest(&argc, argv);
-  int const test_result = RUN_ALL_TESTS();
-  if (test_result != EXIT_SUCCESS) {
-    return test_result;
-  }
-  if (2 <= argc) {
-    return EXIT_SUCCESS;
-  }
-#endif
   try {
     ebiten::game::kernels::kernel kernel;
     kernel.run<sample_game>(320, 240, 600, 2);

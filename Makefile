@@ -17,7 +17,7 @@ LDFLAGS:= \
 SRC:=$(shell find src -name "*.hpp" -or -name "*.cpp" -or -name "*.m")
 
 all: $(PROG)_test.app
-	open $(PROG)_test.app --args --gtest_color=yes
+	open $(PROG)_test.app
 
 $(PROG).app: $(PROG)
 	mkdir -p $@/Contents/MacOS
@@ -40,9 +40,10 @@ $(PROG)_test: $(SRC)
 	$(CXX) \
 		$(CXXFLAGS) \
 		$(LDFLAGS) \
+		-lboost_unit_test_framework \
 		-g \
 		-o $@ \
-		-lgtest \
+		-DEBITEN_TEST \
 		src/main.cpp
 
 .PHONY: clean

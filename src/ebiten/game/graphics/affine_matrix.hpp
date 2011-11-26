@@ -85,50 +85,50 @@ namespace ebiten {
 namespace game {
 namespace graphics {
 
-TEST(affine_matrix, element) {
+BOOST_AUTO_TEST_CASE(affine_matrix_element) {
   affine_matrix<double, 4> m((double[]){1, 2, 3});
-  EXPECT_EQ(1, (m.element<0, 0>()));
-  EXPECT_EQ(2, (m.element<0, 1>()));
-  EXPECT_EQ(3, (m.element<0, 2>()));
-  EXPECT_EQ(0, (m.element<0, 3>()));
-  EXPECT_EQ(0, (m.element<1, 0>()));
-  EXPECT_EQ(0, (m.element<1, 1>()));
-  EXPECT_EQ(0, (m.element<1, 2>()));
-  EXPECT_EQ(0, (m.element<1, 3>()));
-  EXPECT_EQ(0, (m.element<2, 0>()));
-  EXPECT_EQ(0, (m.element<2, 1>()));
-  EXPECT_EQ(0, (m.element<2, 2>()));
-  EXPECT_EQ(0, (m.element<2, 3>()));
-  EXPECT_EQ(0, (m.element<3, 0>()));
-  EXPECT_EQ(0, (m.element<3, 1>()));
-  EXPECT_EQ(0, (m.element<3, 2>()));
-  EXPECT_EQ(1, (m.element<3, 3>()));
+  BOOST_CHECK_EQUAL(1, (m.element<0, 0>()));
+  BOOST_CHECK_EQUAL(2, (m.element<0, 1>()));
+  BOOST_CHECK_EQUAL(3, (m.element<0, 2>()));
+  BOOST_CHECK_EQUAL(0, (m.element<0, 3>()));
+  BOOST_CHECK_EQUAL(0, (m.element<1, 0>()));
+  BOOST_CHECK_EQUAL(0, (m.element<1, 1>()));
+  BOOST_CHECK_EQUAL(0, (m.element<1, 2>()));
+  BOOST_CHECK_EQUAL(0, (m.element<1, 3>()));
+  BOOST_CHECK_EQUAL(0, (m.element<2, 0>()));
+  BOOST_CHECK_EQUAL(0, (m.element<2, 1>()));
+  BOOST_CHECK_EQUAL(0, (m.element<2, 2>()));
+  BOOST_CHECK_EQUAL(0, (m.element<2, 3>()));
+  BOOST_CHECK_EQUAL(0, (m.element<3, 0>()));
+  BOOST_CHECK_EQUAL(0, (m.element<3, 1>()));
+  BOOST_CHECK_EQUAL(0, (m.element<3, 2>()));
+  BOOST_CHECK_EQUAL(1, (m.element<3, 3>()));
   m.set_element<1, 0>(4);
   m.set_element<1, 1>(5);
   m.set_element<2, 3>(6);
-  EXPECT_EQ(1, (m.element<0, 0>()));
-  EXPECT_EQ(2, (m.element<0, 1>()));
-  EXPECT_EQ(3, (m.element<0, 2>()));
-  EXPECT_EQ(0, (m.element<0, 3>()));
-  EXPECT_EQ(4, (m.element<1, 0>()));
-  EXPECT_EQ(5, (m.element<1, 1>()));
-  EXPECT_EQ(0, (m.element<1, 2>()));
-  EXPECT_EQ(0, (m.element<1, 3>()));
-  EXPECT_EQ(0, (m.element<2, 0>()));
-  EXPECT_EQ(0, (m.element<2, 1>()));
-  EXPECT_EQ(0, (m.element<2, 2>()));
-  EXPECT_EQ(6, (m.element<2, 3>()));
-  EXPECT_EQ(0, (m.element<3, 0>()));
-  EXPECT_EQ(0, (m.element<3, 1>()));
-  EXPECT_EQ(0, (m.element<3, 2>()));
-  EXPECT_EQ(1, (m.element<3, 3>()));
+  BOOST_CHECK_EQUAL(1, (m.element<0, 0>()));
+  BOOST_CHECK_EQUAL(2, (m.element<0, 1>()));
+  BOOST_CHECK_EQUAL(3, (m.element<0, 2>()));
+  BOOST_CHECK_EQUAL(0, (m.element<0, 3>()));
+  BOOST_CHECK_EQUAL(4, (m.element<1, 0>()));
+  BOOST_CHECK_EQUAL(5, (m.element<1, 1>()));
+  BOOST_CHECK_EQUAL(0, (m.element<1, 2>()));
+  BOOST_CHECK_EQUAL(0, (m.element<1, 3>()));
+  BOOST_CHECK_EQUAL(0, (m.element<2, 0>()));
+  BOOST_CHECK_EQUAL(0, (m.element<2, 1>()));
+  BOOST_CHECK_EQUAL(0, (m.element<2, 2>()));
+  BOOST_CHECK_EQUAL(6, (m.element<2, 3>()));
+  BOOST_CHECK_EQUAL(0, (m.element<3, 0>()));
+  BOOST_CHECK_EQUAL(0, (m.element<3, 1>()));
+  BOOST_CHECK_EQUAL(0, (m.element<3, 2>()));
+  BOOST_CHECK_EQUAL(1, (m.element<3, 3>()));
 }
 
-TEST(affine_matrix, is_identity) {
+BOOST_AUTO_TEST_CASE(affine_matrix_is_identity) {
   affine_matrix<double, 4> m1((double[]){1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0});
-  EXPECT_TRUE(m1.is_identity());
+  BOOST_CHECK(m1.is_identity());
   affine_matrix<double, 4> m2((double[]){1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0});
-  EXPECT_FALSE(m2.is_identity());
+  BOOST_CHECK(!m2.is_identity());
 }
 
 }
