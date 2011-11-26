@@ -16,14 +16,13 @@ LDFLAGS:= \
 
 SRC:=$(shell find src -name "*.hpp" -or -name "*.cpp" -or -name "*.m")
 
-all: $(PROG)_test.app
-	open $(PROG)_test.app
+all: $(PROG).app
+	open $<
+
+test: $(PROG)_test
+	./$<
 
 $(PROG).app: $(PROG)
-	mkdir -p $@/Contents/MacOS
-	cp $< $@/Contents/MacOS/
-
-$(PROG)_test.app: $(PROG)_test
 	mkdir -p $@/Contents/MacOS
 	cp $< $@/Contents/MacOS/
 
@@ -43,8 +42,7 @@ $(PROG)_test: $(SRC)
 		-lboost_unit_test_framework \
 		-g \
 		-o $@ \
-		-DEBITEN_TEST \
-		src/main.cpp
+		src/main_test.cpp
 
 .PHONY: clean
 clean:

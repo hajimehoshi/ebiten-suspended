@@ -1,14 +1,8 @@
-#ifdef EBITEN_TEST
-#include <boost/test/unit_test.hpp>
-#endif
-
 #include "ebiten/ebiten.hpp"
 #include "sample_game.hpp"
 
 int
-main(int argc, char** argv) {
-  (void)argc;
-  (void)argv;
+main() {
   try {
     ebiten::game::kernels::kernel kernel;
     kernel.run<sample_game>(320, 240, 600, 2);
