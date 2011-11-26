@@ -32,7 +32,13 @@ public:
   element() const {
     BOOST_STATIC_ASSERT(I < Dimension);
     BOOST_STATIC_ASSERT(J < Dimension);
-    return this->element_<I, J>();
+    if (I == Dimension - 1) {
+      if (J == Dimension - 1) {
+        return 1;
+      }
+      return 0;
+    }
+    return this->elements_[I * Dimension + J];
   }
   template<std::size_t I, std::size_t J>
   Float
@@ -58,18 +64,6 @@ public:
       }
     }
     return true;
-  }
-private:
-  template<std::size_t I, std::size_t J>
-  Float
-  element_() const {
-    if (I == Dimension - 1) {
-      if (J == Dimension - 1) {
-        return 1;
-      }
-      return 0;
-    }
-    return this->elements_[I * Dimension + J];
   }
 };
 
