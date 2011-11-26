@@ -25,7 +25,7 @@ public:
     this->sprites_.push_back(new sprite_type(this->texture_.get(), 4));
     sprite_type& s = this->sprites_.at(0);
     s.geometry_matrix().set_a(1);
-    BOOST_FOREACH(drawing_region_type& dr, s.drawing_regions()) {
+    for (auto& dr : s.drawing_regions()) {
       dr.set_width(32);
       dr.set_height(32);
     }

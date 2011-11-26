@@ -58,7 +58,7 @@ public:
         typedef boost::reference_wrapper<graphics::sprite const> sprite_cref;
         std::vector<sprite_cref> sorted_sprites;
         sorted_sprites.reserve(boost::size(sprites));
-        BOOST_FOREACH(graphics::sprite const& s, sprites) {
+        for (auto const& s : sprites) {
           sorted_sprites.push_back(boost::ref(s));
         };
         // sort the sprites in desceinding order of z
@@ -71,7 +71,7 @@ public:
         };
         std::sort(sorted_sprites.begin(), sorted_sprites.end(),
                   sprites_cmp::invoke);
-        BOOST_FOREACH(sprite_cref const& s, sorted_sprites) {
+        for (auto const& s : sorted_sprites) {
           s.get().draw(device.graphics_context());
         };
       }

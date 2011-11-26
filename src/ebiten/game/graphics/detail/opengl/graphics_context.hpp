@@ -87,7 +87,7 @@ public:
     float const zf = static_cast<float>(z);
     float const texture_width  = texture.texture_width();
     float const texture_height = texture.texture_height();
-    BOOST_FOREACH(drawing_region const& dr, drawing_regions) {
+    for (auto const& dr : drawing_regions) {
       float const tu1 = dr.src_x()                 / texture_width;
       float const tu2 = (dr.src_x() + dr.width())  / texture_width;
       float const tv1 = dr.src_y()                 / texture_height;
