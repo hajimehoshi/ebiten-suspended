@@ -1,5 +1,4 @@
 PROG:=ebiten
-CC:=gcc
 CXX:=g++
 
 CXXFLAGS:= \
