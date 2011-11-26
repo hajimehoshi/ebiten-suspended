@@ -1,11 +1,11 @@
 PROG:=ebiten
-CXX:=g++
+CXX:=clang++
 
 CXXFLAGS:= \
 	-W -Wall -Wextra \
 	-fPIC \
 	-I/usr/X11/include -Isrc \
-	-x objective-c++
+	-x objective-c++ -std=c++0x -stdlib=libc++
 
 LDFLAGS:= \
 	-L/usr/X11/lib \
