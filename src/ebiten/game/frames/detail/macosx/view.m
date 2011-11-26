@@ -1,7 +1,7 @@
 #import <Cocoa/Cocoa.h>
 #undef check // conflicts with boost
-#include <boost/function.hpp>
 #include <boost/signals2/signal.hpp>
+#include <functional>
 
 @interface EbitenOpenGLView : NSOpenGLView {
   boost::signals2::signal<void()> updating;
@@ -14,7 +14,7 @@
 - (BOOL)becomeFirstResponder;
 - (void)animationTimer:(NSTimer*)timer;
 - (void)drawRect:(NSRect)rect;
-- (void)connectUpdating:(boost::function<void()> const &)func;
+- (void)connectUpdating:(std::function<void()> const &)func;
 - (void)mouseDown:(NSEvent*)theEvent;
 - (void)keyDown:(NSEvent*)theEvent;
 
@@ -74,7 +74,7 @@
   [pool release];
 }
 
-- (void)connectUpdating:(boost::function<void()> const &)func {
+- (void)connectUpdating:(std::function<void()> const &)func {
   self->updating.connect(func);
 }
 
