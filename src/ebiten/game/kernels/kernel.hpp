@@ -11,11 +11,9 @@
 #include "ebiten/game/graphics/sprite.hpp"
 #include "ebiten/game/timers/timer.hpp"
 #include <boost/bind.hpp>
-#include <boost/foreach.hpp>
 #include <boost/function.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/optional.hpp>
-#include <boost/range.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/typeof/typeof.hpp>
 #include <boost/utility/in_place_factory.hpp>

@@ -8,7 +8,6 @@
 #include "ebiten/game/graphics/texture.hpp"
 #include <OpenGL/gl.h>
 #include <boost/array.hpp>
-#include <boost/foreach.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/range.hpp>
 #include <boost/static_assert.hpp>
@@ -39,7 +38,7 @@ public:
                 int z,
                 graphics::color_matrix const& color_mat) {
     BOOST_STATIC_ASSERT((boost::is_same<typename boost::range_value<DrawingRegions>::type,
-                         drawing_region>::value));
+                                        drawing_region>::value));
     if (!this->shader_program) {
       this->shader_program = compile_shader_program();
       assert(this->shader_program);

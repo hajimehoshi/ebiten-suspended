@@ -2,10 +2,8 @@
 #define SAMPLE_GAME_HPP
 
 #include "ebiten/ebiten.hpp"
-#include <boost/foreach.hpp>
 #include <boost/optional.hpp>
 #include <boost/ptr_container/ptr_vector.hpp>
-#include <boost/range.hpp>
 #include <cstdlib>
 #include <deque>
 #include <iostream>
