@@ -1,6 +1,10 @@
 #ifndef EBITEN_UTIL_IMAGE_LOADER_HPP
 #define EBITEN_UTIL_IMAGE_LOADER_HPP
 
+// backport for old libpng
+#define png_infopp_NULL (png_infopp)0
+#define int_p_NULL (int*)0
+
 #include <boost/gil/gil_all.hpp>
 #include <boost/gil/extension/io/png_io.hpp>
 
