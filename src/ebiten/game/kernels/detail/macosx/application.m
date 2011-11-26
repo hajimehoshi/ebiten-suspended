@@ -2,10 +2,6 @@
 #undef check // conflicts with boost
 #include <cassert>
 
-/*@interface NSApplication(NiblessAdditions)
--(void) setAppleMenu:(NSMenu *)aMenu;
-@end*/
-
 @interface EbitenController : NSObject<NSApplicationDelegate> {
 @private
   NSWindow* window_;
@@ -28,20 +24,22 @@
 
 - (void)initMenu {
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-  // TODO: 2 apples?
-  [NSApp setMainMenu: [[NSMenu alloc] initWithTitle:@""]];
   // TODO: add the application's name
-  NSMenu* menu = [[NSMenu alloc] initWithTitle:@""];
-  [menu addItemWithTitle:@"Quit" 
-                  action:@selector(terminate:)
-           keyEquivalent:@"q"];
-  NSMenuItem* menuItem = [[NSMenuItem alloc] initWithTitle:@""
-                                                    action:nil
-                                             keyEquivalent:@""];
-  [menuItem setSubmenu:menu];
-  [[NSApp mainMenu] addItem:menuItem];
-  [menuItem release];
-  [menu release];
+  NSMenu* mainMenu = [[NSMenu alloc] initWithTitle:@""];
+  NSMenu* appleMenu = [[NSMenu alloc] initWithTitle:@""];
+  [appleMenu addItemWithTitle:@"Quit" 
+                       action:@selector(terminate:)
+                keyEquivalent:@"q"];
+  {
+    NSMenuItem* menuItem = [mainMenu insertItemWithTitle:@""
+                                                  action:nil
+                                           keyEquivalent:@""
+                                                 atIndex:0];
+    [mainMenu setSubmenu:appleMenu forItem:menuItem];
+  }
+  [NSApp setMainMenu: mainMenu];
+  [mainMenu release];
+  [appleMenu release];
   [pool release];
 }
 
