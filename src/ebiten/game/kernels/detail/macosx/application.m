@@ -2,6 +2,10 @@
 #undef check // conflicts with boost
 #include <cassert>
 
+/*@interface NSApplication(NiblessAdditions)
+-(void) setAppleMenu:(NSMenu *)aMenu;
+@end*/
+
 @interface EbitenController : NSObject<NSApplicationDelegate> {
 @private
   NSWindow* window_;
@@ -22,12 +26,32 @@
   return self;
 }
 
+- (void)initMenu {
+  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+  // TODO: 2 apples?
+  [NSApp setMainMenu: [[NSMenu alloc] initWithTitle:@""]];
+  // TODO: add the application's name
+  NSMenu* menu = [[NSMenu alloc] initWithTitle:@""];
+  [menu addItemWithTitle:@"Quit" 
+                  action:@selector(terminate:)
+           keyEquivalent:@"q"];
+  NSMenuItem* menuItem = [[NSMenuItem alloc] initWithTitle:@""
+                                                    action:nil
+                                             keyEquivalent:@""];
+  [menuItem setSubmenu:menu];
+  [[NSApp mainMenu] addItem:menuItem];
+  [menuItem release];
+  [menu release];
+  [pool release];
+}
+
 - (void)applicationDidFinishLaunching:(NSNotification*)aNotification {
   (void)aNotification;
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   NSWindow* window = self->window_;
   assert(window);
   [window makeKeyAndOrderFront:nil];
+  [self initMenu];
   [pool release];
 }
 

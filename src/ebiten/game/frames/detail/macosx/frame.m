@@ -60,6 +60,7 @@
 
 - (id)initWithSize:(NSSize)size {
   [NSApplication sharedApplication];
+  // initialize
   NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   NSRect contentRect = NSMakeRect(0, 0, size.width, size.height);
   NSUInteger const style = (NSTitledWindowMask | NSClosableWindowMask |
@@ -77,17 +78,6 @@
   EbitenWindowController* controller = [[EbitenWindowController alloc] init];
   [self setDelegate:controller];
   [self setDocumentEdited:YES];
-  [NSApp setMainMenu:[[NSMenu alloc] init]];
-  NSMenu* menu = [[NSMenu alloc] initWithTitle:@""];
-  [menu addItemWithTitle:@"Quit" // TODO: add the application's name
-                  action:@selector(terminate:)
-           keyEquivalent:@"q"];
-  NSMenuItem* menuItem = [[NSMenuItem alloc] initWithTitle:@""
-                                                    action:nil
-                                             keyEquivalent:@""];
-  [menuItem setSubmenu:menu];
-  [[NSApp mainMenu] addItem:menuItem];
-  [menu release];
   [pool release];
   return self;
 }
