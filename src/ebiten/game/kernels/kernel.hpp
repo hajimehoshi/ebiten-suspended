@@ -10,10 +10,8 @@
 #include "ebiten/game/graphics/device.hpp"
 #include "ebiten/game/graphics/sprite.hpp"
 #include "ebiten/game/timers/timer.hpp"
-#include <boost/bind.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/optional.hpp>
-#include <boost/type_traits.hpp>
 #include <boost/utility/in_place_factory.hpp>
 #include <algorithm>
 #include <functional>
@@ -52,11 +50,11 @@ public:
              graphics::device& device) {
         lock l(mutex);
         auto const& sprites = game->sprites();
-        typedef boost::reference_wrapper<graphics::sprite const> sprite_cref;
+        typedef std::reference_wrapper<graphics::sprite const> sprite_cref;
         std::vector<sprite_cref> sorted_sprites;
         sorted_sprites.reserve(boost::size(sprites));
         for (auto const& s : sprites) {
-          sorted_sprites.push_back(boost::ref(s));
+          sorted_sprites.push_back(std::ref(s));
         };
         // sort the sprites in desceinding order of z
         struct sprites_cmp {
@@ -77,11 +75,11 @@ public:
     graphics::device device(screen_width,
                             screen_height,
                             window_scale);
-    device.connect_drawing_sprites(boost::bind(&draw_sprites_func::invoke,
-                                               boost::ref(mutex),
-                                               boost::cref(game),
-                                               boost::ref(device)));
-    game = boost::in_place(boost::ref(device.texture_factory()));
+    device.connect_drawing_sprites(std::bind(&draw_sprites_func::invoke,
+                                             std::ref(mutex),
+                                             std::cref(game),
+                                             std::ref(device)));
+    game = boost::in_place(std::ref(device.texture_factory()));
     // start the logic loop
     struct logic_func {
       static void
@@ -96,10 +94,10 @@ public:
         }
       }
     };
-    std::function<void()> logic = boost::bind(logic_func::invoke,
-                                              fps,
-                                              boost::ref(mutex),
-                                              boost::ref(*game));
+    std::function<void()> logic = std::bind(logic_func::invoke,
+                                            fps,
+                                            std::ref(mutex),
+                                            std::ref(*game));
     struct logic_func_wrapper {
       static void*
       invoke(void* func_p) {
