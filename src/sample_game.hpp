@@ -8,7 +8,7 @@
 #include <deque>
 #include <iostream>
 
-class sample_game : private boost::noncopyable {
+class sample_game : private ebiten::util::noncopyable {
 private:
   typedef ebiten::graphics::sprite sprite_type;
   typedef boost::ptr_vector<sprite_type> sprites_type;

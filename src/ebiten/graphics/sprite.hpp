@@ -5,14 +5,14 @@
 #include "ebiten/graphics/drawing_region.hpp"
 #include "ebiten/graphics/geometry_matrix.hpp"
 #include "ebiten/graphics/texture.hpp"
-#include <boost/noncopyable.hpp>
+#include "ebiten/util/noncopyable.hpp"
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <boost/range.hpp>
 
 namespace ebiten {
 namespace graphics {
 
-class sprite : private boost::noncopyable {
+class sprite : private ebiten::util::noncopyable {
 private:
   texture const& texture_;
   typedef boost::ptr_vector<drawing_region> drawing_regions_type;

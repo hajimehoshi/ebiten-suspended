@@ -5,8 +5,8 @@
 #include "ebiten/graphics/detail/opengl/graphics_context.hpp"
 #include "ebiten/graphics/detail/opengl/texture_factory.hpp"
 #include "ebiten/graphics/sprite.hpp"
+#include "ebiten/util/noncopyable.hpp"
 #include <OpenGL/gl.h>
-#include <boost/noncopyable.hpp>
 #include <boost/signals2/signal.hpp>
 #include <cassert>
 #include <functional>
@@ -15,7 +15,7 @@ namespace ebiten {
 namespace graphics {
 namespace detail {
 
-class device : private boost::noncopyable {
+class device : private ebiten::util::noncopyable {
 public:
   typedef frames::frame frame_type;
   typedef detail::texture_factory texture_factory_type;

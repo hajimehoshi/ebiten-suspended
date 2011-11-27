@@ -4,7 +4,7 @@
 #import "ebiten/frames/detail/macosx/frame.m"
 #import "ebiten/frames/detail/macosx/view.m"
 
-#include <boost/noncopyable.hpp>
+#include "ebiten/util/noncopyable.hpp"
 #include <cstddef>
 #include <functional>
 
@@ -12,7 +12,7 @@ namespace ebiten {
 namespace frames {
 namespace detail {
 
-class frame : private boost::noncopyable {
+class frame : private ebiten::util::noncopyable {
 public:
   typedef NSWindow* native_frame_type;
 private:

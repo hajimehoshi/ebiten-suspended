@@ -1,7 +1,7 @@
 #ifndef EBITEN_TIMERS_DETAIL_MACOSX_TIMER_HPP
 #define EBITEN_TIMERS_DETAIL_MACOSX_TIMER_HPP
 
-#include <boost/noncopyable.hpp>
+#include "ebiten/util/noncopyable.hpp"
 #include <mach/mach_time.h>
 #include <cassert>
 #include <cstddef>
@@ -10,7 +10,7 @@ namespace ebiten {
 namespace timers {
 namespace detail {
 
-class timer : private boost::noncopyable {
+class timer : private ebiten::util::noncopyable {
 private:
   uint64_t const duration_per_frame_;
   uint64_t next_time_to_update_;

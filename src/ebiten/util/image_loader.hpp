@@ -56,4 +56,3 @@ BOOST_AUTO_TEST_CASE(image_loader_png_image_loader) {
 #endif
 
 #endif
-

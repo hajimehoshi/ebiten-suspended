@@ -6,8 +6,8 @@
 #include "ebiten/graphics/drawing_region.hpp"
 #include "ebiten/graphics/geometry_matrix.hpp"
 #include "ebiten/graphics/texture.hpp"
+#include "ebiten/util/noncopyable.hpp"
 #include <OpenGL/gl.h>
-#include <boost/noncopyable.hpp>
 #include <boost/range.hpp>
 #include <array>
 #include <algorithm>
@@ -19,7 +19,7 @@ namespace ebiten {
 namespace graphics {
 namespace detail {
 
-class graphics_context : private boost::noncopyable {
+class graphics_context : private ebiten::util::noncopyable {
   friend class device;
 private:
   GLuint shader_program;

@@ -10,7 +10,7 @@
 #include "ebiten/graphics/device.hpp"
 #include "ebiten/graphics/sprite.hpp"
 #include "ebiten/timers/timer.hpp"
-#include <boost/noncopyable.hpp>
+#include "ebiten/util/noncopyable.hpp"
 #include <boost/optional.hpp>
 #include <boost/utility/in_place_factory.hpp>
 #include <algorithm>
@@ -20,7 +20,7 @@
 namespace ebiten {
 namespace kernels {
 
-class kernel : private boost::noncopyable {
+class kernel : private ebiten::util::noncopyable {
 public:
   template<class Game>
   void

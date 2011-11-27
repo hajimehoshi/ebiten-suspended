@@ -4,13 +4,13 @@
 #import "ebiten/kernels/detail/macosx/application.m"
 
 #include "ebiten/frames/frame.hpp"
-#include <boost/noncopyable.hpp>
+#include "ebiten/util/noncopyable.hpp"
 
 namespace ebiten {
 namespace kernels {
 namespace detail {
 
-class application : private boost::noncopyable {
+class application : private ebiten::util::noncopyable {
 public:
   explicit
   application(frames::frame& frame) {
