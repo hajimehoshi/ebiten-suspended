@@ -2,7 +2,6 @@
 #define SAMPLE_GAME_HPP
 
 #include "ebiten/ebiten.hpp"
-#include <boost/optional.hpp>
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <cstdlib>
 #include <deque>
@@ -13,14 +12,14 @@ private:
   typedef ebiten::graphics::sprite sprite_type;
   typedef boost::ptr_vector<sprite_type> sprites_type;
   typedef ebiten::graphics::drawing_region drawing_region_type;
-  boost::optional<ebiten::graphics::texture> texture_;
+  std::unique_ptr<ebiten::graphics::texture const> texture_;
   sprites_type sprites_;
 public:
   explicit
-  sample_game(ebiten::graphics::device::texture_factory_type& tf) {
+  sample_game(ebiten::graphics::device::texture_factory_type& tf)
+    : texture_(tf.from_file("/Users/hajime/ebiten/test.png")) {
     // TODO: カレントディレクトリについてどうにかする
-    this->texture_ = boost::in_place(tf.from_file("/Users/hajime/ebiten/test.png"));
-    this->sprites_.push_back(new sprite_type(this->texture_.get(), 4));
+    this->sprites_.push_back(new sprite_type(*this->texture_, 4));
     sprite_type& s = this->sprites_.at(0);
     s.geometry_matrix().set_a(1);
     for (auto& dr : s.drawing_regions()) {

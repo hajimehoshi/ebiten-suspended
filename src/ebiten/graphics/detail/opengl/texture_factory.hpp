@@ -37,7 +37,7 @@ private:
     // TODO: GL 初期化済みであることの明示?
   }
 public:
-  graphics::texture
+  std::unique_ptr<graphics::texture const>
   from_file(std::string const& filename) {
     util::image image(util::png_image_loader, filename);
     std::size_t const width  = image.width();
@@ -61,13 +61,14 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     ::glBindTexture(GL_TEXTURE_2D, 0);
-    return graphics::texture(texture_id,
-                             width,
-                             height,
-                             width,
-                             height);
+    typedef std::unique_ptr<graphics::texture const> p;
+    return p(new graphics::texture(texture_id,
+                                   width,
+                                   height,
+                                   width,
+                                   height));
   }
-  graphics::texture
+  std::unique_ptr<graphics::texture const>
   create(std::size_t width, std::size_t height) {
     std::size_t const texture_width  = clp2(width);
     std::size_t const texture_height = clp2(height);
@@ -88,11 +89,12 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     ::glBindTexture(GL_TEXTURE_2D, 0);
-    return graphics::texture(texture_id,
-                             width,
-                             height,
-                             texture_width,
-                             texture_height);
+    typedef std::unique_ptr<graphics::texture const> p;
+    return p(new graphics::texture(texture_id,
+                                   width,
+                                   height,
+                                   texture_width,
+                                   texture_height));
   }
 };
 
