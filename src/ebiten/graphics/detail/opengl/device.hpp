@@ -23,19 +23,21 @@ private:
   std::size_t const screen_width_;
   std::size_t const screen_height_;
   std::size_t const window_scale_;
+  std::function<void(device&)> drawing_sprites_func_;
   graphics_context_type graphics_context_;
   frames::frame frame_;
   texture_factory_type texture_factory_;
   texture const offscreen_texture_;
   GLuint const framebuffer_;
-  std::function<void()> drawing_sprites_;
 public:
   device(std::size_t screen_width,
          std::size_t screen_height,
-         std::size_t window_scale)
+         std::size_t window_scale,
+         std::function<void(device&)> const& drawing_sprites_func)
     : screen_width_(screen_width),
       screen_height_(screen_height),
       window_scale_(window_scale),
+      drawing_sprites_func_(drawing_sprites_func),
       graphics_context_(),
       frame_(screen_width * window_scale, screen_height * window_scale,
              std::bind(&device::update, this)),
@@ -79,7 +81,7 @@ public:
     ::glMatrixMode(GL_PROJECTION);
     ::glLoadIdentity();
     ::glOrtho(0, this->screen_width_, 0, this->screen_height_, 0, 1);
-    this->drawing_sprites_();
+    this->drawing_sprites_func_(*this);
     ::glFlush();
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
@@ -127,10 +129,6 @@ public:
   texture_factory_type&
   texture_factory() {
     return this->texture_factory_;
-  }
-  void
-  set_drawing_sprites(std::function<void()> const& func) {
-    this->drawing_sprites_ = func;
   }
 private:
   static GLuint

@@ -70,11 +70,11 @@ run(std::size_t screen_width,
   boost::optional<Game> game;
   graphics::device device(screen_width,
                           screen_height,
-                          window_scale);
-  device.set_drawing_sprites(std::bind(&draw_sprites_func::invoke,
-                                       std::ref(mutex),
-                                       std::cref(game),
-                                       std::ref(device)));
+                          window_scale,
+                          std::bind(&draw_sprites_func::invoke,
+                                    std::ref(mutex),
+                                    std::cref(game),
+                                    std::placeholders::_1));
   game = boost::in_place(std::ref(device.texture_factory()));
   // start the logic loop
   struct logic_func {
