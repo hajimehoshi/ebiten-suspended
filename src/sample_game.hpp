@@ -38,10 +38,6 @@ public:
     s.color_matrix().set_element<0, 0>(0);
     s.color_matrix().set_element<0, 3>(1);
   }
-  sprites_type&
-  sprites() {
-    return this->sprites_;
-  }
   sprites_type const&
   sprites() const {
     return this->sprites_;
