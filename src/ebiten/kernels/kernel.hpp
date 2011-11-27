@@ -105,7 +105,7 @@ run(std::size_t screen_width,
   };
   pthread_t logic_thread;
   ::pthread_create(&logic_thread, 0, logic_func_wrapper::invoke, &logic);
-  detail::application app(device.frame());
+  detail::run_application(device.frame());
   //game_terminated.store(true);
   //::pthread_join(logic_thread, 0);
 }
