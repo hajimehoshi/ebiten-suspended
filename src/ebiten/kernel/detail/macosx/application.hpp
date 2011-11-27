@@ -1,7 +1,7 @@
 #ifndef EBITEN_KERNEL_DETAIL_MACOSX_APPLICATION_HPP
 #define EBITEN_KERNEL_DETAIL_MACOSX_APPLICATION_HPP
 
-#import "ebiten/kernel/detail/macosx/application.m"
+#import "ebiten/kernel/detail/macosx/application.mm"
 
 #include "ebiten/frames/frame.hpp"
 

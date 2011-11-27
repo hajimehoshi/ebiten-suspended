@@ -1,7 +1,7 @@
 #ifndef EBITEN_FRAMES_DETAIL_MACOSX_FRAME_HPP
 #define EBITEN_FRAMES_DETAIL_MACOSX_FRAME_HPP
 
-#import "ebiten/frames/detail/macosx/frame.m"
+#import "ebiten/frames/detail/macosx/frame.mm"
 
 #include "ebiten/util/noncopyable.hpp"
 #include <cstddef>
