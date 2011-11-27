@@ -9,7 +9,6 @@
 #include <OpenGL/gl.h>
 #include <boost/noncopyable.hpp>
 #include <boost/range.hpp>
-#include <boost/static_assert.hpp>
 #include <array>
 #include <algorithm>
 #include <cassert>
@@ -36,8 +35,9 @@ public:
                 graphics::geometry_matrix const& geo_mat,
                 int z,
                 graphics::color_matrix const& color_mat) {
-    BOOST_STATIC_ASSERT((std::is_same<typename boost::range_value<DrawingRegions>::type,
-                                      drawing_region>::value));
+    static_assert(std::is_same<typename boost::range_value<DrawingRegions>::type,
+                               drawing_region>::value,
+                  "The type of DrawingRegions' elements must be drawing_reagion");
     if (!this->shader_program) {
       this->shader_program = compile_shader_program();
       assert(this->shader_program);

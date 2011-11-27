@@ -3,7 +3,6 @@
 
 #include <boost/noncopyable.hpp>
 #include <boost/range.hpp>
-#include <boost/static_assert.hpp>
 #include <array>
 #include <cassert>
 
@@ -12,7 +11,7 @@ namespace graphics {
 
 template<class Float, std::size_t Dimension>
 class affine_matrix : private boost::noncopyable {
-  BOOST_STATIC_ASSERT(0 < Dimension);
+  static_assert(0 < Dimension, "Dimension must be more than 0");
 private:
   static std::size_t const size = Dimension * (Dimension - 1);
   typedef std::array<Float, size> elements_type;
