@@ -29,8 +29,8 @@ public:
   template<std::size_t I, std::size_t J>
   Float
   element() const {
-    BOOST_STATIC_ASSERT(I < Dimension);
-    BOOST_STATIC_ASSERT(J < Dimension);
+    static_assert(I < Dimension, "I must be less than Dimension");
+    static_assert(J < Dimension, "J must be less than Dimension");
     if (I == Dimension - 1) {
       if (J == Dimension - 1) {
         return 1;
@@ -42,8 +42,8 @@ public:
   template<std::size_t I, std::size_t J>
   Float
   set_element(Float element) {
-    BOOST_STATIC_ASSERT(I < Dimension - 1);
-    BOOST_STATIC_ASSERT(J < Dimension);
+    static_assert(I < Dimension - 1, "I must be less than Dimension - 1");
+    static_assert(J < Dimension,     "J must be less than Dimension");
     return this->elements_[I * Dimension + J] = element;
   }
   bool
