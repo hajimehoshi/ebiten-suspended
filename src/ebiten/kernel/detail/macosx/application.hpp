@@ -1,12 +1,12 @@
-#ifndef EBITEN_KERNELS_DETAIL_MACOSX_APPLICATION_HPP
-#define EBITEN_KERNELS_DETAIL_MACOSX_APPLICATION_HPP
+#ifndef EBITEN_KERNEL_DETAIL_MACOSX_APPLICATION_HPP
+#define EBITEN_KERNEL_DETAIL_MACOSX_APPLICATION_HPP
 
-#import "ebiten/kernels/detail/macosx/application.m"
+#import "ebiten/kernel/detail/macosx/application.m"
 
 #include "ebiten/frames/frame.hpp"
 
 namespace ebiten {
-namespace kernels {
+namespace kernel {
 namespace detail {
 
 void

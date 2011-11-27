@@ -1,10 +1,10 @@
-#ifndef EBITEN_KERNELS_KERNEL_HPP
-#define EBITEN_KERNELS_KERNEL_HPP
+#ifndef EBITEN_KERNEL_KERNEL_HPP
+#define EBITEN_KERNEL_KERNEL_HPP
 
 #include "ebiten/platform.hpp"
 
 #ifdef EBITEN_MACOSX
-#include "ebiten/kernels/detail/macosx/application.hpp"
+#include "ebiten/kernel/detail/macosx/application.hpp"
 #endif
 
 #include "ebiten/graphics/device.hpp"
@@ -17,7 +17,7 @@
 #include <pthread.h>
 
 namespace ebiten {
-namespace kernels {
+namespace kernel {
 
 template<class Game>
 void
