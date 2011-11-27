@@ -1,10 +1,9 @@
-#ifndef EBITEN_GAME_GRAPHICS_GEOMETRY_MATRIX_HPP
-#define EBITEN_GAME_GRAPHICS_GEOMETRY_MATRIX_HPP
+#ifndef EBITEN_GRAPHICS_GEOMETRY_MATRIX_HPP
+#define EBITEN_GRAPHICS_GEOMETRY_MATRIX_HPP
 
-#include "ebiten/game/graphics/affine_matrix.hpp"
+#include "ebiten/graphics/affine_matrix.hpp"
 
 namespace ebiten {
-namespace game {
 namespace graphics {
 
 template<class Float>
@@ -67,12 +66,10 @@ typedef geometry_matrix_base<float> geometry_matrix;
 
 }
 }
-}
 
 #ifdef EBITEN_TEST
 
 namespace ebiten {
-namespace game {
 namespace graphics {
 
 BOOST_AUTO_TEST_CASE(geometry_matrix_member_functions) {
@@ -97,7 +94,6 @@ BOOST_AUTO_TEST_CASE(geometry_matrix_member_functions) {
   BOOST_CHECK_EQUAL(12, m.ty());
 }
 
-}
 }
 }
 

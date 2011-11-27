@@ -1,13 +1,13 @@
-#ifndef EBITEN_GAME_GRAPHICS_AFFINE_MATRIX_HPP
-#define EBITEN_GAME_GRAPHICS_AFFINE_MATRIX_HPP
+#ifndef EBITEN_GRAPHICS_AFFINE_MATRIX_HPP
+#define EBITEN_GRAPHICS_AFFINE_MATRIX_HPP
 
 #include <boost/noncopyable.hpp>
+#include <boost/range.hpp>
 #include <boost/static_assert.hpp>
 #include <array>
 #include <cassert>
 
 namespace ebiten {
-namespace game {
 namespace graphics {
 
 template<class Float, std::size_t Dimension>
@@ -69,12 +69,10 @@ public:
 
 }
 }
-}
 
 #ifdef EBITEN_TEST
 
 namespace ebiten {
-namespace game {
 namespace graphics {
 
 BOOST_AUTO_TEST_CASE(affine_matrix_element) {
@@ -123,7 +121,6 @@ BOOST_AUTO_TEST_CASE(affine_matrix_is_identity) {
   BOOST_CHECK(!m2.is_identity());
 }
 
-}
 }
 }
 

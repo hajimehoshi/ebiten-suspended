@@ -1,15 +1,15 @@
-#ifndef EBITEN_GAME_KERNELS_KERNEL_HPP
-#define EBITEN_GAME_KERNELS_KERNEL_HPP
+#ifndef EBITEN_KERNELS_KERNEL_HPP
+#define EBITEN_KERNELS_KERNEL_HPP
 
 #include "ebiten/platform.hpp"
 
 #ifdef EBITEN_MACOSX
-#include "ebiten/game/kernels/detail/macosx/application.hpp"
+#include "ebiten/kernels/detail/macosx/application.hpp"
 #endif
 
-#include "ebiten/game/graphics/device.hpp"
-#include "ebiten/game/graphics/sprite.hpp"
-#include "ebiten/game/timers/timer.hpp"
+#include "ebiten/graphics/device.hpp"
+#include "ebiten/graphics/sprite.hpp"
+#include "ebiten/timers/timer.hpp"
 #include <boost/noncopyable.hpp>
 #include <boost/optional.hpp>
 #include <boost/utility/in_place_factory.hpp>
@@ -18,7 +18,6 @@
 #include <pthread.h>
 
 namespace ebiten {
-namespace game {
 namespace kernels {
 
 class kernel : private boost::noncopyable {
@@ -115,7 +114,6 @@ public:
   }
 };
 
-}
 }
 }
 

@@ -1,11 +1,10 @@
-#ifndef EBITEN_GAME_GRAPHICS_DRAWING_REGION_HPP
-#define EBITEN_GAME_GRAPHICS_DRAWING_REGION_HPP
+#ifndef EBITEN_GRAPHICS_DRAWING_REGION_HPP
+#define EBITEN_GRAPHICS_DRAWING_REGION_HPP
 
 #include <boost/noncopyable.hpp>
 #include <algorithm>
 
 namespace ebiten {
-namespace game {
 namespace graphics {
 
 class drawing_region : private boost::noncopyable {
@@ -65,7 +64,6 @@ public:
   }
 };
 
-}
 }
 }
 

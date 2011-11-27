@@ -1,15 +1,14 @@
-#ifndef EBITEN_GAME_FRAMES_DETAIL_MACOSX_FRAME_HPP
-#define EBITEN_GAME_FRAMES_DETAIL_MACOSX_FRAME_HPP
+#ifndef EBITEN_FRAMES_DETAIL_MACOSX_FRAME_HPP
+#define EBITEN_FRAMES_DETAIL_MACOSX_FRAME_HPP
 
-#import "ebiten/game/frames/detail/macosx/frame.m"
-#import "ebiten/game/frames/detail/macosx/view.m"
+#import "ebiten/frames/detail/macosx/frame.m"
+#import "ebiten/frames/detail/macosx/view.m"
 
 #include <boost/noncopyable.hpp>
 #include <cstddef>
 #include <functional>
 
 namespace ebiten {
-namespace game {
 namespace frames {
 namespace detail {
 
@@ -67,7 +66,6 @@ public:
   }
 };
 
-}
 }
 }
 }

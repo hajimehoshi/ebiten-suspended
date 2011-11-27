@@ -1,14 +1,13 @@
-#ifndef EBITEN_GAME_GRAPHICS_TEXTURE_HPP
-#define EBITEN_GAME_GRAPHICS_TEXTURE_HPP
+#ifndef EBITEN_GRAPHICS_TEXTURE_HPP
+#define EBITEN_GRAPHICS_TEXTURE_HPP
 
 #include "ebiten/platform.hpp"
 
 #ifdef EBITEN_MACOSX
-#include "ebiten/game/graphics/detail/opengl/texture_id.hpp"
+#include "ebiten/graphics/detail/opengl/texture_id.hpp"
 #endif
 
 namespace ebiten {
-namespace game {
 namespace graphics {
 
 class texture {
@@ -54,7 +53,6 @@ public:
   }
 };
 
-}
 }
 }
 

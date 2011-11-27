@@ -2,6 +2,7 @@
 *.app
 *.dSYM
 *.o
+.DS_Store
 ebiten
 !src/ebiten
 ebiten_test

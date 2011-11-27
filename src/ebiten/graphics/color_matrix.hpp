@@ -1,10 +1,9 @@
-#ifndef EBITEN_GAME_GRAPHICS_COLOR_MATRIX_HPP
-#define EBITEN_GAME_GRAPHICS_COLOR_MATRIX_HPP
+#ifndef EBITEN_GRAPHICS_COLOR_MATRIX_HPP
+#define EBITEN_GRAPHICS_COLOR_MATRIX_HPP
 
-#include "ebiten/game/graphics/affine_matrix.hpp"
+#include "ebiten/graphics/affine_matrix.hpp"
 
 namespace ebiten {
-namespace game {
 namespace graphics {
 
 template<class Float>
@@ -18,7 +17,6 @@ public:
 
 typedef color_matrix_base<double> color_matrix;
 
-}
 }
 }
 

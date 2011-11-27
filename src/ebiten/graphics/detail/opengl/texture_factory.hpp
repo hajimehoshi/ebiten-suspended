@@ -1,15 +1,14 @@
-#ifndef EBITEN_GAME_GRAPHICS_DETAIL_OPENGL_TEXTURE_FACTORY_HPP
-#define EBITEN_GAME_GRAPHICS_DETAIL_OPENGL_TEXTURE_FACTORY_HPP
+#ifndef EBITEN_GRAPHICS_DETAIL_OPENGL_TEXTURE_FACTORY_HPP
+#define EBITEN_GRAPHICS_DETAIL_OPENGL_TEXTURE_FACTORY_HPP
 
-#include "ebiten/game/graphics/texture.hpp"
-#include "ebiten/game/graphics/detail/opengl/device.hpp"
+#include "ebiten/graphics/texture.hpp"
+#include "ebiten/graphics/detail/opengl/device.hpp"
 #include "ebiten/util/image.hpp"
 #include "ebiten/util/image_loader.hpp"
 #include <OpenGL/gl.h>
 #include <cassert>
 
 namespace ebiten {
-namespace game {
 namespace graphics {
 namespace detail {
 
@@ -97,12 +96,10 @@ public:
 }
 }
 }
-}
 
 #ifdef EBITEN_TEST
 
 namespace ebiten {
-namespace game {
 namespace graphics {
 namespace detail {
 
@@ -112,7 +109,6 @@ BOOST_AUTO_TEST_CASE(clp2_calling) {
   BOOST_CHECK_EQUAL(512u, clp2(257));
 }
 
-}
 }
 }
 }

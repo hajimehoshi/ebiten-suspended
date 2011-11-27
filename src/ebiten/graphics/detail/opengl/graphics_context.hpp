@@ -1,11 +1,11 @@
-#ifndef EBITEN_GAME_GRAPHICS_DETAIL_OPENGL_GRAPHICS_CONTEXT_HPP
-#define EBITEN_GAME_GRAPHICS_DETAIL_OPENGL_GRAPHICS_CONTEXT_HPP
+#ifndef EBITEN_GRAPHICS_DETAIL_OPENGL_GRAPHICS_CONTEXT_HPP
+#define EBITEN_GRAPHICS_DETAIL_OPENGL_GRAPHICS_CONTEXT_HPP
 
-#include "ebiten/game/graphics/detail/opengl/device.hpp"
-#include "ebiten/game/graphics/color_matrix.hpp"
-#include "ebiten/game/graphics/drawing_region.hpp"
-#include "ebiten/game/graphics/geometry_matrix.hpp"
-#include "ebiten/game/graphics/texture.hpp"
+#include "ebiten/graphics/detail/opengl/device.hpp"
+#include "ebiten/graphics/color_matrix.hpp"
+#include "ebiten/graphics/drawing_region.hpp"
+#include "ebiten/graphics/geometry_matrix.hpp"
+#include "ebiten/graphics/texture.hpp"
 #include <OpenGL/gl.h>
 #include <boost/noncopyable.hpp>
 #include <boost/range.hpp>
@@ -17,7 +17,6 @@
 #include <type_traits>
 
 namespace ebiten {
-namespace game {
 namespace graphics {
 namespace detail {
 
@@ -171,7 +170,6 @@ private:
   // TODO: show_program_log
 };
 
-}
 }
 }
 }

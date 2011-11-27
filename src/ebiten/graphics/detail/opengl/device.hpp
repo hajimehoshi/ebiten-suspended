@@ -1,10 +1,10 @@
-#ifndef EBITEN_GAME_GRAPHICS_DETAIL_OPENGL_DEVICE_HPP
-#define EBITEN_GAME_GRAPHICS_DETAIL_OPENGL_DEVICE_HPP
+#ifndef EBITEN_GRAPHICS_DETAIL_OPENGL_DEVICE_HPP
+#define EBITEN_GRAPHICS_DETAIL_OPENGL_DEVICE_HPP
 
-#include "ebiten/game/frames/frame.hpp"
-#include "ebiten/game/graphics/detail/opengl/graphics_context.hpp"
-#include "ebiten/game/graphics/detail/opengl/texture_factory.hpp"
-#include "ebiten/game/graphics/sprite.hpp"
+#include "ebiten/frames/frame.hpp"
+#include "ebiten/graphics/detail/opengl/graphics_context.hpp"
+#include "ebiten/graphics/detail/opengl/texture_factory.hpp"
+#include "ebiten/graphics/sprite.hpp"
 #include <OpenGL/gl.h>
 #include <boost/noncopyable.hpp>
 #include <boost/signals2/signal.hpp>
@@ -12,7 +12,6 @@
 #include <functional>
 
 namespace ebiten {
-namespace game {
 namespace graphics {
 namespace detail {
 
@@ -144,7 +143,6 @@ private:
   }
 };
 
-}
 }
 }
 }

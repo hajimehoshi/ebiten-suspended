@@ -4,7 +4,7 @@
 int
 main() {
   try {
-    ebiten::game::kernels::kernel kernel;
+    ebiten::kernels::kernel kernel;
     kernel.run<sample_game>(320, 240, 600, 2);
   } catch (std::runtime_error const& err) {
     // TODO: use boost::diagnostic_information?

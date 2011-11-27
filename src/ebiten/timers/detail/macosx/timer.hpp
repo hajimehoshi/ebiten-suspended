@@ -1,5 +1,5 @@
-#ifndef EBITEN_GAME_TIMERS_DETAIL_MACOSX_TIMER_HPP
-#define EBITEN_GAME_TIMERS_DETAIL_MACOSX_TIMER_HPP
+#ifndef EBITEN_TIMERS_DETAIL_MACOSX_TIMER_HPP
+#define EBITEN_TIMERS_DETAIL_MACOSX_TIMER_HPP
 
 #include <boost/noncopyable.hpp>
 #include <mach/mach_time.h>
@@ -7,7 +7,6 @@
 #include <cstddef>
 
 namespace ebiten {
-namespace game {
 namespace timers {
 namespace detail {
 
@@ -39,7 +38,6 @@ private:
   }
 };
 
-}
 }
 }
 }

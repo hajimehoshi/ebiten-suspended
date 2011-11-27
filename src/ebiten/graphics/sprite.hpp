@@ -1,16 +1,15 @@
-#ifndef EBITEN_GAME_GRAPHICS_SPRITE_HPP
-#define EBITEN_GAME_GRAPHICS_SPRITE_HPP
+#ifndef EBITEN_GRAPHICS_SPRITE_HPP
+#define EBITEN_GRAPHICS_SPRITE_HPP
 
-#include "ebiten/game/graphics/color_matrix.hpp"
-#include "ebiten/game/graphics/drawing_region.hpp"
-#include "ebiten/game/graphics/geometry_matrix.hpp"
-#include "ebiten/game/graphics/texture.hpp"
+#include "ebiten/graphics/color_matrix.hpp"
+#include "ebiten/graphics/drawing_region.hpp"
+#include "ebiten/graphics/geometry_matrix.hpp"
+#include "ebiten/graphics/texture.hpp"
 #include <boost/noncopyable.hpp>
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <boost/range.hpp>
 
 namespace ebiten {
-namespace game {
 namespace graphics {
 
 class sprite : private boost::noncopyable {
@@ -92,7 +91,6 @@ public:
   }
 };
 
-}
 }
 }
 

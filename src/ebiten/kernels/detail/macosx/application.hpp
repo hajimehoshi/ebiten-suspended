@@ -1,13 +1,12 @@
-#ifndef EBITEN_GAME_KERNELS_DETAIL_MACOSX_APPLICATION_HPP
-#define EBITEN_GAME_KERNELS_DETAIL_MACOSX_APPLICATION_HPP
+#ifndef EBITEN_KERNELS_DETAIL_MACOSX_APPLICATION_HPP
+#define EBITEN_KERNELS_DETAIL_MACOSX_APPLICATION_HPP
 
-#import "ebiten/game/kernels/detail/macosx/application.m"
+#import "ebiten/kernels/detail/macosx/application.m"
 
-#include "ebiten/game/frames/frame.hpp"
+#include "ebiten/frames/frame.hpp"
 #include <boost/noncopyable.hpp>
 
 namespace ebiten {
-namespace game {
 namespace kernels {
 namespace detail {
 
@@ -27,7 +26,6 @@ public:
   }
 };
 
-}
 }
 }
 }

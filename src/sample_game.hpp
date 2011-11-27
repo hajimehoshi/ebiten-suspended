@@ -10,14 +10,14 @@
 
 class sample_game : private boost::noncopyable {
 private:
-  typedef ebiten::game::graphics::sprite sprite_type;
+  typedef ebiten::graphics::sprite sprite_type;
   typedef boost::ptr_vector<sprite_type> sprites_type;
-  typedef ebiten::game::graphics::drawing_region drawing_region_type;
-  boost::optional<ebiten::game::graphics::texture> texture_;
+  typedef ebiten::graphics::drawing_region drawing_region_type;
+  boost::optional<ebiten::graphics::texture> texture_;
   sprites_type sprites_;
 public:
   explicit
-  sample_game(ebiten::game::graphics::device::texture_factory_type& tf) {
+  sample_game(ebiten::graphics::device::texture_factory_type& tf) {
     // TODO: カレントディレクトリについてどうにかする
     this->texture_ = boost::in_place(tf.from_file("/Users/hajime/ebiten/test.png"));
     this->sprites_.push_back(new sprite_type(this->texture_.get(), 4));
@@ -48,7 +48,7 @@ public:
   }
   void
   update(int frame_count) {
-    ebiten::game::graphics::drawing_region& dr =
+    ebiten::graphics::drawing_region& dr =
       this->sprites_.at(0).drawing_region_at(0);
     dr.set_dst_x(dr.dst_x() + 0.01);
     if (frame_count % 600 == 0) {
