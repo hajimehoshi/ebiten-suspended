@@ -3,6 +3,7 @@
 
 #include "ebiten/frames/frame.hpp"
 #include "ebiten/graphics/detail/opengl/graphics_context.hpp"
+#include "ebiten/graphics/detail/opengl/initialize_opengl.hpp"
 #include "ebiten/graphics/detail/opengl/texture_factory.hpp"
 #include "ebiten/graphics/sprite.hpp"
 #include "ebiten/util/noncopyable.hpp"
@@ -24,11 +25,11 @@ private:
   std::size_t const screen_height_;
   std::size_t const window_scale_;
   std::function<void(device&)> drawing_sprites_func_;
-  graphics_context_type graphics_context_;
   frames::frame frame_;
+  graphics_context_type graphics_context_;
   texture_factory_type texture_factory_;
-  std::unique_ptr<texture const> const offscreen_texture_;
-  GLuint const framebuffer_;
+  std::unique_ptr<texture const> offscreen_texture_;
+  GLuint framebuffer_;
 public:
   device(std::size_t screen_width,
          std::size_t screen_height,
@@ -38,12 +39,12 @@ public:
       screen_height_(screen_height),
       window_scale_(window_scale),
       drawing_sprites_func_(drawing_sprites_func),
+      frame_(screen_width * window_scale, screen_height * window_scale),
       graphics_context_(),
-      frame_(screen_width * window_scale, screen_height * window_scale,
-             std::bind(&device::update, this)),
-      texture_factory_(),
-      offscreen_texture_(texture_factory().create(screen_width, screen_height)),
-      framebuffer_(generate_frame_buffer()) {
+      texture_factory_() {
+    initialize_opengl(this->frame_, std::bind(&device::update, this));
+    this->offscreen_texture_ = texture_factory().create(screen_width, screen_height);
+    this->framebuffer_ = generate_frame_buffer();
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->framebuffer_);
     ::glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,
                                 GL_COLOR_ATTACHMENT0_EXT,

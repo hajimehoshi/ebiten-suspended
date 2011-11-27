@@ -1,4 +1,5 @@
 #import <Cocoa/Cocoa.h>
+
 #include <functional>
 
 @interface EbitenOpenGLView : NSOpenGLView {
@@ -8,7 +9,6 @@
 - (id)initWithFrame:(NSRect)frame
         pixelFormat:(NSOpenGLPixelFormat*)format
        updatingFunc:(std::function<void()> const&)updatingFunc;
-- (void)prepareOpenGL;
 - (BOOL)acceptsFirstResponder;
 - (BOOL)becomeFirstResponder;
 - (void)animationTimer:(NSTimer*)timer;
@@ -38,12 +38,12 @@
   int const swapInterval = 1;
   [context setValues:&swapInterval forParameter:NSOpenGLCPSwapInterval];
   NSTimer* timer = [NSTimer timerWithTimeInterval:0
-                            target:self
-                            selector:@selector(animationTimer:)
-                            userInfo:nil
-                            repeats:YES];
+                                           target:self
+                                         selector:@selector(animationTimer:)
+                                         userInfo:nil
+                                          repeats:YES];
+  // NSEventTrackingRunLoopMode?
   [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
-  //[[NSRunLoop currentRunLoop] addTimer:timer forMode:NSEventTrackingRunLoopMode];
   [pool release];
 }
 

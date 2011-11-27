@@ -2,11 +2,9 @@
 #define EBITEN_FRAMES_DETAIL_MACOSX_FRAME_HPP
 
 #import "ebiten/frames/detail/macosx/frame.m"
-#import "ebiten/frames/detail/macosx/view.m"
 
 #include "ebiten/util/noncopyable.hpp"
 #include <cstddef>
-#include <functional>
 
 namespace ebiten {
 namespace frames {
@@ -20,9 +18,7 @@ private:
   std::size_t const height_;
   NSWindow* native_window_;
 public:
-  frame(std::size_t width,
-        std::size_t height,
-        std::function<void()> const& updating_func)
+  frame(std::size_t width, std::size_t height)
     : width_(width),
       height_(height) {
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
@@ -30,23 +26,6 @@ public:
                             initWithSize:NSMakeSize(width, height)];
     this->native_window_ = window;
     assert(window != nil);
-    NSRect rect = NSMakeRect(0, 0, this->width_, this->height_);
-    NSOpenGLPixelFormatAttribute attributes[] = {
-      NSOpenGLPFAWindow,
-      NSOpenGLPFADoubleBuffer,
-      NSOpenGLPFAAccelerated,
-      NSOpenGLPFADepthSize, 32,
-      nil,
-    };
-    NSOpenGLPixelFormat* format = [[[NSOpenGLPixelFormat alloc]
-                                    initWithAttributes:attributes]
-                                   autorelease];
-    EbitenOpenGLView* glView = [[EbitenOpenGLView alloc]
-                                initWithFrame:rect
-                                pixelFormat:format
-                                updatingFunc:updating_func];
-    [window setContentView:glView];
-    //[window makeFirstResponder:glView];
     [pool release];
   }
   native_frame_type const&
