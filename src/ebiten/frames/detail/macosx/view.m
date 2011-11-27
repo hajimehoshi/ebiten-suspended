@@ -2,7 +2,7 @@
 #include <functional>
 
 @interface EbitenOpenGLView : NSOpenGLView {
-  std::function<void()> updating;
+  std::function<void()> updatingFunc_;
 }
 
 - (id)initWithFrame:(NSRect)frame
@@ -26,7 +26,7 @@
   self = [super initWithFrame:frame pixelFormat:format];
   if (self != nil) {
     [self prepareOpenGL];
-    self->updating = updatingFunc;
+    self->updatingFunc_ = updatingFunc;
   }
   return self;
 }
@@ -67,7 +67,7 @@
   assert(context != nil);
   //[context makeCurrentContext];
   //[context update]; ?
-  self->updating();
+  self->updatingFunc_();
   //[context clearDrawable];
   // drawing
   [context flushBuffer];
