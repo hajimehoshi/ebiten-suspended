@@ -7,7 +7,6 @@
 #include "ebiten/graphics/sprite.hpp"
 #include "ebiten/util/noncopyable.hpp"
 #include <OpenGL/gl.h>
-#include <boost/signals2/signal.hpp>
 #include <cassert>
 #include <functional>
 
@@ -29,7 +28,7 @@ private:
   graphics_context_type graphics_context_;
   texture const offscreen_texture_;
   GLuint const framebuffer_;
-  boost::signals2::signal<void()> drawing_sprites_;
+  std::function<void()> drawing_sprites_;
 public:
   device(std::size_t screen_width,
          std::size_t screen_height,
@@ -42,7 +41,7 @@ public:
       graphics_context_(),
       offscreen_texture_(texture_factory().create(screen_width, screen_height)),
       framebuffer_(generate_frame_buffer()) {
-    this->frame_.connect_updating(boost::bind(&device::update, this));
+    this->frame_.set_updating(std::bind(&device::update, this));
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->framebuffer_);
     ::glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,
                                 GL_COLOR_ATTACHMENT0_EXT,
@@ -130,8 +129,8 @@ public:
     return this->texture_factory_;
   }
   void
-  connect_drawing_sprites(std::function<void()> const& func) {
-    this->drawing_sprites_.connect(func);
+  set_drawing_sprites(std::function<void()> const& func) {
+    this->drawing_sprites_ = func;
   }
 private:
   static GLuint

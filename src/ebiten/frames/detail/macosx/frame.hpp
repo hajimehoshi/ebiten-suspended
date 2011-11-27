@@ -59,10 +59,10 @@ public:
     return this->height_;
   }
   void
-  connect_updating(std::function<void()> const& func) {
+  set_updating(std::function<void()> const& func) {
     NSWindow* window = this->native_window_;
     EbitenOpenGLView* glView = [window contentView];
-    [glView connectUpdating:func];
+    [glView setUpdating:func];
   }
 };
 
