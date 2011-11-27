@@ -20,7 +20,9 @@ private:
   std::size_t const height_;
   NSWindow* native_window_;
 public:
-  frame(std::size_t width, std::size_t height)
+  frame(std::size_t width,
+        std::size_t height,
+        std::function<void()> const& updating_func)
     : width_(width),
       height_(height) {
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
@@ -41,7 +43,8 @@ public:
                                    autorelease];
     EbitenOpenGLView* glView = [[EbitenOpenGLView alloc]
                                 initWithFrame:rect
-                                pixelFormat:format];
+                                pixelFormat:format
+                                updatingFunc:updating_func];
     [window setContentView:glView];
     //[window makeFirstResponder:glView];
     [pool release];
@@ -57,12 +60,6 @@ public:
   std::size_t
   height() const {
     return this->height_;
-  }
-  void
-  set_updating(std::function<void()> const& func) {
-    NSWindow* window = this->native_window_;
-    EbitenOpenGLView* glView = [window contentView];
-    [glView setUpdating:func];
   }
 };
 

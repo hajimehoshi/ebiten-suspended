@@ -34,6 +34,7 @@ class texture_factory : private ebiten::util::noncopyable {
   friend class device;
 private:
   texture_factory() {
+    // TODO: GL 初期化済みであることの明示?
   }
 public:
   graphics::texture

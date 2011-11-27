@@ -23,9 +23,9 @@ private:
   std::size_t const screen_width_;
   std::size_t const screen_height_;
   std::size_t const window_scale_;
+  graphics_context_type graphics_context_;
   frames::frame frame_;
   texture_factory_type texture_factory_;
-  graphics_context_type graphics_context_;
   texture const offscreen_texture_;
   GLuint const framebuffer_;
   std::function<void()> drawing_sprites_;
@@ -36,12 +36,12 @@ public:
     : screen_width_(screen_width),
       screen_height_(screen_height),
       window_scale_(window_scale),
-      frame_(screen_width * window_scale, screen_height * window_scale),
-      texture_factory_(),
       graphics_context_(),
+      frame_(screen_width * window_scale, screen_height * window_scale,
+             std::bind(&device::update, this)),
+      texture_factory_(),
       offscreen_texture_(texture_factory().create(screen_width, screen_height)),
       framebuffer_(generate_frame_buffer()) {
-    this->frame_.set_updating(std::bind(&device::update, this));
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->framebuffer_);
     ::glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,
                                 GL_COLOR_ATTACHMENT0_EXT,

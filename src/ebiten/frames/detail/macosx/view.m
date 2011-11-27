@@ -6,13 +6,13 @@
 }
 
 - (id)initWithFrame:(NSRect)frame
-        pixelFormat:(NSOpenGLPixelFormat*)format;
+        pixelFormat:(NSOpenGLPixelFormat*)format
+       updatingFunc:(std::function<void()> const&)updatingFunc;
 - (void)prepareOpenGL;
 - (BOOL)acceptsFirstResponder;
 - (BOOL)becomeFirstResponder;
 - (void)animationTimer:(NSTimer*)timer;
 - (void)drawRect:(NSRect)rect;
-- (void)setUpdating:(std::function<void()> const&)func;
 - (void)mouseDown:(NSEvent*)theEvent;
 - (void)keyDown:(NSEvent*)theEvent;
 
@@ -21,10 +21,12 @@
 @implementation EbitenOpenGLView
 
 - (id)initWithFrame:(NSRect)frame
-        pixelFormat:(NSOpenGLPixelFormat*)format {
+        pixelFormat:(NSOpenGLPixelFormat*)format
+       updatingFunc:(std::function<void()> const&)updatingFunc {
   self = [super initWithFrame:frame pixelFormat:format];
   if (self != nil) {
     [self prepareOpenGL];
+    self->updating = updatingFunc;
   }
   return self;
 }
@@ -70,10 +72,6 @@
   // drawing
   [context flushBuffer];
   [pool release];
-}
-
-- (void)setUpdating:(std::function<void()> const&)func {
-  self->updating = func;
 }
 
 - (void)mouseDown:(NSEvent*)theEvent {
