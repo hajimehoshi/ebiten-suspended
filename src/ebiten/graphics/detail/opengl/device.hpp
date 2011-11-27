@@ -44,7 +44,8 @@ public:
       texture_factory_() {
     initialize_opengl(this->frame_, std::bind(&device::update, this));
     this->offscreen_texture_ = texture_factory().create(screen_width, screen_height);
-    this->framebuffer_ = generate_frame_buffer();
+    ::glGenFramebuffersEXT(1, &this->framebuffer_);
+    assert(this->framebuffer_);
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->framebuffer_);
     ::glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,
                                 GL_COLOR_ATTACHMENT0_EXT,
@@ -130,14 +131,6 @@ public:
   texture_factory_type&
   texture_factory() {
     return this->texture_factory_;
-  }
-private:
-  static GLuint
-  generate_frame_buffer() {
-    GLuint framebuffer = 0;
-    ::glGenFramebuffersEXT(1, &framebuffer);
-    assert(framebuffer);
-    return framebuffer;
   }
 };
 
