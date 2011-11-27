@@ -1,0 +1,12 @@
+* Platform
+
+- Mac OS X
+
+
+* How to compile
+
+You need:
+- Xcode 4.2
+- Boost
+
+Do 'make' command to create ebiten.app.
