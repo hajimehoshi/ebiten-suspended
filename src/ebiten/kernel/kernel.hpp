@@ -48,10 +48,9 @@ run(std::size_t screen_width,
       auto const& sprites = game->sprites();
       typedef std::reference_wrapper<graphics::sprite const> sprite_cref;
       std::vector<sprite_cref> sorted_sprites;
-      // TODO: reserve?
-      //sorted_sprites.reserve(boost::size(sprites));
+      sorted_sprites.reserve(std::end(sprites) - std::begin(sprites));
       for (auto const& s : sprites) {
-        sorted_sprites.push_back(std::ref(s));
+        sorted_sprites.emplace_back(s);
       };
       // sort the sprites in desceinding order of z
       struct sprites_cmp {
