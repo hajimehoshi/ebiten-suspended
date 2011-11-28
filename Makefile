@@ -41,6 +41,7 @@ $(PROG)_test: $(SRC)
 		-lboost_unit_test_framework \
 		-g \
 		-o $@ \
+		-O0 \
 		src/main_test.cpp
 
 .PHONY: clean
