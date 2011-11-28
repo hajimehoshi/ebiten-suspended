@@ -1,12 +1,10 @@
 #ifndef EBITEN_GRAPHICS_DRAWING_REGION_HPP
 #define EBITEN_GRAPHICS_DRAWING_REGION_HPP
 
-#include "ebiten/util/noncopyable.hpp"
-
 namespace ebiten {
 namespace graphics {
 
-class drawing_region : private ebiten::util::noncopyable {
+class drawing_region {
 
 private:
   // TODO: implements by std::unique_ptr<std::array<double, 6> >?
