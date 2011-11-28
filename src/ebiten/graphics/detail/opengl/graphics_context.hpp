@@ -8,7 +8,6 @@
 #include "ebiten/graphics/texture.hpp"
 #include "ebiten/util/noncopyable.hpp"
 #include <OpenGL/gl.h>
-#include <boost/range.hpp>
 #include <array>
 #include <algorithm>
 #include <cassert>
@@ -35,9 +34,6 @@ public:
                 graphics::geometry_matrix const& geo_mat,
                 int z,
                 graphics::color_matrix const& color_mat) {
-    static_assert(std::is_same<typename boost::range_value<DrawingRegions>::type,
-                               drawing_region>::value,
-                  "The type of DrawingRegions' elements must equal to drawing_reagion");
     if (!this->shader_program) {
       this->shader_program = compile_shader_program();
       assert(this->shader_program);

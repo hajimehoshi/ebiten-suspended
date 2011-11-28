@@ -7,7 +7,6 @@
 #include "ebiten/graphics/texture.hpp"
 #include "ebiten/util/noncopyable.hpp"
 #include <boost/ptr_container/ptr_vector.hpp>
-#include <boost/range.hpp>
 
 namespace ebiten {
 namespace graphics {
