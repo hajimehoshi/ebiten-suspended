@@ -26,8 +26,12 @@ public:
     : texture_(texture_),
       geometry_matrix_(1, 0, 0, 1, 0, 0),
       z_(0),
-      color_matrix_((double[]){1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0}),
+      color_matrix_(),
       is_visible_(true) {
+    this->color_matrix_.set_element<0, 0>(1);
+    this->color_matrix_.set_element<1, 1>(1);
+    this->color_matrix_.set_element<2, 2>(1);
+    this->color_matrix_.set_element<3, 3>(1);
     drawing_regions_.reserve(drawing_regions_count);
     for (std::size_t i = 0; i < drawing_regions_count; ++i) {
       drawing_regions_.push_back(new drawing_region());

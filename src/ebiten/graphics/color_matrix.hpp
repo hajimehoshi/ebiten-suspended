@@ -9,9 +9,8 @@ namespace graphics {
 template<class Float>
 class color_matrix_base : public affine_matrix<Float, 5> {
 public:
-  template<class Elements>
-  color_matrix_base(Elements const& elements_)
-    : affine_matrix<Float, 5>(elements_) {
+  color_matrix_base()
+    : affine_matrix<Float, 5>() {
   }
 };
 
