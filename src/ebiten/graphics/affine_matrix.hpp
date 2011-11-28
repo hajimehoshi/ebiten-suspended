@@ -67,7 +67,10 @@ namespace ebiten {
 namespace graphics {
 
 BOOST_AUTO_TEST_CASE(affine_matrix_element) {
-  affine_matrix<double, 4> m((double[]){1, 2, 3});
+  affine_matrix<double, 4> m;
+  m.set_element<0, 0>(1);
+  m.set_element<0, 1>(2);
+  m.set_element<0, 2>(3);
   BOOST_CHECK_EQUAL(1, (m.element<0, 0>()));
   BOOST_CHECK_EQUAL(2, (m.element<0, 1>()));
   BOOST_CHECK_EQUAL(3, (m.element<0, 2>()));
@@ -106,9 +109,14 @@ BOOST_AUTO_TEST_CASE(affine_matrix_element) {
 }
 
 BOOST_AUTO_TEST_CASE(affine_matrix_is_identity) {
-  affine_matrix<double, 4> m1((double[]){1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0});
+  affine_matrix<double, 4> m1;
+  m1.set_element<0, 0>(1);
+  m1.set_element<1, 1>(1);
+  m1.set_element<2, 2>(1);
   BOOST_CHECK(m1.is_identity());
-  affine_matrix<double, 4> m2((double[]){1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0});
+  affine_matrix<double, 4> m2 = m1;
+  BOOST_CHECK(m2.is_identity());
+  m2.set_element<0, 1>(1);
   BOOST_CHECK(!m2.is_identity());
 }
 
