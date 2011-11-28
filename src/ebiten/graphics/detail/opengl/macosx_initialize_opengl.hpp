@@ -1,6 +1,6 @@
 #ifndef EBITEN_GRAPHICS_DETAIL_OPENGL_MACOSX_INITIALIZE_OPENGL_HPP
 #define EBITEN_GRAPHICS_DETAIL_OPENGL_MACOSX_INITIALIZE_OPENGL_HPP
 
-#import "ebiten/graphics/detail/opengl/macosx_initialize_opengl.mm"
+#include "ebiten/graphics/detail/opengl/macosx_initialize_opengl.mm"
 
 #endif

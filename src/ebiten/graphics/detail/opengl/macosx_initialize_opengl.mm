@@ -1,3 +1,6 @@
+#ifndef EBITEN_GRAPHICS_DETAIL_OPENGL_MACOSX_INITIALIZE_OPENGL_MM
+#define EBITEN_GRAPHICS_DETAIL_OPENGL_MACOSX_INITIALIZE_OPENGL_MM
+
 #import <Cocoa/Cocoa.h>
 
 #include "ebiten/frames/frame.hpp"
@@ -116,3 +119,6 @@ initialize_opengl(frames::frame& frame,
 }
 }
 }
+
+#endif
+

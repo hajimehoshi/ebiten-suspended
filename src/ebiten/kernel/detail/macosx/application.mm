@@ -1,5 +1,10 @@
+#ifndef EBITEN_KERNEL_DETAIL_MACOSX_APPLICATION_MM
+#define EBITEN_KERNEL_DETAIL_MACOSX_APPLICATION_MM
+
 #import <Cocoa/Cocoa.h>
-#undef check // conflicts with boost
+#undef check // solve a confliction with Boost
+
+#include "ebiten/frames/frame.hpp"
 #include <cassert>
 
 @interface EbitenController : NSObject<NSApplicationDelegate> {
@@ -54,3 +59,18 @@
 }
 
 @end
+
+void
+ebiten_kernel_detail_run_application(ebiten::frames::frame& frame) {
+  NSWindow* window = frame.native_frame();
+  assert(window != nil);
+  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+  EbitenController* controller = [[EbitenController alloc] initWithWindow:window];
+  NSApplication* app = [NSApplication sharedApplication];
+  [app setDelegate:controller];
+  [app finishLaunching];
+  [app run];
+  [pool release];
+}
+
+#endif
