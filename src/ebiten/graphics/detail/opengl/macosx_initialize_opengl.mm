@@ -90,13 +90,9 @@
 
 @end
 
-namespace ebiten {
-namespace graphics {
-namespace detail {
-
 void
-initialize_opengl(frames::frame& frame,
-                  std::function<void()> const updating_func) {
+ebiten_graphics_detail_initialize_opengl(ebiten::frames::frame& frame,
+                                         std::function<void()> const updating_func) {
   NSRect rect = NSMakeRect(0, 0, frame.width(), frame.height());
   NSOpenGLPixelFormatAttribute attributes[] = {
     NSOpenGLPFAWindow,
@@ -114,10 +110,6 @@ initialize_opengl(frames::frame& frame,
                                 updatingFunc:updating_func];
   [frame.native_frame() setContentView:glView];
   //[window makeFirstResponder:glView];
-}
-
-}
-}
 }
 
 #endif

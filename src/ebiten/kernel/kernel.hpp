@@ -68,9 +68,11 @@ run(std::size_t screen_width,
     }
   };
   boost::optional<Game> game;
+  frames::frame frame(screen_width * window_scale, screen_height * window_scale);
   graphics::device device(screen_width,
                           screen_height,
                           window_scale,
+                          frame,
                           std::bind(&draw_sprites_func::invoke,
                                     std::ref(mutex),
                                     std::cref(game),
@@ -105,7 +107,7 @@ run(std::size_t screen_width,
   };
   pthread_t logic_thread;
   ::pthread_create(&logic_thread, 0, logic_func_wrapper::invoke, &logic);
-  detail::run_application(device.frame());
+  detail::run_application(frame);
   //game_terminated.store(true);
   //::pthread_join(logic_thread, 0);
 }
