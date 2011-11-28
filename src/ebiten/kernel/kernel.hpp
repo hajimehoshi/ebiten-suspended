@@ -102,7 +102,7 @@ run(std::size_t screen_width,
       typedef std::function<void()> func_type;
       func_type& func = *(reinterpret_cast<func_type*>(func_p));
       func();
-      return 0;
+      return nullptr;
     }
   };
   pthread_t logic_thread;
