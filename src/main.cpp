@@ -4,9 +4,9 @@
 int
 main() {
   try {
-    ebiten::kernel::run<sample_game>(320, 240, 600, 2);
+    sample_game game;
+    ebiten::kernel::run(game, 320, 240, 600, 2);
   } catch (std::runtime_error const& err) {
-    // TODO: use boost::diagnostic_information?
     std::cerr << err.what() << std::endl;
     return EXIT_FAILURE;
   }

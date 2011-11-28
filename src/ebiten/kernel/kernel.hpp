@@ -10,8 +10,6 @@
 #include "ebiten/graphics/device.hpp"
 #include "ebiten/graphics/sprite.hpp"
 #include "ebiten/timers/timer.hpp"
-#include <boost/optional.hpp>
-#include <boost/utility/in_place_factory.hpp>
 #include <algorithm>
 #include <functional>
 #include <pthread.h>
@@ -21,7 +19,8 @@ namespace kernel {
 
 template<class Game>
 void
-run(std::size_t screen_width,
+run(Game& game,
+    std::size_t screen_width,
     std::size_t screen_height,
     std::size_t fps,
     std::size_t window_scale) {
@@ -42,10 +41,10 @@ run(std::size_t screen_width,
   struct draw_sprites_func {
     static void
     invoke(pthread_mutex_t& mutex,
-           boost::optional<Game> const& game,
+           Game const& game,
            graphics::device& device) {
       lock l(mutex);
-      auto const& sprites = game->sprites();
+      auto const& sprites = game.sprites();
       typedef std::reference_wrapper<graphics::sprite const> sprite_cref;
       std::vector<sprite_cref> sorted_sprites;
       sorted_sprites.reserve(std::end(sprites) - std::begin(sprites));
@@ -67,7 +66,6 @@ run(std::size_t screen_width,
       };
     }
   };
-  boost::optional<Game> game;
   frames::frame frame(screen_width * window_scale, screen_height * window_scale);
   graphics::device device(screen_width,
                           screen_height,
@@ -77,7 +75,7 @@ run(std::size_t screen_width,
                                     std::ref(mutex),
                                     std::cref(game),
                                     std::placeholders::_1));
-  game = boost::in_place(std::ref(device.texture_factory()));
+  game.initialize(device.texture_factory());
   // start the logic loop
   struct logic_func {
     static void
@@ -95,7 +93,7 @@ run(std::size_t screen_width,
   std::function<void()> logic = std::bind(logic_func::invoke,
                                           fps,
                                           std::ref(mutex),
-                                          std::ref(*game));
+                                          std::ref(game));
   struct logic_func_wrapper {
     static void*
     invoke(void* func_p) {

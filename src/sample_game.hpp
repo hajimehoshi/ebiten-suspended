@@ -16,10 +16,13 @@ private:
   sprites_type sprites_;
 public:
   explicit
-  sample_game(ebiten::graphics::device::texture_factory_type& tf)
-    : texture_(tf.from_file("/Users/hajime/ebiten/test.png")) {
+  sample_game() {
+  }
+  void
+  initialize(ebiten::graphics::device::texture_factory_type& tf) {
     // TODO: カレントディレクトリについてどうにかする
-    this->sprites_.push_back(new sprite_type(*this->texture_, 4));
+    this->texture_ = tf.from_file("/Users/hajime/ebiten/test.png");
+        this->sprites_.push_back(new sprite_type(*this->texture_, 4));
     sprite_type& s = this->sprites_.at(0);
     s.geometry_matrix().set_a(1);
     for (auto& dr : s.drawing_regions()) {
