@@ -80,8 +80,11 @@ public:
                                 geo_mat.tx(), geo_mat.ty(), 0, 1};
     ::glMatrixMode(GL_MODELVIEW);
     ::glLoadMatrixf(gl_geo_mat);
+    // TODO: cache?
     ::glBindTexture(GL_TEXTURE_2D, texture.id());
     ::glBegin(GL_QUADS);
+    // TODO: replace float to short?
+    // http://objective-audio.jp/2009/07/ngmoco-opengl.html
     float const texture_width  = texture.texture_width();
     float const texture_height = texture.texture_height();
     for (auto const& dr : drawing_regions) {
