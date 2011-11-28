@@ -6,7 +6,6 @@
 #include "ebiten/graphics/geometry_matrix.hpp"
 #include "ebiten/graphics/texture.hpp"
 #include "ebiten/util/noncopyable.hpp"
-#include <boost/ptr_container/ptr_vector.hpp>
 
 namespace ebiten {
 namespace graphics {
@@ -14,7 +13,7 @@ namespace graphics {
 class sprite : private ebiten::util::noncopyable {
 private:
   texture const& texture_;
-  typedef boost::ptr_vector<drawing_region> drawing_regions_type;
+  typedef std::vector<drawing_region> drawing_regions_type;
   drawing_regions_type drawing_regions_;
   graphics::geometry_matrix geometry_matrix_;
   double z_;
@@ -33,7 +32,7 @@ public:
     this->color_matrix_.set_element<3, 3>(1);
     drawing_regions_.reserve(drawing_regions_count);
     for (std::size_t i = 0; i < drawing_regions_count; ++i) {
-      drawing_regions_.push_back(new drawing_region());
+      drawing_regions_.emplace_back();
     }
   }
   template<class GraphicsContext>

@@ -48,7 +48,8 @@ run(std::size_t screen_width,
       auto const& sprites = game->sprites();
       typedef std::reference_wrapper<graphics::sprite const> sprite_cref;
       std::vector<sprite_cref> sorted_sprites;
-      sorted_sprites.reserve(boost::size(sprites));
+      // TODO: reserve?
+      //sorted_sprites.reserve(boost::size(sprites));
       for (auto const& s : sprites) {
         sorted_sprites.push_back(std::ref(s));
       };
