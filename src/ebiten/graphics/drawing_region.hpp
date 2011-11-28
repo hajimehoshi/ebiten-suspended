@@ -2,7 +2,6 @@
 #define EBITEN_GRAPHICS_DRAWING_REGION_HPP
 
 #include "ebiten/util/noncopyable.hpp"
-#include <algorithm>
 
 namespace ebiten {
 namespace graphics {
