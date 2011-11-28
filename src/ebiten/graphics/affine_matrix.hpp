@@ -1,7 +1,6 @@
 #ifndef EBITEN_GRAPHICS_AFFINE_MATRIX_HPP
 #define EBITEN_GRAPHICS_AFFINE_MATRIX_HPP
 
-#include <boost/range.hpp>
 #include <array>
 #include <cassert>
 
@@ -18,15 +17,6 @@ private:
 public:
   affine_matrix() {
     this->elements_.fill(0);
-  }
-  // TODO: accepts iterators
-  // TODO: constructor's arugments?
-  template<class Elements>
-  explicit
-  affine_matrix(Elements const& elements) {
-    assert(static_cast<std::size_t>(boost::size(elements)) <= size);
-    this->elements_.fill(0);
-    std::copy(std::begin(elements), std::end(elements), this->elements_.begin());
   }
   template<std::size_t I, std::size_t J>
   Float

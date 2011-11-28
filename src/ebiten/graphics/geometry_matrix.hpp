@@ -9,8 +9,17 @@ namespace graphics {
 template<class Float>
 class geometry_matrix_base : public affine_matrix<Float, 3> {
 public:
+  geometry_matrix_base()
+    : affine_matrix<Float, 3>() {
+  }
   geometry_matrix_base(Float a, Float b, Float c, Float d, Float tx, Float ty)
-    : affine_matrix<Float, 3>((Float[]){a, b, tx, c, d, ty}) {
+    : affine_matrix<Float, 3>() {
+    this->set_a(a);
+    this->set_b(b);
+    this->set_c(c);
+    this->set_d(d);
+    this->set_tx(tx);
+    this->set_ty(ty);
   }
   Float
   a() const {
