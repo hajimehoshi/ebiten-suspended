@@ -27,12 +27,16 @@ private:
     : shader_program(0) {
   }
 public:
+  template<class Drawable>
+  void
+  draw(Drawable const& drawable) {
+    drawable.draw(*this);
+  }
   template<class DrawingRegions>
   void
   draw_textures(graphics::texture const& texture,
                 DrawingRegions const& drawing_regions,
                 graphics::geometry_matrix const& geo_mat,
-                int z,
                 graphics::color_matrix const& color_mat) {
     if (!this->shader_program) {
       this->shader_program = compile_shader_program();
@@ -78,7 +82,6 @@ public:
     ::glLoadMatrixf(gl_geo_mat);
     ::glBindTexture(GL_TEXTURE_2D, texture.id());
     ::glBegin(GL_QUADS);
-    float const zf = static_cast<float>(z);
     float const texture_width  = texture.texture_width();
     float const texture_height = texture.texture_height();
     for (auto const& dr : drawing_regions) {
@@ -90,19 +93,19 @@ public:
       float const x2 = dr.dst_x() + dr.width();
       float const y1 = dr.dst_y();
       float const y2 = dr.dst_y() + dr.height();
-      float const vertex[4][3] = {{x1, y1, zf},
-                                  {x2, y1, zf},
-                                  {x2, y2, zf},
-                                  {x1, y2, zf}};
+      float const vertex[4][3] = {{x1, y1},
+                                  {x2, y1},
+                                  {x2, y2},
+                                  {x1, y2}};
       // TODO: use glDrawArrays?
       ::glTexCoord2f(tu1, tv1);
-      ::glVertex3fv(vertex[0]);
+      ::glVertex2fv(vertex[0]);
       ::glTexCoord2f(tu2, tv1);
-      ::glVertex3fv(vertex[1]);
+      ::glVertex2fv(vertex[1]);
       ::glTexCoord2f(tu2, tv2);
-      ::glVertex3fv(vertex[2]);
+      ::glVertex2fv(vertex[2]);
       ::glTexCoord2f(tu1, tv2);
-      ::glVertex3fv(vertex[3]);
+      ::glVertex2fv(vertex[3]);
     };
     ::glEnd();
     ::glBindTexture(GL_TEXTURE_2D, 0);

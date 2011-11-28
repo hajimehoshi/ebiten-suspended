@@ -24,7 +24,7 @@ private:
   std::size_t const screen_width_;
   std::size_t const screen_height_;
   std::size_t const window_scale_;
-  std::function<void(device&)> drawing_sprites_func_;
+  std::function<void(device&)> draw_func_;
   graphics_context_type graphics_context_;
   texture_factory_type texture_factory_;
   std::unique_ptr<texture const> offscreen_texture_;
@@ -34,11 +34,11 @@ public:
          std::size_t screen_height,
          std::size_t window_scale,
          frames::frame& frame,
-         std::function<void(device&)> const& drawing_sprites_func)
+         std::function<void(device&)> const& draw_func)
     : screen_width_(screen_width),
       screen_height_(screen_height),
       window_scale_(window_scale),
-      drawing_sprites_func_(drawing_sprites_func),
+      draw_func_(draw_func),
       graphics_context_(),
       texture_factory_() {
     initialize_opengl(frame, std::bind(&device::update, this));
@@ -71,7 +71,6 @@ public:
                                    0,              window_scale_f, 0, 0,
                                    0,              0,              1, 0,
                                    0,              0,              0, 1};
-    // render sprites to the offscreen
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->framebuffer_);
     ::glClearColor(0, 0, 0, 1);
     ::glClear(GL_COLOR_BUFFER_BIT);
@@ -82,7 +81,7 @@ public:
     ::glMatrixMode(GL_PROJECTION);
     ::glLoadIdentity();
     ::glOrtho(0, this->screen_width_, 0, this->screen_height_, 0, 1);
-    this->drawing_sprites_func_(*this);
+    this->draw_func_(*this);
     ::glFlush();
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 

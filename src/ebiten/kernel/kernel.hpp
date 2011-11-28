@@ -38,32 +38,13 @@ run(Game& game,
   };
   pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
-  struct draw_sprites_func {
+  struct draw_func {
     static void
     invoke(pthread_mutex_t& mutex,
            Game const& game,
            graphics::device& device) {
       lock l(mutex);
-      auto const& sprites = game.sprites();
-      typedef std::reference_wrapper<graphics::sprite const> sprite_cref;
-      std::vector<sprite_cref> sorted_sprites;
-      sorted_sprites.reserve(std::end(sprites) - std::begin(sprites));
-      for (auto const& s : sprites) {
-        sorted_sprites.emplace_back(s);
-      };
-      // sort the sprites in desceinding order of z
-      struct sprites_cmp {
-        static int
-        invoke(sprite_cref const& a, sprite_cref const& b) {
-          double const diff = a.get().z() - b.get().z();
-          return (0 < diff) ? -1 : ((diff < 0) ? 1 : 0);
-        }
-      };
-      std::sort(sorted_sprites.begin(), sorted_sprites.end(),
-                sprites_cmp::invoke);
-      for (auto const& s : sorted_sprites) {
-        s.get().draw(device.graphics_context());
-      };
+      game.draw(device.graphics_context());
     }
   };
   frames::frame frame(screen_width * window_scale, screen_height * window_scale);
@@ -71,7 +52,7 @@ run(Game& game,
                           screen_height,
                           window_scale,
                           frame,
-                          std::bind(&draw_sprites_func::invoke,
+                          std::bind(&draw_func::invoke,
                                     std::ref(mutex),
                                     std::cref(game),
                                     std::placeholders::_1));

@@ -15,34 +15,46 @@ private:
   std::unique_ptr<ebiten::graphics::texture const> texture_;
   sprites_type sprites_;
 public:
-  explicit
   sample_game() {
   }
   void
   initialize(ebiten::graphics::device::texture_factory_type& tf) {
     // TODO: カレントディレクトリについてどうにかする
     this->texture_ = tf.from_file("/Users/hajime/ebiten/test.png");
-        this->sprites_.push_back(new sprite_type(*this->texture_, 4));
-    sprite_type& s = this->sprites_.at(0);
-    s.geometry_matrix().set_a(1);
-    for (auto& dr : s.drawing_regions()) {
-      dr.set_width(32);
-      dr.set_height(32);
+    {
+      this->sprites_.push_back(new sprite_type(*this->texture_, 4));
+      sprite_type& s = this->sprites_.at(0);
+      for (auto& dr : s.drawing_regions()) {
+        dr.set_width(32);
+        dr.set_height(32);
+      }
+      s.drawing_region_at(0).set_dst_x(32);
+      s.drawing_region_at(0).set_dst_y(32);
+      s.drawing_region_at(1).set_dst_x(32);
+      s.drawing_region_at(1).set_dst_y(132);
+      s.drawing_region_at(2).set_dst_x(132);
+      s.drawing_region_at(2).set_dst_y(32);
+      s.drawing_region_at(3).set_dst_x(132);
+      s.drawing_region_at(3).set_dst_y(132);
+      /*s.color_matrix().set_element<0, 0>(0);
+        s.color_matrix().set_element<0, 3>(0);*/
     }
-    s.drawing_region_at(0).set_dst_x(32);
-    s.drawing_region_at(0).set_dst_y(32);
-    s.drawing_region_at(1).set_dst_x(32);
-    s.drawing_region_at(1).set_dst_y(132);
-    s.drawing_region_at(2).set_dst_x(132);
-    s.drawing_region_at(2).set_dst_y(32);
-    s.drawing_region_at(3).set_dst_x(132);
-    s.drawing_region_at(3).set_dst_y(132);
-    s.color_matrix().set_element<0, 0>(0);
-    s.color_matrix().set_element<0, 3>(1);
-  }
-  sprites_type const&
-  sprites() const {
-    return this->sprites_;
+    {
+      this->sprites_.push_back(new sprite_type(*this->texture_, 1));
+      sprite_type& s = this->sprites_.at(1);
+      s.drawing_region_at(0).set_width(32);
+      s.drawing_region_at(0).set_height(32);
+      s.drawing_region_at(0).set_dst_x(32);
+      s.drawing_region_at(0).set_dst_y(32);
+    }
+    {
+      this->sprites_.push_back(new sprite_type(*this->texture_, 1));
+      sprite_type& s = this->sprites_.at(2);
+      s.drawing_region_at(0).set_width(32);
+      s.drawing_region_at(0).set_height(32);
+      s.drawing_region_at(0).set_dst_x(64);
+      s.drawing_region_at(0).set_dst_y(32);
+    }
   }
   void
   update(int frame_count) {
@@ -51,6 +63,13 @@ public:
     dr.set_dst_x(dr.dst_x() + 0.01);
     if (frame_count % 600 == 0) {
       std::cout << "foo!" << std::endl;
+    }
+  }
+  //sprites_type const&
+  void
+  draw(ebiten::graphics::device::graphics_context_type& gc) const {
+    for (auto const& s : this->sprites_) {
+      gc.draw(s);
     }
   }
 };
