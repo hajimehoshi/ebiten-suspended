@@ -7,6 +7,7 @@
 #include <functional>
 
 @interface EbitenOpenGLView : NSOpenGLView {
+@private
   std::function<void()> updatingFunc_;
 }
 

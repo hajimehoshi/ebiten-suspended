@@ -46,6 +46,7 @@
 @end
 
 @interface EbitenWindow : NSWindow {
+@private
   EbitenWindowController* controller_;
 }
 
@@ -73,7 +74,7 @@
   assert(self != nil);
   [self setReleasedWhenClosed:YES];
   EbitenWindowController* controller = [[EbitenWindowController alloc] init];
-  self->controller_ = controller;
+  self->controller_ = controller; // TODO: fix this dirty hack!
   [self setDelegate:controller];
   [self setDocumentEdited:YES];
   return self;
