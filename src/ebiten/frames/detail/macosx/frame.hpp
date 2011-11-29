@@ -12,8 +12,8 @@ namespace detail {
 typedef NSWindow* native_frame_type;
 
 NSWindow*
-generate_native_window(std::size_t width, std::size_t height) {
-  return ::ebiten_frame_detail_generate_native_window(width, height);
+generate_native_frame(std::size_t width, std::size_t height) {
+  return ::ebiten_frame_detail_generate_native_frame(width, height);
 }
 
 }

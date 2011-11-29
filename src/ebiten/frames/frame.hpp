@@ -16,12 +16,12 @@ class frame : private ebiten::util::noncopyable {
 private:
   std::size_t const width_;
   std::size_t const height_;
-  native_frame_type native_window_;
+  native_frame_type native_frame_;
 public:
   frame(std::size_t width, std::size_t height)
     : width_(width),
       height_(height),
-      native_window_(detail::generate_native_window(width, height)) {
+      native_frame_(detail::generate_native_frame(width, height)) {
   }
   std::size_t
   width() const {
@@ -33,7 +33,7 @@ public:
   }
   native_frame_type const&
   native_frame() const {
-    return this->native_window_;
+    return this->native_frame_;
   }
 };
 

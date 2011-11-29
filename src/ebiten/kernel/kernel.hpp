@@ -23,7 +23,7 @@ run(Game& game,
     std::size_t screen_width,
     std::size_t screen_height,
     std::size_t fps,
-    std::size_t window_scale) {
+    std::size_t screen_scale) {
   class lock {
   public:
     lock(pthread_mutex_t& mutex)
@@ -47,10 +47,10 @@ run(Game& game,
       game.draw(device.graphics_context());
     }
   };
-  frames::frame frame(screen_width * window_scale, screen_height * window_scale);
+  frames::frame frame(screen_width * screen_scale, screen_height * screen_scale);
   graphics::device device(screen_width,
                           screen_height,
-                          window_scale,
+                          screen_scale,
                           frame,
                           std::bind(&draw_func::invoke,
                                     std::ref(mutex),

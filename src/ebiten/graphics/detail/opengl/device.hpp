@@ -23,7 +23,7 @@ public:
 private:
   std::size_t const screen_width_;
   std::size_t const screen_height_;
-  std::size_t const window_scale_;
+  std::size_t const screen_scale_;
   std::function<void(device&)> draw_func_;
   graphics_context_type graphics_context_;
   texture_factory_type texture_factory_;
@@ -32,12 +32,12 @@ private:
 public:
   device(std::size_t screen_width,
          std::size_t screen_height,
-         std::size_t window_scale,
+         std::size_t screen_scale,
          frames::frame& frame,
          std::function<void(device&)> const& draw_func)
     : screen_width_(screen_width),
       screen_height_(screen_height),
-      window_scale_(window_scale),
+      screen_scale_(screen_scale),
       draw_func_(draw_func),
       graphics_context_(),
       texture_factory_() {
@@ -66,9 +66,9 @@ public:
                                           {offscreen_width, 0,                0},
                                           {offscreen_width, offscreen_height, 0},
                                           {0,               offscreen_height, 0}};
-    float const window_scale_f = static_cast<float>(this->window_scale_);
-    float const offscreen_geo[] = {window_scale_f, 0,              0, 0,
-                                   0,              window_scale_f, 0, 0,
+    float const screen_scale_f = static_cast<float>(this->screen_scale_);
+    float const offscreen_geo[] = {screen_scale_f, 0,              0, 0,
+                                   0,              screen_scale_f, 0, 0,
                                    0,              0,              1, 0,
                                    0,              0,              0, 1};
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->framebuffer_);
@@ -91,12 +91,12 @@ public:
     ::glEnable(GL_TEXTURE_2D);
     ::glDisable(GL_BLEND);
     ::glViewport(0, 0,
-                 this->screen_width_ * this->window_scale_,
-                 this->screen_height_ * this->window_scale_);
+                 this->screen_width_ * this->screen_scale_,
+                 this->screen_height_ * this->screen_scale_);
     ::glMatrixMode(GL_PROJECTION);
     ::glLoadIdentity();
-    ::glOrtho(0, this->screen_width_ * this->window_scale_,
-              this->screen_height_ * this->window_scale_, 0,
+    ::glOrtho(0, this->screen_width_ * this->screen_scale_,
+              this->screen_height_ * this->screen_scale_, 0,
               0, 1);
     ::glMatrixMode(GL_MODELVIEW);
     ::glLoadMatrixf(offscreen_geo);
