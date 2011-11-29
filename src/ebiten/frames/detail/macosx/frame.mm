@@ -20,16 +20,16 @@
 
 - (id)initWithSize:(NSSize)size {
   [NSApplication sharedApplication];
-  // initialize
-  NSRect contentRect = NSMakeRect(0, 0, size.width, size.height);
   NSUInteger const style = (NSTitledWindowMask | NSClosableWindowMask |
                             NSMiniaturizableWindowMask);
-  NSRect windowRect = [NSWindow frameRectForContentRect:contentRect
-                                              styleMask:style];
+  NSRect const windowRect =
+    [NSWindow frameRectForContentRect:NSMakeRect(0, 0, size.width, size.height)
+                            styleMask:style];
   NSScreen* screen = [[NSScreen screens] objectAtIndex:0];
-  NSSize screenSize = [screen visibleFrame].size;
-  contentRect.origin = NSMakePoint((screenSize.width - windowRect.size.width) / 2,
-                                   (screenSize.height - windowRect.size.height) / 2);
+  NSSize const screenSize = [screen visibleFrame].size;
+  NSRect const contentRect = NSMakeRect((screenSize.width - windowRect.size.width) / 2,
+                                        (screenSize.height - windowRect.size.height) / 2,
+                                        size.width, size.height);
   self = [super initWithContentRect:contentRect
                           styleMask:style
                             backing:NSBackingStoreBuffered defer:YES];
