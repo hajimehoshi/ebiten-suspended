@@ -45,7 +45,9 @@
 
 @end
 
-@interface EbitenWindow : NSWindow
+@interface EbitenWindow : NSWindow {
+  EbitenWindowController* controller_;
+}
 
 - (id)initWithSize:(NSSize)size;
 
@@ -60,16 +62,18 @@
   NSUInteger const style = (NSTitledWindowMask | NSClosableWindowMask |
                             NSMiniaturizableWindowMask);
   NSRect windowRect = [NSWindow frameRectForContentRect:contentRect
-                                styleMask:style];
+                                              styleMask:style];
   NSScreen* screen = [[NSScreen screens] objectAtIndex:0];
   NSSize screenSize = [screen visibleFrame].size;
   contentRect.origin = NSMakePoint((screenSize.width - windowRect.size.width) / 2,
                                    (screenSize.height - windowRect.size.height) / 2);
   self = [super initWithContentRect:contentRect
-                styleMask:style backing:NSBackingStoreBuffered defer:YES];
+                          styleMask:style
+                            backing:NSBackingStoreBuffered defer:YES];
   assert(self != nil);
   [self setReleasedWhenClosed:YES];
   EbitenWindowController* controller = [[EbitenWindowController alloc] init];
+  self->controller_ = controller;
   [self setDelegate:controller];
   [self setDocumentEdited:YES];
   return self;

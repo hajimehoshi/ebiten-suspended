@@ -5,7 +5,8 @@ CXXFLAGS:= \
 	-W -Wall -Wextra \
 	-fPIC \
 	-I/usr/X11/include -Isrc \
-	-x objective-c++ -std=c++0x -stdlib=libc++
+	-x objective-c++ -std=c++0x -stdlib=libc++ \
+	-fobjc-arc
 
 LDFLAGS:= \
 	-L/usr/X11/lib \
@@ -13,7 +14,7 @@ LDFLAGS:= \
 	-framework Cocoa -framework OpenGL \
 	-lpng # TODO: link them statically
 
-SRC:=$(shell find src -name "*.hpp" -or -name "*.cpp" -or -name "*.m")
+SRC:=$(shell find src -name "*.hpp" -or -name "*.cpp" -or -name "*.mm")
 
 all: $(PROG).app
 	open $<
