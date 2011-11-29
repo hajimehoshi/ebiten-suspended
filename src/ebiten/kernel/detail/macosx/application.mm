@@ -28,7 +28,6 @@
 }
 
 - (void)initMenu {
-  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   NSString* processName = [[NSProcessInfo processInfo] processName];
   NSMenu* mainMenu = [[NSMenu alloc] init];
   NSMenu* appleMenu = [[NSMenu alloc] init];
@@ -43,34 +42,29 @@
     [mainMenu setSubmenu:appleMenu forItem:menuItem];
   }
   [NSApp setMainMenu: mainMenu];
-  [mainMenu release];
-  [appleMenu release];
-  [pool release];
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification*)aNotification {
   (void)aNotification;
-  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   NSWindow* window = self->window_;
   assert(window);
   [window makeKeyAndOrderFront:nil];
   [self initMenu];
-  [pool release];
 }
 
 @end
 
 void
 ebiten_kernel_detail_run_application(ebiten::frames::frame& frame) {
-  NSWindow* window = frame.native_frame();
-  assert(window != nil);
-  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-  EbitenController* controller = [[EbitenController alloc] initWithWindow:window];
-  NSApplication* app = [NSApplication sharedApplication];
-  [app setDelegate:controller];
-  [app finishLaunching];
-  [app run];
-  [pool release];
+  @autoreleasepool {
+    NSWindow* window = frame.native_frame();
+    assert(window != nil);
+    EbitenController* controller = [[EbitenController alloc] initWithWindow:window];
+    NSApplication* app = [NSApplication sharedApplication];
+    [app setDelegate:controller];
+    [app finishLaunching];
+    [app run];
+  }
 }
 
 #endif

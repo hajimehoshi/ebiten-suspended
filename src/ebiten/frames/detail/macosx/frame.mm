@@ -18,20 +18,18 @@
 @implementation EbitenWindowController
 
 - (BOOL)windowShouldClose:(id)sender {
-  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   if ([sender isDocumentEdited]) {
     // TODO: add the application's name
     NSAlert* alert = [NSAlert alertWithMessageText:@"Quit the game?"
-                              defaultButton:@"Quit"
-                              alternateButton:nil
-                              otherButton:@"Cancel"
-                              informativeTextWithFormat:@""];
+                                     defaultButton:@"Quit"
+                                   alternateButton:nil
+                                       otherButton:@"Cancel"
+                         informativeTextWithFormat:@""];
     [alert beginSheetModalForWindow:sender
-           modalDelegate:self
-           didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:)
-           contextInfo:nil];
+                      modalDelegate:self
+                     didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:)
+                        contextInfo:nil];
   }
-  [pool release];
   return NO;
 }
 
@@ -40,11 +38,9 @@
         contextInfo:(void*)contextInfo {
   (void)alert;
   (void)contextInfo;
-  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   if (returnCode == NSAlertDefaultReturn) {
     [NSApp terminate:self];
   }
-  [pool release];
 }
 
 @end
@@ -60,7 +56,6 @@
 - (id)initWithSize:(NSSize)size {
   [NSApplication sharedApplication];
   // initialize
-  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   NSRect contentRect = NSMakeRect(0, 0, size.width, size.height);
   NSUInteger const style = (NSTitledWindowMask | NSClosableWindowMask |
                             NSMiniaturizableWindowMask);
@@ -77,7 +72,6 @@
   EbitenWindowController* controller = [[EbitenWindowController alloc] init];
   [self setDelegate:controller];
   [self setDocumentEdited:YES];
-  [pool release];
   return self;
 }
 
@@ -85,11 +79,9 @@
 
 NSWindow*
 ebiten_frame_detail_generate_native_window(std::size_t width, std::size_t height) {
-  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   EbitenWindow* window = [[EbitenWindow alloc]
                            initWithSize:NSMakeSize(width, height)];
   assert(window != nil);
-  [pool release];
   return window;
 }
 

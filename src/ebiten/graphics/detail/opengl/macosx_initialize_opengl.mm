@@ -36,7 +36,6 @@
 }
 
 - (void)prepareOpenGL {
-  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   NSOpenGLContext* context = [self openGLContext];
   assert(context != nil);
   int const swapInterval = 1;
@@ -48,7 +47,6 @@
                                           repeats:YES];
   // NSEventTrackingRunLoopMode?
   [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
-  [pool release];
 }
 
 - (BOOL)acceptsFirstResponder {
@@ -66,7 +64,6 @@
 
 - (void)drawRect:(NSRect)rect {
   (void)rect;
-  NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
   NSOpenGLContext* context = [self openGLContext];
   assert(context != nil);
   //[context makeCurrentContext];
@@ -75,7 +72,6 @@
   //[context clearDrawable];
   // drawing
   [context flushBuffer];
-  [pool release];
 }
 
 - (void)mouseDown:(NSEvent*)theEvent {
@@ -101,9 +97,8 @@ ebiten_graphics_detail_initialize_opengl(ebiten::frames::frame& frame,
     NSOpenGLPFADepthSize, 32,
     nil,
   };
-  NSOpenGLPixelFormat* format = [[[NSOpenGLPixelFormat alloc]
-                                   initWithAttributes:attributes]
-                                  autorelease];
+  NSOpenGLPixelFormat* format = [[NSOpenGLPixelFormat alloc]
+                                  initWithAttributes:attributes];
   EbitenOpenGLView* glView = [[EbitenOpenGLView alloc]
                                initWithFrame:rect
                                  pixelFormat:format
