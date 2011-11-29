@@ -6,8 +6,9 @@
 
 #include <cstddef>
 
-@interface EbitenWindowController : NSObject<NSWindowDelegate>
+@interface EbitenWindow : NSWindow<NSWindowDelegate>
 
+- (id)initWithSize:(NSSize)size;
 - (void)alertDidEnd:(NSAlert*)alert
          returnCode:(NSInteger)returnCode
         contextInfo:(void*)contextInfo;
@@ -15,7 +16,29 @@
 
 @end
 
-@implementation EbitenWindowController
+@implementation EbitenWindow
+
+- (id)initWithSize:(NSSize)size {
+  [NSApplication sharedApplication];
+  // initialize
+  NSRect contentRect = NSMakeRect(0, 0, size.width, size.height);
+  NSUInteger const style = (NSTitledWindowMask | NSClosableWindowMask |
+                            NSMiniaturizableWindowMask);
+  NSRect windowRect = [NSWindow frameRectForContentRect:contentRect
+                                              styleMask:style];
+  NSScreen* screen = [[NSScreen screens] objectAtIndex:0];
+  NSSize screenSize = [screen visibleFrame].size;
+  contentRect.origin = NSMakePoint((screenSize.width - windowRect.size.width) / 2,
+                                   (screenSize.height - windowRect.size.height) / 2);
+  self = [super initWithContentRect:contentRect
+                          styleMask:style
+                            backing:NSBackingStoreBuffered defer:YES];
+  assert(self != nil);
+  [self setReleasedWhenClosed:YES];
+  [self setDelegate:self];
+  [self setDocumentEdited:YES];
+  return self;
+}
 
 - (BOOL)windowShouldClose:(id)sender {
   if ([sender isDocumentEdited]) {
@@ -41,43 +64,6 @@
   if (returnCode == NSAlertDefaultReturn) {
     [NSApp terminate:self];
   }
-}
-
-@end
-
-@interface EbitenWindow : NSWindow {
-@private
-  EbitenWindowController* controller_;
-}
-
-- (id)initWithSize:(NSSize)size;
-
-@end
-
-@implementation EbitenWindow
-
-- (id)initWithSize:(NSSize)size {
-  [NSApplication sharedApplication];
-  // initialize
-  NSRect contentRect = NSMakeRect(0, 0, size.width, size.height);
-  NSUInteger const style = (NSTitledWindowMask | NSClosableWindowMask |
-                            NSMiniaturizableWindowMask);
-  NSRect windowRect = [NSWindow frameRectForContentRect:contentRect
-                                              styleMask:style];
-  NSScreen* screen = [[NSScreen screens] objectAtIndex:0];
-  NSSize screenSize = [screen visibleFrame].size;
-  contentRect.origin = NSMakePoint((screenSize.width - windowRect.size.width) / 2,
-                                   (screenSize.height - windowRect.size.height) / 2);
-  self = [super initWithContentRect:contentRect
-                          styleMask:style
-                            backing:NSBackingStoreBuffered defer:YES];
-  assert(self != nil);
-  [self setReleasedWhenClosed:YES];
-  EbitenWindowController* controller = [[EbitenWindowController alloc] init];
-  self->controller_ = controller; // TODO: fix this dirty hack!
-  [self setDelegate:controller];
-  [self setDocumentEdited:YES];
-  return self;
 }
 
 @end
