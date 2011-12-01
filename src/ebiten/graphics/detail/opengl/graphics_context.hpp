@@ -85,6 +85,7 @@ public:
     ::glBegin(GL_QUADS);
     // TODO: replace float to short?
     // http://objective-audio.jp/2009/07/ngmoco-opengl.html
+    // 選べるようにするといいかも
     float const texture_width  = texture.texture_width();
     float const texture_height = texture.texture_height();
     for (auto const& dr : drawing_regions) {

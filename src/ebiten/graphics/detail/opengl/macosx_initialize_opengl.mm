@@ -93,6 +93,7 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
 - (void)dealloc
 {
   CVDisplayLinkRelease(displayLink_);
+  // Do not call [super dealloc] because of ARC.
 }
 
 - (BOOL)acceptsFirstResponder {

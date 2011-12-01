@@ -58,10 +58,12 @@ public:
   }
   void
   update(int frame_count) {
+    // update 中に draw が実行されても困る
+    // draw は描画時だけ実行されれば良い
     ebiten::graphics::drawing_region& dr =
       this->sprites_.at(0).drawing_region_at(0);
-    dr.set_dst_x(dr.dst_x() + 0.01);
-    if (frame_count % 600 == 0) {
+    dr.set_dst_x(dr.dst_x() + 0.01 * 10);
+    if (frame_count % 60 == 0) {
       std::cout << "foo!" << std::endl;
     }
   }

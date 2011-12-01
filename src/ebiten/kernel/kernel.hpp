@@ -12,6 +12,7 @@
 #include "ebiten/timers/timer.hpp"
 #include <algorithm>
 #include <functional>
+// TODO: Replace with std::thread
 #include <pthread.h>
 
 namespace ebiten {
@@ -87,7 +88,6 @@ run(Game& game,
   pthread_t logic_thread;
   ::pthread_create(&logic_thread, 0, logic_func_wrapper::invoke, &logic);
   detail::run_application(frame);
-  //game_terminated.store(true);
   //::pthread_join(logic_thread, 0);
 }
 
