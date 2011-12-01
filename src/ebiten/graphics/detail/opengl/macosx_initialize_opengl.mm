@@ -49,8 +49,7 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
                           CVTimeStamp const* outputTime,
                           CVOptionFlags flagsIn,
                           CVOptionFlags* flagsOut,
-                          void* displayLinkContext)
-{
+                          void* displayLinkContext) {
   (void)displayLink;
   (void)now;
   (void)flagsIn;
@@ -60,8 +59,7 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
   return result;
 }
 
-- (void)prepareOpenGL
-{
+- (void)prepareOpenGL {
   NSOpenGLContext* openGLContext = [self openGLContext];
   assert(openGLContext != nil);
   GLint const swapInterval = 1;
@@ -77,8 +75,7 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
   CVDisplayLinkStart(displayLink_);
 }
 
-- (CVReturn)getFrameForTime:(CVTimeStamp const*)outputTime
-{
+- (CVReturn)getFrameForTime:(CVTimeStamp const*)outputTime {
   (void)outputTime;
   NSOpenGLContext* context = [self openGLContext];
   assert(context != nil);
@@ -90,8 +87,7 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
   return kCVReturnSuccess;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
   CVDisplayLinkRelease(displayLink_);
   // Do not call [super dealloc] because of ARC.
 }
