@@ -12,8 +12,7 @@
 #include "ebiten/timers/timer.hpp"
 #include <algorithm>
 #include <functional>
-// TODO: Replace with std::thread
-#include <pthread.h>
+#include <thread>
 
 namespace ebiten {
 namespace kernel {
@@ -25,26 +24,14 @@ run(Game& game,
     std::size_t screen_height,
     std::size_t fps,
     std::size_t screen_scale) {
-  class lock {
-  public:
-    lock(pthread_mutex_t& mutex)
-      : mutex_(mutex) {
-      ::pthread_mutex_lock(&this->mutex_);
-    }
-    ~lock() {
-      ::pthread_mutex_unlock(&this->mutex_);
-    }
-  private:
-    pthread_mutex_t& mutex_;
-  };
-  pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+  std::mutex mutex;
 
   struct draw_func {
     static void
-    invoke(pthread_mutex_t& mutex,
+    invoke(std::mutex& mutex,
            Game const& game,
            graphics::device& device) {
-      lock l(mutex);
+      std::lock_guard<std::mutex> lock(mutex);
       game.draw(device.graphics_context());
     }
   };
@@ -61,12 +48,12 @@ run(Game& game,
   // start the logic loop
   struct logic_func {
     static void
-    invoke(std::size_t fps, pthread_mutex_t& mutex, Game& game) {
+    invoke(std::size_t fps, /*pthread_mutex_t&*/ std::mutex& mutex, Game& game) {
       int frame_count = 0;
       timers::timer timer(fps);
       for (;;) {
         timer.wait_frame();
-        lock l(mutex);
+        std::lock_guard<std::mutex> lock(mutex);
         game.update(frame_count);
         ++frame_count;
       }
@@ -85,10 +72,8 @@ run(Game& game,
       return nullptr;
     }
   };
-  pthread_t logic_thread;
-  ::pthread_create(&logic_thread, 0, logic_func_wrapper::invoke, &logic);
+  std::thread logic_thread(logic_func_wrapper::invoke, &logic);
   detail::run_application(frame);
-  //::pthread_join(logic_thread, 0);
 }
 
 }
