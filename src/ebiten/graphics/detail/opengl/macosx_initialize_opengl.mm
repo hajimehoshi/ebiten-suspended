@@ -22,7 +22,7 @@
 - (id)initWithFrame:(NSRect)frame
         pixelFormat:(NSOpenGLPixelFormat*)format
        updatingFunc:(std::function<void()> const&)updatingFunc;
-- (CVReturn)getFrameForTime:(const CVTimeStamp*)outputTime;
+- (CVReturn)getFrameForTime:(CVTimeStamp const*)outputTime;
 - (BOOL)acceptsFirstResponder;
 - (BOOL)becomeFirstResponder;
 - (void)mouseDown:(NSEvent*)theEvent;
@@ -68,14 +68,16 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
   [openGLContext setValues:&swapInterval
               forParameter:NSOpenGLCPSwapInterval]; 
   CVDisplayLinkCreateWithActiveCGDisplays(&displayLink_);
-  CVDisplayLinkSetOutputCallback(displayLink_, &EbitenDisplayLinkCallback, (__bridge void*)self);
+  CVDisplayLinkSetOutputCallback(displayLink_,
+                                 &EbitenDisplayLinkCallback,
+                                 (__bridge void*)self);
   CGLContextObj cglContext = (CGLContextObj)[openGLContext CGLContextObj];
   CGLPixelFormatObj cglPixelFormat = (CGLPixelFormatObj)[[self pixelFormat] CGLPixelFormatObj];
   CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext(displayLink_, cglContext, cglPixelFormat);
   CVDisplayLinkStart(displayLink_);
 }
 
-- (CVReturn)getFrameForTime:(const CVTimeStamp*)outputTime
+- (CVReturn)getFrameForTime:(CVTimeStamp const*)outputTime
 {
   (void)outputTime;
   NSOpenGLContext* context = [self openGLContext];
