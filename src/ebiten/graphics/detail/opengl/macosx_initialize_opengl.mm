@@ -82,10 +82,7 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
   assert(context != nil);
   [context makeCurrentContext];
   CGLLockContext((CGLContextObj)[context CGLContextObj]);
-  //[context makeCurrentContext];
-  //[context update]; ?
   self->updatingFunc_();
-  //[context clearDrawable];
   [context flushBuffer];
   CGLUnlockContext((CGLContextObj)[context CGLContextObj]);
   return kCVReturnSuccess;
