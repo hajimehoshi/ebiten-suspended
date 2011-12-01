@@ -1,23 +1,30 @@
 #ifndef EBITEN_GRAPHICS_DETAIL_OPENGL_MACOSX_INITIALIZE_OPENGL_MM
 #define EBITEN_GRAPHICS_DETAIL_OPENGL_MACOSX_INITIALIZE_OPENGL_MM
 
+/*
+ * Reference:
+ *   http://developer.apple.com/library/mac/#qa/qa1385/_index.html
+ *   http://www.alecjacobson.com/weblog/?p=2185
+ */
+
 #import <Cocoa/Cocoa.h>
+#import <QuartzCore/QuartzCore.h>
 
 #include "ebiten/frames/frame.hpp"
 #include <functional>
 
 @interface EbitenOpenGLView : NSOpenGLView {
 @private
+  CVDisplayLinkRef displayLink_;
   std::function<void()> updatingFunc_;
 }
 
 - (id)initWithFrame:(NSRect)frame
         pixelFormat:(NSOpenGLPixelFormat*)format
        updatingFunc:(std::function<void()> const&)updatingFunc;
+- (CVReturn)getFrameForTime:(const CVTimeStamp*)outputTime;
 - (BOOL)acceptsFirstResponder;
 - (BOOL)becomeFirstResponder;
-- (void)animationTimer:(NSTimer*)timer;
-- (void)drawRect:(NSRect)rect;
 - (void)mouseDown:(NSEvent*)theEvent;
 - (void)keyDown:(NSEvent*)theEvent;
 
@@ -36,18 +43,57 @@
   return self;
 }
 
-- (void)prepareOpenGL {
+static CVReturn
+EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
+                          CVTimeStamp const* now,
+                          CVTimeStamp const* outputTime,
+                          CVOptionFlags flagsIn,
+                          CVOptionFlags* flagsOut,
+                          void* displayLinkContext)
+{
+  (void)displayLink;
+  (void)now;
+  (void)flagsIn;
+  (void)flagsOut;
+  EbitenOpenGLView* view = (__bridge EbitenOpenGLView*)displayLinkContext;
+  CVReturn const result = [view getFrameForTime:outputTime];
+  return result;
+}
+
+- (void)prepareOpenGL
+{
+  NSOpenGLContext* openGLContext = [self openGLContext];
+  assert(openGLContext != nil);
+  GLint const swapInterval = 1;
+  [openGLContext setValues:&swapInterval
+              forParameter:NSOpenGLCPSwapInterval]; 
+  CVDisplayLinkCreateWithActiveCGDisplays(&displayLink_);
+  CVDisplayLinkSetOutputCallback(displayLink_, &EbitenDisplayLinkCallback, (__bridge void*)self);
+  CGLContextObj cglContext = (CGLContextObj)[openGLContext CGLContextObj];
+  CGLPixelFormatObj cglPixelFormat = (CGLPixelFormatObj)[[self pixelFormat] CGLPixelFormatObj];
+  CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext(displayLink_, cglContext, cglPixelFormat);
+  CVDisplayLinkStart(displayLink_);
+}
+
+- (CVReturn)getFrameForTime:(const CVTimeStamp*)outputTime
+{
+  (void)outputTime;
   NSOpenGLContext* context = [self openGLContext];
   assert(context != nil);
-  int const swapInterval = 1;
-  [context setValues:&swapInterval forParameter:NSOpenGLCPSwapInterval];
-  NSTimer* timer = [NSTimer timerWithTimeInterval:0
-                                           target:self
-                                         selector:@selector(animationTimer:)
-                                         userInfo:nil
-                                          repeats:YES];
-  // NSEventTrackingRunLoopMode?
-  [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSDefaultRunLoopMode];
+  [context makeCurrentContext];
+  CGLLockContext((CGLContextObj)[context CGLContextObj]);
+  //[context makeCurrentContext];
+  //[context update]; ?
+  self->updatingFunc_();
+  //[context clearDrawable];
+  [context flushBuffer];
+  CGLUnlockContext((CGLContextObj)[context CGLContextObj]);
+  return kCVReturnSuccess;
+}
+
+- (void)dealloc
+{
+  CVDisplayLinkRelease(displayLink_);
 }
 
 - (BOOL)acceptsFirstResponder {
@@ -56,23 +102,6 @@
 
 - (BOOL)becomeFirstResponder {
   return YES;
-}
-
-- (void)animationTimer:(NSTimer*)timer {
-  (void)timer;
-  [self setNeedsDisplay:YES];
-}
-
-- (void)drawRect:(NSRect)rect {
-  (void)rect;
-  NSOpenGLContext* context = [self openGLContext];
-  assert(context != nil);
-  //[context makeCurrentContext];
-  //[context update]; ?
-  self->updatingFunc_();
-  //[context clearDrawable];
-  // drawing
-  [context flushBuffer];
 }
 
 - (void)mouseDown:(NSEvent*)theEvent {
