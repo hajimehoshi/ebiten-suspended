@@ -62,12 +62,11 @@ public:
     // draw は描画時だけ実行されれば良い
     ebiten::graphics::drawing_region& dr =
       this->sprites_.at(0).drawing_region_at(0);
-    dr.set_dst_x(dr.dst_x() + 0.01 * 10);
-    if (frame_count % 60 == 0) {
-      std::cout << "foo!" << std::endl;
+    dr.set_dst_x(32 + 0.1 * (frame_count % 2400));
+    if (frame_count % 600 == 0) {
+      std::cout << frame_count << std::endl;
     }
   }
-  //sprites_type const&
   void
   draw(ebiten::graphics::device::graphics_context_type& gc) const {
     for (auto const& s : this->sprites_) {
