@@ -48,13 +48,15 @@ run(Game& game,
   // start the logic loop
   struct logic_func {
     static void
-    invoke(std::size_t fps, /*pthread_mutex_t&*/ std::mutex& mutex, Game& game) {
+    invoke(std::size_t fps, std::mutex& mutex, Game& game) {
       int frame_count = 0;
       timers::timer timer(fps);
       for (;;) {
         timer.wait_frame();
-        std::lock_guard<std::mutex> lock(mutex);
-        game.update(frame_count);
+        {
+          std::lock_guard<std::mutex> lock(mutex);
+          game.update(frame_count);
+        }
         ++frame_count;
       }
     }

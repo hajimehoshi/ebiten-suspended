@@ -36,8 +36,8 @@ public:
       s.drawing_region_at(2).set_dst_y(32);
       s.drawing_region_at(3).set_dst_x(132);
       s.drawing_region_at(3).set_dst_y(132);
-      /*s.color_matrix().set_element<0, 0>(0);
-        s.color_matrix().set_element<0, 3>(0);*/
+      s.color_matrix().set_element<0, 0>(0);
+      s.color_matrix().set_element<0, 3>(0);
     }
     {
       this->sprites_.push_back(new sprite_type(*this->texture_, 1));

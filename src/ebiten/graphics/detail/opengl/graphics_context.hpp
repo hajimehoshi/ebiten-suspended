@@ -12,7 +12,6 @@
 #include <algorithm>
 #include <cassert>
 #include <iostream>
-#include <type_traits>
 
 namespace ebiten {
 namespace graphics {
