@@ -12,9 +12,9 @@ You need:
 - Xcode 4.2
 - Boost
 
-Do 'make' command to create ebiten.app.
+Do 'make' command to create ebiten.app (a kind of a sample).
 
 
 * License
 
-Read LEGAL file.
+Read the file LEGAL.
