@@ -26,36 +26,18 @@ public:
     std::string path2([path UTF8String]);
     this->texture_ = tf.from_file(path2);
     typedef ebiten::graphics::drawing_region dr;
-    {
-      this->sprites_.emplace_back();
-      sprite& s = this->sprites_.at(this->sprites_.size() - 1);
-      s.drawing_region = dr(0, 0, 32, 32, 32, 32);
-    }
-    {
-      this->sprites_.emplace_back();
-      sprite& s = this->sprites_.at(this->sprites_.size() - 1);
-      s.drawing_region = dr(0, 0, 32, 132, 32, 32);
-    }
-    {
-      this->sprites_.emplace_back();
-      sprite& s = this->sprites_.at(this->sprites_.size() - 1);
-      s.drawing_region = dr(0, 0, 132, 32, 32, 32);
-    }
-    {
-      this->sprites_.emplace_back();
-      sprite& s = this->sprites_.at(this->sprites_.size() - 1);
-      s.drawing_region = dr(0, 0, 132, 132, 32, 32);
-    }
-    {
-      this->sprites_.emplace_back();
-      sprite& s = this->sprites_.at(this->sprites_.size() - 1);
-      s.drawing_region = dr(0, 0, 32, 32, 32, 32);
-    }
-    {
-      this->sprites_.emplace_back();
-      sprite& s = this->sprites_.at(this->sprites_.size() - 1);
-      s.drawing_region = dr(0, 0, 64, 32, 32, 32);
-    }
+    this->sprites_.emplace_back();
+    this->sprites_.emplace_back();
+    this->sprites_.emplace_back();
+    this->sprites_.emplace_back();
+    this->sprites_.emplace_back();
+    this->sprites_.emplace_back();
+    this->sprites_.at(0).drawing_region = dr(0, 0, 32, 32, 32, 32);
+    this->sprites_.at(1).drawing_region = dr(0, 0, 32, 132, 32, 32);
+    this->sprites_.at(2).drawing_region = dr(0, 0, 132, 32, 32, 32);
+    this->sprites_.at(3).drawing_region = dr(0, 0, 132, 132, 32, 32);
+    this->sprites_.at(4).drawing_region = dr(0, 0, 32, 32, 32, 32);
+    this->sprites_.at(5).drawing_region = dr(0, 0, 64, 32, 32, 32);
   }
   void
   update(int frame_count) {
