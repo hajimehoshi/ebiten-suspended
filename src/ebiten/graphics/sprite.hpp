@@ -5,12 +5,12 @@
 #include "ebiten/graphics/drawing_region.hpp"
 #include "ebiten/graphics/geometry_matrix.hpp"
 #include "ebiten/graphics/texture.hpp"
-#include "ebiten/util/noncopyable.hpp"
+#include "ebiten/noncopyable.hpp"
 
 namespace ebiten {
 namespace graphics {
 
-class sprite : private ebiten::util::noncopyable {
+class sprite : private noncopyable {
 private:
   texture const& texture_;
   typedef std::vector<drawing_region> drawing_regions_type;

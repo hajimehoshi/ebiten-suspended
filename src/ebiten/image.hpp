@@ -1,13 +1,12 @@
-#ifndef EBITEN_UTIL_IMAGE_HPP
-#define EBITEN_UTIL_IMAGE_HPP
+#ifndef EBITEN_IMAGE_HPP
+#define EBITEN_IMAGE_HPP
 
+#include "ebiten/noncopyable.hpp"
 #include <vector>
-#include "ebiten/util/noncopyable.hpp"
 
 namespace ebiten {
-namespace util {
 
-class image : private ebiten::util::noncopyable {
+class image : private noncopyable {
 private:
   std::size_t width_;
   std::size_t height_;
@@ -41,7 +40,6 @@ public:
   }
 };
 
-}
 }
 
 #endif

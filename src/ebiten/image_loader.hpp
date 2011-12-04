@@ -1,5 +1,5 @@
-#ifndef EBITEN_UTIL_IMAGE_LOADER_HPP
-#define EBITEN_UTIL_IMAGE_LOADER_HPP
+#ifndef EBITEN_IMAGE_LOADER_HPP
+#define EBITEN_IMAGE_LOADER_HPP
 
 // backport for old libpng
 #define png_infopp_NULL (png_infopp)0
@@ -9,7 +9,6 @@
 #include <boost/gil/extension/io/png_io.hpp>
 
 namespace ebiten {
-namespace util {
 
 struct png_image_loader_t {
 public:
@@ -35,14 +34,12 @@ public:
 } png_image_loader = {};
 
 }
-}
 
 #ifdef EBITEN_TEST
 
-#include "ebiten/util/image.hpp"
+#include "ebiten/image.hpp"
 
 namespace ebiten {
-namespace util {
 
 BOOST_AUTO_TEST_CASE(image_loader_png_image_loader) {
   image img(png_image_loader, "test.png");
@@ -50,7 +47,6 @@ BOOST_AUTO_TEST_CASE(image_loader_png_image_loader) {
   BOOST_CHECK_EQUAL(32u, img.height());
 }
 
-}
 }
 
 #endif

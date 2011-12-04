@@ -1,8 +1,7 @@
-#ifndef EBITEN_UTIL_NONCOPYABLE_HPP
-#define EBITEN_UTIL_NONCOPYABLE_HPP
+#ifndef EBITEN_NONCOPYABLE_HPP
+#define EBITEN_NONCOPYABLE_HPP
 
 namespace ebiten {
-namespace util {
 
 namespace avoid_adl {
 
@@ -19,7 +18,6 @@ private:
 
 typedef avoid_adl::noncopyable noncopyable;
 
-}
 }
 
 #endif

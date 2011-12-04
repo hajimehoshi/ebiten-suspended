@@ -3,9 +3,9 @@
 
 #include "ebiten/graphics/texture.hpp"
 #include "ebiten/graphics/detail/opengl/device.hpp"
-#include "ebiten/util/image.hpp"
-#include "ebiten/util/image_loader.hpp"
-#include "ebiten/util/noncopyable.hpp"
+#include "ebiten/image.hpp"
+#include "ebiten/image_loader.hpp"
+#include "ebiten/noncopyable.hpp"
 #include <OpenGL/gl.h>
 #include <cassert>
 
@@ -30,7 +30,7 @@ clp2(uint64_t x) {
   return x + 1;
 }
 
-class texture_factory : private ebiten::util::noncopyable {
+class texture_factory : private noncopyable {
   friend class device;
 private:
   texture_factory() {
@@ -38,7 +38,7 @@ private:
 public:
   std::unique_ptr<graphics::texture const>
   from_file(std::string const& filename) {
-    util::image image(util::png_image_loader, filename);
+    image image(png_image_loader, filename);
     std::size_t const width  = image.width();
     std::size_t const height = image.height();
     assert(width  == clp2(width));

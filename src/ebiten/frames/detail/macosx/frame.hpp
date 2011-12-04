@@ -2,7 +2,6 @@
 #define EBITEN_FRAMES_DETAIL_MACOSX_FRAME_HPP
 
 #include "ebiten/frames/detail/macosx/frame.mm"
-#include "ebiten/util/noncopyable.hpp"
 #include <cstddef>
 
 namespace ebiten {

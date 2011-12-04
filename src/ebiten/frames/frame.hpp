@@ -7,12 +7,14 @@
 #include "ebiten/frames/detail/macosx/frame.hpp"
 #endif
 
+#include "ebiten/noncopyable.hpp"
+
 namespace ebiten {
 namespace frames {
 
 typedef detail::native_frame_type native_frame_type;
 
-class frame : private ebiten::util::noncopyable {
+class frame : private noncopyable {
 private:
   std::size_t const width_;
   std::size_t const height_;
