@@ -17,19 +17,13 @@ private:
   texture_id const id_;
   std::size_t const width_;
   std::size_t const height_;
-  std::size_t const texture_width_;
-  std::size_t const texture_height_;
 public:
   texture(texture_id const& id_,
           std::size_t width_,
-          std::size_t height_,
-          std::size_t texture_width_,
-          std::size_t texture_height_)
+          std::size_t height_)
     : id_(id_),
       width_(width_),
-      height_(height_),
-      texture_width_(texture_width_),
-      texture_height_(texture_height_) {
+      height_(height_) {
   }
   texture_id
   id() const {
@@ -42,14 +36,6 @@ public:
   std::size_t
   height() const {
     return this->height_;
-  }
-  std::size_t
-  texture_width() const {
-    return this->texture_width_;
-  }
-  std::size_t
-  texture_height() const {
-    return this->texture_height_;
   }
 };
 

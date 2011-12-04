@@ -50,6 +50,7 @@ public:
                                 GL_TEXTURE_2D,
                                 this->offscreen_texture_->id(),
                                 0);
+    // TODO: Is that correct?
     if (::glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT) != GL_FRAMEBUFFER_COMPLETE_EXT) {
       throw std::runtime_error("framebuffer is not supported completely");
     }
@@ -57,10 +58,10 @@ public:
   }
   void
   update() {
-    float const offscreen_width  = static_cast<float>(this->offscreen_texture_->width());
-    float const offscreen_height = static_cast<float>(this->offscreen_texture_->height());
-    float const offscreen_tu     = offscreen_width  / this->offscreen_texture_->texture_width();
-    float const offscreen_tv     = offscreen_height / this->offscreen_texture_->texture_height();
+    float const offscreen_width  = static_cast<float>(this->screen_width_);
+    float const offscreen_height = static_cast<float>(this->screen_height_);
+    float const offscreen_tu     = offscreen_width  / this->offscreen_texture_->width();
+    float const offscreen_tv     = offscreen_height / this->offscreen_texture_->height();
     float const offscreen_vertex[4][3] = {{0,               0,                0},
                                           {offscreen_width, 0,                0},
                                           {offscreen_width, offscreen_height, 0},

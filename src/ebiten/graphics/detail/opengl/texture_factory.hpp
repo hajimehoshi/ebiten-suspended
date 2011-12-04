@@ -63,8 +63,6 @@ public:
     typedef std::unique_ptr<graphics::texture const> p;
     return p(new graphics::texture(texture_id,
                                    width,
-                                   height,
-                                   width,
                                    height));
   }
   std::unique_ptr<graphics::texture const>
@@ -90,8 +88,6 @@ public:
     ::glBindTexture(GL_TEXTURE_2D, 0);
     typedef std::unique_ptr<graphics::texture const> p;
     return p(new graphics::texture(texture_id,
-                                   width,
-                                   height,
                                    texture_width,
                                    texture_height));
   }
