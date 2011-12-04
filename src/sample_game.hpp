@@ -3,7 +3,6 @@
 
 #include "ebiten/ebiten.hpp"
 #include <cstdlib>
-#include <deque>
 #include <iostream>
 
 class sprite {
@@ -14,7 +13,9 @@ public:
 class sample_game : private ebiten::noncopyable {
 private:
   typedef std::vector<sprite> sprites_type;
-  std::unique_ptr<ebiten::graphics::texture const> texture_;
+  ebiten::graphics::texture_id texture_id_;
+  std::size_t texture_width_;
+  std::size_t texture_height_;
   sprites_type sprites_;
 public:
   sample_game() {
@@ -24,7 +25,10 @@ public:
     NSBundle* bundle = [NSBundle mainBundle];
     NSString* path = [bundle pathForResource:@"test.png" ofType:nil];
     std::string path2([path UTF8String]);
-    this->texture_ = tf.from_file(path2);
+    auto t = tf.from_file(path2);
+    this->texture_id_     = t.id();
+    this->texture_width_  = t.width();
+    this->texture_height_ = t.height();
     typedef ebiten::graphics::drawing_region dr;
     this->sprites_.emplace_back();
     this->sprites_.emplace_back();
@@ -52,14 +56,13 @@ public:
   }
   void
   draw(ebiten::graphics::device::graphics_context_type& gc) const {
-    gc.set_texture(texture_->id(),
-                   texture_->width(),
-                   texture_->height());
+    gc.set_texture(this->texture_id_,
+                   this->texture_width_,
+                   this->texture_height_);
+    /*auto mat = ebiten::graphics::geometry_matrix(1, 0, 0, 1, 32, 32);
+      gc.set_geometry_matrix(mat);*/
     for (auto const& s : this->sprites_) {
       //gc.set_color_matrix(s.color_matrix);
-      /*for (auto const& dr : s.drawing_regions) {
-        gc.draw(dr);
-        }*/
       gc.draw(s.drawing_region);
     }
   }

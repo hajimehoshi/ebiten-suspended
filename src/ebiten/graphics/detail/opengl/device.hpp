@@ -26,7 +26,9 @@ private:
   std::function<void(device&)> draw_func_;
   graphics_context_type graphics_context_;
   texture_factory_type texture_factory_;
-  std::unique_ptr<texture const> offscreen_texture_;
+  texture_id offscreen_texture_id_;
+  std::size_t offscreen_texture_width_;
+  std::size_t offscreen_texture_height_;
   GLuint offscreen_framebuffer_;
 public:
   device(std::size_t screen_width,
@@ -41,14 +43,17 @@ public:
       graphics_context_(),
       texture_factory_() {
     initialize_opengl(frame, std::bind(&device::update, this));
-    this->offscreen_texture_ = texture_factory().create(screen_width, screen_height);
+    texture t = texture_factory().create(screen_width, screen_height);
+    this->offscreen_texture_id_     = t.id();
+    this->offscreen_texture_width_  = t.width();
+    this->offscreen_texture_height_ = t.height();
     ::glGenFramebuffersEXT(1, &this->offscreen_framebuffer_);
     assert(this->offscreen_framebuffer_);
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->offscreen_framebuffer_);
     ::glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,
                                 GL_COLOR_ATTACHMENT0_EXT,
                                 GL_TEXTURE_2D,
-                                this->offscreen_texture_->id(),
+                                this->offscreen_texture_id_,
                                 0);
     // TODO: Is that correct?
     if (::glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT) != GL_FRAMEBUFFER_COMPLETE_EXT) {
@@ -60,8 +65,8 @@ public:
   update() {
     float const offscreen_width  = static_cast<float>(this->screen_width_);
     float const offscreen_height = static_cast<float>(this->screen_height_);
-    float const offscreen_tu     = offscreen_width  / this->offscreen_texture_->width();
-    float const offscreen_tv     = offscreen_height / this->offscreen_texture_->height();
+    float const offscreen_tu     = offscreen_width  / this->offscreen_texture_width_;
+    float const offscreen_tv     = offscreen_height / this->offscreen_texture_height_;
     float const offscreen_vertex[4][3] = {{0,               0,                0},
                                           {offscreen_width, 0,                0},
                                           {offscreen_width, offscreen_height, 0},
@@ -103,7 +108,7 @@ public:
               0, 1);
     ::glMatrixMode(GL_MODELVIEW);
     ::glLoadMatrixf(offscreen_geo);
-    ::glBindTexture(GL_TEXTURE_2D, this->offscreen_texture_->id());
+    ::glBindTexture(GL_TEXTURE_2D, this->offscreen_texture_id_);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     {

@@ -36,7 +36,7 @@ private:
   texture_factory() {
   }
 public:
-  std::unique_ptr<graphics::texture const>
+  graphics::texture
   from_file(std::string const& filename) {
     image image(png_image_loader, filename);
     std::size_t const width  = image.width();
@@ -60,12 +60,9 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     ::glBindTexture(GL_TEXTURE_2D, 0);
-    typedef std::unique_ptr<graphics::texture const> p;
-    return p(new graphics::texture(texture_id,
-                                   width,
-                                   height));
+    return graphics::texture(texture_id, width, height);
   }
-  std::unique_ptr<graphics::texture const>
+  graphics::texture
   create(std::size_t width, std::size_t height) {
     std::size_t const texture_width  = clp2(width);
     std::size_t const texture_height = clp2(height);
@@ -87,9 +84,7 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     ::glBindTexture(GL_TEXTURE_2D, 0);
     typedef std::unique_ptr<graphics::texture const> p;
-    return p(new graphics::texture(texture_id,
-                                   texture_width,
-                                   texture_height));
+    return graphics::texture(texture_id, texture_width, texture_height);
   }
 };
 
