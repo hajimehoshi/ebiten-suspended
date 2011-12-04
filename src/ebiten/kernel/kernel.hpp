@@ -31,8 +31,11 @@ run(Game& game,
     invoke(std::mutex& mutex,
            Game const& game,
            graphics::device& device) {
-      std::lock_guard<std::mutex> lock(mutex);
-      game.draw(device.graphics_context());
+      
+      {
+        std::lock_guard<std::mutex> lock(mutex);
+        game.draw(device.graphics_context());
+      }
     }
   };
   frames::frame frame(screen_width * screen_scale, screen_height * screen_scale);

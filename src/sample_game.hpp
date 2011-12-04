@@ -71,8 +71,14 @@ public:
   }
   void
   draw(ebiten::graphics::device::graphics_context_type& gc) const {
+    gc.set_texture(texture_->id(),
+                   texture_->texture_width(),
+                   texture_->texture_height());
     for (auto const& s : this->sprites_) {
-      gc.draw(s);
+      gc.set_color_matrix(s.color_matrix());
+      for (auto const& dr : s.drawing_regions()) {
+        gc.draw(dr);
+      }
     }
   }
 };

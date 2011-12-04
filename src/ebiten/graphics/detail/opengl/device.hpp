@@ -81,6 +81,9 @@ public:
     ::glMatrixMode(GL_PROJECTION);
     ::glLoadIdentity();
     ::glOrtho(0, this->screen_width_, 0, this->screen_height_, 0, 1);
+    ::glMatrixMode(GL_MODELVIEW);
+    ::glLoadIdentity();
+    ::glUseProgram(0);
     this->draw_func_(*this);
     ::glFlush();
     ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
