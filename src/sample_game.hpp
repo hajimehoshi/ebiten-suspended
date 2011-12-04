@@ -63,7 +63,7 @@ public:
     // draw は描画時だけ実行されれば良い
     auto& s = this->sprites_.at(0);
     auto& dr = s.drawing_region;
-    dr.set_dst_x(32 + 0.1 * (frame_count % 2400));
+    dr.dst_x = 32 + 0.1 * (frame_count % 2400);
     if (frame_count % 600 == 0) {
       std::cout << frame_count << std::endl;
     }

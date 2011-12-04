@@ -49,14 +49,14 @@ public:
     // 選べるようにするといいかも
     float const texture_width  = current_texture_width;
     float const texture_height = current_texture_height;
-    float const tu1 = dr.src_x()                 / texture_width;
-    float const tu2 = (dr.src_x() + dr.width())  / texture_width;
-    float const tv1 = dr.src_y()                 / texture_height;
-    float const tv2 = (dr.src_y() + dr.height()) / texture_height;
-    float const x1 = dr.dst_x();
-    float const x2 = dr.dst_x() + dr.width();
-    float const y1 = dr.dst_y();
-    float const y2 = dr.dst_y() + dr.height();
+    float const tu1 = dr.src_x                 / texture_width;
+    float const tu2 = (dr.src_x + dr.width)  / texture_width;
+    float const tv1 = dr.src_y                 / texture_height;
+    float const tv2 = (dr.src_y + dr.height) / texture_height;
+    float const x1 = dr.dst_x;
+    float const x2 = dr.dst_x + dr.width;
+    float const y1 = dr.dst_y;
+    float const y2 = dr.dst_y + dr.height;
     float const vertex[4][3] = {{x1, y1},
                                 {x2, y1},
                                 {x2, y2},
