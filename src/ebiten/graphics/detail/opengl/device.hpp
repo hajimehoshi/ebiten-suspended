@@ -5,7 +5,6 @@
 #include "ebiten/graphics/detail/opengl/graphics_context.hpp"
 #include "ebiten/graphics/detail/opengl/initialize_opengl.hpp"
 #include "ebiten/graphics/detail/opengl/texture_factory.hpp"
-#include "ebiten/graphics/sprite.hpp"
 #include "ebiten/noncopyable.hpp"
 #include <OpenGL/gl.h>
 #include <cassert>

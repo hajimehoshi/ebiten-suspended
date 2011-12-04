@@ -8,7 +8,6 @@
 #endif
 
 #include "ebiten/graphics/device.hpp"
-#include "ebiten/graphics/sprite.hpp"
 #include "ebiten/timers/timer.hpp"
 #include <algorithm>
 #include <functional>
