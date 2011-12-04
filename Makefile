@@ -24,7 +24,9 @@ test: $(PROG)_test
 
 $(PROG).app: $(PROG)
 	mkdir -p $@/Contents/MacOS
-	cp $< $@/Contents/MacOS/
+	cp $< $@/Contents/MacOS
+	mkdir -p $@/Contents/Resources
+	cp test.png $@/Contents/Resources
 
 $(PROG): $(SRC)
 	$(CXX) \

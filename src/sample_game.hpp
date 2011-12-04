@@ -19,8 +19,10 @@ public:
   }
   void
   initialize(ebiten::graphics::device::texture_factory_type& tf) {
-    // TODO: カレントディレクトリについてどうにかする
-    this->texture_ = tf.from_file("/Users/hajime/ebiten/test.png");
+    NSBundle* bundle = [NSBundle mainBundle];
+    NSString* path = [bundle pathForResource:@"test.png" ofType:nil];
+    std::string path2([path UTF8String]);
+    this->texture_ = tf.from_file(path2);
     {
       this->sprites_.push_back(new sprite_type(*this->texture_, 4));
       sprite_type& s = this->sprites_.at(0);
