@@ -27,7 +27,7 @@ private:
   graphics_context_type graphics_context_;
   texture_factory_type texture_factory_;
   std::unique_ptr<texture const> offscreen_texture_;
-  GLuint framebuffer_;
+  GLuint offscreen_framebuffer_;
 public:
   device(std::size_t screen_width,
          std::size_t screen_height,
@@ -42,9 +42,9 @@ public:
       texture_factory_() {
     initialize_opengl(frame, std::bind(&device::update, this));
     this->offscreen_texture_ = texture_factory().create(screen_width, screen_height);
-    ::glGenFramebuffersEXT(1, &this->framebuffer_);
-    assert(this->framebuffer_);
-    ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->framebuffer_);
+    ::glGenFramebuffersEXT(1, &this->offscreen_framebuffer_);
+    assert(this->offscreen_framebuffer_);
+    ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->offscreen_framebuffer_);
     ::glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,
                                 GL_COLOR_ATTACHMENT0_EXT,
                                 GL_TEXTURE_2D,
@@ -70,7 +70,7 @@ public:
                                    0,              screen_scale_f, 0, 0,
                                    0,              0,              1, 0,
                                    0,              0,              0, 1};
-    ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->framebuffer_);
+    ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->offscreen_framebuffer_);
     ::glClearColor(0, 0, 0, 1);
     ::glClear(GL_COLOR_BUFFER_BIT);
     ::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
