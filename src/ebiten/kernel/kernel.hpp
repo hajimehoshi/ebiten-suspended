@@ -11,6 +11,7 @@
 #include "ebiten/timers/timer.hpp"
 #include <algorithm>
 #include <functional>
+#include <future>
 #include <thread>
 
 namespace ebiten {
@@ -67,17 +68,9 @@ run(Game& game,
                                           fps,
                                           std::ref(mutex),
                                           std::ref(game));
-  struct logic_func_wrapper {
-    static void*
-    invoke(void* func_p) {
-      typedef std::function<void()> func_type;
-      func_type& func = *(reinterpret_cast<func_type*>(func_p));
-      func();
-      return nullptr;
-    }
-  };
-  std::thread logic_thread(logic_func_wrapper::invoke, &logic);
+  std::future<void> result = std::async(logic);
   detail::run_application(frame);
+  result.get();
 }
 
 }
