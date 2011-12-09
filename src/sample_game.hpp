@@ -29,6 +29,7 @@ public:
       this->sprites_.emplace_back();
     }
   }
+  // TODO: Replace 'device::foo_type' with 'foo'
   void
   update(ebiten::graphics::device::texture_factory_type& tf) {
     reenter(c) {
@@ -78,6 +79,7 @@ public:
   void
   draw(ebiten::graphics::device::graphics_context_type& gc) const {
     if (this->texture_id_ == 0) {
+      // loading...
       return;
     }
     gc.set_texture(this->texture_id_,
