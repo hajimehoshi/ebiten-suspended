@@ -9,7 +9,6 @@
 
 #include "ebiten/graphics/device.hpp"
 #include "ebiten/timers/timer.hpp"
-#include <algorithm>
 #include <functional>
 
 namespace ebiten {
