@@ -6,6 +6,8 @@
 #include <cstdlib>
 #include <iostream>
 
+#include "yield.hpp"
+
 class sprite {
 public:
   ebiten::graphics::drawing_region drawing_region;
@@ -18,6 +20,8 @@ private:
   std::size_t texture_width_;
   std::size_t texture_height_;
   sprites_type sprites_;
+  coroutine c;
+  int i;
 public:
   sample_game() {
   }
@@ -28,6 +32,7 @@ public:
     std::string path2([path UTF8String]);
     // TODO: Load Async
     ebiten::image image(ebiten::png_image_loader, path2);
+    // TODO: Texture Atlas
     auto t = tf.from_image(image);
     this->texture_id_     = t.id();
     this->texture_width_  = t.width();
@@ -47,14 +52,22 @@ public:
     this->sprites_.at(5).drawing_region = dr(0, 0, 64, 32, 32, 32);
   }
   void
-  update(int frame_count) {
+  update(int) {
     // update 中に draw が実行されても困る
     // draw は描画時だけ実行されれば良い
     auto& s = this->sprites_.at(0);
     auto& dr = s.drawing_region;
-    dr.dst_x = 32 + 0.1 * (frame_count % 2400);
-    if (frame_count % 600 == 0) {
-      std::cout << frame_count << std::endl;
+    reenter(c) {
+      for (;;) {
+        for (i = 0; i < 2400; i++) {
+          dr.dst_x = 32 + 0.1 * (i % 2400);
+          yield();
+        }
+        for (i = 2400; 0 <= i; i--) {
+          dr.dst_x = 32 + 0.1 * (i % 2400);
+          yield();
+        }
+      }
     }
   }
   void
@@ -70,5 +83,7 @@ public:
     }
   }
 };
+
+#include "unyield.hpp"
 
 #endif

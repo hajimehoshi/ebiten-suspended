@@ -1,0 +1,2 @@
+#undef reenter
+#undef yield
