@@ -46,7 +46,7 @@ run(Game& game,
                           std::bind(update_func::invoke,
                                     fps,
                                     std::ref(game),
-                                    std::ref(device)),
+                                    std::placeholders::_1),
                           std::bind(draw_func::invoke,
                                     std::cref(game),
                                     std::placeholders::_1));
