@@ -4,7 +4,6 @@
 #include "ebiten/graphics/texture.hpp"
 #include "ebiten/graphics/detail/opengl/device.hpp"
 #include "ebiten/image.hpp"
-#include "ebiten/image_loader.hpp"
 #include "ebiten/noncopyable.hpp"
 #include <OpenGL/gl.h>
 #include <cassert>
@@ -37,8 +36,7 @@ private:
   }
 public:
   graphics::texture
-  from_file(std::string const& filename) {
-    image image(png_image_loader, filename);
+  from_image(image const& image) {
     std::size_t const width  = image.width();
     std::size_t const height = image.height();
     assert(width  == clp2(width));

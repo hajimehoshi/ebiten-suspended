@@ -2,6 +2,7 @@
 #define SAMPLE_GAME_HPP
 
 #include "ebiten/ebiten.hpp"
+#include "ebiten/image_loader.hpp"
 #include <cstdlib>
 #include <iostream>
 
@@ -25,7 +26,9 @@ public:
     NSBundle* bundle = [NSBundle mainBundle];
     NSString* path = [bundle pathForResource:@"test.png" ofType:nil];
     std::string path2([path UTF8String]);
-    auto t = tf.from_file(path2);
+    // TODO: Load Async
+    ebiten::image image(ebiten::png_image_loader, path2);
+    auto t = tf.from_image(image);
     this->texture_id_     = t.id();
     this->texture_width_  = t.width();
     this->texture_height_ = t.height();
