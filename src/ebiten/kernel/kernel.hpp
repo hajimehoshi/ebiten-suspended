@@ -11,8 +11,6 @@
 #include "ebiten/timers/timer.hpp"
 #include <algorithm>
 #include <functional>
-#include <future>
-#include <thread>
 
 namespace ebiten {
 namespace kernel {
@@ -24,18 +22,21 @@ run(Game& game,
     std::size_t screen_height,
     std::size_t fps,
     std::size_t screen_scale) {
-  std::mutex mutex;
-
+  struct update_func {
+    static void
+    invoke(std::size_t fps,
+           Game& game,
+           graphics::device& device) {
+      (void)fps;
+      // TODO: Adjust FPS
+      game.update(device.texture_factory());
+    }
+  };
   struct draw_func {
     static void
-    invoke(std::mutex& mutex,
-           Game const& game,
+    invoke(Game const& game,
            graphics::device& device) {
-      
-      {
-        std::lock_guard<std::mutex> lock(mutex);
-        game.draw(device.graphics_context());
-      }
+      game.draw(device.graphics_context());
     }
   };
   frames::frame frame(screen_width * screen_scale, screen_height * screen_scale);
@@ -43,34 +44,14 @@ run(Game& game,
                           screen_height,
                           screen_scale,
                           frame,
-                          std::bind(&draw_func::invoke,
-                                    std::ref(mutex),
+                          std::bind(update_func::invoke,
+                                    fps,
+                                    std::ref(game),
+                                    std::ref(device)),
+                          std::bind(draw_func::invoke,
                                     std::cref(game),
                                     std::placeholders::_1));
-  game.initialize(device.texture_factory());
-  // start the logic loop
-  struct logic_func {
-    static void
-    invoke(std::size_t fps, std::mutex& mutex, Game& game) {
-      int frame_count = 0;
-      timers::timer timer(fps);
-      for (;;) {
-        timer.wait_frame();
-        {
-          std::lock_guard<std::mutex> lock(mutex);
-          game.update(frame_count);
-        }
-        ++frame_count;
-      }
-    }
-  };
-  std::function<void()> logic = std::bind(logic_func::invoke,
-                                          fps,
-                                          std::ref(mutex),
-                                          std::ref(game));
-  std::future<void> result = std::async(logic);
   detail::run_application(frame);
-  result.get();
 }
 
 }

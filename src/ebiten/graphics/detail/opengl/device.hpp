@@ -23,6 +23,7 @@ private:
   std::size_t const screen_width_;
   std::size_t const screen_height_;
   std::size_t const screen_scale_;
+  std::function<void(device&)> update_func_;
   std::function<void(device&)> draw_func_;
   graphics_context_type graphics_context_;
   texture_factory_type texture_factory_;
@@ -35,10 +36,12 @@ public:
          std::size_t screen_height,
          std::size_t screen_scale,
          frames::frame& frame,
+         std::function<void(device&)> const& update_func,
          std::function<void(device&)> const& draw_func)
     : screen_width_(screen_width),
       screen_height_(screen_height),
       screen_scale_(screen_scale),
+      update_func_(update_func),
       draw_func_(draw_func),
       graphics_context_(),
       texture_factory_() {
@@ -63,6 +66,7 @@ public:
   }
   void
   update() {
+    this->update_func_(*this);
     float const offscreen_width  = static_cast<float>(this->screen_width_);
     float const offscreen_height = static_cast<float>(this->screen_height_);
     float const offscreen_tu     = offscreen_width  / this->offscreen_texture_width_;
