@@ -29,9 +29,8 @@ public:
       this->sprites_.emplace_back();
     }
   }
-  // TODO: Replace 'device::foo_type' with 'foo'
   void
-  update(ebiten::graphics::device::texture_factory_type& tf) {
+  update(ebiten::graphics::texture_factory& tf) {
     reenter(c) {
       {
         NSBundle* bundle = [NSBundle mainBundle];
@@ -77,7 +76,7 @@ public:
     }
   }
   void
-  draw(ebiten::graphics::device::graphics_context_type& gc) const {
+  draw(ebiten::graphics::graphics_context& gc) const {
     if (this->texture_id_ == 0) {
       // loading...
       return;

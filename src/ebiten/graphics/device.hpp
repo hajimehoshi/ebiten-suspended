@@ -10,7 +10,9 @@
 namespace ebiten {
 namespace graphics {
 
-typedef detail::device device;
+typedef detail::device           device;
+typedef detail::graphics_context graphics_context;
+typedef detail::texture_factory  texture_factory;
 
 }
 }

@@ -15,18 +15,14 @@ namespace graphics {
 namespace detail {
 
 class device : private noncopyable {
-public:
-  typedef frames::frame frame_type;
-  typedef detail::texture_factory texture_factory_type;
-  typedef detail::graphics_context graphics_context_type;
 private:
   std::size_t const screen_width_;
   std::size_t const screen_height_;
   std::size_t const screen_scale_;
   std::function<void(device&)> update_func_;
   std::function<void(device&)> draw_func_;
-  graphics_context_type graphics_context_;
-  texture_factory_type texture_factory_;
+  graphics_context graphics_context_;
+  texture_factory texture_factory_;
   texture_id offscreen_texture_id_;
   std::size_t offscreen_texture_width_;
   std::size_t offscreen_texture_height_;
@@ -130,11 +126,11 @@ public:
     ::glBindTexture(GL_TEXTURE_2D, 0);
     ::glFlush();
   }
-  graphics_context_type&
+  graphics_context&
   graphics_context() {
     return this->graphics_context_;
   }
-  texture_factory_type&
+  texture_factory&
   texture_factory() {
     return this->texture_factory_;
   }
