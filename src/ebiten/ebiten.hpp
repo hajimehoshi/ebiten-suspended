@@ -7,6 +7,7 @@
 #include <boost/test/unit_test.hpp>
 #endif
 
+#include "ebiten/version.hpp"
 #include "ebiten/kernels/kernel.hpp"
 
 #endif
