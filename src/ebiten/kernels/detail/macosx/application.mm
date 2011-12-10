@@ -54,7 +54,7 @@
 
 @end
 
-void
+static void
 ebiten_kernels_detail_run_application(ebiten::frames::frame& frame) {
   @autoreleasepool {
     NSWindow* window = frame.native_frame();

@@ -8,7 +8,7 @@ namespace ebiten {
 namespace kernels {
 namespace detail {
 
-void
+static void
 run_application(frames::frame& frame) {
   ::ebiten_kernels_detail_run_application(frame);
 }

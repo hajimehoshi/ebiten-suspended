@@ -7,7 +7,7 @@ namespace ebiten {
 namespace graphics {
 namespace detail {
 
-void
+static void
 initialize_opengl(frames::frame& frame,
                   std::function<void()> const updating_func) {
   ::ebiten_graphics_detail_initialize_opengl(frame, updating_func);

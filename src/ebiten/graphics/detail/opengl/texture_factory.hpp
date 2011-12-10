@@ -17,7 +17,7 @@ static_assert(sizeof(uint64_t) == sizeof(std::size_t),
               "sizeof(uint64_t) must equal to sizeof(std::size_t)");
 
 // TODO: implements for 32bit machine
-uint64_t
+static uint64_t
 clp2(uint64_t x) {
   x -= 1;
   x |= (x >> 1);

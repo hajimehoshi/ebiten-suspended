@@ -68,7 +68,7 @@
 
 @end
 
-NSWindow*
+static NSWindow*
 ebiten_frame_detail_generate_native_frame(std::size_t width, std::size_t height) {
   EbitenWindow* window = [[EbitenWindow alloc]
                            initWithSize:NSMakeSize(width, height)];

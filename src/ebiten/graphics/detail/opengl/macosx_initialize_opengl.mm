@@ -112,7 +112,7 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
 
 @end
 
-void
+static void
 ebiten_graphics_detail_initialize_opengl(ebiten::frames::frame& frame,
                                          std::function<void()> const updating_func) {
   NSRect const rect = NSMakeRect(0, 0, frame.width(), frame.height());
