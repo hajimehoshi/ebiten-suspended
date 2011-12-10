@@ -1,5 +1,5 @@
-#ifndef EBITEN_KERNEL_DETAIL_MACOSX_APPLICATION_MM
-#define EBITEN_KERNEL_DETAIL_MACOSX_APPLICATION_MM
+#ifndef EBITEN_KERNELS_DETAIL_MACOSX_APPLICATION_MM
+#define EBITEN_KERNELS_DETAIL_MACOSX_APPLICATION_MM
 
 #import <Cocoa/Cocoa.h>
 #undef check // solve a confliction with Boost
@@ -55,7 +55,7 @@
 @end
 
 void
-ebiten_kernel_detail_run_application(ebiten::frames::frame& frame) {
+ebiten_kernels_detail_run_application(ebiten::frames::frame& frame) {
   @autoreleasepool {
     NSWindow* window = frame.native_frame();
     assert(window != nil);
