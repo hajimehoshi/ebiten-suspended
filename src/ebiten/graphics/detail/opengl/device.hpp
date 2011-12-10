@@ -46,19 +46,19 @@ public:
     this->offscreen_texture_id_     = t.id();
     this->offscreen_texture_width_  = t.width();
     this->offscreen_texture_height_ = t.height();
-    ::glGenFramebuffersEXT(1, &this->offscreen_framebuffer_);
+    ::glGenFramebuffers(1, &this->offscreen_framebuffer_);
     assert(this->offscreen_framebuffer_);
-    ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->offscreen_framebuffer_);
-    ::glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT,
-                                GL_COLOR_ATTACHMENT0_EXT,
-                                GL_TEXTURE_2D,
-                                this->offscreen_texture_id_,
-                                0);
+    ::glBindFramebuffer(GL_FRAMEBUFFER, this->offscreen_framebuffer_);
+    ::glFramebufferTexture2D(GL_FRAMEBUFFER,
+                             GL_COLOR_ATTACHMENT0,
+                             GL_TEXTURE_2D,
+                             this->offscreen_texture_id_,
+                             0);
     // TODO: Is that correct?
-    if (::glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT) != GL_FRAMEBUFFER_COMPLETE_EXT) {
+    if (::glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
       throw std::runtime_error("framebuffer is not supported completely");
     }
-    ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+    ::glBindFramebuffer(GL_FRAMEBUFFER, 0);
   }
   void
   update() {
@@ -76,7 +76,7 @@ public:
                                    0,              screen_scale_f, 0, 0,
                                    0,              0,              1, 0,
                                    0,              0,              0, 1};
-    ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, this->offscreen_framebuffer_);
+    ::glBindFramebuffer(GL_FRAMEBUFFER, this->offscreen_framebuffer_);
     ::glClearColor(0, 0, 0, 1);
     ::glClear(GL_COLOR_BUFFER_BIT);
     ::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -91,7 +91,7 @@ public:
     ::glUseProgram(0);
     this->draw_func_(*this);
     ::glFlush();
-    ::glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+    ::glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     // render the offscreen to the screen
     ::glClearColor(0, 0, 0, 1);
