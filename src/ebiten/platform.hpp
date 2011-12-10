@@ -7,10 +7,10 @@
 
 #ifdef __APPLE__
 # include <TargetConditionals.h>
-# if TARGET_OS_MAC
-#  define EBITEN_MACOSX
-# elif TARGET_OS_IPHONE
+# if TARGET_OS_IPHONE
 #  define EBITEN_IOS
+# else
+#  define EBITEN_MACOSX
 # endif
 #endif
 

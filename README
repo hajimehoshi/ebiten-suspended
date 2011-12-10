@@ -11,8 +11,23 @@ Ebiten - A 2D Game Library -
 You need:
 - Xcode 4.2
 - Boost
+- Cocoa.framework (Mac OS X)
+- OpenGL.framework (Mac OS X)
+- QuartzCore.framework (Mac OS X)
 
 Do 'make' command to create ebiten.app (a kind of a sample).
+
+
+* Use on the Xcode (4.2)
+
+- Add frameworks to 'Linked Frameworks and Libraries' (Mac OS X only)
+  - OpenGL.framework
+  - QuartzCore.framework
+- Configure 'Build Setting'
+  - 'User Header Search Path': /path/to/ebiten/src
+  - 'C++ Language Dialect':    C++0x [-std=c++0x]
+  - 'C++ Standard Library':    libc++ (LLVM C++ standard library with C++'0x support)
+- Renamed main.m to main.mm
 
 
 * License
