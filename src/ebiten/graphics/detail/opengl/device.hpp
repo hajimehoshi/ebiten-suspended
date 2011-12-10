@@ -82,7 +82,9 @@ public:
     ::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     ::glEnable(GL_TEXTURE_2D);
     ::glEnable(GL_BLEND);
-    ::glViewport(0, 0, this->screen_width_, this->screen_height_);
+    ::glViewport(0, 0,
+                 static_cast<GLsizei>(this->screen_width_),
+                 static_cast<GLsizei>(this->screen_height_));
     ::glMatrixMode(GL_PROJECTION);
     ::glLoadIdentity();
     ::glOrtho(0, this->screen_width_, 0, this->screen_height_, 0, 1);
@@ -99,8 +101,8 @@ public:
     ::glEnable(GL_TEXTURE_2D);
     ::glDisable(GL_BLEND);
     ::glViewport(0, 0,
-                 this->screen_width_ * this->screen_scale_,
-                 this->screen_height_ * this->screen_scale_);
+                 static_cast<GLsizei>(this->screen_width_ * this->screen_scale_),
+                 static_cast<GLsizei>(this->screen_height_ * this->screen_scale_));
     ::glMatrixMode(GL_PROJECTION);
     ::glLoadIdentity();
     ::glOrtho(0, this->screen_width_ * this->screen_scale_,

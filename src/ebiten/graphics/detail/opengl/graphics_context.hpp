@@ -181,10 +181,11 @@ private:
     ::glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &log_size);
     if (log_size) {
       int length = 0;
-      // TODO: 動的確保のほうがよい?
+      // TODO: Use malloc?
       std::array<char, 1024> buffer;
       // TODO: バッファ確認
-      ::glGetShaderInfoLog(shader, buffer.size(), &length, buffer.data());
+      ::glGetShaderInfoLog(shader, static_cast<GLsizei>(buffer.size()),
+                           &length, buffer.data());
       std::cerr << buffer.data() << std::endl;
     }
   }

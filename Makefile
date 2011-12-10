@@ -2,7 +2,7 @@ PROG:=ebiten
 CXX:=clang++
 
 CXXFLAGS:= \
-	-W -Wall -Wextra -Weffc++ \
+	-W -Wall -Wextra -Wshorten-64-to-32 -pedantic \
 	-fPIC \
 	-I/usr/X11/include -Isrc \
 	-x objective-c++ -std=c++0x -stdlib=libc++ \
