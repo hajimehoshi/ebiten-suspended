@@ -6,7 +6,12 @@
 #endif
 
 #ifdef __APPLE__
-#define EBITEN_MACOSX
+# include <TargetConditionals.h>
+# if TARGET_OS_MAC
+#  define EBITEN_MACOSX
+# elif TARGET_OS_IPHONE
+#  define EBITEN_IOS
+# endif
 #endif
 
 #ifdef __linux__
