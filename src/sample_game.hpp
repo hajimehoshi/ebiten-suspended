@@ -56,19 +56,19 @@ public:
       }
       {
         for (;;) {
-          for (this->i = 0; this->i < 2400; ++this->i) {
+          for (this->i = 0; this->i < 240; ++this->i) {
             {
               auto& s = this->sprites_.at(0);
               auto& dr = s.drawing_region;
-              dr.dst_x = 32 + 0.1 * (this->i % 2400);
+              dr.dst_x = 32 + (this->i % 240);
             }
             yield();
           }
-          for (this->i = 2400; 0 <= this->i; --this->i) {
+          for (this->i = 240 - 1; 0 <= this->i; --this->i) {
             {
               auto& s = this->sprites_.at(0);
               auto& dr = s.drawing_region;
-              dr.dst_x = 32 + 0.1 * (this->i % 2400);
+              dr.dst_x = 32 + (this->i % 240);
             }
             yield();
           }
