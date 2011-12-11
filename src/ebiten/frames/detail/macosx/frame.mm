@@ -16,6 +16,7 @@
 
 @end
 
+#ifndef EBITEN_WITHOUT_OBJC_IMPL
 @implementation EbitenWindow
 
 - (id)initWithSize:(NSSize)size {
@@ -67,6 +68,7 @@
 }
 
 @end
+#endif
 
 static NSWindow*
 ebiten_frame_detail_generate_native_frame(std::size_t width, std::size_t height) {

@@ -31,19 +31,6 @@
 
 @end
 
-@implementation EbitenOpenGLView
-
-- (id)initWithFrame:(NSRect)frame
-        pixelFormat:(NSOpenGLPixelFormat*)format
-       updatingFunc:(std::function<void()> const&)updatingFunc {
-  self = [super initWithFrame:frame pixelFormat:format];
-  if (self != nil) {
-    [self prepareOpenGL];
-    self->updatingFunc_ = updatingFunc;
-  }
-  return self;
-}
-
 static CVReturn
 EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
                           CVTimeStamp const* now,
@@ -57,6 +44,20 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
   (void)flagsOut;
   EbitenOpenGLView* view = (__bridge EbitenOpenGLView*)displayLinkContext;
   return [view getFrameForTime:outputTime];
+}
+
+#ifndef EBITEN_WITHOUT_OBJC_IMPL
+@implementation EbitenOpenGLView
+
+- (id)initWithFrame:(NSRect)frame
+        pixelFormat:(NSOpenGLPixelFormat*)format
+       updatingFunc:(std::function<void()> const&)updatingFunc {
+  self = [super initWithFrame:frame pixelFormat:format];
+  if (self != nil) {
+    [self prepareOpenGL];
+    self->updatingFunc_ = updatingFunc;
+  }
+  return self;
 }
 
 - (void)dealloc {
@@ -118,6 +119,7 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
 }
 
 @end
+#endif
 
 static void
 ebiten_graphics_detail_initialize_opengl(ebiten::frames::frame& frame,

@@ -28,6 +28,9 @@ Do 'make' command to create ebiten.app (a kind of a sample).
   - 'C++ Language Dialect':    C++0x [-std=c++0x]
   - 'C++ Standard Library':    libc++ (LLVM C++ standard library with C++'0x support)
 - Use kernel::start_with_view instead of kernel::main_loop
+- Include 'ebiten/ebiten.hpp' only ONCE in a project.
+- Include 'ebiten/ebiten_without_objc_impl.hpp' if needed.
+(TODO: Add explanations)
 
 
 * License

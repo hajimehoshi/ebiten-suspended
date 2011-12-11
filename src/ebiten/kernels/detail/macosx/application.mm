@@ -17,6 +17,7 @@
 
 @end
 
+#ifndef EBITEN_WITHOUT_OBJC_IMPL
 @implementation EbitenController
 
 - (id)initWithWindow:(NSWindow*)window {
@@ -53,6 +54,7 @@
 }
 
 @end
+#endif
 
 static void
 ebiten_kernels_detail_run_application(ebiten::frames::frame& frame) {
