@@ -56,8 +56,7 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
   (void)flagsIn;
   (void)flagsOut;
   EbitenOpenGLView* view = (__bridge EbitenOpenGLView*)displayLinkContext;
-  CVReturn const result = [view getFrameForTime:outputTime];
-  return result;
+  return [view getFrameForTime:outputTime];
 }
 
 - (void)dealloc {
@@ -83,13 +82,14 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
 
 - (CVReturn)getFrameForTime:(CVTimeStamp const*)outputTime {
   (void)outputTime;
+  if (!self->updatingFunc_) {
+    return kCVReturnSuccess;
+  }
   NSOpenGLContext* context = [self openGLContext];
   assert(context != nil);
   [context makeCurrentContext];
   CGLLockContext((CGLContextObj)[context CGLContextObj]);
-  if (self->updatingFunc_) {
-    self->updatingFunc_();
-  }
+  self->updatingFunc_();
   [context flushBuffer];
   CGLUnlockContext((CGLContextObj)[context CGLContextObj]);
   return kCVReturnSuccess;
