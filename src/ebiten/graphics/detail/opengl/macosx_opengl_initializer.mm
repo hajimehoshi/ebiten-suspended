@@ -1,5 +1,5 @@
-#ifndef EBITEN_GRAPHICS_DETAIL_OPENGL_MACOSX_INITIALIZE_OPENGL_MM
-#define EBITEN_GRAPHICS_DETAIL_OPENGL_MACOSX_INITIALIZE_OPENGL_MM
+#ifndef EBITEN_GRAPHICS_DETAIL_OPENGL_MACOSX_OPENGL_INITIALIZER_MM
+#define EBITEN_GRAPHICS_DETAIL_OPENGL_MACOSX_OPENGL_INITIALIZER_MM
 
 /*
  * Reference:
@@ -23,6 +23,7 @@
         pixelFormat:(NSOpenGLPixelFormat*)format
        updatingFunc:(std::function<void()> const&)updatingFunc;
 - (CVReturn)getFrameForTime:(CVTimeStamp const*)outputTime;
+- (void)setUpdatingFunc:(std::function<void()> const&)updatingFunc;
 - (BOOL)acceptsFirstResponder;
 - (BOOL)becomeFirstResponder;
 - (void)mouseDown:(NSEvent*)theEvent;
@@ -59,6 +60,11 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
   return result;
 }
 
+- (void)dealloc {
+  CVDisplayLinkRelease(displayLink_);
+  // Do not call [super dealloc] because of ARC.
+}
+
 - (void)prepareOpenGL {
   NSOpenGLContext* openGLContext = [self openGLContext];
   assert(openGLContext != nil);
@@ -89,9 +95,8 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
   return kCVReturnSuccess;
 }
 
-- (void)dealloc {
-  CVDisplayLinkRelease(displayLink_);
-  // Do not call [super dealloc] because of ARC.
+- (void)setUpdatingFunc:(std::function<void()> const&)updatingFunc {
+  self->updatingFunc_ = updatingFunc;
 }
 
 - (BOOL)acceptsFirstResponder {
@@ -133,6 +138,12 @@ ebiten_graphics_detail_initialize_opengl(ebiten::frames::frame& frame,
                                 updatingFunc:updating_func];
   [frame.native_frame() setContentView:glView];
   //[window makeFirstResponder:glView];
+}
+
+static void
+ebiten_graphics_detail_initialize_opengl_with_view(EbitenOpenGLView* view,
+                                                   std::function<void()> const updating_func) {
+  [view setUpdatingFunc:updating_func];
 }
 
 #endif

@@ -3,7 +3,7 @@
 
 #include "ebiten/frames/frame.hpp"
 #include "ebiten/graphics/detail/opengl/graphics_context.hpp"
-#include "ebiten/graphics/detail/opengl/initialize_opengl.hpp"
+#include "ebiten/graphics/detail/opengl/opengl_initializer.hpp"
 #include "ebiten/graphics/detail/opengl/texture_factory.hpp"
 #include "ebiten/noncopyable.hpp"
 #include <OpenGL/gl.h>
@@ -38,27 +38,24 @@ public:
       screen_height_(screen_height),
       screen_scale_(screen_scale),
       update_func_(update_func),
-      draw_func_(draw_func),
-      graphics_context_(),
-      texture_factory_() {
-    initialize_opengl(frame, std::bind(&device::update, this));
-    texture t = texture_factory().create(screen_width, screen_height);
-    this->offscreen_texture_id_     = t.id();
-    this->offscreen_texture_width_  = t.width();
-    this->offscreen_texture_height_ = t.height();
-    ::glGenFramebuffers(1, &this->offscreen_framebuffer_);
-    assert(this->offscreen_framebuffer_);
-    ::glBindFramebuffer(GL_FRAMEBUFFER, this->offscreen_framebuffer_);
-    ::glFramebufferTexture2D(GL_FRAMEBUFFER,
-                             GL_COLOR_ATTACHMENT0,
-                             GL_TEXTURE_2D,
-                             this->offscreen_texture_id_,
-                             0);
-    // TODO: Is that correct?
-    if (::glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-      throw std::runtime_error("framebuffer is not supported completely");
-    }
-    ::glBindFramebuffer(GL_FRAMEBUFFER, 0);
+      draw_func_(draw_func) {
+    opengl_initializer::initialize(frame, std::bind(&device::update, this));
+    this->initialize_offscreen();
+  }
+  template<class View>
+  device(std::size_t screen_width,
+         std::size_t screen_height,
+         std::size_t screen_scale,
+         View& view,
+         std::function<void(device&)> const& update_func,
+         std::function<void(device&)> const& draw_func)
+    : screen_width_(screen_width),
+      screen_height_(screen_height),
+      screen_scale_(screen_scale),
+      update_func_(update_func),
+      draw_func_(draw_func) {
+    opengl_initializer::initialize_with_view(view, std::bind(&device::update, this));
+    this->initialize_offscreen();
   }
   void
   update() {
@@ -135,6 +132,28 @@ public:
   texture_factory&
   texture_factory() {
     return this->texture_factory_;
+  }
+private:
+  void
+  initialize_offscreen() {
+    texture t = texture_factory().create(this->screen_width_,
+                                         this->screen_height_);
+    this->offscreen_texture_id_     = t.id();
+    this->offscreen_texture_width_  = t.width();
+    this->offscreen_texture_height_ = t.height();
+    ::glGenFramebuffers(1, &this->offscreen_framebuffer_);
+    assert(this->offscreen_framebuffer_);
+    ::glBindFramebuffer(GL_FRAMEBUFFER, this->offscreen_framebuffer_);
+    ::glFramebufferTexture2D(GL_FRAMEBUFFER,
+                             GL_COLOR_ATTACHMENT0,
+                             GL_TEXTURE_2D,
+                             this->offscreen_texture_id_,
+                             0);
+    // TODO: Is that correct?
+    if (::glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+      throw std::runtime_error("framebuffer is not supported completely");
+    }
+    ::glBindFramebuffer(GL_FRAMEBUFFER, 0);
   }
 };
 
