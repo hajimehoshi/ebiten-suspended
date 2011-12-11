@@ -14,10 +14,18 @@ typedef detail::texture_id texture_id;
 
 class texture {
 private:
-  texture_id const id_;
-  std::size_t const width_;
-  std::size_t const height_;
+  texture_id id_;
+  std::size_t width_;
+  std::size_t height_;
 public:
+  // TODO: Is 0 a magic number?
+  texture()
+    : id_(0),
+      width_(0),
+      height_(0) {
+  }
+  texture(texture const&) = default;
+  texture& operator=(texture const&) = default;
   texture(texture_id const& id_,
           std::size_t width_,
           std::size_t height_)
@@ -37,10 +45,12 @@ public:
   height() const {
     return this->height_;
   }
+  operator bool() const {
+    return this->id_ != 0;
+  }
 };
 
 }
 }
 
 #endif
-

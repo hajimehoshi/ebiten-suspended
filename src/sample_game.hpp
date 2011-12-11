@@ -16,15 +16,12 @@ public:
 class sample_game : private ebiten::noncopyable {
 private:
   typedef std::vector<sprite> sprites_type;
-  ebiten::graphics::texture_id texture_id_;
-  std::size_t texture_width_;
-  std::size_t texture_height_;
+  ebiten::graphics::texture texture_;
   sprites_type sprites_;
   coroutine c;
   int i;
 public:
-  sample_game()
-    : texture_id_(0) {
+  sample_game() {
     for (int i = 0; i < 6; ++i) {
       this->sprites_.emplace_back();
     }
@@ -39,10 +36,7 @@ public:
         // TODO: Load Async
         ebiten::image image(ebiten::png_image_loader, path2);
         // TODO: Texture Atlas
-        auto t = tf.from_image(image);
-        this->texture_id_     = t.id();
-        this->texture_width_  = t.width();
-        this->texture_height_ = t.height();
+        this->texture_ = tf.from_image(image);
       }
       {
         typedef ebiten::graphics::drawing_region dr;
@@ -77,13 +71,11 @@ public:
   }
   void
   draw(ebiten::graphics::graphics_context& gc) const {
-    if (this->texture_id_ == 0) {
+    if (!this->texture_) {
       // loading...
       return;
     }
-    gc.set_texture(this->texture_id_,
-                   this->texture_width_,
-                   this->texture_height_);
+    gc.set_texture(this->texture_);
     /*auto mat = ebiten::graphics::geometry_matrix(1, 0, 0, 1, 32, 32);
       gc.set_geometry_matrix(mat);*/
     for (auto const& s : this->sprites_) {

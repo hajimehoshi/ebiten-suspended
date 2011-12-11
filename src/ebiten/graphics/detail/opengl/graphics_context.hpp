@@ -21,34 +21,33 @@ class graphics_context : private noncopyable {
   friend class device;
 private:
   GLuint shader_program;
-  texture_id current_texture_id;
-  std::size_t current_texture_width;
-  std::size_t current_texture_height;
+  texture current_texture;
 private:
   graphics_context()
     : shader_program(0) {
   }
 public:
   void
-  set_texture(texture_id texture_id,
-              std::size_t texture_width,
-              std::size_t texture_height) {
-    this->current_texture_id     = texture_id;
-    this->current_texture_width  = texture_width;
-    this->current_texture_height = texture_height;
-    ::glBindTexture(GL_TEXTURE_2D, texture_id);
+  set_texture(texture const& texture) {
+    this->current_texture = texture;
+    ::glBindTexture(GL_TEXTURE_2D, texture.id());
   }
   void
   reset_texture() {
+    this->current_texture = ebiten::graphics::texture();
     ::glBindTexture(GL_TEXTURE_2D, 0);
   }
   void
   draw(drawing_region const& dr) {
+    // TODO: Throwing an exception?
+    if (!this->current_texture) {
+      return;
+    }
     // TODO: replace float to short?
     // http://objective-audio.jp/2009/07/ngmoco-opengl.html
     // 選べるようにするといいかも
-    float const texture_width  = current_texture_width;
-    float const texture_height = current_texture_height;
+    float const texture_width  = this->current_texture.width();
+    float const texture_height = this->current_texture.height();
     float const tu1 = dr.src_x                 / texture_width;
     float const tu2 = (dr.src_x + dr.width)  / texture_width;
     float const tv1 = dr.src_y                 / texture_height;
