@@ -53,4 +53,6 @@ public:
 }
 }
 
+// TODO: implement operator= (with nullptr), swap, and so on?
+
 #endif
