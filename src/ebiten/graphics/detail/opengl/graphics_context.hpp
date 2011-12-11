@@ -180,13 +180,14 @@ private:
     int log_size = 0;
     ::glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &log_size);
     if (log_size) {
-      int length = 0;
-      // TODO: Use malloc?
-      std::array<char, 1024> buffer;
-      // TODO: バッファ確認
-      ::glGetShaderInfoLog(shader, static_cast<GLsizei>(buffer.size()),
-                           &length, buffer.data());
-      std::cerr << buffer.data() << std::endl;
+      int length;
+      std::unique_ptr<char[]> buffer(new char[log_size]);
+      std::fill_n(buffer.get(), log_size, 0);
+      ::glGetShaderInfoLog(shader,
+                           log_size,
+                           &length,
+                           buffer.get());
+      throw std::runtime_error(std::string("shader error: ") + buffer.get());
     }
   }
   // TODO: show_program_log
