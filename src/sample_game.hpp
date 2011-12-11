@@ -75,6 +75,7 @@ public:
       // loading...
       return;
     }
+    gc.draw_rect(0, 0, 100, 100, 51, 102, 153, 204);
     gc.set_texture(this->texture_);
     /*auto mat = ebiten::graphics::geometry_matrix(1, 0, 0, 1, 32, 32);
       gc.set_geometry_matrix(mat);*/

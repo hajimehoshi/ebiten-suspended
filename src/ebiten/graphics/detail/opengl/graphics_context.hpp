@@ -27,6 +27,19 @@ private:
     : shader_program(0) {
   }
 public:
+  // Only for debugging?
+  void
+  draw_rect(std::size_t x, std::size_t y, std::size_t width, std::size_t height,
+            uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) {
+    ::glColor4ub(red, green, blue, alpha);
+    ::glBegin(GL_QUADS);
+    ::glVertex2f(x, y);
+    ::glVertex2f(x + width, y);
+    ::glVertex2f(x + width, y + height);
+    ::glVertex2f(x, y + height);
+    ::glEnd();
+    ::glColor4f(1, 1, 1, 1);
+  }
   void
   set_texture(texture const& texture) {
     this->current_texture = texture;
