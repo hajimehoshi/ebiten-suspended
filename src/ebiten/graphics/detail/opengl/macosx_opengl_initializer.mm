@@ -42,8 +42,10 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
   (void)now;
   (void)flagsIn;
   (void)flagsOut;
-  EbitenOpenGLView* view = (__bridge EbitenOpenGLView*)displayLinkContext;
-  return [view getFrameForTime:outputTime];
+  @autoreleasepool {
+    EbitenOpenGLView* view = (__bridge EbitenOpenGLView*)displayLinkContext;
+    return [view getFrameForTime:outputTime];
+  }
 }
 
 #ifndef EBITEN_WITHOUT_OBJC_IMPL
