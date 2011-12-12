@@ -3,7 +3,8 @@
 
 #include "ebiten/platform.hpp"
 
-#ifdef EBITEN_MACOSX
+// TODO: define EBITEN_OPENGL / EBITEN_OPENGLES?
+#if defined(EBITEN_MACOSX) || defined(EBITEN_IOS)
 #include "ebiten/graphics/detail/opengl/texture_id.hpp"
 #endif
 

@@ -4,7 +4,7 @@
 #include "ebiten/platform.hpp"
 
 #ifdef EBITEN_MACOSX
-#include "ebiten/kernels/detail/macosx/application.hpp"
+# include "ebiten/kernels/detail/macosx/application.hpp"
 #endif
 
 #include "ebiten/graphics/device.hpp"
@@ -40,9 +40,11 @@ public:
       fps_(fps),
       before_(timers::timer::now_nsec() * fps) {
   }
+  // TODO: Refactoring
+#ifndef EBITEN_IOS
   void
   main_loop() {
-    frames::frame frame(this->screen_width_ * this->screen_scale_,
+    frames::frame frame(this->screen_width_  * this->screen_scale_,
                         this->screen_height_ * this->screen_scale_);
     this->device_.reset(new graphics::device(this->screen_width_,
                                              this->screen_height_,
@@ -56,6 +58,7 @@ public:
                                                        std::placeholders::_1)));
     detail::run_application(frame);
   }
+#endif
   template<class View>
   void
   start_with_view(View& view) {

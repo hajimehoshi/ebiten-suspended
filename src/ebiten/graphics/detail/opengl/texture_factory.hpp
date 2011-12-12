@@ -5,7 +5,14 @@
 #include "ebiten/graphics/detail/opengl/device.hpp"
 #include "ebiten/image.hpp"
 #include "ebiten/noncopyable.hpp"
-#include <OpenGL/gl.h>
+
+#ifdef EBITEN_MACOSX
+# include <OpenGL/gl.h>
+#endif
+#ifdef EBITEN_IOS
+# import <GLKit/GLKit.h>
+#endif
+
 #include <cassert>
 
 namespace ebiten {

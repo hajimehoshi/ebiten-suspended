@@ -20,9 +20,11 @@ Do 'make' command to create ebiten.app (a kind of a sample).
 
 * Use on the Xcode (4.2)
 
-- Add frameworks to 'Linked Frameworks and Libraries' (Mac OS X only)
-  - OpenGL.framework
-  - QuartzCore.framework
+- Add frameworks to 'Linked Frameworks and Libraries'
+  - OpenGL.framework (Mac OS X)
+  - QuartzCore.framework (Mac OS X)
+  - GLKit.framework (iOS)
+  - OpenGLES.framework (iOS)
 - Configure 'Build Setting'
   - 'User Header Search Path': /path/to/ebiten/src
   - 'C++ Language Dialect':    C++0x [-std=c++0x]

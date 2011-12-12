@@ -1,12 +1,23 @@
 #ifndef EBITEN_GRAPHICS_DETAIL_OPENGL_DEVICE_HPP
 #define EBITEN_GRAPHICS_DETAIL_OPENGL_DEVICE_HPP
 
-#include "ebiten/frames/frame.hpp"
+// TODO: refactoring
+#ifndef EBITEN_IOS
+# include "ebiten/frames/frame.hpp"
+#endif
+
 #include "ebiten/graphics/detail/opengl/graphics_context.hpp"
 #include "ebiten/graphics/detail/opengl/opengl_initializer.hpp"
 #include "ebiten/graphics/detail/opengl/texture_factory.hpp"
 #include "ebiten/noncopyable.hpp"
-#include <OpenGL/gl.h>
+
+#ifdef EBITEN_MACOSX
+# include <OpenGL/gl.h>
+#endif
+#ifdef EBITEN_IOS
+# import <GLKit/GLKit.h>
+#endif
+
 #include <cassert>
 #include <functional>
 
@@ -26,6 +37,7 @@ private:
   texture offscreen_texture_;
   GLuint offscreen_framebuffer_;
 public:
+#ifndef EBITEN_IOS
   device(std::size_t screen_width,
          std::size_t screen_height,
          std::size_t screen_scale,
@@ -39,6 +51,7 @@ public:
       draw_func_(draw_func) {
     opengl_initializer::initialize(frame, std::bind(&device::update, this));
   }
+#endif
   template<class View>
   device(std::size_t screen_width,
          std::size_t screen_height,

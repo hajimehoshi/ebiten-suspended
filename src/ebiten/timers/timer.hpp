@@ -3,8 +3,8 @@
 
 #include "ebiten/platform.hpp"
 
-#ifdef EBITEN_MACOSX
-#include "ebiten/timers/detail/macosx/timer.hpp"
+#if defined(EBITEN_MACOSX) || defined(EBITEN_IOS)
+#include "ebiten/timers/detail/mach/timer.hpp"
 #endif
 
 namespace ebiten {

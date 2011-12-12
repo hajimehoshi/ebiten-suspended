@@ -3,8 +3,8 @@
 
 #include "ebiten/platform.hpp"
 
-#ifdef EBITEN_MACOSX
-#include "ebiten/graphics/detail/opengl/device.hpp"
+#if defined(EBITEN_MACOSX) || defined(EBITEN_IOS)
+# include "ebiten/graphics/detail/opengl/device.hpp"
 #endif
 
 namespace ebiten {

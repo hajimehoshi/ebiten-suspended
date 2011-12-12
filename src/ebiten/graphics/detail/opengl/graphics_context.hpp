@@ -7,7 +7,14 @@
 #include "ebiten/graphics/geometry_matrix.hpp"
 #include "ebiten/graphics/texture.hpp"
 #include "ebiten/noncopyable.hpp"
-#include <OpenGL/gl.h>
+
+#ifdef EBITEN_MACOSX
+# include <OpenGL/gl.h>
+#endif
+#ifdef EBITEN_IOS
+# import <GLKit/GLKit.h>
+#endif
+
 #include <array>
 #include <algorithm>
 #include <cassert>
@@ -32,12 +39,14 @@ public:
   draw_rect(std::size_t x, std::size_t y, std::size_t width, std::size_t height,
             uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) {
     ::glColor4ub(red, green, blue, alpha);
+#ifdef GL_QUADS
     ::glBegin(GL_QUADS);
     ::glVertex2f(x, y);
     ::glVertex2f(x + width, y);
     ::glVertex2f(x + width, y + height);
     ::glVertex2f(x, y + height);
     ::glEnd();
+#endif
     ::glColor4f(1, 1, 1, 1);
   }
   void
@@ -75,6 +84,7 @@ public:
                                 {x1, y2}};
     // TODO: use glDrawArrays?
     // TODO: use glMultiDrawArrays?
+#ifdef GL_QUADS
     ::glBegin(GL_QUADS);
     ::glTexCoord2f(tu1, tv1);
     ::glVertex2fv(vertex[0]);
@@ -85,6 +95,7 @@ public:
     ::glTexCoord2f(tu1, tv2);
     ::glVertex2fv(vertex[3]);
     ::glEnd();
+#endif
   }
   void
   set_geometry_matrix(geometry_matrix const& mat) {
