@@ -54,7 +54,6 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
        updatingFunc:(std::function<void()> const&)updatingFunc {
   self = [super initWithFrame:frame pixelFormat:format];
   if (self != nil) {
-    [self prepareOpenGL];
     self->updatingFunc_ = updatingFunc;
   }
   return self;
