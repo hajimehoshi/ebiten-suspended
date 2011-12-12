@@ -21,6 +21,11 @@
 #include <cassert>
 #include <functional>
 
+// TODO: refactoring
+#ifdef EBITEN_IOS
+# define glOrtho glOrthof
+#endif
+
 namespace ebiten {
 namespace graphics {
 namespace detail {
@@ -75,12 +80,6 @@ public:
     this->update_func_(*this);
     float const offscreen_width  = static_cast<float>(this->screen_width_);
     float const offscreen_height = static_cast<float>(this->screen_height_);
-    float const offscreen_tu     = offscreen_width  / this->offscreen_texture_.width();
-    float const offscreen_tv     = offscreen_height / this->offscreen_texture_.height();
-    float const offscreen_vertex[4][3] = {{0,               0,                0},
-                                          {offscreen_width, 0,                0},
-                                          {offscreen_width, offscreen_height, 0},
-                                          {0,               offscreen_height, 0}};
     float const screen_scale_f = static_cast<float>(this->screen_scale_);
     float const offscreen_geo[] = {screen_scale_f, 0,              0, 0,
                                    0,              screen_scale_f, 0, 0,
@@ -124,16 +123,23 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     {
-      ::glBegin(GL_QUADS);
-      ::glTexCoord2f(0, 0);
-      ::glVertex3fv(offscreen_vertex[0]);
-      ::glTexCoord2f(offscreen_tu, 0);
-      ::glVertex3fv(offscreen_vertex[1]);
-      ::glTexCoord2f(offscreen_tu, offscreen_tv);
-      ::glVertex3fv(offscreen_vertex[2]);
-      ::glTexCoord2f(0, offscreen_tv);
-      ::glVertex3fv(offscreen_vertex[3]);
-      ::glEnd();
+      float const vertex_pointer[] = {0,               0,
+                                      offscreen_width, 0,
+                                      0,               offscreen_height,
+                                      offscreen_width, offscreen_height,};
+      float const offscreen_tu = offscreen_width  / this->offscreen_texture_.width();
+      float const offscreen_tv = offscreen_height / this->offscreen_texture_.height();
+      float tex_coord[] = {0,            0,
+                           offscreen_tu, 0,
+                           0,            offscreen_tv,
+                           offscreen_tu, offscreen_tv,};
+      ::glEnableClientState(GL_VERTEX_ARRAY);
+      ::glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+      ::glVertexPointer(2, GL_FLOAT, 0, vertex_pointer);
+      ::glTexCoordPointer(2, GL_FLOAT, 0, tex_coord);
+      ::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+      ::glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+      ::glDisableClientState(GL_VERTEX_ARRAY);
     }
     ::glBindTexture(GL_TEXTURE_2D, 0);
     ::glFlush();

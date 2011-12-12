@@ -38,15 +38,16 @@ public:
   void
   draw_rect(std::size_t x, std::size_t y, std::size_t width, std::size_t height,
             uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) {
+    float vertex[] = {x,         y,
+                      x + width, y,
+                      x,         y + height,
+                      x + width, y + height,};
     ::glColor4ub(red, green, blue, alpha);
-#ifdef GL_QUADS
-    ::glBegin(GL_QUADS);
-    ::glVertex2f(x, y);
-    ::glVertex2f(x + width, y);
-    ::glVertex2f(x + width, y + height);
-    ::glVertex2f(x, y + height);
-    ::glEnd();
-#endif
+    ::glEnableClientState(GL_VERTEX_ARRAY);
+    ::glVertexPointer(2, GL_FLOAT, 0, vertex);
+    ::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    ::glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    ::glDisableClientState(GL_VERTEX_ARRAY);
     ::glColor4f(1, 1, 1, 1);
   }
   void
@@ -78,24 +79,23 @@ public:
     float const x2 = dr.dst_x + dr.width;
     float const y1 = dr.dst_y;
     float const y2 = dr.dst_y + dr.height;
-    float const vertex[4][3] = {{x1, y1},
-                                {x2, y1},
-                                {x2, y2},
-                                {x1, y2}};
-    // TODO: use glDrawArrays?
+    float const vertex[] = {x1, y1,
+                            x2, y1,
+                            x1, y2,
+                            x2, y2,};
+    float const tex_coord[] = {tu1, tv1,
+                               tu2, tv1,
+                               tu1, tv2,
+                               tu2, tv2,};
     // TODO: use glMultiDrawArrays?
-#ifdef GL_QUADS
-    ::glBegin(GL_QUADS);
-    ::glTexCoord2f(tu1, tv1);
-    ::glVertex2fv(vertex[0]);
-    ::glTexCoord2f(tu2, tv1);
-    ::glVertex2fv(vertex[1]);
-    ::glTexCoord2f(tu2, tv2);
-    ::glVertex2fv(vertex[2]);
-    ::glTexCoord2f(tu1, tv2);
-    ::glVertex2fv(vertex[3]);
-    ::glEnd();
-#endif
+    // I wanna use GL_QUAD, but it is not defined in OpenGL ES.
+    ::glEnableClientState(GL_VERTEX_ARRAY);
+    ::glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    ::glVertexPointer(2, GL_FLOAT, 0, vertex);
+    ::glTexCoordPointer(2, GL_FLOAT, 0, tex_coord);
+    ::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    ::glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    ::glDisableClientState(GL_VERTEX_ARRAY);
   }
   void
   set_geometry_matrix(geometry_matrix const& mat) {
