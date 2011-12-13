@@ -90,36 +90,43 @@ public:
     }
     this->update_func_(*this);
     assert(::glGetError() == GL_NO_ERROR);
-    ::glBindFramebuffer(GL_FRAMEBUFFER, this->offscreen_framebuffer_);
-    assert(::glGetError() == GL_NO_ERROR);
-    ::glClearColor(0, 0, 0, 1);
-    assert(::glGetError() == GL_NO_ERROR);
-    ::glClear(GL_COLOR_BUFFER_BIT);
-    assert(::glGetError() == GL_NO_ERROR);
-    // ::glEnable(GL_TEXTURE_2D); is not valid in OpenGL ES. Why?
-    ::glEnable(GL_BLEND);
-    assert(::glGetError() == GL_NO_ERROR);
-    ::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    assert(::glGetError() == GL_NO_ERROR);
-    ::glViewport(0, 0,
-                 static_cast<GLsizei>(this->screen_width_),
-                 static_cast<GLsizei>(this->screen_height_));
-    assert(::glGetError() == GL_NO_ERROR);
-    ::glMatrixMode(GL_PROJECTION);
-    assert(::glGetError() == GL_NO_ERROR);
-    ::glLoadIdentity();
-    assert(::glGetError() == GL_NO_ERROR);
-    ::glOrtho(0, this->screen_width_, 0, this->screen_height_, 0, 1);
-    assert(::glGetError() == GL_NO_ERROR);
-    ::glMatrixMode(GL_MODELVIEW);
-    ::glLoadIdentity();
-    ::glUseProgram(0);
-    assert(::glGetError() == GL_NO_ERROR);
-    this->draw_func_(*this);
-    ::glFlush();
-    assert(::glGetError() == GL_NO_ERROR);
-    ::glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    assert(::glGetError() == GL_NO_ERROR);
+    {
+      GLint origFramebuffer;
+      ::glGetIntegerv(GL_FRAMEBUFFER_BINDING, &origFramebuffer);
+      assert(::glGetError() == GL_NO_ERROR);
+      ::glBindFramebuffer(GL_FRAMEBUFFER, this->offscreen_framebuffer_);
+      assert(::glGetError() == GL_NO_ERROR);
+      ::glClearColor(0, 0, 0, 1);
+      assert(::glGetError() == GL_NO_ERROR);
+      ::glClear(GL_COLOR_BUFFER_BIT);
+      assert(::glGetError() == GL_NO_ERROR);
+      // ::glEnable(GL_TEXTURE_2D);  is not valid in OpenGL ES. Why?
+      ::glEnable(GL_BLEND);
+      assert(::glGetError() == GL_NO_ERROR);
+      ::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+      assert(::glGetError() == GL_NO_ERROR);
+      ::glViewport(0, 0,
+                   static_cast<GLsizei>(this->screen_width_),
+                   static_cast<GLsizei>(this->screen_height_));
+      assert(::glGetError() == GL_NO_ERROR);
+      ::glMatrixMode(GL_PROJECTION);
+      assert(::glGetError() == GL_NO_ERROR);
+      ::glLoadIdentity();
+      assert(::glGetError() == GL_NO_ERROR);
+      ::glOrtho(0, this->screen_width_, 0, this->screen_height_, 0, 1);
+      assert(::glGetError() == GL_NO_ERROR);
+      ::glMatrixMode(GL_MODELVIEW);
+      assert(::glGetError() == GL_NO_ERROR);
+      ::glLoadIdentity();
+      assert(::glGetError() == GL_NO_ERROR);
+      ::glUseProgram(0);
+      assert(::glGetError() == GL_NO_ERROR);
+      this->draw_func_(*this);
+      ::glFlush();
+      assert(::glGetError() == GL_NO_ERROR);
+      ::glBindFramebuffer(GL_FRAMEBUFFER, origFramebuffer);
+      assert(::glGetError() == GL_NO_ERROR);
+    }
 
     // render the offscreen to the screen
     ::glClearColor(0, 0, 0, 1);
@@ -184,21 +191,22 @@ public:
 private:
   void
   initialize_offscreen() {
-    // TODO: need to lock context
+    // TODO: need to lock context?
     this->offscreen_texture_ = texture_factory().create(this->screen_width_,
                                                         this->screen_height_);
     ::glGenFramebuffers(1, &this->offscreen_framebuffer_);
     assert(this->offscreen_framebuffer_);
-    ::glBindFramebuffer(GL_FRAMEBUFFER, this->offscreen_framebuffer_);
-    assert(::glGetError() == GL_NO_ERROR);
-    ::glFramebufferTexture2D(GL_FRAMEBUFFER,
-                             GL_COLOR_ATTACHMENT0,
-                             GL_TEXTURE_2D,
-                             this->offscreen_texture_.id(),
-                             0);
-    assert(::glGetError() == GL_NO_ERROR);
-    //::glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    //assert(::glGetError() == GL_NO_ERROR);
+    {
+      GLint origFramebuffer;
+      ::glGetIntegerv(GL_FRAMEBUFFER_BINDING, &origFramebuffer);
+      ::glBindFramebuffer(GL_FRAMEBUFFER, this->offscreen_framebuffer_);
+      ::glFramebufferTexture2D(GL_FRAMEBUFFER,
+                               GL_COLOR_ATTACHMENT0,
+                               GL_TEXTURE_2D,
+                               this->offscreen_texture_.id(),
+                               0);
+      ::glBindFramebuffer(GL_FRAMEBUFFER, origFramebuffer);
+    }
     if (::glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
       throw std::runtime_error("framebuffer is not supported completely");
     }
