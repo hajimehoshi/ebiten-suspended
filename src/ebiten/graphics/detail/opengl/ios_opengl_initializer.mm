@@ -25,18 +25,25 @@
   assert(self->eaglContext_);
   GLKView* view = (GLKView*)self.view;
   view.context = self->eaglContext_;
-  //view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
+  // view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
+  /*GLuint viewFramebuffer, viewRenderbuffer;
+  ::glGenFramebuffers(1, &viewFramebuffer);
+  ::glGenRenderbuffers(1, &viewRenderbuffer);
+  ::glBindFramebuffer(GL_FRAMEBUFFER_OES, viewFramebuffer);
+  ::glBindRenderbuffer(GL_RENDERBUFFER_OES, viewRenderbuffer);
+  [self->eaglContext_ renderbufferStorage:GL_RENDERBUFFER
+                             fromDrawable:(CAEAGLLayer*)self.layer];
+  ::glFramebufferRenderbuffer(GL_FRAMEBUFFER_OES,
+                              GL_COLOR_ATTACHMENT0_OES,
+                              GL_RENDERBUFFER_OES,
+                              viewRenderbuffer);*/
 }
 
-- (void)update {
-}
-
-- (void)glkView:(GLKView *)view
+- (void)glkView:(GLKView*)view
      drawInRect:(CGRect)rect {
   if (!self->updatingFunc_) {
     return;
   }
-  [EAGLContext setCurrentContext:self->eaglContext_]; // ?
   self->updatingFunc_();
 }
 

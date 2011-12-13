@@ -68,7 +68,6 @@ public:
     std::size_t const texture_height = clp2(height);
     GLuint texture_id = 0;
     ::glGenTextures(1, &texture_id);
-    assert(texture_id);
     ::glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
     ::glBindTexture(GL_TEXTURE_2D, texture_id);
     ::glTexImage2D(GL_TEXTURE_2D,

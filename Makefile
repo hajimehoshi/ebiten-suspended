@@ -34,7 +34,6 @@ $(PROG): $(SRC)
 		$(LDFLAGS) \
 		-o $@ \
 		-O2 \
-		-DNDEBUG \
 		src/main.cpp
 
 $(PROG)_test: $(SRC)

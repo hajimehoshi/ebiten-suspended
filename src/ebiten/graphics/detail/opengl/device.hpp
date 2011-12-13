@@ -54,6 +54,11 @@ public:
       screen_scale_(screen_scale),
       update_func_(update_func),
       draw_func_(draw_func) {
+    assert(0 < this->screen_width_);
+    assert(0 < this->screen_height_);
+    assert(0 < this->screen_scale_);
+    assert(this->update_func_);
+    assert(this->draw_func_);
     opengl_initializer::initialize(frame, std::bind(&device::update, this));
   }
 #endif
@@ -69,40 +74,52 @@ public:
       screen_scale_(screen_scale),
       update_func_(update_func),
       draw_func_(draw_func) {
+    assert(0 < this->screen_width_);
+    assert(0 < this->screen_height_);
+    assert(0 < this->screen_scale_);
+    assert(this->update_func_);
+    assert(this->draw_func_);
     opengl_initializer::initialize_with_view(view, std::bind(&device::update, this));
   }
   // TODO: destructor
   void
   update() {
+    // TODO: If application is terminated, stop
     if (!this->offscreen_texture_) {
       this->initialize_offscreen();
     }
     this->update_func_(*this);
-    float const offscreen_width  = static_cast<float>(this->screen_width_);
-    float const offscreen_height = static_cast<float>(this->screen_height_);
-    float const screen_scale_f = static_cast<float>(this->screen_scale_);
-    float const offscreen_geo[] = {screen_scale_f, 0,              0, 0,
-                                   0,              screen_scale_f, 0, 0,
-                                   0,              0,              1, 0,
-                                   0,              0,              0, 1};
+    assert(::glGetError() == GL_NO_ERROR);
     ::glBindFramebuffer(GL_FRAMEBUFFER, this->offscreen_framebuffer_);
+    assert(::glGetError() == GL_NO_ERROR);
     ::glClearColor(0, 0, 0, 1);
+    assert(::glGetError() == GL_NO_ERROR);
     ::glClear(GL_COLOR_BUFFER_BIT);
-    ::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    ::glEnable(GL_TEXTURE_2D);
+    assert(::glGetError() == GL_NO_ERROR);
+    // ::glEnable(GL_TEXTURE_2D); is not valid in OpenGL ES. Why?
     ::glEnable(GL_BLEND);
+    assert(::glGetError() == GL_NO_ERROR);
+    ::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    assert(::glGetError() == GL_NO_ERROR);
     ::glViewport(0, 0,
                  static_cast<GLsizei>(this->screen_width_),
                  static_cast<GLsizei>(this->screen_height_));
+    assert(::glGetError() == GL_NO_ERROR);
     ::glMatrixMode(GL_PROJECTION);
+    assert(::glGetError() == GL_NO_ERROR);
     ::glLoadIdentity();
+    assert(::glGetError() == GL_NO_ERROR);
     ::glOrtho(0, this->screen_width_, 0, this->screen_height_, 0, 1);
+    assert(::glGetError() == GL_NO_ERROR);
     ::glMatrixMode(GL_MODELVIEW);
     ::glLoadIdentity();
     ::glUseProgram(0);
+    assert(::glGetError() == GL_NO_ERROR);
     this->draw_func_(*this);
     ::glFlush();
+    assert(::glGetError() == GL_NO_ERROR);
     ::glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    assert(::glGetError() == GL_NO_ERROR);
 
     // render the offscreen to the screen
     ::glClearColor(0, 0, 0, 1);
@@ -117,12 +134,23 @@ public:
     ::glOrtho(0, this->screen_width_ * this->screen_scale_,
               this->screen_height_ * this->screen_scale_, 0,
               0, 1);
+    assert(::glGetError() == GL_NO_ERROR);
     ::glMatrixMode(GL_MODELVIEW);
-    ::glLoadMatrixf(offscreen_geo);
+    {
+      float const screen_scale_f = static_cast<float>(this->screen_scale_);
+      float const offscreen_geo[] = {screen_scale_f, 0,              0, 0,
+                                     0,              screen_scale_f, 0, 0,
+                                     0,              0,              1, 0,
+                                     0,              0,              0, 1};
+      ::glLoadMatrixf(offscreen_geo);
+    }
     ::glBindTexture(GL_TEXTURE_2D, this->offscreen_texture_.id());
+    assert(::glGetError() == GL_NO_ERROR);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     {
+      float const offscreen_width  = static_cast<float>(this->screen_width_);
+      float const offscreen_height = static_cast<float>(this->screen_height_);
       float const vertex_pointer[] = {0,               0,
                                       offscreen_width, 0,
                                       0,               offscreen_height,
@@ -142,6 +170,7 @@ public:
       ::glDisableClientState(GL_VERTEX_ARRAY);
     }
     ::glBindTexture(GL_TEXTURE_2D, 0);
+    assert(::glGetError() == GL_NO_ERROR);
     ::glFlush();
   }
   graphics_context&
@@ -161,16 +190,18 @@ private:
     ::glGenFramebuffers(1, &this->offscreen_framebuffer_);
     assert(this->offscreen_framebuffer_);
     ::glBindFramebuffer(GL_FRAMEBUFFER, this->offscreen_framebuffer_);
+    assert(::glGetError() == GL_NO_ERROR);
     ::glFramebufferTexture2D(GL_FRAMEBUFFER,
                              GL_COLOR_ATTACHMENT0,
                              GL_TEXTURE_2D,
                              this->offscreen_texture_.id(),
                              0);
-    // TODO: Is that correct?
+    assert(::glGetError() == GL_NO_ERROR);
+    //::glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    //assert(::glGetError() == GL_NO_ERROR);
     if (::glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
       throw std::runtime_error("framebuffer is not supported completely");
     }
-    ::glBindFramebuffer(GL_FRAMEBUFFER, 0);
   }
 };
 
