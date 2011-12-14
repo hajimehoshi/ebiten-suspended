@@ -91,36 +91,30 @@ public:
     this->update_func_(*this);
     assert(::glGetError() == GL_NO_ERROR);
     {
+      /*::glMatrixMode(GL_PROJECTION);
+      ::glLoadIdentity();
+      ::glMatrixMode(GL_MODELVIEW);
+      ::glLoadIdentity();*/
       GLint origFramebuffer;
       ::glGetIntegerv(GL_FRAMEBUFFER_BINDING, &origFramebuffer);
-      assert(::glGetError() == GL_NO_ERROR);
-      ::glBindFramebuffer(GL_FRAMEBUFFER, this->offscreen_framebuffer_);
-      assert(::glGetError() == GL_NO_ERROR);
+      //::glBindFramebuffer(GL_FRAMEBUFFER, this->offscreen_framebuffer_);
       ::glClearColor(0, 0, 0, 1);
-      assert(::glGetError() == GL_NO_ERROR);
       ::glClear(GL_COLOR_BUFFER_BIT);
-      assert(::glGetError() == GL_NO_ERROR);
-      // ::glEnable(GL_TEXTURE_2D);  is not valid in OpenGL ES. Why?
+      ::glEnable(GL_TEXTURE_2D); // is not valid in OpenGL ES. Why?
       ::glEnable(GL_BLEND);
-      assert(::glGetError() == GL_NO_ERROR);
       ::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-      assert(::glGetError() == GL_NO_ERROR);
-      ::glViewport(0, 0,
+      /*::glViewport(0, 0,
                    static_cast<GLsizei>(this->screen_width_),
-                   static_cast<GLsizei>(this->screen_height_));
+                   static_cast<GLsizei>(this->screen_height_));*/
       assert(::glGetError() == GL_NO_ERROR);
-      ::glMatrixMode(GL_PROJECTION);
-      assert(::glGetError() == GL_NO_ERROR);
-      ::glLoadIdentity();
-      assert(::glGetError() == GL_NO_ERROR);
-      ::glOrtho(0, this->screen_width_, 0, this->screen_height_, 0, 1);
-      assert(::glGetError() == GL_NO_ERROR);
-      ::glMatrixMode(GL_MODELVIEW);
-      assert(::glGetError() == GL_NO_ERROR);
-      ::glLoadIdentity();
-      assert(::glGetError() == GL_NO_ERROR);
-      ::glUseProgram(0);
-      assert(::glGetError() == GL_NO_ERROR);
+      float const projection_matrix[] = {
+        2.0 / this->screen_width_, 0,                          0, 0,
+        0,                         2.0 / this->screen_height_, 0, 0,
+        0,                         0,                          1, 0,
+        -1,                        -1,                         0, 1,
+      };
+      this->graphics_context_.set_projection_matrix(std::begin(projection_matrix),
+                                                    std::end(projection_matrix));
       this->draw_func_(*this);
       ::glFlush();
       assert(::glGetError() == GL_NO_ERROR);
@@ -129,13 +123,14 @@ public:
     }
 
     // render the offscreen to the screen
-    ::glClearColor(0, 0, 0, 1);
+    /*::glClearColor(0, 0, 0, 1);
     ::glClear(GL_COLOR_BUFFER_BIT);
     ::glEnable(GL_TEXTURE_2D);
     ::glDisable(GL_BLEND);
     ::glViewport(0, 0,
                  static_cast<GLsizei>(this->screen_width_  * this->screen_scale_),
                  static_cast<GLsizei>(this->screen_height_ * this->screen_scale_));
+    ::glUseProgram(0); // tempolarily
     ::glMatrixMode(GL_PROJECTION);
     ::glLoadIdentity();
     ::glOrtho(0, this->screen_width_ * this->screen_scale_,
@@ -179,6 +174,7 @@ public:
     ::glBindTexture(GL_TEXTURE_2D, 0);
     assert(::glGetError() == GL_NO_ERROR);
     ::glFlush();
+    assert(::glGetError() == GL_NO_ERROR);*/
   }
   graphics_context&
   graphics_context() {

@@ -2,6 +2,7 @@
 #define EBITEN_GRAPHICS_GEOMETRY_MATRIX_HPP
 
 #include "ebiten/graphics/affine_matrix.hpp"
+#include <algorithm>
 
 namespace ebiten {
 namespace graphics {
@@ -20,6 +21,20 @@ public:
     this->set_d(d);
     this->set_tx(tx);
     this->set_ty(ty);
+  }
+  geometry_matrix_base(affine_matrix<Float, 3> const& mat)
+    : affine_matrix<Float, 3>() {
+    std::copy(std::begin(mat.elements()),
+              std::end(mat.elements()),
+              std::begin(this->elements()));
+  }
+  geometry_matrix_base<Float>&
+  operator=(affine_matrix<Float, 3> const& rhs) {
+    if (this != &rhs) {
+      geometry_matrix_base<Float> geo(rhs);
+      *this = geo;
+    }
+    return *this;
   }
   Float
   a() const {

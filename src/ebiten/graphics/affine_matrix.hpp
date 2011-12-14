@@ -11,8 +11,8 @@ template<class Float, std::size_t Dimension>
 class affine_matrix {
   static_assert(0 < Dimension, "Dimension must be more than 0");
 private:
-  static std::size_t const size = Dimension * (Dimension - 1);
-  typedef std::array<Float, size> elements_type;
+  static std::size_t const size_ = Dimension * (Dimension - 1);
+  typedef std::array<Float, size_> elements_type;
   elements_type elements_;
 public:
   affine_matrix() {
@@ -55,6 +55,20 @@ public:
       }
     }
     return true;
+  }
+  void
+  // TODO: Is that ugly?
+  set_identity() {
+    typename elements_type::iterator it = this->elements_.begin();
+    for (std::size_t i = 0; i < Dimension - 1; ++i) {
+      for (std::size_t j = 0; j < Dimension; ++j, ++it) {
+        if (i == j) {
+          *it = 1;
+        } else {
+          *it = 0;
+        }
+      }
+    }
   }
 };
 
