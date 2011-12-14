@@ -90,22 +90,17 @@ public:
     }
     this->update_func_(*this);
     assert(::glGetError() == GL_NO_ERROR);
+    //::glEnable(GL_TEXTURE_2D); // is not valid in OpenGL ES. Why?
+    ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     {
-      /*::glMatrixMode(GL_PROJECTION);
-      ::glLoadIdentity();
-      ::glMatrixMode(GL_MODELVIEW);
-      ::glLoadIdentity();*/
       GLint origFramebuffer;
       ::glGetIntegerv(GL_FRAMEBUFFER_BINDING, &origFramebuffer);
       //::glBindFramebuffer(GL_FRAMEBUFFER, this->offscreen_framebuffer_);
       ::glClearColor(0, 0, 0, 1);
       ::glClear(GL_COLOR_BUFFER_BIT);
-      ::glEnable(GL_TEXTURE_2D); // is not valid in OpenGL ES. Why?
       ::glEnable(GL_BLEND);
       ::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-      /*::glViewport(0, 0,
-                   static_cast<GLsizei>(this->screen_width_),
-                   static_cast<GLsizei>(this->screen_height_));*/
       assert(::glGetError() == GL_NO_ERROR);
       float const projection_matrix[] = {
         2.0 / this->screen_width_, 0,                          0, 0,
@@ -118,8 +113,8 @@ public:
       this->draw_func_(*this);
       ::glFlush();
       assert(::glGetError() == GL_NO_ERROR);
-      ::glBindFramebuffer(GL_FRAMEBUFFER, origFramebuffer);
-      assert(::glGetError() == GL_NO_ERROR);
+      /*::glBindFramebuffer(GL_FRAMEBUFFER, origFramebuffer);
+        assert(::glGetError() == GL_NO_ERROR);*/
     }
 
     // render the offscreen to the screen

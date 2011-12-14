@@ -51,10 +51,10 @@ public:
                             x + width, y,
                             x,         y + height,
                             x + width, y + height,};
-    uint8_t const colors[] = {red, green, blue, alpha,
+    /*uint8_t const colors[] = {red, green, blue, alpha,
                               red, green, blue, alpha,
                               red, green, blue, alpha,
-                              red, green, blue, alpha,};
+                              red, green, blue, alpha,};*/
     ::glEnableClientState(GL_VERTEX_ARRAY);
     //::glEnableClientState(GL_COLOR_ARRAY);
     ::glColor4ub(red, green, blue, alpha);
@@ -80,12 +80,9 @@ public:
     if (!this->current_texture_) {
       return;
     }
-    if (this->current_texture_) {
-      ::glBindTexture(GL_TEXTURE_2D, this->current_texture_.id());
-    } else {
-      ::glBindTexture(GL_TEXTURE_2D, 0);
-    }
     this->set_shader_program();
+    ::glBindTexture(GL_TEXTURE_2D, this->current_texture_.id());
+    assert(::glGetError() == GL_NO_ERROR);
     // TODO: replace float to short?
     // http://objective-audio.jp/2009/07/ngmoco-opengl.html
     // 選べるようにするといいかも
@@ -231,13 +228,15 @@ private:
                         "uniform mat4 modelview_matrix;\n"
                         "\n"
                         "void main(void) {\n"
+                        "  gl_TexCoord[0] = gl_MultiTexCoord0;\n"
                         "  gl_Position = projection_matrix * modelview_matrix * gl_Vertex;\n"
                         "}\n");
     static std::string const
       fragment_shader_src("uniform sampler2D texture;\n"
                           "\n"
                           "void main(void) {\n"
-                          "  gl_FragColor = vec4(0.5, 0.5, 0.5, 0.5); //texture2Dproj(texture, gl_TexCoord[0]);\n"
+                          //"  gl_FragColor = vec4(0.5, 0.5, 0.5, 0.5);\n"
+                          "  gl_FragColor = texture2DProj(texture, gl_TexCoord[0]);\n"
                           "}\n");
     static std::string const
       color_mat_shader_src("uniform sampler2D texture;\n"
