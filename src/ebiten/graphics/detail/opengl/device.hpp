@@ -20,6 +20,7 @@
 
 #include <cassert>
 #include <functional>
+#include <thread>
 
 // TODO: refactoring
 #ifdef EBITEN_IOS
@@ -41,6 +42,7 @@ private:
   texture_factory texture_factory_;
   texture offscreen_texture_;
   GLuint offscreen_framebuffer_;
+  std::mutex mutex_;
 public:
 #ifndef EBITEN_IOS
   device(std::size_t screen_width,
@@ -82,8 +84,14 @@ public:
     opengl_initializer::initialize_with_view(view, std::bind(&device::update, this));
   }
   // TODO: destructor
+  /*
+   * NOTICE:
+   *   The OpenGL functions should be called only in this method 'update'.
+   *   Is that better to add an argument to this method?
+   */
   void
   update() {
+    std::lock_guard<std::mutex> lock(this->mutex_);
     // TODO: If application is terminated, stop
     if (!this->offscreen_texture_) {
       this->initialize_offscreen();
@@ -157,7 +165,6 @@ public:
 private:
   void
   initialize_offscreen() {
-    // TODO: need to lock context?
     this->offscreen_texture_ = texture_factory().create(this->screen_width_,
                                                         this->screen_height_);
     ::glGenFramebuffers(1, &this->offscreen_framebuffer_);

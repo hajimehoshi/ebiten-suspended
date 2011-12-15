@@ -47,6 +47,7 @@ public:
     ::glClear(GL_COLOR_BUFFER_BIT);
   }
   // Only for debugging?
+  // TODO: Fix that!
   void
   draw_rect(std::size_t x, std::size_t y, std::size_t width, std::size_t height,
             uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) {
@@ -56,10 +57,12 @@ public:
                             x,         y + height,
                             x + width, y + height,};
     // TODO: fix that
-    /*uint8_t const colors[] = {red, green, blue, alpha,
+    uint8_t const colors[] = {red, green, blue, alpha,
                               red, green, blue, alpha,
                               red, green, blue, alpha,
-                              red, green, blue, alpha,};*/
+                              red, green, blue, alpha,};
+    ::glUseProgram(this->vertex_shader_program_);
+    ::glBindTexture(GL_TEXTURE_2D, 0);
     ::glEnableClientState(GL_VERTEX_ARRAY);
     //::glEnableClientState(GL_COLOR_ARRAY);
     ::glColor4ub(red, green, blue, alpha);
@@ -86,6 +89,7 @@ public:
     }
     this->set_shader_program();
 
+    // TODO: cache? Check other callings of glBindTexture.
     ::glBindTexture(GL_TEXTURE_2D, this->current_texture_.id());
     // TODO: replace float to short?
     // http://objective-audio.jp/2009/07/ngmoco-opengl.html
