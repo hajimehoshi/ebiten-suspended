@@ -3,7 +3,6 @@
 
 #include "ebiten/graphics/detail/opengl/device.hpp"
 #include "ebiten/graphics/color_matrix.hpp"
-#include "ebiten/graphics/drawing_region.hpp"
 #include "ebiten/graphics/geometry_matrix.hpp"
 #include "ebiten/graphics/texture.hpp"
 #include "ebiten/noncopyable.hpp"
@@ -80,7 +79,7 @@ public:
     this->current_texture_ = ebiten::graphics::texture();
   }
   void
-  draw(drawing_region const& dr) {
+  draw(double src_x, double src_y, double dst_x, double dst_y, double width, double height) {
     // TODO: Throwing an exception?
     if (!this->current_texture_) {
       return;
@@ -93,14 +92,14 @@ public:
     // 選べるようにするといいかも
     float const texture_width  = this->current_texture_.width();
     float const texture_height = this->current_texture_.height();
-    float const tu1 = dr.src_x               / texture_width;
-    float const tu2 = (dr.src_x + dr.width)  / texture_width;
-    float const tv1 = dr.src_y               / texture_height;
-    float const tv2 = (dr.src_y + dr.height) / texture_height;
-    float const x1 = dr.dst_x;
-    float const x2 = dr.dst_x + dr.width;
-    float const y1 = dr.dst_y;
-    float const y2 = dr.dst_y + dr.height;
+    float const tu1 = src_x            / texture_width;
+    float const tu2 = (src_x + width)  / texture_width;
+    float const tv1 = src_y            / texture_height;
+    float const tv2 = (src_y + height) / texture_height;
+    float const x1 = dst_x;
+    float const x2 = dst_x + width;
+    float const y1 = dst_y;
+    float const y2 = dst_y + height;
     float const vertex[] = {x1, y1,
                             x2, y1,
                             x1, y2,

@@ -143,12 +143,7 @@ public:
       this->graphics_context_.reset_color_matrix();
     }
     this->graphics_context_.set_texture(this->offscreen_texture_);
-    {
-      drawing_region dr(0, 0, 0, 0,
-                        this->screen_width_,
-                        this->screen_height_);
-      this->graphics_context_.draw(dr);
-    }
+    this->graphics_context_.draw(0, 0, 0, 0, this->screen_width_, this->screen_height_);
     ::glFlush();
   }
   graphics_context&

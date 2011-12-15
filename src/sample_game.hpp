@@ -10,7 +10,14 @@
 
 class sprite {
 public:
-  ebiten::graphics::drawing_region drawing_region;
+  double x;
+  double y;
+  sprite()
+    : x(0), y(0) {
+  }
+  sprite(double x, double y)
+    : x(x), y(y) {
+  }
 };
 
 class sample_game : private ebiten::noncopyable {
@@ -39,29 +46,26 @@ public:
         this->texture_ = tf.from_image(image);
       }
       {
-        typedef ebiten::graphics::drawing_region dr;
-        this->sprites_.at(0).drawing_region = dr(0, 0, 32, 32, 32, 32);
-        this->sprites_.at(1).drawing_region = dr(0, 0, 32, 132, 32, 32);
-        this->sprites_.at(2).drawing_region = dr(0, 0, 132, 32, 32, 32);
-        this->sprites_.at(3).drawing_region = dr(0, 0, 132, 132, 32, 32);
-        this->sprites_.at(4).drawing_region = dr(0, 0, 32, 32, 32, 32);
-        this->sprites_.at(5).drawing_region = dr(0, 0, 64, 32, 32, 32);
+        this->sprites_.at(0) = sprite(32, 32);
+        this->sprites_.at(1) = sprite(32, 132);
+        this->sprites_.at(2) = sprite(132, 32);
+        this->sprites_.at(3) = sprite(132, 132);
+        this->sprites_.at(4) = sprite(32, 32);
+        this->sprites_.at(5) = sprite(64, 32);
       }
       {
         for (;;) {
           for (this->i = 0; this->i < 240; ++this->i) {
             {
               auto& s = this->sprites_.at(0);
-              auto& dr = s.drawing_region;
-              dr.dst_x = 32 + (this->i % 240);
+              s.x = 32 + (this->i % 240);
             }
             yield();
           }
           for (this->i = 240 - 1; 0 <= this->i; --this->i) {
             {
               auto& s = this->sprites_.at(0);
-              auto& dr = s.drawing_region;
-              dr.dst_x = 32 + (this->i % 240);
+              s.x = 32 + (this->i % 240);
             }
             yield();
           }
@@ -92,7 +96,7 @@ public:
         auto mat = ebiten::graphics::geometry_matrix(1, 0, 0, 1, 0, 0);
         gc.set_geometry_matrix(mat);
       }
-      gc.draw(s.drawing_region);
+      gc.draw(0, 0, s.x, s.y, 32, 32);
       ++i;
     }
   }
