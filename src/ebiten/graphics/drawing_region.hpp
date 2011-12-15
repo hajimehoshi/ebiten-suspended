@@ -4,6 +4,7 @@
 namespace ebiten {
 namespace graphics {
 
+// TODO: Remove this class?
 class drawing_region {
 public:
   double src_x, src_y, dst_x, dst_y, width, height;

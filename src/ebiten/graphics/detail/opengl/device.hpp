@@ -90,86 +90,70 @@ public:
     }
     this->update_func_(*this);
     assert(::glGetError() == GL_NO_ERROR);
-    //::glEnable(GL_TEXTURE_2D); // is not valid in OpenGL ES. Why?
+    ::glEnable(GL_TEXTURE_2D); // is not valid in OpenGL ES. Why?
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     {
       GLint origFramebuffer;
       ::glGetIntegerv(GL_FRAMEBUFFER_BINDING, &origFramebuffer);
-      //::glBindFramebuffer(GL_FRAMEBUFFER, this->offscreen_framebuffer_);
+      ::glBindFramebuffer(GL_FRAMEBUFFER, this->offscreen_framebuffer_);
       ::glClearColor(0, 0, 0, 1);
       ::glClear(GL_COLOR_BUFFER_BIT);
       ::glEnable(GL_BLEND);
       ::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       assert(::glGetError() == GL_NO_ERROR);
+      std::size_t const width  = this->offscreen_texture_.width();
+      std::size_t const height = this->offscreen_texture_.height();
+      ::glViewport(0, 0,
+                   static_cast<GLsizei>(width),
+                   static_cast<GLsizei>(height));
       float const projection_matrix[] = {
-        2.0 / this->screen_width_, 0,                          0, 0,
-        0,                         2.0 / this->screen_height_, 0, 0,
-        0,                         0,                          1, 0,
-        -1,                        -1,                         0, 1,
+        2.0 / width, 0,            0, 0,
+        0,           2.0 / height, 0, 0,
+        0,           0,            1, 0,
+        -1,          -1,           0, 1,
       };
       this->graphics_context_.set_projection_matrix(std::begin(projection_matrix),
                                                     std::end(projection_matrix));
+      this->graphics_context_.reset_geometry_matrix();
       this->draw_func_(*this);
       ::glFlush();
       assert(::glGetError() == GL_NO_ERROR);
-      /*::glBindFramebuffer(GL_FRAMEBUFFER, origFramebuffer);
-        assert(::glGetError() == GL_NO_ERROR);*/
+      ::glBindFramebuffer(GL_FRAMEBUFFER, origFramebuffer);
+      assert(::glGetError() == GL_NO_ERROR);
     }
 
-    // render the offscreen to the screen
-    /*::glClearColor(0, 0, 0, 1);
-    ::glClear(GL_COLOR_BUFFER_BIT);
-    ::glEnable(GL_TEXTURE_2D);
-    ::glDisable(GL_BLEND);
-    ::glViewport(0, 0,
-                 static_cast<GLsizei>(this->screen_width_  * this->screen_scale_),
-                 static_cast<GLsizei>(this->screen_height_ * this->screen_scale_));
-    ::glUseProgram(0); // tempolarily
-    ::glMatrixMode(GL_PROJECTION);
-    ::glLoadIdentity();
-    ::glOrtho(0, this->screen_width_ * this->screen_scale_,
-              this->screen_height_ * this->screen_scale_, 0,
-              0, 1);
-    assert(::glGetError() == GL_NO_ERROR);
-    ::glMatrixMode(GL_MODELVIEW);
-    {
-      float const screen_scale_f = static_cast<float>(this->screen_scale_);
-      float const offscreen_geo[] = {screen_scale_f, 0,              0, 0,
-                                     0,              screen_scale_f, 0, 0,
-                                     0,              0,              1, 0,
-                                     0,              0,              0, 1};
-      ::glLoadMatrixf(offscreen_geo);
-    }
-    ::glBindTexture(GL_TEXTURE_2D, this->offscreen_texture_.id());
-    assert(::glGetError() == GL_NO_ERROR);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ::glClearColor(0, 0, 0, 1);
+    ::glClear(GL_COLOR_BUFFER_BIT);
+    ::glDisable(GL_BLEND);
     {
-      float const offscreen_width  = static_cast<float>(this->screen_width_);
-      float const offscreen_height = static_cast<float>(this->screen_height_);
-      float const vertex_pointer[] = {0,               0,
-                                      offscreen_width, 0,
-                                      0,               offscreen_height,
-                                      offscreen_width, offscreen_height,};
-      float const offscreen_tu = offscreen_width  / this->offscreen_texture_.width();
-      float const offscreen_tv = offscreen_height / this->offscreen_texture_.height();
-      float tex_coord[] = {0,            0,
-                           offscreen_tu, 0,
-                           0,            offscreen_tv,
-                           offscreen_tu, offscreen_tv,};
-      ::glEnableClientState(GL_VERTEX_ARRAY);
-      ::glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-      ::glVertexPointer(2, GL_FLOAT, 0, vertex_pointer);
-      ::glTexCoordPointer(2, GL_FLOAT, 0, tex_coord);
-      ::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-      ::glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-      ::glDisableClientState(GL_VERTEX_ARRAY);
+      std::size_t const width  = this->screen_width_;
+      std::size_t const height = this->screen_height_;
+      ::glViewport(0, 0,
+                   static_cast<GLsizei>(width  * this->screen_scale_),
+                   static_cast<GLsizei>(height * this->screen_scale_));
+      float const projection_matrix[] = {
+        2.0 / width, 0,             0, 0,
+        0,           -2.0 / height, 0, 0,
+        0,           0,             1, 0,
+        -1,          1,             0, 1,
+      };
+      this->graphics_context_.set_projection_matrix(std::begin(projection_matrix),
+                                                    std::end(projection_matrix));
+      this->graphics_context_.reset_geometry_matrix();
     }
-    ::glBindTexture(GL_TEXTURE_2D, 0);
-    assert(::glGetError() == GL_NO_ERROR);
+    this->graphics_context_.set_texture(this->offscreen_texture_);
+    {
+      /*drawing_region dr(0, 0, 0, 0,
+                        this->screen_width_,
+                        this->screen_height_);*/
+      drawing_region dr(0, 0, 0, 0, 512, 256);
+      this->graphics_context_.draw(dr);
+    }
     ::glFlush();
-    assert(::glGetError() == GL_NO_ERROR);*/
+    assert(::glGetError() == GL_NO_ERROR);
   }
   graphics_context&
   graphics_context() {

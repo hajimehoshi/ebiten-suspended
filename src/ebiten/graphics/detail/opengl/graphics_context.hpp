@@ -51,6 +51,7 @@ public:
                             x + width, y,
                             x,         y + height,
                             x + width, y + height,};
+    // TODO: fix that
     /*uint8_t const colors[] = {red, green, blue, alpha,
                               red, green, blue, alpha,
                               red, green, blue, alpha,
@@ -88,9 +89,9 @@ public:
     // 選べるようにするといいかも
     float const texture_width  = this->current_texture_.width();
     float const texture_height = this->current_texture_.height();
-    float const tu1 = dr.src_x                 / texture_width;
+    float const tu1 = dr.src_x               / texture_width;
     float const tu2 = (dr.src_x + dr.width)  / texture_width;
-    float const tv1 = dr.src_y                 / texture_height;
+    float const tv1 = dr.src_y               / texture_height;
     float const tv2 = (dr.src_y + dr.height) / texture_height;
     float const x1 = dr.dst_x;
     float const x2 = dr.dst_x + dr.width;
@@ -235,7 +236,6 @@ private:
       fragment_shader_src("uniform sampler2D texture;\n"
                           "\n"
                           "void main(void) {\n"
-                          //"  gl_FragColor = vec4(0.5, 0.5, 0.5, 0.5);\n"
                           "  gl_FragColor = texture2DProj(texture, gl_TexCoord[0]);\n"
                           "}\n");
     static std::string const
@@ -261,7 +261,7 @@ private:
       GLuint program = ::glCreateProgram();
       assert(program);
       ::glAttachShader(program, vertex_shader);
-      ::glAttachShader(program, fragment_shader);
+      //::glAttachShader(program, fragment_shader);
       ::glLinkProgram(program);
       GLint linked;
       ::glGetProgramiv(program, GL_LINK_STATUS, &linked);

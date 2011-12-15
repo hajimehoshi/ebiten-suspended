@@ -57,7 +57,7 @@ public:
     return true;
   }
   void
-  // TODO: Is that ugly?
+  // TODO: Is that ugly? I wanna define static identity() instead...
   set_identity() {
     typename elements_type::iterator it = this->elements_.begin();
     for (std::size_t i = 0; i < Dimension - 1; ++i) {
