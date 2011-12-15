@@ -28,8 +28,10 @@
                             styleMask:style];
   NSScreen* screen = [[NSScreen screens] objectAtIndex:0];
   NSSize const screenSize = [screen visibleFrame].size;
+  // Reference: Mac OS X Human Interface Guidelines: UI Element Guidelines: Windows
+  // http://developer.apple.com/library/mac/#documentation/UserExperience/Conceptual/AppleHIGuidelines/Windows/Windows.html#//apple_ref/doc/uid/20000961-TP9
   NSRect const contentRect = NSMakeRect((screenSize.width - windowRect.size.width) / 2,
-                                        (screenSize.height - windowRect.size.height) / 2,
+                                        (screenSize.height - windowRect.size.height) * 2 / 3,
                                         size.width, size.height);
   self = [super initWithContentRect:contentRect
                           styleMask:style
