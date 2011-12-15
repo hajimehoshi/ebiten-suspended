@@ -90,14 +90,13 @@ public:
     }
     this->update_func_(*this);
     ::glEnable(GL_TEXTURE_2D); // is not valid in OpenGL ES. Why?
-    ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     {
       GLint origFramebuffer;
       ::glGetIntegerv(GL_FRAMEBUFFER_BINDING, &origFramebuffer);
       ::glBindFramebuffer(GL_FRAMEBUFFER, this->offscreen_framebuffer_);
-      ::glClearColor(0, 0, 0, 1);
-      ::glClear(GL_COLOR_BUFFER_BIT);
+      this->graphics_context_.clear();
       ::glEnable(GL_BLEND);
       ::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       std::size_t const width  = this->offscreen_texture_.width();
@@ -114,22 +113,21 @@ public:
       this->graphics_context_.set_projection_matrix(std::begin(projection_matrix),
                                                     std::end(projection_matrix));
       this->graphics_context_.reset_geometry_matrix();
+      this->graphics_context_.reset_color_matrix();
       this->draw_func_(*this);
       ::glFlush();
       ::glBindFramebuffer(GL_FRAMEBUFFER, origFramebuffer);
     }
-
-    ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    ::glClearColor(0, 0, 0, 1);
-    ::glClear(GL_COLOR_BUFFER_BIT);
+    ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    this->graphics_context_.clear();
     ::glDisable(GL_BLEND);
     {
-      std::size_t const width  = this->screen_width_;
-      std::size_t const height = this->screen_height_;
+      std::size_t const width  = this->screen_width_  * this->screen_scale_;
+      std::size_t const height = this->screen_height_ * this->screen_scale_;
       ::glViewport(0, 0,
-                   static_cast<GLsizei>(width  * this->screen_scale_),
-                   static_cast<GLsizei>(height * this->screen_scale_));
+                   static_cast<GLsizei>(width),
+                   static_cast<GLsizei>(height));
       float const projection_matrix[] = {
         2.0 / width, 0,             0, 0,
         0,           -2.0 / height, 0, 0,
@@ -138,14 +136,17 @@ public:
       };
       this->graphics_context_.set_projection_matrix(std::begin(projection_matrix),
                                                     std::end(projection_matrix));
-      this->graphics_context_.reset_geometry_matrix();
+      geometry_matrix geometry_matrix(this->screen_scale_, 0,
+                                      0, this->screen_scale_,
+                                      0, 0);
+      this->graphics_context_.set_geometry_matrix(geometry_matrix);
+      this->graphics_context_.reset_color_matrix();
     }
     this->graphics_context_.set_texture(this->offscreen_texture_);
     {
-      /*drawing_region dr(0, 0, 0, 0,
+      drawing_region dr(0, 0, 0, 0,
                         this->screen_width_,
-                        this->screen_height_);*/
-      drawing_region dr(0, 0, 0, 0, 512, 256);
+                        this->screen_height_);
       this->graphics_context_.draw(dr);
     }
     ::glFlush();

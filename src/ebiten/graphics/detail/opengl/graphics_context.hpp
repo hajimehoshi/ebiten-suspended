@@ -42,6 +42,11 @@ private:
     assert(this->modelview_matrix_.is_identity());
   }
 public:
+  void
+  clear() {
+    ::glClearColor(0, 0, 0, 1);
+    ::glClear(GL_COLOR_BUFFER_BIT);
+  }
   // Only for debugging?
   void
   draw_rect(std::size_t x, std::size_t y, std::size_t width, std::size_t height,
@@ -81,6 +86,7 @@ public:
       return;
     }
     this->set_shader_program();
+
     ::glBindTexture(GL_TEXTURE_2D, this->current_texture_.id());
     // TODO: replace float to short?
     // http://objective-audio.jp/2009/07/ngmoco-opengl.html
@@ -168,14 +174,12 @@ private:
                              1, GL_FALSE, gl_modelview_mat);
       }
     }
-    /*{
-      GLint location = ::glGetUniformLocation(program, "texture");
-      assert(::glGetError() == GL_NO_ERROR);
-      //assert(location != -1);
-      ::glUniform1i(location, 0);
-      assert(::glGetError() == GL_NO_ERROR);
-      }*/
     if (program == this->vertex_fragment_shader_program_) {
+      {
+        GLint location = ::glGetUniformLocation(program, "texture");
+        assert(location != -1);
+        ::glUniform1i(location, 0);
+      }
       color_matrix const& mat = this->color_matrix_;
       float const gl_color_mat[] = {
         static_cast<float>(mat.element<0, 0>()),
