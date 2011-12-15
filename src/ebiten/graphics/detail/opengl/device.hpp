@@ -89,7 +89,6 @@ public:
       this->initialize_offscreen();
     }
     this->update_func_(*this);
-    assert(::glGetError() == GL_NO_ERROR);
     ::glEnable(GL_TEXTURE_2D); // is not valid in OpenGL ES. Why?
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -101,7 +100,6 @@ public:
       ::glClear(GL_COLOR_BUFFER_BIT);
       ::glEnable(GL_BLEND);
       ::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-      assert(::glGetError() == GL_NO_ERROR);
       std::size_t const width  = this->offscreen_texture_.width();
       std::size_t const height = this->offscreen_texture_.height();
       ::glViewport(0, 0,
@@ -118,9 +116,7 @@ public:
       this->graphics_context_.reset_geometry_matrix();
       this->draw_func_(*this);
       ::glFlush();
-      assert(::glGetError() == GL_NO_ERROR);
       ::glBindFramebuffer(GL_FRAMEBUFFER, origFramebuffer);
-      assert(::glGetError() == GL_NO_ERROR);
     }
 
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -153,7 +149,6 @@ public:
       this->graphics_context_.draw(dr);
     }
     ::glFlush();
-    assert(::glGetError() == GL_NO_ERROR);
   }
   graphics_context&
   graphics_context() {
@@ -170,7 +165,6 @@ private:
     this->offscreen_texture_ = texture_factory().create(this->screen_width_,
                                                         this->screen_height_);
     ::glGenFramebuffers(1, &this->offscreen_framebuffer_);
-    assert(this->offscreen_framebuffer_);
     {
       GLint origFramebuffer;
       ::glGetIntegerv(GL_FRAMEBUFFER_BINDING, &origFramebuffer);

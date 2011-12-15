@@ -61,7 +61,6 @@ public:
     ::glColor4ub(red, green, blue, alpha);
     ::glVertexPointer(2, GL_FLOAT, 0, vertex);
     //::glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors);
-    assert(::glGetError() == GL_NO_ERROR);
     ::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     ::glDisableClientState(GL_VERTEX_ARRAY);
     //::glDisableClientState(GL_COLOR_ARRAY);
@@ -83,7 +82,6 @@ public:
     }
     this->set_shader_program();
     ::glBindTexture(GL_TEXTURE_2D, this->current_texture_.id());
-    assert(::glGetError() == GL_NO_ERROR);
     // TODO: replace float to short?
     // http://objective-audio.jp/2009/07/ngmoco-opengl.html
     // 選べるようにするといいかも
@@ -151,14 +149,11 @@ private:
     }
     // TODO: cache and skip?
     ::glUseProgram(program);
-    assert(::glGetError() == GL_NO_ERROR);
     {
       GLint location = ::glGetUniformLocation(program, "projection_matrix");
-      assert(::glGetError() == GL_NO_ERROR);
       assert(location != -1);
       ::glUniformMatrix4fv(location,
                            1, GL_FALSE, this->projection_matrix_.data());
-      assert(::glGetError() == GL_NO_ERROR);
     }
     {
       geometry_matrix mat = this->modelview_matrix_;
@@ -168,20 +163,18 @@ private:
                                         mat.tx(), mat.ty(), 0, 1};
       {
         GLint location = ::glGetUniformLocation(program, "modelview_matrix");
-        assert(::glGetError() == GL_NO_ERROR);
         assert(location != -1);
         ::glUniformMatrix4fv(location,
                              1, GL_FALSE, gl_modelview_mat);
-        assert(::glGetError() == GL_NO_ERROR);
       }
     }
-    {
+    /*{
       GLint location = ::glGetUniformLocation(program, "texture");
       assert(::glGetError() == GL_NO_ERROR);
       //assert(location != -1);
       ::glUniform1i(location, 0);
       assert(::glGetError() == GL_NO_ERROR);
-    }
+      }*/
     if (program == this->vertex_fragment_shader_program_) {
       color_matrix const& mat = this->color_matrix_;
       float const gl_color_mat[] = {
