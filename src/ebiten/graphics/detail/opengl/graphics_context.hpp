@@ -36,8 +36,8 @@ private:
   graphics_context()
     : vertex_shader_program_(0),
       vertex_fragment_shader_program_(0) {
-    this->modelview_matrix_.set_identity();
-    this->color_matrix_.set_identity();
+    this->modelview_matrix_ = geometry_matrix::identity();
+    this->color_matrix_     = color_matrix::identity();
     assert(this->modelview_matrix_.is_identity());
   }
 public:
@@ -123,7 +123,7 @@ public:
   }
   void
   reset_geometry_matrix() {
-    this->modelview_matrix_.set_identity();
+    this->modelview_matrix_ = geometry_matrix::identity();
   }
   void
   set_color_matrix(color_matrix const& mat) {
@@ -131,7 +131,7 @@ public:
   }
   void
   reset_color_matrix() {
-    this->color_matrix_.set_identity();
+    this->color_matrix_ = color_matrix::identity();
   }
 private:
   void

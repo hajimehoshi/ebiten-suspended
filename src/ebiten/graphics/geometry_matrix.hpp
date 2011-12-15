@@ -8,33 +8,21 @@ namespace ebiten {
 namespace graphics {
 
 template<class Float>
-class geometry_matrix_base : public affine_matrix<Float, 3> {
+class geometry_matrix_base : public affine_matrix<Float, 3, geometry_matrix_base<Float> > {
+private:
+  typedef geometry_matrix_base<Float> Self;
 public:
   geometry_matrix_base()
-    : affine_matrix<Float, 3>() {
+    : affine_matrix<Float, 3, Self>() {
   }
   geometry_matrix_base(Float a, Float b, Float c, Float d, Float tx, Float ty)
-    : affine_matrix<Float, 3>() {
+    : affine_matrix<Float, 3, Self>() {
     this->set_a(a);
     this->set_b(b);
     this->set_c(c);
     this->set_d(d);
     this->set_tx(tx);
     this->set_ty(ty);
-  }
-  geometry_matrix_base(affine_matrix<Float, 3> const& mat)
-    : affine_matrix<Float, 3>() {
-    std::copy(std::begin(mat.elements()),
-              std::end(mat.elements()),
-              std::begin(this->elements()));
-  }
-  geometry_matrix_base<Float>&
-  operator=(affine_matrix<Float, 3> const& rhs) {
-    if (this != &rhs) {
-      geometry_matrix_base<Float> geo(rhs);
-      *this = geo;
-    }
-    return *this;
   }
   Float
   a() const {

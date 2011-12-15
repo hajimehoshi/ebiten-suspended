@@ -3,21 +3,25 @@
 
 #include <array>
 #include <cassert>
+#include <mutex>
 
 namespace ebiten {
 namespace graphics {
 
-template<class Float, std::size_t Dimension>
+template<class Float, std::size_t Dimension, class Self>
 class affine_matrix {
   static_assert(0 < Dimension, "Dimension must be more than 0");
 private:
   static std::size_t const size_ = Dimension * (Dimension - 1);
   typedef std::array<Float, size_> elements_type;
+  static std::once_flag identity_once_flag_;
+protected:
   elements_type elements_;
-public:
+protected:
   affine_matrix() {
     this->elements_.fill(0);
   }
+public:
   template<std::size_t I, std::size_t J>
   Float
   element() const {
@@ -56,10 +60,16 @@ public:
     }
     return true;
   }
-  void
-  // TODO: Is that ugly? I wanna define static identity() instead...
-  set_identity() {
-    typename elements_type::iterator it = this->elements_.begin();
+  static Self
+  identity() {
+    static Self identity_;
+    std::call_once(identity_once_flag_, initialize_identity, std::ref<Self>(identity_));
+    return identity_;
+  }
+private:
+  static void
+  initialize_identity(Self& identity) {
+    typename elements_type::iterator it = identity.elements_.begin();
     for (std::size_t i = 0; i < Dimension - 1; ++i) {
       for (std::size_t j = 0; j < Dimension; ++j, ++it) {
         if (i == j) {
@@ -72,10 +82,15 @@ public:
   }
 };
 
+template<class Float, std::size_t Dimension, class Self>
+std::once_flag affine_matrix<Float, Dimension, Self>::identity_once_flag_;
+
 }
 }
 
-#ifdef EBITEN_TEST
+// TODO: test...
+
+/*#ifdef EBITEN_TEST
 
 namespace ebiten {
 namespace graphics {
@@ -137,6 +152,6 @@ BOOST_AUTO_TEST_CASE(affine_matrix_is_identity) {
 }
 }
 
-#endif
+#endif*/
 
 #endif

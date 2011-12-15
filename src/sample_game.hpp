@@ -88,8 +88,7 @@ public:
         auto mat = ebiten::graphics::geometry_matrix(2, 0, 0, 2, 0, 0);
         gc.set_geometry_matrix(mat);
       } else if (i == 4) {
-        ebiten::graphics::color_matrix mat;
-        mat.set_identity();
+        ebiten::graphics::color_matrix mat(ebiten::graphics::color_matrix::identity());
         mat.set_element<0, 0>(0);
         gc.set_color_matrix(mat);
       } else {
