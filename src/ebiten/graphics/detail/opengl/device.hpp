@@ -22,11 +22,6 @@
 #include <functional>
 #include <thread>
 
-// TODO: refactoring
-#ifdef EBITEN_IOS
-# define glOrtho glOrthof
-#endif
-
 namespace ebiten {
 namespace graphics {
 namespace detail {

@@ -79,7 +79,7 @@ public:
       // loading...
       return;
     }
-    gc.draw_rect(0, 0, 100, 100, 51, 102, 153, 204);
+    gc.draw_rect(0, 0, 100, 100, 51, 102, 153, 128);
     
     gc.set_texture(this->texture_);
     int i = 0;

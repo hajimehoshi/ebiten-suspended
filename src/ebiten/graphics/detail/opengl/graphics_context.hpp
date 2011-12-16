@@ -47,7 +47,6 @@ public:
     ::glClear(GL_COLOR_BUFFER_BIT);
   }
   // Only for debugging?
-  // TODO: Fix that!
   void
   draw_rect(std::size_t x, std::size_t y, std::size_t width, std::size_t height,
             uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) {
@@ -56,7 +55,6 @@ public:
                             x + width, y,
                             x,         y + height,
                             x + width, y + height,};
-    // TODO: fix that
     uint8_t const colors[] = {red, green, blue, alpha,
                               red, green, blue, alpha,
                               red, green, blue, alpha,
@@ -64,14 +62,12 @@ public:
     ::glUseProgram(this->vertex_shader_program_);
     ::glBindTexture(GL_TEXTURE_2D, 0);
     ::glEnableClientState(GL_VERTEX_ARRAY);
-    //::glEnableClientState(GL_COLOR_ARRAY);
-    ::glColor4ub(red, green, blue, alpha);
+    ::glEnableClientState(GL_COLOR_ARRAY);
     ::glVertexPointer(2, GL_FLOAT, 0, vertex);
-    //::glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors);
+    ::glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors);
     ::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     ::glDisableClientState(GL_VERTEX_ARRAY);
-    //::glDisableClientState(GL_COLOR_ARRAY);
-    ::glColor4f(1, 1, 1, 1);
+    ::glDisableClientState(GL_COLOR_ARRAY);
   }
   void
   set_texture(texture const& texture) {
@@ -229,6 +225,7 @@ private:
                         "uniform mat4 modelview_matrix;\n"
                         "\n"
                         "void main(void) {\n"
+                        "  gl_FrontColor = gl_Color;\n"
                         "  gl_TexCoord[0] = gl_MultiTexCoord0;\n"
                         "  gl_Position = projection_matrix * modelview_matrix * gl_Vertex;\n"
                         "}\n");
