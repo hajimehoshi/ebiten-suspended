@@ -18,6 +18,9 @@
 #include <algorithm>
 #include <cassert>
 #include <iostream>
+#include <regex>
+#include <sstream>
+
 
 namespace ebiten {
 namespace graphics {
@@ -124,8 +127,10 @@ public:
     ::glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     ::glEnableVertexAttribArray(vertex_attr_location);
     ::glEnableVertexAttribArray(texture_attr_location);
-    ::glVertexAttribPointer(vertex_attr_location, 2, GL_FLOAT, GL_FALSE, 0, vertex);
-    ::glVertexAttribPointer(texture_attr_location, 2, GL_FLOAT, GL_FALSE, 0, tex_coord);
+    ::glVertexAttribPointer(vertex_attr_location, 2, GL_FLOAT, GL_FALSE,
+                            0, vertex);
+    ::glVertexAttribPointer(texture_attr_location, 2, GL_FLOAT, GL_FALSE,
+                            0, tex_coord);
     ::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     ::glDisableVertexAttribArray(texture_attr_location);
     ::glDisableVertexAttribArray(vertex_attr_location);
@@ -238,44 +243,50 @@ private:
   is_opengl_es_2() {
     GLubyte const* gl_version_p = glGetString(GL_VERSION);
     std::string const gl_version(reinterpret_cast<char const*>(gl_version_p));
-    std::string const opengl_es_prefix("OpenGL ES");
-    return gl_version.substr(0, opengl_es_prefix.size()) == opengl_es_prefix &&
-      gl_version[10] == '2';
+    std::smatch match;
+    std::regex const reg("^OpenGL ES ([[:digit:]])");
+    bool const matched = std::regex_search(gl_version, match, reg);
+    return matched && (match[1] == '2');
   }
   void
   initialize_shader_programs() {
-    std::string const vertex_shader_src =
-      //"default precision highp;\n"
-      "attribute vec2 vertex;\n" // TODO: Use highp
-      "attribute vec2 texture;\n"
-      "uniform mat4 projection_matrix;\n"
-      "uniform mat4 modelview_matrix;\n"
-      "varying vec2 tex_coord;\n"
+    std::string vertex_shader_src;
+    std::string fragment_shader_src;
+    std::string color_mat_shader_src;
+    vertex_shader_src +=
+      "attribute highp vec2 vertex;\n"
+      "attribute highp vec2 texture;\n"
+      "uniform highp mat4 projection_matrix;\n"
+      "uniform highp mat4 modelview_matrix;\n"
+      "varying highp vec2 tex_coord;\n"
       "\n"
       "void main(void) {\n"
-      // "  gl_FrontColor = gl_Color;\n"
       "  tex_coord = texture;\n"
       "  gl_Position = projection_matrix * modelview_matrix * vec4(vertex, 0, 1);\n"
       "}\n";
-    std::string const fragment_shader_src =
-      //"default precision highp;\n"
-      "uniform sampler2D texture;\n"
-      "varying vec2 tex_coord;\n"
+    fragment_shader_src +=
+      "uniform lowp sampler2D texture;\n"
+      "varying highp vec2 tex_coord;\n"
       "\n"
       "void main(void) {\n"
       "  gl_FragColor = texture2D(texture, tex_coord);\n"
       "}\n";
-    std::string const color_mat_shader_src =
-      //"default precision highp;\n"
-      "uniform sampler2D texture;\n"
-      "uniform mat4 color_matrix;\n"
-      "uniform vec4 color_matrix_translation;\n"
-      "varying vec2 tex_coord;\n"
+    color_mat_shader_src +=
+      "uniform highp sampler2D texture;\n"
+      "uniform lowp mat4 color_matrix;\n"
+      "uniform lowp vec4 color_matrix_translation;\n"
+      "varying highp vec2 tex_coord;\n"
       "\n"
       "void main(void) {\n"
-      "  vec4 color = texture2D(texture, tex_coord);\n"
+      "  lowp vec4 color = texture2D(texture, tex_coord);\n"
       "  gl_FragColor = color_matrix * color + color_matrix_translation;\n"
       "}\n";
+    if (!is_opengl_es_2()) {
+      std::regex const reg("(highp|lowp)");
+      vertex_shader_src    = std::regex_replace(vertex_shader_src,    reg, "");
+      fragment_shader_src  = std::regex_replace(fragment_shader_src,  reg, "");
+      color_mat_shader_src = std::regex_replace(color_mat_shader_src, reg, "");
+    }
     // TODO: ARB?
     GLuint vertex_shader = ::glCreateShader(GL_VERTEX_SHADER);
     assert(vertex_shader);
@@ -283,9 +294,9 @@ private:
     assert(fragment_shader);
     GLuint color_mat_shader = ::glCreateShader(GL_FRAGMENT_SHADER);
     assert(color_mat_shader);
-    this->compile_shader(vertex_shader, vertex_shader_src);
-    this->compile_shader(fragment_shader, fragment_shader_src);
-    this->compile_shader(color_mat_shader, color_mat_shader_src);
+    this->compile_shader(vertex_shader,    vertex_shader_src,    "vertex_shader");
+    this->compile_shader(fragment_shader,  fragment_shader_src,  "fragment_shader");
+    this->compile_shader(color_mat_shader, color_mat_shader_src, "color_mat_shader");
     {
       GLuint program = ::glCreateProgram();
       assert(program);
@@ -317,20 +328,20 @@ private:
     ::glDeleteShader(color_mat_shader);
   }
   void
-  compile_shader(GLuint shader, std::string const& src) {
+  compile_shader(GLuint shader, std::string const& src, std::string const& shader_name) {
     char const* src_p = src.c_str();
     ::glShaderSource(shader, 1, &src_p, 0);
     ::glCompileShader(shader);
     GLint compiled;
     ::glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
-    this->show_shader_log(shader);
+    this->show_shader_log(shader, shader_name);
     if (compiled == GL_FALSE) {
-      throw std::runtime_error("shader compile error");
+      throw std::runtime_error("shader compile error (" + shader_name + ")");
     }
   }
   // TODO: Debug Mode
   void
-  show_shader_log(GLuint shader) {
+  show_shader_log(GLuint shader, std::string const& shader_name) {
     int log_size = 0;
     ::glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &log_size);
     if (log_size) {
@@ -341,7 +352,12 @@ private:
                            log_size,
                            &length,
                            buffer.get());
-      throw std::runtime_error(std::string("shader error: ") + buffer.get());
+      std::ostringstream msg;
+      msg << "shader error ("
+          << shader_name
+          << "): "
+          << buffer.get();
+      throw std::runtime_error(msg.str());
     }
   }
   // TODO: show_program_log
