@@ -28,6 +28,7 @@ class graphics_context : private noncopyable {
 private:
   GLuint vertex_shader_program_;
   GLuint vertex_fragment_shader_program_;
+  GLuint current_program_;
   texture current_texture_;
   std::array<float, 16> projection_matrix_;
   geometry_matrix modelview_matrix_;
@@ -35,7 +36,8 @@ private:
 private:
   graphics_context()
     : vertex_shader_program_(0),
-      vertex_fragment_shader_program_(0) {
+      vertex_fragment_shader_program_(0),
+      current_program_(0) {
     this->modelview_matrix_ = geometry_matrix::identity();
     this->color_matrix_     = color_matrix::identity();
     assert(this->modelview_matrix_.is_identity());
@@ -84,6 +86,7 @@ public:
       return;
     }
     this->set_shader_program();
+    // TODO: use glVertexAttribPointer
 
     // TODO: cache? Check other callings of glBindTexture.
     ::glBindTexture(GL_TEXTURE_2D, this->current_texture_.id());
@@ -108,12 +111,24 @@ public:
                                tu2, tv1,
                                tu1, tv2,
                                tu2, tv2,};
+
+    GLint const vertex_attr_location = ::glGetAttribLocation(this->current_program_,
+                                                             "vertex");
+    assert(vertex_attr_location != -1);
+    GLint const texture_attr_location = ::glGetAttribLocation(this->current_program_,
+                                                             "texture");
+    assert(texture_attr_location != -1);
+
     // TODO: use glMultiDrawArrays?
     ::glEnableClientState(GL_VERTEX_ARRAY);
     ::glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-    ::glVertexPointer(2, GL_FLOAT, 0, vertex);
-    ::glTexCoordPointer(2, GL_FLOAT, 0, tex_coord);
+    ::glEnableVertexAttribArray(vertex_attr_location);
+    ::glEnableVertexAttribArray(texture_attr_location);
+    ::glVertexAttribPointer(vertex_attr_location, 2, GL_FLOAT, GL_FALSE, 0, vertex);
+    ::glVertexAttribPointer(texture_attr_location, 2, GL_FLOAT, GL_FALSE, 0, tex_coord);
     ::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    ::glDisableVertexAttribArray(texture_attr_location);
+    ::glDisableVertexAttribArray(vertex_attr_location);
     ::glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     ::glDisableClientState(GL_VERTEX_ARRAY);
   }
@@ -154,6 +169,7 @@ private:
     }
     // TODO: cache and skip?
     ::glUseProgram(program);
+    this->current_program_ = program;
     {
       GLint location = ::glGetUniformLocation(program, "projection_matrix");
       assert(location != -1);
@@ -218,32 +234,48 @@ private:
     std::copy(first, last, this->projection_matrix_.data());
   }
   // TODO: Check multi process
+  bool
+  is_opengl_es_2() {
+    GLubyte const* gl_version_p = glGetString(GL_VERSION);
+    std::string const gl_version(reinterpret_cast<char const*>(gl_version_p));
+    std::string const opengl_es_prefix("OpenGL ES");
+    return gl_version.substr(0, opengl_es_prefix.size()) == opengl_es_prefix &&
+      gl_version[10] == '2';
+  }
   void
   initialize_shader_programs() {
-    static std::string const
-      vertex_shader_src("uniform mat4 projection_matrix;\n"
-                        "uniform mat4 modelview_matrix;\n"
-                        "\n"
-                        "void main(void) {\n"
-                        "  gl_FrontColor = gl_Color;\n"
-                        "  gl_TexCoord[0] = gl_MultiTexCoord0;\n"
-                        "  gl_Position = projection_matrix * modelview_matrix * gl_Vertex;\n"
-                        "}\n");
-    static std::string const
-      fragment_shader_src("uniform sampler2D texture;\n"
-                          "\n"
-                          "void main(void) {\n"
-                          "  gl_FragColor = texture2DProj(texture, gl_TexCoord[0]);\n"
-                          "}\n");
-    static std::string const
-      color_mat_shader_src("uniform sampler2D texture;\n"
-                           "uniform mat4 color_matrix;\n"
-                           "uniform vec4 color_matrix_translation;\n"
-                           "\n"
-                           "void main(void) {\n"
-                           "  vec4 color = texture2DProj(texture, gl_TexCoord[0]);\n"
-                           "  gl_FragColor = color_matrix * color + color_matrix_translation;\n"
-                           "}\n");
+    std::string const vertex_shader_src =
+      //"default precision highp;\n"
+      "attribute vec2 vertex;\n" // TODO: Use highp
+      "attribute vec2 texture;\n"
+      "uniform mat4 projection_matrix;\n"
+      "uniform mat4 modelview_matrix;\n"
+      "varying vec2 tex_coord;\n"
+      "\n"
+      "void main(void) {\n"
+      // "  gl_FrontColor = gl_Color;\n"
+      "  tex_coord = texture;\n"
+      "  gl_Position = projection_matrix * modelview_matrix * vec4(vertex, 0, 1);\n"
+      "}\n";
+    std::string const fragment_shader_src =
+      //"default precision highp;\n"
+      "uniform sampler2D texture;\n"
+      "varying vec2 tex_coord;\n"
+      "\n"
+      "void main(void) {\n"
+      "  gl_FragColor = texture2D(texture, tex_coord);\n"
+      "}\n";
+    std::string const color_mat_shader_src =
+      //"default precision highp;\n"
+      "uniform sampler2D texture;\n"
+      "uniform mat4 color_matrix;\n"
+      "uniform vec4 color_matrix_translation;\n"
+      "varying vec2 tex_coord;\n"
+      "\n"
+      "void main(void) {\n"
+      "  vec4 color = texture2D(texture, tex_coord);\n"
+      "  gl_FragColor = color_matrix * color + color_matrix_translation;\n"
+      "}\n";
     // TODO: ARB?
     GLuint vertex_shader = ::glCreateShader(GL_VERTEX_SHADER);
     assert(vertex_shader);
@@ -258,7 +290,7 @@ private:
       GLuint program = ::glCreateProgram();
       assert(program);
       ::glAttachShader(program, vertex_shader);
-      //::glAttachShader(program, fragment_shader);
+      ::glAttachShader(program, fragment_shader);
       ::glLinkProgram(program);
       GLint linked;
       ::glGetProgramiv(program, GL_LINK_STATUS, &linked);
