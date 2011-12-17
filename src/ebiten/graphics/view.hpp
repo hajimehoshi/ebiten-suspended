@@ -20,7 +20,7 @@ public:
     : native_view_(n) {
   }
   native_view
-  native_view() const {
+  native_view() {
     return this->native_view_;
   }
 };

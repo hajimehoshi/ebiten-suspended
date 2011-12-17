@@ -37,7 +37,7 @@ public:
     return this->height_;
   }
   native_frame
-  native_frame() const {
+  native_frame() {
     return this->native_frame_;
   }
   graphics::view&
