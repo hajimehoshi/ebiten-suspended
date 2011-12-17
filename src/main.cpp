@@ -7,10 +7,12 @@ main() {
     sample_game game;
     auto game_update = std::bind(&sample_game::update, &game, std::placeholders::_1);
     auto game_draw   = std::bind(&sample_game::draw,   &game, std::placeholders::_1);
+    ebiten::frames::frame frame(640, 480);
     ebiten::kernels::kernel kernel(game_update,
                                    game_draw,
-                                   320, 240, 2, 60);
-    kernel.main_loop();
+                                   320, 240, 2, 60,
+                                   frame.view());
+    kernel.run_main_loop();
   } catch (std::runtime_error const& err) {
     std::cerr << err.what() << std::endl;
     return EXIT_FAILURE;

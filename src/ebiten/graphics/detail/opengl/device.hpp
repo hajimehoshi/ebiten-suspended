@@ -39,11 +39,10 @@ private:
   GLuint offscreen_framebuffer_;
   std::mutex mutex_;
 public:
-#ifndef EBITEN_IOS
   device(std::size_t screen_width,
          std::size_t screen_height,
          std::size_t screen_scale,
-         frames::frame& frame,
+         graphics::view& view,
          std::function<void(device&)> const& update_func,
          std::function<void(device&)> const& draw_func)
     : screen_width_(screen_width),
@@ -56,27 +55,7 @@ public:
     assert(0 < this->screen_scale_);
     assert(this->update_func_);
     assert(this->draw_func_);
-    opengl_initializer::initialize(frame, std::bind(&device::update, this));
-  }
-#endif
-  template<class View>
-  device(std::size_t screen_width,
-         std::size_t screen_height,
-         std::size_t screen_scale,
-         View& view,
-         std::function<void(device&)> const& update_func,
-         std::function<void(device&)> const& draw_func)
-    : screen_width_(screen_width),
-      screen_height_(screen_height),
-      screen_scale_(screen_scale),
-      update_func_(update_func),
-      draw_func_(draw_func) {
-    assert(0 < this->screen_width_);
-    assert(0 < this->screen_height_);
-    assert(0 < this->screen_scale_);
-    assert(this->update_func_);
-    assert(this->draw_func_);
-    opengl_initializer::initialize_with_view(view, std::bind(&device::update, this));
+    opengl_initializer::initialize(view, std::bind(&device::update, this));
   }
   // TODO: destructor
   /*

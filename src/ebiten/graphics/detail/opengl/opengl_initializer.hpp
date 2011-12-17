@@ -18,18 +18,10 @@ public:
   opengl_initializer() = delete;
   opengl_initializer(opengl_initializer const&) = delete;
   opengl_initializer& operator=(opengl_initializer const&) = delete;
-#ifndef EBITEN_IOS
   static void
-  initialize(frames::frame& frame,
-             std::function<void()> const updating_func) {
-    ::ebiten_graphics_detail_initialize_opengl(frame, updating_func);
-  }
-#endif
-  template<class View>
-  static void
-  initialize_with_view(View& view,
-                       std::function<void()> const updating_func) {
-    ::ebiten_graphics_detail_initialize_opengl_with_view(view, updating_func);
+  initialize(view& view,
+             std::function<void()> const& updating_func) {
+    ::ebiten_graphics_detail_initialize_opengl(view, updating_func);
   }
 };
 

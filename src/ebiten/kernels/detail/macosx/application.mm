@@ -57,9 +57,9 @@
 #endif
 
 static void
-ebiten_kernels_detail_run_application(ebiten::frames::frame& frame) {
+ebiten_kernels_detail_run_application(ebiten::graphics::view& view) {
   @autoreleasepool {
-    NSWindow* window = frame.native_frame();
+    NSWindow* window = [view.native_view() window];
     assert(window != nil);
     EbitenController* controller = [[EbitenController alloc] initWithWindow:window];
     NSApplication* app = [NSApplication sharedApplication];

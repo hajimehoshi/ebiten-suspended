@@ -1,6 +1,9 @@
 #ifndef EBITEN_FRAMES_DETAIL_MACOSX_FRAME_MM
 #define EBITEN_FRAMES_DETAIL_MACOSX_FRAME_MM
 
+// TODO: Fix that?
+#include "ebiten/graphics/view.hpp"
+
 #import <Cocoa/Cocoa.h>
 #undef check // solve a confliction with Boost
 
@@ -77,6 +80,23 @@ ebiten_frame_detail_generate_native_frame(std::size_t width, std::size_t height)
   EbitenWindow* window = [[EbitenWindow alloc]
                            initWithSize:NSMakeSize(width, height)];
   assert(window != nil);
+
+  NSRect const rect = NSMakeRect(0, 0, width, height);
+  NSOpenGLPixelFormatAttribute const attributes[] = {
+    NSOpenGLPFAWindow,
+    NSOpenGLPFADoubleBuffer,
+    NSOpenGLPFAAccelerated,
+    NSOpenGLPFADepthSize, 32,
+    nil,
+  };
+  NSOpenGLPixelFormat* format = [[NSOpenGLPixelFormat alloc]
+                                  initWithAttributes:attributes];
+  EbitenOpenGLView* glView = [[EbitenOpenGLView alloc]
+                               initWithFrame:rect
+                                 pixelFormat:format];
+  [window setContentView:glView];
+  //[window makeFirstResponder:glView];
+
   return window;
 }
 
