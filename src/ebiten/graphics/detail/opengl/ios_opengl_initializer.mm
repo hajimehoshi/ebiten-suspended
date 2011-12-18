@@ -33,24 +33,6 @@
 }
 
 @end
-
-// TODO: Fix it
-static EbitenGLKViewDelegate* ebitenGlkViewDelegate;
-
 #endif
-
-static void
-ebiten_graphics_detail_initialize_opengl(ebiten::graphics::view& view,
-                                         std::function<void()> const updating_func) {
-  GLKView* glkView = view.native_view();
-  ebitenGlkViewDelegate = [[EbitenGLKViewDelegate alloc] init];
-  [ebitenGlkViewDelegate setUpdatingFunc: updating_func];
-  glkView.delegate = ebitenGlkViewDelegate;
-
-  EAGLContext* eaglContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-  glkView.context = eaglContext;
-
-  //[glkView setUpdatingFunc:updating_func];
-}
 
 #endif

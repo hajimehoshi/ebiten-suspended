@@ -31,6 +31,7 @@ private:
   graphics_context graphics_context_;
   texture offscreen_texture_;
   GLuint offscreen_framebuffer_;
+  opengl_initializer opengl_initializer_;
 public:
   device(std::size_t screen_width,
          std::size_t screen_height,
@@ -50,7 +51,7 @@ public:
     assert(0 < this->screen_scale_);
     assert(this->update_func_);
     assert(this->draw_func_);
-    opengl_initializer::initialize(view, std::bind(&device::update, this));
+    this->opengl_initializer_.initialize(view, std::bind(&device::update, this));
   }
   // TODO: destructor
   /*

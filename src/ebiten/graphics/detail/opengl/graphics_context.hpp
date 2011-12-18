@@ -22,7 +22,6 @@
 #include <regex>
 #include <sstream>
 
-
 namespace ebiten {
 namespace graphics {
 namespace detail {
