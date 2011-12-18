@@ -1,17 +1,31 @@
 #ifndef EBITEN_KERNELS_DETAIL_MACOSX_APPLICATION_HPP
 #define EBITEN_KERNELS_DETAIL_MACOSX_APPLICATION_HPP
 
+// TODO: make native_frame.hpp?
+#include "ebiten/frames/frame.hpp"
 #include "ebiten/graphics/view.hpp"
 #include "ebiten/kernels/detail/macosx/application.mm"
+#include "ebiten/noncopyable.hpp"
 
 namespace ebiten {
 namespace kernels {
 namespace detail {
 
-static void
-run_application(graphics::view& view) {
-  ::ebiten_kernels_detail_run_application(view);
-}
+class application : private noncopyable {
+public:
+  static void
+  run(frames::native_frame native_frame) {
+    @autoreleasepool {
+      NSWindow* window = native_frame;
+      assert(window != nil);
+      EbitenController* controller = [[EbitenController alloc] initWithWindow:window];
+      NSApplication* app = [NSApplication sharedApplication];
+      [app setDelegate:controller];
+      [app finishLaunching];
+      [app run];
+    }
+  }
+};
 
 }
 }

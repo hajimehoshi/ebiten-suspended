@@ -1,16 +1,6 @@
 #ifndef EBITEN_KERNELS_KERNEL_HPP
 #define EBITEN_KERNELS_KERNEL_HPP
 
-#include "ebiten/platform.hpp"
-
-#ifdef EBITEN_MACOSX
-# include "ebiten/kernels/detail/macosx/application.hpp"
-#endif
-
-#ifdef EBITEN_IOS
-# include "ebiten/kernels/detail/ios/application.hpp"
-#endif
-
 #include "ebiten/graphics/device.hpp"
 #include "ebiten/graphics/view.hpp"
 #include "ebiten/noncopyable.hpp"
@@ -25,7 +15,6 @@ private:
   std::function<void(graphics::texture_factory&)> game_update_;
   std::function<void(graphics::graphics_context&)> game_draw_;
   std::size_t const fps_;
-  graphics::view& view_;
   uint64_t before_;
   graphics::device device_;
 public:
@@ -39,7 +28,6 @@ public:
     : game_update_(game_update),
       game_draw_(game_draw),
       fps_(fps),
-      view_(view),
       before_(timers::timer::now_nsec() * fps),
       device_(screen_width,
               screen_height,
@@ -47,10 +35,6 @@ public:
               view,
               std::bind(&kernel::update, this),
               std::bind(&kernel::draw, this)) {
-  }
-  void
-  run_main_loop() {
-    detail::run_application(this->view_);
   }
 private:
   void

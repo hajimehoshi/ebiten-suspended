@@ -1,6 +1,9 @@
 #ifndef SAMPLE_GAME_HPP
 #define SAMPLE_GAME_HPP
 
+// TODO: Remove this dirty hack!
+#include <boost/type_traits.hpp>
+
 #include "ebiten/ebiten.hpp"
 #include "ebiten/image_loader.hpp"
 #include <cstdlib>

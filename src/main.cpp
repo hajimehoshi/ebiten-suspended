@@ -1,6 +1,7 @@
 #include "sample_game.hpp"
 #include "ebiten/ebiten.hpp"
 #include "ebiten/frames/frame.hpp"
+#include "ebiten/kernels/application.hpp"
 
 int
 main() {
@@ -13,7 +14,7 @@ main() {
                                    game_draw,
                                    320, 240, 2, 60,
                                    frame.view());
-    kernel.run_main_loop();
+    ebiten::kernels::application::run(frame.native_frame());
   } catch (std::runtime_error const& err) {
     std::cerr << err.what() << std::endl;
     return EXIT_FAILURE;
