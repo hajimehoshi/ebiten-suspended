@@ -1,6 +1,8 @@
 #ifndef EBITEN_GRAPHICS_DETAIL_OPENGL_TEXTURE_ID_HPP
 #define EBITEN_GRAPHICS_DETAIL_OPENGL_TEXTURE_ID_HPP
 
+#include "ebiten/platform.hpp"
+
 #ifdef EBITEN_MACOSX
 # include <OpenGL/gl.h>
 #endif

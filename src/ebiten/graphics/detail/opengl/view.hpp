@@ -1,6 +1,8 @@
 #ifndef EBITEN_GRAPHICS_DETAIL_OPENGL_VIEW_MM
 #define EBITEN_GRAPHICS_DETAIL_OPENGL_VIEW_MM
 
+#include "ebiten/platform.hpp"
+
 #ifdef EBITEN_MACOSX
 # include "macosx_view.mm"
 #endif

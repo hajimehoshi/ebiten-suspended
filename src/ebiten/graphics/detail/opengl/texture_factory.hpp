@@ -5,6 +5,7 @@
 #include "ebiten/graphics/detail/opengl/device.hpp"
 #include "ebiten/image.hpp"
 #include "ebiten/noncopyable.hpp"
+#include "ebiten/platform.hpp"
 
 #ifdef EBITEN_MACOSX
 # include <OpenGL/gl.h>

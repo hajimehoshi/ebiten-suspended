@@ -5,6 +5,7 @@
 #include "ebiten/graphics/detail/opengl/opengl_initializer.hpp"
 #include "ebiten/graphics/detail/opengl/texture_factory.hpp"
 #include "ebiten/noncopyable.hpp"
+#include "ebiten/platform.hpp"
 
 #ifdef EBITEN_MACOSX
 # include <OpenGL/gl.h>

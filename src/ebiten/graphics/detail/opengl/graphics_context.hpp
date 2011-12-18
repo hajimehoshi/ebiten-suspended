@@ -7,6 +7,7 @@
 #include "ebiten/graphics/geometry_matrix.hpp"
 #include "ebiten/graphics/texture.hpp"
 #include "ebiten/noncopyable.hpp"
+#include "ebiten/platform.hpp"
 
 #ifdef EBITEN_MACOSX
 # include <OpenGL/gl.h>
