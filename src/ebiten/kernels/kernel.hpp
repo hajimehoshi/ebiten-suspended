@@ -7,6 +7,10 @@
 # include "ebiten/kernels/detail/macosx/application.hpp"
 #endif
 
+#ifdef EBITEN_IOS
+# include "ebiten/kernels/detail/ios/application.hpp"
+#endif
+
 #include "ebiten/graphics/device.hpp"
 #include "ebiten/graphics/view.hpp"
 #include "ebiten/noncopyable.hpp"

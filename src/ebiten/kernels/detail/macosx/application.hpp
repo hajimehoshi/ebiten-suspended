@@ -2,10 +2,7 @@
 #define EBITEN_KERNELS_DETAIL_MACOSX_APPLICATION_HPP
 
 #include "ebiten/graphics/view.hpp"
-
-#ifdef EBITEN_MACOSX
 #include "ebiten/kernels/detail/macosx/application.mm"
-#endif
 
 namespace ebiten {
 namespace kernels {

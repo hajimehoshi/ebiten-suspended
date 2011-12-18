@@ -1,7 +1,7 @@
 #ifndef EBITEN_GRAPHICS_GRAPHICS_VIEW_HPP
 #define EBITEN_GRAPHICS_GRAPHICS_VIEW_HPP
 
-#ifdef EBITEN_MACOSX
+#if defined(EBITEN_MACOSX) || defined(EBITEN_IOS)
 # include "ebiten/graphics/detail/opengl/view.hpp"
 #endif
 
