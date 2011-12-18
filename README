@@ -11,9 +11,10 @@ Ebiten - A 2D Game Library -
 You need:
 - Xcode 4.2
 - Boost
-- Cocoa.framework (Mac OS X)
 - OpenGL.framework (Mac OS X)
 - QuartzCore.framework (Mac OS X)
+- GLKit.framework (iOS)
+- OpenGLES.framework (iOS)
 
 Do 'make' command to create ebiten.app (a kind of a sample).
 
