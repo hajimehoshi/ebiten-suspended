@@ -95,7 +95,7 @@ public:
         auto mat = ebiten::graphics::geometry_matrix(1, 0, 0, 1, 0, 0);
         gc.set_geometry_matrix(mat);
       }
-      gc.draw(0, 0, s.x, s.y, 32, 32);
+      gc.draw(0, 0, 32, 32, s.x, s.y, 32, 32);
       ++i;
     }
   }

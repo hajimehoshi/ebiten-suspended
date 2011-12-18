@@ -2,6 +2,7 @@
 #define EBITEN_GRAPHICS_DETAIL_OPENGL_GRAPHICS_CONTEXT_HPP
 
 #include "ebiten/graphics/detail/opengl/device.hpp"
+#include "ebiten/graphics/detail/opengl/texture_factory.hpp"
 #include "ebiten/graphics/color_matrix.hpp"
 #include "ebiten/graphics/geometry_matrix.hpp"
 #include "ebiten/graphics/texture.hpp"
@@ -29,17 +30,20 @@ namespace detail {
 class graphics_context : private noncopyable {
   friend class device;
 private:
-  GLuint vertex_shader_program_;
-  GLuint vertex_fragment_shader_program_;
+  texture_factory& texture_factory_;
+  GLuint regular_shader_program_;
+  GLuint color_mat_shader_program_;
   GLuint current_program_;
-  texture current_texture_;
+  graphics::texture texture_;
   std::array<float, 16> projection_matrix_;
-  geometry_matrix modelview_matrix_;
-  color_matrix color_matrix_;
+  graphics::geometry_matrix modelview_matrix_;
+  graphics::color_matrix color_matrix_;
+  texture empty_texture_;
 private:
-  graphics_context()
-    : vertex_shader_program_(0),
-      vertex_fragment_shader_program_(0),
+  graphics_context(texture_factory& texture_factory)
+    : texture_factory_(texture_factory),
+      regular_shader_program_(0),
+      color_mat_shader_program_(0),
       current_program_(0) {
     this->modelview_matrix_ = geometry_matrix::identity();
     this->color_matrix_     = color_matrix::identity();
@@ -55,57 +59,59 @@ public:
   void
   draw_rect(std::size_t x, std::size_t y, std::size_t width, std::size_t height,
             uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) {
-    this->set_shader_program();
-    float const vertex[] = {x,         y,
-                            x + width, y,
-                            x,         y + height,
-                            x + width, y + height,};
-    uint8_t const colors[] = {red, green, blue, alpha,
-                              red, green, blue, alpha,
-                              red, green, blue, alpha,
-                              red, green, blue, alpha,};
-    ::glUseProgram(this->vertex_shader_program_);
-    ::glBindTexture(GL_TEXTURE_2D, 0);
-    ::glEnableClientState(GL_VERTEX_ARRAY);
-    ::glEnableClientState(GL_COLOR_ARRAY);
-    ::glVertexPointer(2, GL_FLOAT, 0, vertex);
-    ::glColorPointer(4, GL_UNSIGNED_BYTE, 0, colors);
-    ::glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    ::glDisableClientState(GL_VERTEX_ARRAY);
-    ::glDisableClientState(GL_COLOR_ARRAY);
+    if (!this->empty_texture_) {
+      this->empty_texture_ = this->texture_factory_.create(16, 16);
+    }
+    graphics::texture orig_texture = this->texture();
+    graphics::color_matrix orig_color_mat = this->color_matrix();
+    graphics::color_matrix color_mat;
+    color_mat.set_element<0, 4>(red   / 255.0);
+    color_mat.set_element<1, 4>(green / 255.0);
+    color_mat.set_element<2, 4>(blue  / 255.0);
+    color_mat.set_element<3, 4>(alpha / 255.0);
+
+    this->set_texture(this->empty_texture_);
+    this->set_color_matrix(color_mat);
+    this->draw(0, 0, this->empty_texture_.width(), this->empty_texture_.height(),
+               x, y, width, height);
+    this->set_color_matrix(orig_color_mat);
+    this->set_texture(orig_texture);
+  }
+  texture
+  texture() const {
+    return this->texture_;
   }
   void
-  set_texture(texture const& texture) {
-    this->current_texture_ = texture;
+  set_texture(graphics::texture const& texture) {
+    this->texture_ = texture;
   }
   void
   reset_texture() {
-    this->current_texture_ = ebiten::graphics::texture();
+    this->texture_ = ebiten::graphics::texture();
   }
   void
-  draw(double src_x, double src_y, double dst_x, double dst_y, double width, double height) {
+  draw(double src_x, double src_y, double src_width, double src_height,
+       double dst_x, double dst_y, double dst_width, double dst_height) {
     // TODO: Throwing an exception?
-    if (!this->current_texture_) {
+    if (!this->texture_) {
       return;
     }
     this->set_shader_program();
-    // TODO: use glVertexAttribPointer
-
     // TODO: cache? Check other callings of glBindTexture.
-    ::glBindTexture(GL_TEXTURE_2D, this->current_texture_.id());
+    ::glBindTexture(GL_TEXTURE_2D, this->texture_.id());
     // TODO: replace float to short?
     // http://objective-audio.jp/2009/07/ngmoco-opengl.html
     // 選べるようにするといいかも
-    float const texture_width  = this->current_texture_.width();
-    float const texture_height = this->current_texture_.height();
-    float const tu1 = src_x            / texture_width;
-    float const tu2 = (src_x + width)  / texture_width;
-    float const tv1 = src_y            / texture_height;
-    float const tv2 = (src_y + height) / texture_height;
+    float const texture_width  = this->texture_.width();
+    float const texture_height = this->texture_.height();
+    float const tu1 = src_x                / texture_width;
+    float const tu2 = (src_x + src_width)  / texture_width;
+    float const tv1 = src_y                / texture_height;
+    float const tv2 = (src_y + src_height) / texture_height;
     float const x1 = dst_x;
-    float const x2 = dst_x + width;
+    float const x2 = dst_x + dst_width;
     float const y1 = dst_y;
-    float const y2 = dst_y + height;
+    float const y2 = dst_y + dst_height;
     float const vertex[] = {x1, y1,
                             x2, y1,
                             x1, y2,
@@ -119,7 +125,7 @@ public:
                                                              "vertex");
     assert(vertex_attr_location != -1);
     GLint const texture_attr_location = ::glGetAttribLocation(this->current_program_,
-                                                             "texture");
+                                                              "texture");
     assert(texture_attr_location != -1);
 
     // TODO: use glMultiDrawArrays?
@@ -137,16 +143,24 @@ public:
     ::glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     ::glDisableClientState(GL_VERTEX_ARRAY);
   }
+  graphics::geometry_matrix
+  geometry_matrix() const {
+    return this->modelview_matrix_;
+  }
   void
-  set_geometry_matrix(geometry_matrix const& mat) {
+  set_geometry_matrix(graphics::geometry_matrix const& mat) {
     this->modelview_matrix_ = mat;
   }
   void
   reset_geometry_matrix() {
     this->modelview_matrix_ = geometry_matrix::identity();
   }
+  graphics::color_matrix
+  color_matrix() const {
+    return this->color_matrix_;
+  }
   void
-  set_color_matrix(color_matrix const& mat) {
+  set_color_matrix(graphics::color_matrix const& mat) {
     this->color_matrix_ = mat;
   }
   void
@@ -156,8 +170,8 @@ public:
 private:
   void
   set_shader_program() {
-    if (!this->vertex_shader_program_ ||
-        !this->vertex_fragment_shader_program_) {
+    if (!(this->regular_shader_program_ &&
+          this->color_mat_shader_program_)) {
       // TODO: Replace that with logging
       try {
         this->initialize_shader_programs();
@@ -168,9 +182,9 @@ private:
     }
     GLuint program;
     if (this->color_matrix_.is_identity()) {
-      program = this->vertex_shader_program_;
+      program = this->regular_shader_program_;
     } else {
-      program = this->vertex_fragment_shader_program_;
+      program = this->color_mat_shader_program_;
     }
     // TODO: cache and skip?
     ::glUseProgram(program);
@@ -182,7 +196,7 @@ private:
                            1, GL_FALSE, this->projection_matrix_.data());
     }
     {
-      geometry_matrix mat = this->modelview_matrix_;
+      graphics::geometry_matrix mat = this->modelview_matrix_;
       float const gl_modelview_mat[] = {mat.a(),  mat.c(),  0, 0,
                                         mat.b(),  mat.d(),  0, 0,
                                         0,        0,        1, 0,
@@ -194,13 +208,14 @@ private:
                              1, GL_FALSE, gl_modelview_mat);
       }
     }
-    if (program == this->vertex_fragment_shader_program_) {
-      {
-        GLint location = ::glGetUniformLocation(program, "texture");
-        assert(location != -1);
-        ::glUniform1i(location, 0);
-      }
-      color_matrix const& mat = this->color_matrix_;
+    {
+      GLint location = ::glGetUniformLocation(program, "texture");
+      assert(location != -1);
+      ::glUniform1i(location, 0);
+    }
+    if (program == this->color_mat_shader_program_) {
+      graphics::color_matrix const& mat = this->color_matrix_;
+      // TODO: Refactoring
       float const gl_color_mat[] = {
         static_cast<float>(mat.element<0, 0>()),
         static_cast<float>(mat.element<0, 1>()),
@@ -219,18 +234,22 @@ private:
         static_cast<float>(mat.element<3, 2>()),
         static_cast<float>(mat.element<3, 3>()),
       };
-      ::glUniformMatrix4fv(glGetUniformLocation(program,
-                                                "color_matrix"),
-                           1, GL_FALSE, gl_color_mat);
+      {
+        GLint location = glGetUniformLocation(program, "color_matrix");
+        assert(location != -1);
+        ::glUniformMatrix4fv(location, 1, GL_FALSE, gl_color_mat);
+      }
       float const gl_color_mat_translation[] = {
         static_cast<float>(mat.element<0, 4>()),
         static_cast<float>(mat.element<1, 4>()),
         static_cast<float>(mat.element<2, 4>()),
         static_cast<float>(mat.element<3, 4>()),
       };
-      ::glUniform4fv(glGetUniformLocation(program,
-                                          "color_matrix_translation"),
-                     4, gl_color_mat_translation);
+      {
+        GLint location = glGetUniformLocation(program, "color_matrix_translation");
+        assert(location != -1);
+        ::glUniform4fv(location, 1, gl_color_mat_translation);
+      }
     }
   }
   template<class InputIterator>
@@ -279,7 +298,7 @@ private:
       "\n"
       "void main(void) {\n"
       "  lowp vec4 color = texture2D(texture, tex_coord);\n"
-      "  gl_FragColor = color_matrix * color + color_matrix_translation;\n"
+      "  gl_FragColor = (color_matrix * color) + color_matrix_translation;\n"
       "}\n";
     if (!is_opengl_es_2()) {
       std::regex const reg("(highp|lowp)");
@@ -297,6 +316,7 @@ private:
     this->compile_shader(vertex_shader,    vertex_shader_src,    "vertex_shader");
     this->compile_shader(fragment_shader,  fragment_shader_src,  "fragment_shader");
     this->compile_shader(color_mat_shader, color_mat_shader_src, "color_mat_shader");
+    // TODO: Refactoring
     {
       GLuint program = ::glCreateProgram();
       assert(program);
@@ -308,7 +328,7 @@ private:
       if (linked == GL_FALSE) {
         throw std::runtime_error("program error");
       }
-      this->vertex_shader_program_ = program;
+      this->regular_shader_program_ = program;
     }
     {
       GLuint program = ::glCreateProgram();
@@ -321,7 +341,7 @@ private:
       if (linked == GL_FALSE) {
         throw std::runtime_error("program error");
       }
-      this->vertex_fragment_shader_program_ = program;
+      this->color_mat_shader_program_ = program;
     }
     ::glDeleteShader(vertex_shader);
     ::glDeleteShader(fragment_shader);
@@ -353,9 +373,7 @@ private:
                            &length,
                            buffer.get());
       std::ostringstream msg;
-      msg << "shader error ("
-          << shader_name
-          << "): "
+      msg << "shader error (" << shader_name << "): "
           << buffer.get();
       throw std::runtime_error(msg.str());
     }

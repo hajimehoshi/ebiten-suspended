@@ -15,7 +15,6 @@
 
 #include <cassert>
 #include <functional>
-#include <thread>
 
 namespace ebiten {
 namespace graphics {
@@ -28,11 +27,10 @@ private:
   std::size_t const screen_scale_;
   std::function<void()> update_func_;
   std::function<void()> draw_func_;
-  graphics_context graphics_context_;
   texture_factory texture_factory_;
+  graphics_context graphics_context_;
   texture offscreen_texture_;
   GLuint offscreen_framebuffer_;
-  std::mutex mutex_;
 public:
   device(std::size_t screen_width,
          std::size_t screen_height,
@@ -44,7 +42,9 @@ public:
       screen_height_(screen_height),
       screen_scale_(screen_scale),
       update_func_(update_func),
-      draw_func_(draw_func) {
+      draw_func_(draw_func),
+      texture_factory_(),
+      graphics_context_(this->texture_factory_) {
     assert(0 < this->screen_width_);
     assert(0 < this->screen_height_);
     assert(0 < this->screen_scale_);
@@ -60,7 +60,6 @@ public:
    */
   void
   update() {
-    std::lock_guard<std::mutex> lock(this->mutex_);
     // TODO: If application is terminated, stop
     if (!this->offscreen_texture_) {
       this->initialize_offscreen();
@@ -113,14 +112,14 @@ public:
       };
       this->graphics_context_.set_projection_matrix(std::begin(projection_matrix),
                                                     std::end(projection_matrix));
-      geometry_matrix geometry_matrix(this->screen_scale_, 0,
-                                      0, this->screen_scale_,
-                                      0, 0);
-      this->graphics_context_.set_geometry_matrix(geometry_matrix);
+      this->graphics_context_.reset_geometry_matrix();
       this->graphics_context_.reset_color_matrix();
     }
     this->graphics_context_.set_texture(this->offscreen_texture_);
-    this->graphics_context_.draw(0, 0, 0, 0, this->screen_width_, this->screen_height_);
+    this->graphics_context_.draw(0, 0, this->screen_width_, this->screen_height_,
+                                 0, 0,
+                                 this->screen_width_  * this->screen_scale_,
+                                 this->screen_height_ * this->screen_scale_);
     ::glFlush();
   }
   graphics_context&
