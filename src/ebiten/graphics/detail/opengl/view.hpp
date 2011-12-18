@@ -5,22 +5,16 @@
 # include "macosx_view.mm"
 #endif
 
-#ifdef EBITEN_IOS
-# include "ios_view.mm"
-#endif
-
 namespace ebiten {
 namespace graphics {
 namespace detail {
-
-// TODO: Refactoring
 
 #ifdef EBITEN_MACOSX
 typedef EbitenOpenGLView* native_view;
 #endif
 
 #ifdef EBITEN_IOS
-typedef EbitenOpenGLViewController* native_view;
+typedef GLKView* native_view;
 #endif
 
 }

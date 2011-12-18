@@ -8,6 +8,8 @@
 #include "ebiten/graphics/detail/opengl/texture_id.hpp"
 #endif
 
+#include <cstddef>
+
 namespace ebiten {
 namespace graphics {
 

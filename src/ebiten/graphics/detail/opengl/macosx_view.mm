@@ -52,6 +52,7 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
 }
 
 - (void)prepareOpenGL {
+  [super prepareOpenGL];
   NSOpenGLContext* openGLContext = [self openGLContext];
   assert(openGLContext != nil);
   GLint const swapInterval = 1;
