@@ -1,5 +1,6 @@
-#include "ebiten/ebiten.hpp"
 #include "sample_game.hpp"
+#include "ebiten/ebiten.hpp"
+#include "ebiten/frames/frame.hpp"
 
 int
 main() {

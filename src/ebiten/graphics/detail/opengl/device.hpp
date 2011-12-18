@@ -1,11 +1,6 @@
 #ifndef EBITEN_GRAPHICS_DETAIL_OPENGL_DEVICE_HPP
 #define EBITEN_GRAPHICS_DETAIL_OPENGL_DEVICE_HPP
 
-// TODO: refactoring
-#ifndef EBITEN_IOS
-# include "ebiten/frames/frame.hpp"
-#endif
-
 #include "ebiten/graphics/detail/opengl/graphics_context.hpp"
 #include "ebiten/graphics/detail/opengl/opengl_initializer.hpp"
 #include "ebiten/graphics/detail/opengl/texture_factory.hpp"
@@ -26,13 +21,13 @@ namespace ebiten {
 namespace graphics {
 namespace detail {
 
-class device : private noncopyable {
+class device : private ebiten::noncopyable {
 private:
   std::size_t const screen_width_;
   std::size_t const screen_height_;
   std::size_t const screen_scale_;
-  std::function<void(device&)> update_func_;
-  std::function<void(device&)> draw_func_;
+  std::function<void()> update_func_;
+  std::function<void()> draw_func_;
   graphics_context graphics_context_;
   texture_factory texture_factory_;
   texture offscreen_texture_;
@@ -42,9 +37,9 @@ public:
   device(std::size_t screen_width,
          std::size_t screen_height,
          std::size_t screen_scale,
-         graphics::view& view,
-         std::function<void(device&)> const& update_func,
-         std::function<void(device&)> const& draw_func)
+         view& view,
+         std::function<void()> const& update_func,
+         std::function<void()> const& draw_func)
     : screen_width_(screen_width),
       screen_height_(screen_height),
       screen_scale_(screen_scale),
@@ -70,7 +65,7 @@ public:
     if (!this->offscreen_texture_) {
       this->initialize_offscreen();
     }
-    this->update_func_(*this);
+    this->update_func_();
     ::glEnable(GL_TEXTURE_2D); // is not valid in OpenGL ES. Why?
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -96,7 +91,7 @@ public:
                                                     std::end(projection_matrix));
       this->graphics_context_.reset_geometry_matrix();
       this->graphics_context_.reset_color_matrix();
-      this->draw_func_(*this);
+      this->draw_func_();
       ::glFlush();
       ::glBindFramebuffer(GL_FRAMEBUFFER, origFramebuffer);
     }

@@ -18,4 +18,3 @@ typedef EbitenOpenGLView* native_view;
 }
 
 #endif
-

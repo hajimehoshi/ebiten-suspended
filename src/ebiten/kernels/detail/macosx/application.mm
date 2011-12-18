@@ -4,7 +4,6 @@
 #import <Cocoa/Cocoa.h>
 #undef check // solve a confliction with Boost
 
-#include "ebiten/frames/frame.hpp"
 #include <cassert>
 
 @interface EbitenController : NSObject<NSApplicationDelegate> {

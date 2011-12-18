@@ -41,12 +41,8 @@ public:
               screen_height,
               screen_scale,
               view,
-              std::bind(&kernel::update,
-                        this,
-                        std::placeholders::_1),
-              std::bind(&kernel::draw,
-                        this,
-                        std::placeholders::_1)) {
+              std::bind(&kernel::update, this),
+              std::bind(&kernel::draw, this)) {
   }
   void
   run_main_loop() {
@@ -54,16 +50,16 @@ public:
   }
 private:
   void
-  update(graphics::device& device) {
+  update() {
     uint64_t const now = timers::timer::now_nsec() * this->fps_;
     while (this->before_ + 1000 * 1000 * 1000 < now) {
-      this->game_update_(device.texture_factory());
+      this->game_update_(this->device_.texture_factory());
       this->before_ += 1000 * 1000 * 1000;
     }
   }
   void
-  draw(graphics::device& device) {
-    this->game_draw_(device.graphics_context());
+  draw() {
+    this->game_draw_(this->device_.graphics_context());
   }
 };
 
