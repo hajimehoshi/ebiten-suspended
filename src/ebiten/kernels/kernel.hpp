@@ -16,7 +16,7 @@
 namespace ebiten {
 namespace kernels {
 
-class kernel : private ebiten::noncopyable {
+class kernel : private noncopyable {
 private:
   std::function<void(graphics::texture_factory&)> game_update_;
   std::function<void(graphics::graphics_context&)> game_draw_;

@@ -1,9 +1,6 @@
 #ifndef EBITEN_FRAMES_DETAIL_MACOSX_FRAME_MM
 #define EBITEN_FRAMES_DETAIL_MACOSX_FRAME_MM
 
-// TODO: Fix that?
-#include "ebiten/graphics/view.hpp"
-
 #import <Cocoa/Cocoa.h>
 #undef check // solve a confliction with Boost
 

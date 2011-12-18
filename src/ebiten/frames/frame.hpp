@@ -19,7 +19,7 @@ class frame : private noncopyable {
 private:
   std::size_t const width_;
   std::size_t const height_;
-  native_frame const native_frame_; // TODO: Have a reference?
+  native_frame const native_frame_;
   graphics::view view_;
 public:
   frame(std::size_t width, std::size_t height)

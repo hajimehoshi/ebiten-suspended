@@ -21,7 +21,7 @@ namespace ebiten {
 namespace graphics {
 namespace detail {
 
-class device : private ebiten::noncopyable {
+class device : private noncopyable {
 private:
   std::size_t const screen_width_;
   std::size_t const screen_height_;

@@ -12,7 +12,7 @@ namespace graphics {
 
 typedef detail::native_view native_view;
 
-class view : private ebiten::noncopyable {
+class view : private noncopyable {
 private:
   native_view const native_view_;
 public:
