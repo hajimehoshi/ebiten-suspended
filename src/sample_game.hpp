@@ -41,7 +41,7 @@ public:
         NSString* ns_path = [bundle pathForResource:@"test.png" ofType:nil];
         std::string path([ns_path UTF8String]);
         // TODO: Load Async
-        std::unique_ptr<ebiten::image> image = ebiten::image_loader::load(path);
+        std::unique_ptr<ebiten::image> image = ebiten::image_loader::load_png(path);
         // TODO: Texture Atlas
         this->texture_ = tf.from_image(*image);
       }

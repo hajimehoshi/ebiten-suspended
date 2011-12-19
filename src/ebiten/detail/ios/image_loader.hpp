@@ -15,7 +15,7 @@ public:
   image_loader(image_loader const&) = delete;
   image_loader& operator=(image_loader const&) = delete;
   static std::unique_ptr<image>
-  load(std::string const& filename) {
+  load_png(std::string const& filename) {
     std::unique_ptr<image> image;
     @autoreleasepool {
       NSString* ns_filename = [NSString stringWithCString:filename.c_str()
