@@ -6,12 +6,12 @@ namespace ebiten {
 namespace avoid_adl {
 
 class noncopyable {
-protected:
-  noncopyable() {}
-  ~noncopyable() {}
-private:
-  noncopyable(noncopyable const&);
-  noncopyable const& operator=(noncopyable const&);
+public:
+  noncopyable() = default;
+  noncopyable(noncopyable const&) = delete;
+  noncopyable& operator=(noncopyable const&) = delete;
+  noncopyable(noncopyable&&) {} // = default;
+  noncopyable& operator=(noncopyable&&) { return *this; } // = default;
 };
 
 }
