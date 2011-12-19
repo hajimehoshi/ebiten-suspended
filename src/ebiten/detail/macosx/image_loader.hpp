@@ -22,9 +22,10 @@ public:
                                                  encoding:NSUTF8StringEncoding];
       NSImage* ns_image = [[NSImage alloc] initWithContentsOfFile: ns_filename];
       NSBitmapImageRep* ns_bitmap = [[ns_image representations] objectAtIndex:0];
-      std::size_t const width  = [ns_bitmap pixelsWide];
-      std::size_t const height = [ns_bitmap pixelsHigh];
-      uint8_t* src_pixels      = [ns_bitmap bitmapData];
+
+      std::size_t const width   = [ns_bitmap pixelsWide];
+      std::size_t const height  = [ns_bitmap pixelsHigh];
+      uint8_t const* src_pixels = [ns_bitmap bitmapData];
       image.reset(new ebiten::image(width, height));
       auto& dst_pixels = image->pixels();
       std::copy(src_pixels, src_pixels + width * height * 4,
