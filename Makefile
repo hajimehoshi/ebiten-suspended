@@ -9,8 +9,6 @@ CXXFLAGS:= \
 	-fobjc-arc
 
 LDFLAGS:= \
-	-L/usr/X11/lib \
-	-pthread \
 	-framework Cocoa -framework OpenGL -framework QuartzCore
 
 SRC:=$(shell find src -name "*.hpp" -or -name "*.cpp" -or -name "*.mm")
