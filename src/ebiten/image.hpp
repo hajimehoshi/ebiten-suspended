@@ -2,6 +2,7 @@
 #define EBITEN_IMAGE_HPP
 
 #include "ebiten/noncopyable.hpp"
+#include <algorithm>
 #include <vector>
 
 namespace ebiten {
@@ -16,11 +17,7 @@ public:
         std::size_t height)
     : width_(width),
       height_(height),
-      pixels_(width * height * 4) {
-  }
-  template<class Loader>
-  image(Loader const& loader, std::string const& filename) {
-    loader(filename, this->width_, this->height_, this->pixels_);
+      pixels_(width * height * 4, 0) {
   }
   std::vector<uint8_t>&
   pixels() {

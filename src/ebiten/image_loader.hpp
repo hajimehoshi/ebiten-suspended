@@ -1,41 +1,19 @@
 #ifndef EBITEN_IMAGE_LOADER_HPP
 #define EBITEN_IMAGE_LOADER_HPP
 
-// backport for old libpng
-#define png_infopp_NULL (png_infopp)0
-#define int_p_NULL (int*)0
+#include "ebiten/platform.hpp"
 
-#include <boost/gil/gil_all.hpp>
-#include <boost/gil/extension/io/png_io.hpp>
+#if defined(EBITEN_MACOSX) || defined(EBITEN_IOS)
+# include "ebiten/detail/cocoa/image_loader.hpp"
+#endif
 
 namespace ebiten {
 
-struct png_image_loader_t {
-public:
-  void
-  operator()(std::string const& filename,
-             std::size_t& width,
-             std::size_t& height,
-             std::vector<uint8_t>& pixels) const {
-    typedef boost::gil::rgba8_image_t gil_image_t;
-    gil_image_t gil_image;
-    boost::gil::png_read_image(filename, gil_image);
-    width  = gil_image.width();
-    height = gil_image.height();
-    pixels.resize(width * height * 4);
-    boost::gil::rgba8_pixel_t* pixelsPtr =
-      reinterpret_cast<boost::gil::rgba8_pixel_t*>(pixels.data());
-    gil_image_t::view_t viewSrc =
-      boost::gil::view(gil_image);
-    gil_image_t::view_t viewDst =
-      boost::gil::interleaved_view(width, height, pixelsPtr, width * 4);
-    boost::gil::copy_pixels(viewSrc, viewDst);
-  }
-} png_image_loader = {};
+typedef detail::image_loader image_loader;
 
 }
 
-#ifdef EBITEN_TEST
+/*#ifdef EBITEN_TEST
 
 #include "ebiten/image.hpp"
 
@@ -49,6 +27,6 @@ BOOST_AUTO_TEST_CASE(image_loader_png_image_loader) {
 
 }
 
-#endif
+#endif*/
 
 #endif

@@ -1,9 +1,6 @@
 #ifndef SAMPLE_GAME_HPP
 #define SAMPLE_GAME_HPP
 
-// TODO: Remove this dirty hack!
-#include <boost/type_traits.hpp>
-
 #include "ebiten/ebiten.hpp"
 #include "ebiten/image_loader.hpp"
 #include <cstdlib>
@@ -41,12 +38,12 @@ public:
     reenter(c) {
       {
         NSBundle* bundle = [NSBundle mainBundle];
-        NSString* path = [bundle pathForResource:@"test.png" ofType:nil];
-        std::string path2([path UTF8String]);
+        NSString* ns_path = [bundle pathForResource:@"test.png" ofType:nil];
+        std::string path([ns_path UTF8String]);
         // TODO: Load Async
-        ebiten::image image(ebiten::png_image_loader, path2);
+        std::unique_ptr<ebiten::image> image = ebiten::image_loader::load(path);
         // TODO: Texture Atlas
-        this->texture_ = tf.from_image(image);
+        this->texture_ = tf.from_image(*image);
       }
       {
         this->sprites_.at(0) = sprite(32, 32);
