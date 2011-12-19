@@ -3,8 +3,12 @@
 
 #include "ebiten/platform.hpp"
 
-#if defined(EBITEN_MACOSX) || defined(EBITEN_IOS)
-# include "ebiten/detail/cocoa/image_loader.hpp"
+#ifdef EBITEN_MACOSX
+# include "ebiten/detail/macosx/image_loader.hpp"
+#endif
+
+#ifdef EBITEN_IOS
+# include "ebiten/detail/ios/image_loader.hpp"
 #endif
 
 namespace ebiten {
