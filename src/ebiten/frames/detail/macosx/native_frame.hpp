@@ -1,7 +1,7 @@
-#ifndef EBITEN_FRAMES_DETAIL_MACOSX_FRAME_HPP
-#define EBITEN_FRAMES_DETAIL_MACOSX_FRAME_HPP
+#ifndef EBITEN_FRAMES_DETAIL_MACOSX_NATIVE_FRAME_HPP
+#define EBITEN_FRAMES_DETAIL_MACOSX_NATIVE_FRAME_HPP
 
-#include "ebiten/frames/detail/macosx/frame.mm"
+#include "ebiten/frames/detail/macosx/native_frame.mm"
 #include "ebiten/graphics/native_view.hpp"
 #include <cstddef>
 

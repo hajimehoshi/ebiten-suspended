@@ -1,8 +1,7 @@
 #ifndef EBITEN_KERNELS_DETAIL_MACOSX_APPLICATION_HPP
 #define EBITEN_KERNELS_DETAIL_MACOSX_APPLICATION_HPP
 
-// TODO: make native_frame.hpp?
-#include "ebiten/frames/frame.hpp"
+#include "ebiten/frames/native_frame.hpp"
 #include "ebiten/kernels/detail/macosx/application.mm"
 #include "ebiten/noncopyable.hpp"
 

@@ -1,19 +1,12 @@
 #ifndef EBITEN_FRAMES_FRAME_HPP
 #define EBITEN_FRAMES_FRAME_HPP
 
-#include "ebiten/platform.hpp"
-
-#ifdef EBITEN_MACOSX
-#include "ebiten/frames/detail/macosx/frame.hpp"
-#endif
-
+#include "ebiten/frames/native_frame.hpp"
 #include "ebiten/graphics/native_view.hpp"
 #include "ebiten/noncopyable.hpp"
 
 namespace ebiten {
 namespace frames {
-
-typedef detail::native_frame native_frame;
 
 class frame : private noncopyable {
 private:

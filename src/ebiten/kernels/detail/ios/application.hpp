@@ -1,7 +1,7 @@
 #ifndef EBITEN_KERNELS_DETAIL_IOS_APPLICATION_HPP
 #define EBITEN_KERNELS_DETAIL_IOS_APPLICATION_HPP
 
-#include "ebiten/frames/frame.hpp"
+#include "ebiten/frames/native_frame.hpp"
 #include "ebiten/graphics/view.hpp"
 #include "ebiten/noncopyable.hpp"
 
