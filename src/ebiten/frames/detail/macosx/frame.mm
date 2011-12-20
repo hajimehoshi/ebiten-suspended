@@ -1,5 +1,5 @@
-#ifndef EBITEN_FRAMES_DETAIL_MACOSX_NATIVE_FRAME_MM
-#define EBITEN_FRAMES_DETAIL_MACOSX_NATIVE_FRAME_MM
+#ifndef EBITEN_FRAMES_DETAIL_MACOSX_FRAME_MM
+#define EBITEN_FRAMES_DETAIL_MACOSX_FRAME_MM
 
 #import <Cocoa/Cocoa.h>
 #undef check // solve a confliction with Boost
