@@ -2,7 +2,9 @@
 #define EBITEN_KERNELS_KERNEL_HPP
 
 #include "ebiten/graphics/device.hpp"
+#include "ebiten/graphics/graphics_context.hpp"
 #include "ebiten/graphics/native_view.hpp"
+#include "ebiten/graphics/texture_factory.hpp"
 #include "ebiten/noncopyable.hpp"
 #include "ebiten/timers/timer.hpp"
 #include <functional>
