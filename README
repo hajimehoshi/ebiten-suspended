@@ -1,9 +1,17 @@
 Ebiten - A 2D Game Library -
 
+- Specified to develop 2D games
+- Headers only (#include "ebiten/ebiten.hpp")
+- Minimal dependencies
+- Written in C++11 / Objective-C++11
+
 
 * Platform
 
 - Mac OS X
+- iOS
+- Windows (not yet)
+- Linux (not yet)
 
 
 * How to compile
@@ -38,3 +46,8 @@ Do 'make' command to create ebiten.app (a kind of a sample).
 * License
 
 Read the file LICENSE.
+
+
+* Author
+
+Hajime Hoshi (hajimehoshi@gmail.com)
