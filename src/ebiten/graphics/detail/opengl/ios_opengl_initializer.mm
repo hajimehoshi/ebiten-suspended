@@ -1,7 +1,6 @@
 #ifndef EBITEN_GRAPHICS_DETAIL_OPENGL_IOS_OPENGL_INITIALIZER_MM
 #define EBITEN_GRAPHICS_DETAIL_OPENGL_IOS_OPENGL_INITIALIZER_MM
 
-#include "ebiten/graphics/view.hpp"
 #import <UIKit/UIKit.h>
 #import <GLKit/GLKit.h>
 #include <functional>

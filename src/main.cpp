@@ -13,7 +13,7 @@ main() {
     ebiten::kernels::kernel kernel(game_update,
                                    game_draw,
                                    320, 240, 2, 60,
-                                   frame.view());
+                                   frame.native_view());
     ebiten::kernels::application::run(frame.native_frame());
   } catch (std::runtime_error const& err) {
     std::cerr << err.what() << std::endl;

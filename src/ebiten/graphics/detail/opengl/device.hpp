@@ -4,6 +4,7 @@
 #include "ebiten/graphics/detail/opengl/graphics_context.hpp"
 #include "ebiten/graphics/detail/opengl/opengl_initializer.hpp"
 #include "ebiten/graphics/detail/opengl/texture_factory.hpp"
+#include "ebiten/graphics/native_view.hpp"
 #include "ebiten/noncopyable.hpp"
 #include "ebiten/platform.hpp"
 
@@ -37,7 +38,7 @@ public:
   device(std::size_t screen_width,
          std::size_t screen_height,
          std::size_t screen_scale,
-         view& view,
+         native_view native_view,
          std::function<void()> const& update_func,
          std::function<void()> const& draw_func)
     : screen_width_(screen_width),
@@ -52,7 +53,7 @@ public:
     assert(0 < this->screen_scale_);
     assert(this->update_func_);
     assert(this->draw_func_);
-    this->opengl_initializer_.initialize(view, std::bind(&device::update, this));
+    this->opengl_initializer_.initialize(native_view, std::bind(&device::update, this));
   }
   // TODO: destructor
   /*

@@ -2,7 +2,7 @@
 #define EBITEN_KERNELS_KERNEL_HPP
 
 #include "ebiten/graphics/device.hpp"
-#include "ebiten/graphics/view.hpp"
+#include "ebiten/graphics/native_view.hpp"
 #include "ebiten/noncopyable.hpp"
 #include "ebiten/timers/timer.hpp"
 #include <functional>
@@ -24,7 +24,7 @@ public:
          std::size_t screen_height,
          std::size_t screen_scale, // TODO: check the scale (1 or 2?) not to crash
          std::size_t fps,
-         graphics::view& view)
+         graphics::native_view native_view)
     : game_update_(game_update),
       game_draw_(game_draw),
       fps_(fps),
@@ -32,7 +32,7 @@ public:
       device_(screen_width,
               screen_height,
               screen_scale,
-              view,
+              native_view,
               std::bind(&kernel::update, this),
               std::bind(&kernel::draw, this)) {
   }

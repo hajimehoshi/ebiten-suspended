@@ -2,7 +2,7 @@
 #define EBITEN_FRAMES_DETAIL_MACOSX_FRAME_HPP
 
 #include "ebiten/frames/detail/macosx/frame.mm"
-#include "ebiten/graphics/view.hpp"
+#include "ebiten/graphics/native_view.hpp"
 #include <cstddef>
 
 namespace ebiten {

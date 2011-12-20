@@ -3,7 +3,6 @@
 
 // TODO: make native_frame.hpp?
 #include "ebiten/frames/frame.hpp"
-#include "ebiten/graphics/view.hpp"
 #include "ebiten/kernels/detail/macosx/application.mm"
 #include "ebiten/noncopyable.hpp"
 
