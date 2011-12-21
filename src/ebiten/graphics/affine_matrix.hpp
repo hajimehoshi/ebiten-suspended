@@ -90,68 +90,68 @@ std::once_flag affine_matrix<Float, Dimension, Self>::identity_once_flag_;
 
 // TODO: test...
 
-/*#ifdef EBITEN_TEST
+#ifdef EBITEN_TEST
 
 namespace ebiten {
 namespace graphics {
 
-BOOST_AUTO_TEST_CASE(affine_matrix_element) {
+/*TEST(affine_matrix, element) {
   affine_matrix<double, 4> m;
   m.set_element<0, 0>(1);
   m.set_element<0, 1>(2);
   m.set_element<0, 2>(3);
-  BOOST_CHECK_EQUAL(1, (m.element<0, 0>()));
-  BOOST_CHECK_EQUAL(2, (m.element<0, 1>()));
-  BOOST_CHECK_EQUAL(3, (m.element<0, 2>()));
-  BOOST_CHECK_EQUAL(0, (m.element<0, 3>()));
-  BOOST_CHECK_EQUAL(0, (m.element<1, 0>()));
-  BOOST_CHECK_EQUAL(0, (m.element<1, 1>()));
-  BOOST_CHECK_EQUAL(0, (m.element<1, 2>()));
-  BOOST_CHECK_EQUAL(0, (m.element<1, 3>()));
-  BOOST_CHECK_EQUAL(0, (m.element<2, 0>()));
-  BOOST_CHECK_EQUAL(0, (m.element<2, 1>()));
-  BOOST_CHECK_EQUAL(0, (m.element<2, 2>()));
-  BOOST_CHECK_EQUAL(0, (m.element<2, 3>()));
-  BOOST_CHECK_EQUAL(0, (m.element<3, 0>()));
-  BOOST_CHECK_EQUAL(0, (m.element<3, 1>()));
-  BOOST_CHECK_EQUAL(0, (m.element<3, 2>()));
-  BOOST_CHECK_EQUAL(1, (m.element<3, 3>()));
+  EXPECT_EQ(1, (m.element<0, 0>()));
+  EXPECT_EQ(2, (m.element<0, 1>()));
+  EXPECT_EQ(3, (m.element<0, 2>()));
+  EXPECT_EQ(0, (m.element<0, 3>()));
+  EXPECT_EQ(0, (m.element<1, 0>()));
+  EXPECT_EQ(0, (m.element<1, 1>()));
+  EXPECT_EQ(0, (m.element<1, 2>()));
+  EXPECT_EQ(0, (m.element<1, 3>()));
+  EXPECT_EQ(0, (m.element<2, 0>()));
+  EXPECT_EQ(0, (m.element<2, 1>()));
+  EXPECT_EQ(0, (m.element<2, 2>()));
+  EXPECT_EQ(0, (m.element<2, 3>()));
+  EXPECT_EQ(0, (m.element<3, 0>()));
+  EXPECT_EQ(0, (m.element<3, 1>()));
+  EXPECT_EQ(0, (m.element<3, 2>()));
+  EXPECT_EQ(1, (m.element<3, 3>()));
   m.set_element<1, 0>(4);
   m.set_element<1, 1>(5);
   m.set_element<2, 3>(6);
-  BOOST_CHECK_EQUAL(1, (m.element<0, 0>()));
-  BOOST_CHECK_EQUAL(2, (m.element<0, 1>()));
-  BOOST_CHECK_EQUAL(3, (m.element<0, 2>()));
-  BOOST_CHECK_EQUAL(0, (m.element<0, 3>()));
-  BOOST_CHECK_EQUAL(4, (m.element<1, 0>()));
-  BOOST_CHECK_EQUAL(5, (m.element<1, 1>()));
-  BOOST_CHECK_EQUAL(0, (m.element<1, 2>()));
-  BOOST_CHECK_EQUAL(0, (m.element<1, 3>()));
-  BOOST_CHECK_EQUAL(0, (m.element<2, 0>()));
-  BOOST_CHECK_EQUAL(0, (m.element<2, 1>()));
-  BOOST_CHECK_EQUAL(0, (m.element<2, 2>()));
-  BOOST_CHECK_EQUAL(6, (m.element<2, 3>()));
-  BOOST_CHECK_EQUAL(0, (m.element<3, 0>()));
-  BOOST_CHECK_EQUAL(0, (m.element<3, 1>()));
-  BOOST_CHECK_EQUAL(0, (m.element<3, 2>()));
-  BOOST_CHECK_EQUAL(1, (m.element<3, 3>()));
+  EXPECT_EQ(1, (m.element<0, 0>()));
+  EXPECT_EQ(2, (m.element<0, 1>()));
+  EXPECT_EQ(3, (m.element<0, 2>()));
+  EXPECT_EQ(0, (m.element<0, 3>()));
+  EXPECT_EQ(4, (m.element<1, 0>()));
+  EXPECT_EQ(5, (m.element<1, 1>()));
+  EXPECT_EQ(0, (m.element<1, 2>()));
+  EXPECT_EQ(0, (m.element<1, 3>()));
+  EXPECT_EQ(0, (m.element<2, 0>()));
+  EXPECT_EQ(0, (m.element<2, 1>()));
+  EXPECT_EQ(0, (m.element<2, 2>()));
+  EXPECT_EQ(6, (m.element<2, 3>()));
+  EXPECT_EQ(0, (m.element<3, 0>()));
+  EXPECT_EQ(0, (m.element<3, 1>()));
+  EXPECT_EQ(0, (m.element<3, 2>()));
+  EXPECT_EQ(1, (m.element<3, 3>()));
 }
 
-BOOST_AUTO_TEST_CASE(affine_matrix_is_identity) {
+TEST(affine_matrix, is_identity) {
   affine_matrix<double, 4> m1;
   m1.set_element<0, 0>(1);
   m1.set_element<1, 1>(1);
   m1.set_element<2, 2>(1);
-  BOOST_CHECK(m1.is_identity());
+  EXEPT_TRUE(m1.is_identity());
   affine_matrix<double, 4> m2 = m1;
-  BOOST_CHECK(m2.is_identity());
+  EXEPT_TRUE(m2.is_identity());
   m2.set_element<0, 1>(1);
-  BOOST_CHECK(!m2.is_identity());
-}
+  EXEPT_FALSE(m2.is_identity());
+  }*/
 
 }
 }
 
-#endif*/
+#endif
 
 #endif

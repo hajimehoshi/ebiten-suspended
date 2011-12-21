@@ -17,20 +17,20 @@ typedef detail::image_loader image_loader;
 
 }
 
-/*#ifdef EBITEN_TEST
+#ifdef EBITEN_TEST
 
 #include "ebiten/image.hpp"
 
 namespace ebiten {
 
-BOOST_AUTO_TEST_CASE(image_loader_png_image_loader) {
-  image img(png_image_loader, "test.png");
-  BOOST_CHECK_EQUAL(32u, img.width());
-  BOOST_CHECK_EQUAL(32u, img.height());
+TEST(image_loader, load_png) {
+  std::unique_ptr<image> img = image_loader::load_png("test.png");
+  EXPECT_EQ(32u, img->width());
+  EXPECT_EQ(32u, img->height());
 }
 
 }
 
-#endif*/
+#endif
 
 #endif

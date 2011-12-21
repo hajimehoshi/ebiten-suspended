@@ -98,10 +98,10 @@ namespace ebiten {
 namespace graphics {
 namespace detail {
 
-BOOST_AUTO_TEST_CASE(clp2_calling) {
-  BOOST_CHECK_EQUAL(256u, clp2(255));
-  BOOST_CHECK_EQUAL(256u, clp2(256));
-  BOOST_CHECK_EQUAL(512u, clp2(257));
+TEST(clp2, calling) {
+  EXPECT_EQ(256u, clp2(255));
+  EXPECT_EQ(256u, clp2(256));
+  EXPECT_EQ(512u, clp2(257));
 }
 
 }

@@ -1,17 +1,21 @@
-PROG:=ebiten
-CXX:=clang++
+PROG := ebiten
+CXX := clang++
 
-CXXFLAGS:= \
+CXXFLAGS := \
 	-W -Wall -Wextra -Wmissing-prototypes -Wshorten-64-to-32 -pedantic \
 	-fPIC \
-	-I/usr/X11/include -Isrc \
+	-Isrc \
 	-x objective-c++ -std=c++0x -stdlib=libc++ \
 	-fobjc-arc
 
-LDFLAGS:= \
+LDFLAGS := \
 	-framework Cocoa -framework OpenGL -framework QuartzCore
 
-SRC:=$(shell find src -name "*.hpp" -or -name "*.cpp" -or -name "*.mm")
+SRC := $(shell find src -name "*.hpp" -or -name "*.cpp" -or -name "*.mm")
+
+GTEST_DIR     := gtest
+GTEST_HEADERS := $(GTEST_DIR)/include/gtest/*.h $(GTEST_DIR)/include/gtest/internal/*.h
+GTEST_SRCS    := $(GTEST_DIR)/src/*.cc $(GTEST_DIR)/src/*.h 
 
 all: $(PROG).app
 	open $<
@@ -33,15 +37,41 @@ $(PROG): $(SRC)
 		-O2 \
 		src/main.cpp
 
-$(PROG)_test: $(SRC)
+$(PROG)_test: $(SRC) $(GTEST_HEADERS) libgtest_main.a
 	$(CXX) \
 		$(CXXFLAGS) \
+		-DGTEST_HAS_TR1_TUPLE=0 \
 		$(LDFLAGS) \
-		-lboost_unit_test_framework \
+		-I$(GTEST_DIR)/include \
 		-g \
 		-o $@ \
 		-O0 \
+		-lpthread \
+		-L. -lgtest_main \
 		src/main_test.cpp
+
+libgtest_main.a: gtest-all.o gtest_main.o
+	$(AR) $(ARFLAGS) $@ $^
+
+gtest-all.o: $(GTEST_SRCS)
+	$(CXX) \
+		-std=c++0x -stdlib=libc++ \
+		-DGTEST_HAS_TR1_TUPLE=0 \
+		-W -Wall -Wextra -g \
+		-I$(GTEST_DIR) \
+		-I$(GTEST_DIR)/include \
+		-c \
+		$(GTEST_DIR)/src/gtest-all.cc
+
+gtest_main.o: $(GTEST_SRCS)
+	$(CXX) \
+		-std=c++0x -stdlib=libc++ \
+		-DGTEST_HAS_TR1_TUPLE=0 \
+		-W -Wall -Wextra -g \
+		-I$(GTEST_DIR) \
+		-I$(GTEST_DIR)/include \
+		-c \
+		$(GTEST_DIR)/src/gtest_main.cc
 
 .PHONY: clean
 clean:
@@ -50,4 +80,4 @@ clean:
 	rm -rf $(PROG).app
 	rm -rf $(PROG)_test.app
 	rm -rf *.dSYM
-	find . -name "*.o" | xargs rm -f
+	find . -name "*.a" -or -name "*.o" | xargs rm -f

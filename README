@@ -19,7 +19,7 @@ Ebiten - A 2D Game Library -
 
 You need:
 - Xcode 4.2
-- Boost.Test (optional)
+- Google Test (optional)
 - OpenGL.framework (Mac OS X)
 - QuartzCore.framework (Mac OS X)
 - GLKit.framework (iOS)

@@ -1,2 +1,1 @@
-#define EBITEN_TEST
-#include "ebiten/ebiten.hpp"
+#include "ebiten/ebiten_test.hpp"
