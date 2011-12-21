@@ -1,7 +1,7 @@
 Ebiten is released under the MIT License. Ebiten uses software listed below,
 which are under their own licenses.
 
-- Google Test (New BSD License: see gtest/COPYING)
+- Google Test (New BSD License: see thrid_party/gtest/COPYING)
 
 
 * The MIT Lincense
