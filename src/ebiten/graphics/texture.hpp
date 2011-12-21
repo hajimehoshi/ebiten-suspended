@@ -13,11 +13,9 @@
 namespace ebiten {
 namespace graphics {
 
-typedef detail::texture_id texture_id;
-
 class texture {
 private:
-  texture_id id_;
+  detail::texture_id id_;
   std::size_t width_;
   std::size_t height_;
 public:
@@ -29,14 +27,14 @@ public:
   }
   texture(texture const&) = default;
   texture& operator=(texture const&) = default;
-  texture(texture_id const& id_,
+  texture(detail::texture_id const& id_,
           std::size_t width_,
           std::size_t height_)
     : id_(id_),
       width_(width_),
       height_(height_) {
   }
-  texture_id
+  detail::texture_id const&
   id() const {
     return this->id_;
   }
