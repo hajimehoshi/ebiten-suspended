@@ -13,7 +13,7 @@ LDFLAGS := \
 	-framework Cocoa -framework OpenGL -framework QuartzCore
 
 SRC := $(shell find src -name "*.hpp" -or -name "*.cpp" -or -name "*.mm")
-GTEST_DIR := thrid_party/gtest
+GTEST_DIR := thrid_party/gtest-1.6.0
 
 all: $(PROG).app
 	open $<
@@ -45,11 +45,11 @@ $(PROG_TEST): $(SRC) libgtest_main.a
 		-o $@ \
 		-O0 \
 		-lpthread \
-		-L. -lgtest_main \
+		-L$(GTEST_DIR) -lgtest_main \
 		main_test.cpp
 
 libgtest_main.a:
-	make -f Makefile.gtest $@
+	cd $(GTEST_DIR); make $@
 
 .PHONY: clean
 clean:
