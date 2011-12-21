@@ -1,4 +1,5 @@
-PROG := ebiten
+PROG      := ebiten
+PROG_TEST := ebiten_test
 CXX := clang++
 
 CXXFLAGS := \
@@ -18,7 +19,7 @@ GTEST_DIR := thrid_party/gtest
 all: $(PROG).app
 	open $<
 
-test: $(PROG)_test
+test: $(PROG_TEST)
 	./$<
 
 $(PROG).app: $(PROG)
@@ -35,7 +36,7 @@ $(PROG): $(SRC)
 		-O2 \
 		src/main_samples.cpp
 
-$(PROG)_test: $(SRC) libgtest_main.a
+$(PROG_TEST): $(SRC) libgtest_main.a
 	$(CXX) \
 		$(CXXFLAGS) \
 		-DGTEST_HAS_TR1_TUPLE=0 \
@@ -74,8 +75,8 @@ gtest_main.o:
 .PHONY: clean
 clean:
 	rm -f $(PROG)
-	rm -f $(PROG)_test
+	rm -f $(PROG_TEST)
 	rm -rf $(PROG).app
-	rm -rf $(PROG)_test.app
+	rm -rf $(PROG_TEST).app
 	rm -rf *.dSYM
 	find . -name "*.a" -or -name "*.o" | xargs rm -f
