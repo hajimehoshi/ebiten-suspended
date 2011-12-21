@@ -13,9 +13,7 @@ LDFLAGS := \
 
 SRC := $(shell find src -name "*.hpp" -or -name "*.cpp" -or -name "*.mm")
 
-GTEST_DIR     := gtest
-GTEST_HEADERS := $(GTEST_DIR)/include/gtest/*.h $(GTEST_DIR)/include/gtest/internal/*.h
-GTEST_SRCS    := $(GTEST_DIR)/src/*.cc $(GTEST_DIR)/src/*.h 
+GTEST_DIR := gtest
 
 all: $(PROG).app
 	open $<
@@ -37,7 +35,7 @@ $(PROG): $(SRC)
 		-O2 \
 		src/main.cpp
 
-$(PROG)_test: $(SRC) $(GTEST_HEADERS) libgtest_main.a
+$(PROG)_test: $(SRC) libgtest_main.a
 	$(CXX) \
 		$(CXXFLAGS) \
 		-DGTEST_HAS_TR1_TUPLE=0 \
@@ -53,23 +51,23 @@ $(PROG)_test: $(SRC) $(GTEST_HEADERS) libgtest_main.a
 libgtest_main.a: gtest-all.o gtest_main.o
 	$(AR) $(ARFLAGS) $@ $^
 
-gtest-all.o: $(GTEST_SRCS)
+gtest-all.o:
 	$(CXX) \
-		-std=c++0x -stdlib=libc++ \
+		-W -Wall -Wextra -stdlib=libc++ \
 		-DGTEST_HAS_TR1_TUPLE=0 \
-		-W -Wall -Wextra -g \
 		-I$(GTEST_DIR) \
 		-I$(GTEST_DIR)/include \
+		-g \
 		-c \
 		$(GTEST_DIR)/src/gtest-all.cc
 
-gtest_main.o: $(GTEST_SRCS)
+gtest_main.o:
 	$(CXX) \
-		-std=c++0x -stdlib=libc++ \
+		-W -Wall -Wextra -stdlib=libc++ \
 		-DGTEST_HAS_TR1_TUPLE=0 \
-		-W -Wall -Wextra -g \
 		-I$(GTEST_DIR) \
 		-I$(GTEST_DIR)/include \
+		-g \
 		-c \
 		$(GTEST_DIR)/src/gtest_main.cc
 
