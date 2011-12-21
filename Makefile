@@ -1,5 +1,5 @@
-PROG      := ebiten
-PROG_TEST := ebiten_test
+PROG_SAMPLES := ebiten
+PROG_TEST    := ebiten_test
 CXX := clang++
 
 SAMPLES_DIR := samples
@@ -11,13 +11,13 @@ all: $(PROG).app
 test: bin/$(PROG_TEST)
 	./$<
 
-$(PROG).app: $(PROG)
+$(PROG_SAMPLES).app: $(PROG_SAMPLES)
 	mkdir -p $@/Contents/MacOS
 	cp bin/$< $@/Contents/MacOS
 	mkdir -p $@/Contents/Resources
 	cp test.png $@/Contents/Resources
 
-$(PROG):
+$(PROG_SAMPLES):
 	cd $(SAMPLES_DIR); make $@
 
 $(PROG_TEST):
