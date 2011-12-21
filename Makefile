@@ -33,7 +33,7 @@ $(PROG): $(SRC)
 		$(LDFLAGS) \
 		-o $@ \
 		-O2 \
-		main_samples.cpp
+		samples/main_samples.cpp
 
 $(PROG_TEST): $(SRC) libgtest_main.a
 	$(CXX) \

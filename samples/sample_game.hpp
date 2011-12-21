@@ -9,8 +9,6 @@
 
 #include "yield.hpp"
 
-namespace samples {
-
 class sprite {
 public:
   double x;
@@ -109,8 +107,6 @@ public:
     }
   }
 };
-
-}
 
 #include "unyield.hpp"
 
