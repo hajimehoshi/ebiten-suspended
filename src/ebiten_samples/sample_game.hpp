@@ -4,6 +4,7 @@
 #include "ebiten/ebiten.hpp"
 #include "ebiten/image_loader.hpp"
 #include <cstdlib>
+#include <future>
 #include <iostream>
 
 #include "yield.hpp"
@@ -28,6 +29,7 @@ private:
   ebiten::graphics::texture texture_;
   sprites_type sprites_;
   coroutine c;
+  std::future<std::unique_ptr<ebiten::image>> image_;
   int i;
 public:
   sample_game() {
@@ -39,13 +41,17 @@ public:
   update(ebiten::graphics::texture_factory& tf) {
     reenter(c) {
       {
-        NSBundle* bundle = [NSBundle mainBundle];
-        NSString* ns_path = [bundle pathForResource:@"test.png" ofType:nil];
-        std::string path([ns_path UTF8String]);
-        // TODO: Load Async
-        std::unique_ptr<ebiten::image> image = ebiten::image_loader::load_png(path);
+        {
+          NSBundle* bundle = [NSBundle mainBundle];
+          NSString* ns_path = [bundle pathForResource:@"test.png" ofType:nil];
+          std::string path([ns_path UTF8String]);
+          this->image_ = std::async(ebiten::image_loader::load_png, path);
+        }
+        while (!this->image_.valid()) {
+          yield();
+        }
         // TODO: Texture Atlas
-        this->texture_ = tf.from_image(*image);
+        this->texture_ = tf.from_image(*(this->image_.get()));
       }
       {
         this->sprites_.at(0) = sprite(32, 32);
@@ -79,6 +85,7 @@ public:
   draw(ebiten::graphics::graphics_context& gc) const {
     if (!this->texture_) {
       // loading...
+      std::cout << "loading..." << std::endl;
       return;
     }
     gc.draw_rect(0, 0, 100, 100, 51, 102, 153, 128);
