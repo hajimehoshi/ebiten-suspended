@@ -1,4 +1,4 @@
-#include "sample_game.hpp"
+#include "ebiten_samples/sample_game.hpp"
 #include "ebiten/ebiten.hpp"
 #include "ebiten/frames/frame.hpp"
 #include "ebiten/kernels/application.hpp"
@@ -6,9 +6,13 @@
 int
 main() {
   try {
-    sample_game game;
-    auto game_update = std::bind(&sample_game::update, &game, std::placeholders::_1);
-    auto game_draw   = std::bind(&sample_game::draw,   &game, std::placeholders::_1);
+    ebiten_samples::sample_game game;
+    auto game_update = std::bind(&ebiten_samples::sample_game::update,
+                                 &game,
+                                 std::placeholders::_1);
+    auto game_draw   = std::bind(&ebiten_samples::sample_game::draw,
+                                 &game,
+                                 std::placeholders::_1);
     ebiten::frames::frame frame(640, 480);
     ebiten::kernels::kernel kernel(game_update,
                                    game_draw,
@@ -21,3 +25,4 @@ main() {
   }
   return EXIT_SUCCESS;
 }
+

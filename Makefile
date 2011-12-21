@@ -13,7 +13,7 @@ LDFLAGS := \
 
 SRC := $(shell find src -name "*.hpp" -or -name "*.cpp" -or -name "*.mm")
 
-GTEST_DIR := gtest
+GTEST_DIR := thrid_party/gtest
 
 all: $(PROG).app
 	open $<
@@ -33,7 +33,7 @@ $(PROG): $(SRC)
 		$(LDFLAGS) \
 		-o $@ \
 		-O2 \
-		src/main.cpp
+		src/main_samples.cpp
 
 $(PROG)_test: $(SRC) libgtest_main.a
 	$(CXX) \

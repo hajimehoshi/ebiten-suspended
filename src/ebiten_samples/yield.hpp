@@ -12,5 +12,3 @@
   case __LINE__:        \
     break;              \
   } while(false);
-
-

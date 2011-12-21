@@ -1,5 +1,5 @@
-#ifndef SAMPLE_GAME_HPP
-#define SAMPLE_GAME_HPP
+#ifndef EBITEN_SAMPLES_SAMPLE_GAME_HPP
+#define EBITEN_SAMPLES_SAMPLE_GAME_HPP
 
 #include "ebiten/ebiten.hpp"
 #include "ebiten/image_loader.hpp"
@@ -7,6 +7,8 @@
 #include <iostream>
 
 #include "yield.hpp"
+
+namespace ebiten_samples {
 
 class sprite {
 public:
@@ -100,6 +102,8 @@ public:
     }
   }
 };
+
+}
 
 #include "unyield.hpp"
 
