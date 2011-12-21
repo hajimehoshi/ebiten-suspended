@@ -1,6 +1,6 @@
 Ebiten - A 2D Game Library -
 
-- Specified to develop 2D games
+- Specialized to develop 2D games
 - Headers only (#include "ebiten/ebiten.hpp")
 - Minimal dependencies
 - Written in C++11 / Objective-C++11
