@@ -2,7 +2,6 @@
 #define EBITEN_GRAPHICS_DETAIL_OPENGL_TEXTURE_FACTORY_HPP
 
 #include "ebiten/graphics/texture.hpp"
-#include "ebiten/graphics/detail/opengl/device.hpp"
 #include "ebiten/image.hpp"
 #include "ebiten/noncopyable.hpp"
 #include "ebiten/platform.hpp"
@@ -31,6 +30,8 @@ clp2(uint64_t x) {
   x |= (x >> 32);
   return x + 1;
 }
+
+class device;
 
 class texture_factory : private noncopyable {
   friend class device;

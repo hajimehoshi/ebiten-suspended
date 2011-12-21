@@ -1,7 +1,6 @@
 #ifndef EBITEN_GRAPHICS_DETAIL_OPENGL_GRAPHICS_CONTEXT_HPP
 #define EBITEN_GRAPHICS_DETAIL_OPENGL_GRAPHICS_CONTEXT_HPP
 
-#include "ebiten/graphics/detail/opengl/device.hpp"
 #include "ebiten/graphics/detail/opengl/texture_factory.hpp"
 #include "ebiten/graphics/color_matrix.hpp"
 #include "ebiten/graphics/geometry_matrix.hpp"
@@ -26,6 +25,8 @@
 namespace ebiten {
 namespace graphics {
 namespace detail {
+
+class device;
 
 class graphics_context : private noncopyable {
   friend class device;
