@@ -5,5 +5,5 @@
 *.o
 .DS_Store
 ebiten
-!src/ebiten
+!include/ebiten
 ebiten_test

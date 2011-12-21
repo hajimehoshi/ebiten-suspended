@@ -5,7 +5,7 @@ CXX := clang++
 CXXFLAGS := \
 	-W -Wall -Wextra -Wmissing-prototypes -Wshorten-64-to-32 -pedantic \
 	-fPIC \
-	-Isrc \
+	-Iinclude \
 	-x objective-c++ -std=c++0x -stdlib=libc++ \
 	-fobjc-arc
 
@@ -33,7 +33,7 @@ $(PROG): $(SRC)
 		$(LDFLAGS) \
 		-o $@ \
 		-O2 \
-		src/main_samples.cpp
+		main_samples.cpp
 
 $(PROG_TEST): $(SRC) libgtest_main.a
 	$(CXX) \
@@ -46,7 +46,7 @@ $(PROG_TEST): $(SRC) libgtest_main.a
 		-O0 \
 		-lpthread \
 		-L. -lgtest_main \
-		src/main_test.cpp
+		main_test.cpp
 
 libgtest_main.a:
 	make -f Makefile.gtest $@
