@@ -3,6 +3,8 @@ CXX := clang++
 EBITEN_ROOT_DIR := ../..
 OBJ := $(EBITEN_ROOT_DIR)/lib/gtest-all.o $(EBITEN_ROOT_DIR)/lib/gtest_main.o
 
+libgtest_main.a: $(EBITEN_ROOT_DIR)/lib/libgtest_main.a
+
 $(EBITEN_ROOT_DIR)/lib/libgtest_main.a: $(OBJ)
 	$(AR) $(ARFLAGS) $@ $^
 

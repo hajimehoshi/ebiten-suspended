@@ -16,7 +16,9 @@ GTEST_DIR       := $(EBITEN_ROOT_DIR)/thrid_party/gtest-1.6.0
 
 SRC := $(shell find $(EBITEN_ROOT_DIR)/include -name "*.hpp" -or -name "*.cpp" -or -name "*.mm")
 
-$(EBITEN_ROOT_DIR)/bin/$(PROG): $(SRC) $(EBITEN_ROOT_DIR)/lib/libgtest_main.a
+$(PROG): $(EBITEN_ROOT_DIR)/bin/$(PROG)
+
+$(EBITEN_ROOT_DIR)/bin/$(PROG): $(SRC) libgtest_main.a
 	$(CXX) \
 		$(CXXFLAGS) \
 		-DGTEST_HAS_TR1_TUPLE=0 \
@@ -24,11 +26,11 @@ $(EBITEN_ROOT_DIR)/bin/$(PROG): $(SRC) $(EBITEN_ROOT_DIR)/lib/libgtest_main.a
 		-I$(EBITEN_ROOT_DIR)/include \
 		-I$(GTEST_DIR)/include \
 		-g \
-		-o $@ \
+		-o $(EBITEN_ROOT_DIR)/bin/$@ \
 		-O0 \
 		-lpthread \
 		-L$(EBITEN_ROOT_DIR)/lib -lgtest_main \
 		main.cpp
 
-$(EBITEN_ROOT_DIR)/lib/libgtest_main.a:
-	cd $(GTEST_DIR); make ../$@
+libgtest_main.a:
+	cd $(GTEST_DIR); make $@

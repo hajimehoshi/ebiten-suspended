@@ -15,6 +15,8 @@ CXXFLAGS := \
 LDFLAGS := \
 	-framework Cocoa -framework OpenGL -framework QuartzCore
 
+$(PROG): $(EBITEN_ROOT_DIR)/bin/$(PROG)
+
 $(EBITEN_ROOT_DIR)/bin/$(PROG): $(SRC)
 	$(CXX) \
 		$(CXXFLAGS) \

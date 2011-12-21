@@ -11,17 +11,17 @@ all: $(PROG).app
 test: bin/$(PROG_TEST)
 	./$<
 
-$(PROG).app: bin/$(PROG)
+$(PROG).app: $(PROG)
 	mkdir -p $@/Contents/MacOS
-	cp $< $@/Contents/MacOS
+	cp bin/$< $@/Contents/MacOS
 	mkdir -p $@/Contents/Resources
 	cp test.png $@/Contents/Resources
 
-bin/$(PROG):
-	cd $(SAMPLES_DIR); make ../$@
+$(PROG):
+	cd $(SAMPLES_DIR); make $@
 
-bin/$(PROG_TEST):
-	cd $(TEST_DIR); make ../$@
+$(PROG_TEST):
+	cd $(TEST_DIR); make $@
 
 .PHONY: clean
 clean:
