@@ -5,11 +5,11 @@ CXX := clang++
 SAMPLES_DIR := samples
 TEST_DIR    := test
 
-all: $(PROG).app
+all: $(PROG_SAMPLES).app
 	open $<
 
-test: bin/$(PROG_TEST)
-	./$<
+test: $(PROG_TEST)
+	./bin/$<
 
 $(PROG_SAMPLES).app: $(PROG_SAMPLES)
 	mkdir -p $@/Contents/MacOS
