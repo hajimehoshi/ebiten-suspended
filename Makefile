@@ -17,7 +17,9 @@ SRC_EBITEN  := $(shell find include -name "*.hpp" -or -name "*.cpp" -or -name "*
 SRC_SAMPLES := $(shell find samples -name "*.hpp" -or -name "*.cpp" -or -name "*.mm")
 SRC_TEST    := $(shell find test    -name "*.hpp" -or -name "*.cpp" -or -name "*.mm")
 
-all: $(PROG_SAMPLES).app
+.PHONY: samples test clean
+
+samples: $(PROG_SAMPLES).app
 	open $<
 
 test: bin/$(PROG_TEST)
@@ -73,7 +75,6 @@ lib/gtest_main.o:
 		-c \
 		$(GTEST_DIR)/src/gtest_main.cc
 
-.PHONY: clean
 clean:
 	rm -rf bin/*
 	rm -rf lib/*
