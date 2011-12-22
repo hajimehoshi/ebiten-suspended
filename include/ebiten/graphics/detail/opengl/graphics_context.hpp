@@ -21,6 +21,7 @@
 #include <iostream>
 #include <regex>
 #include <sstream>
+#include <unordered_map>
 
 namespace ebiten {
 namespace graphics {
@@ -40,6 +41,7 @@ private:
   graphics::geometry_matrix modelview_matrix_;
   graphics::color_matrix color_matrix_;
   texture empty_texture_;
+  std::unordered_map<texture_id, GLint> framebuffers_;
 private:
   graphics_context(texture_factory& texture_factory)
     : texture_factory_(texture_factory),
