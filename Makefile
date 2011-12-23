@@ -37,7 +37,7 @@ bin/$(PROG_SAMPLES): $(SRC_EBITEN) $(SRC_SAMPLES)
 		$(LDFLAGS) \
 		-g \
 		-o $@ \
-		-O2 \
+		-O0 \
 		samples/main.cpp
 
 bin/$(PROG_TEST): $(SRC_EBITEN) $(SRC_TEST) lib/libgtest_main.a

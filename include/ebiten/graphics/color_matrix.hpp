@@ -8,11 +8,9 @@ namespace graphics {
 
 template<class Float>
 class color_matrix_base : public affine_matrix<Float, 5, color_matrix_base<Float> > {
-private:
-  typedef color_matrix_base<Float> Self;
 public:
   color_matrix_base()
-    : affine_matrix<Float, 5, Self>() {
+    : affine_matrix<Float, 5, color_matrix_base<Float> >() {
   }
 };
 

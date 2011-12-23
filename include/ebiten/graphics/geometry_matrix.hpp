@@ -9,14 +9,12 @@ namespace graphics {
 
 template<class Float>
 class geometry_matrix_base : public affine_matrix<Float, 3, geometry_matrix_base<Float> > {
-private:
-  typedef geometry_matrix_base<Float> Self;
 public:
   geometry_matrix_base()
-    : affine_matrix<Float, 3, Self>() {
+    : affine_matrix<Float, 3, geometry_matrix_base<Float> >() {
   }
   geometry_matrix_base(Float a, Float b, Float c, Float d, Float tx, Float ty)
-    : affine_matrix<Float, 3, Self>() {
+    : affine_matrix<Float, 3, geometry_matrix_base<Float> >() {
     this->set_a(a);
     this->set_b(b);
     this->set_c(c);
@@ -74,7 +72,7 @@ public:
   }
 };
 
-typedef geometry_matrix_base<float> geometry_matrix;
+typedef geometry_matrix_base<double> geometry_matrix;
 
 }
 }

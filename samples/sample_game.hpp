@@ -23,9 +23,8 @@ public:
 
 class sample_game : private ebiten::noncopyable {
 private:
-  typedef std::vector<sprite> sprites_type;
   ebiten::graphics::texture texture_;
-  sprites_type sprites_;
+  std::vector<sprite> sprites_;
   coroutine c;
   std::future<std::unique_ptr<ebiten::image>> image_;
   int i;
