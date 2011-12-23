@@ -41,13 +41,17 @@ private:
   graphics::geometry_matrix modelview_matrix_;
   graphics::color_matrix color_matrix_;
   texture empty_texture_;
-  std::unordered_map<texture_id, GLint> framebuffers_;
+  std::unordered_map<texture_id, GLuint> framebuffers_;
+  bool main_framebuffer_initialized_;
+  GLuint main_framebuffer_;
 private:
   graphics_context(texture_factory& texture_factory)
     : texture_factory_(texture_factory),
       regular_shader_program_(0),
       color_mat_shader_program_(0),
-      current_program_(0) {
+      current_program_(0),
+      main_framebuffer_initialized_(false),
+      main_framebuffer_(0) {
     this->modelview_matrix_ = geometry_matrix::identity();
     this->color_matrix_     = color_matrix::identity();
     assert(this->modelview_matrix_.is_identity());
@@ -92,6 +96,7 @@ public:
   reset_texture() {
     this->texture_ = ebiten::graphics::texture();
   }
+  // TODO: dst_width / dst_height?
   void
   draw(double src_x, double src_y, double src_width, double src_height,
        double dst_x, double dst_y, double dst_width, double dst_height) {
@@ -105,8 +110,8 @@ public:
     // TODO: replace float to short?
     // http://objective-audio.jp/2009/07/ngmoco-opengl.html
     // 選べるようにするといいかも
-    float const texture_width  = this->texture_.width();
-    float const texture_height = this->texture_.height();
+    float const texture_width  = this->texture_.texture_width();
+    float const texture_height = this->texture_.texture_height();
     float const tu1 = src_x                / texture_width;
     float const tu2 = (src_x + src_width)  / texture_width;
     float const tv1 = src_y                / texture_height;
@@ -169,6 +174,43 @@ public:
   void
   reset_color_matrix() {
     this->color_matrix_ = color_matrix::identity();
+  }
+  void
+  set_offscreen(graphics::texture const& texture,
+                float left, float right, float bottom, float top) {
+    if (!this->main_framebuffer_initialized_) {
+      GLint framebuffer;
+      ::glGetIntegerv(GL_FRAMEBUFFER_BINDING, &framebuffer);
+      this->main_framebuffer_ = framebuffer;
+      this->main_framebuffer_initialized_ = true;
+    }
+    GLuint framebuffer = this->get_framebuffer(texture);
+    ::glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    this->clear();
+    ::glEnable(GL_BLEND);
+    ::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    float const width  = right - left;
+    float const height = top - bottom;
+    float const tx     = - (right + left) / (right - left);
+    float const ty     = - (top + bottom) / (top - bottom);
+    ::glViewport(std::min(left, right),
+                 std::min(bottom, top),
+                 static_cast<GLsizei>(std::abs(width)),
+                 static_cast<GLsizei>(std::abs(height)));
+    float const projection_matrix[] = {
+      2.0 / width, 0,            0, 0,
+      0,           2.0 / height, 0, 0,
+      0,           0,            1, 0,
+      tx,          ty,           0, 1,
+    };
+    this->set_projection_matrix(std::begin(projection_matrix),
+                                std::end(projection_matrix));
+    this->reset_geometry_matrix();
+    this->reset_color_matrix();
+  }
+  void
+  flush() {
+    ::glFlush();
   }
 private:
   void
@@ -255,6 +297,34 @@ private:
       }
     }
   }
+  GLuint
+  get_framebuffer(graphics::texture const& texture) {
+    if (!texture) {
+      return this->main_framebuffer_;      
+    }
+    auto const& it = this->framebuffers_.find(texture.id());
+    if (it != this->framebuffers_.end()) {
+      return it->second;
+    }
+    GLuint framebuffer;
+    ::glGenFramebuffers(1, &framebuffer);
+    {
+      GLint orig_framebuffer;
+      ::glGetIntegerv(GL_FRAMEBUFFER_BINDING, &orig_framebuffer);
+      ::glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+      ::glFramebufferTexture2D(GL_FRAMEBUFFER,
+                               GL_COLOR_ATTACHMENT0,
+                               GL_TEXTURE_2D,
+                               texture.id(),
+                               0);
+      ::glBindFramebuffer(GL_FRAMEBUFFER, orig_framebuffer);
+    }
+    if (::glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+      throw std::runtime_error("framebuffer is not supported completely");
+    }
+    return this->framebuffers_[texture.id()] = framebuffer;
+  }
+  // TODO: Remove this function if not needed
   template<class InputIterator>
   void
   set_projection_matrix(InputIterator first, InputIterator last) {

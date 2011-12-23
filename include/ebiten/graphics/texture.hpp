@@ -22,18 +22,24 @@ class texture_factory;
 
 class texture {
 private:
+  bool is_null_;
   detail::texture_id id_;
   std::size_t width_;
   std::size_t height_;
+  std::size_t texture_width_;
+  std::size_t texture_height_;
   friend class detail::device;
   friend class detail::graphics_context;
   friend class detail::texture_factory;
 public:
   // TODO: Is 0 a magic number?
   texture()
-    : id_(0),
+    : is_null_(true),
+      id_(0),
       width_(0),
-      height_(0) {
+      height_(0),
+      texture_width_(0),
+      texture_height_(0) {
   }
   texture(texture const&) = default;
   texture& operator=(texture const&) = default;
@@ -45,16 +51,29 @@ public:
   height() const {
     return this->height_;
   }
+  std::size_t
+  texture_width() const {
+    return this->texture_width_;
+  }
+  std::size_t
+  texture_height() const {
+    return this->texture_height_;
+  }
   operator bool() const {
-    return this->id_ != 0;
+    return !this->is_null_;
   }
 private:
   texture(detail::texture_id const& id_,
           std::size_t width_,
-          std::size_t height_)
-    : id_(id_),
+          std::size_t height_,
+          std::size_t texture_width_,
+          std::size_t texture_height_)
+    : is_null_(false),
+      id_(id_),
       width_(width_),
-      height_(height_) {
+      height_(height_),
+      texture_width_(texture_width_),
+      texture_height_(texture_height_) {
   }
   detail::texture_id const&
   id() const {

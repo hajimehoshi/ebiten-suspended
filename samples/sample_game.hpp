@@ -42,8 +42,10 @@ public:
         {
           NSBundle* bundle = [NSBundle mainBundle];
           NSString* ns_path = [bundle pathForResource:@"test.png" ofType:nil];
-          std::string path([ns_path UTF8String]);
-          this->image_ = std::async(ebiten::image_loader::load_png, path);
+          if (ns_path != nil) {
+            std::string path([ns_path UTF8String]);
+            this->image_ = std::async(ebiten::image_loader::load_png, path);
+          }
         }
         while (!this->image_.valid()) {
           yield();
@@ -83,7 +85,6 @@ public:
   draw(ebiten::graphics::graphics_context& gc) const {
     if (!this->texture_) {
       // loading...
-      std::cout << "loading..." << std::endl;
       return;
     }
     gc.draw_rect(0, 0, 100, 100, 51, 102, 153, 128);

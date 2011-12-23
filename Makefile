@@ -35,6 +35,7 @@ bin/$(PROG_SAMPLES): $(SRC_EBITEN) $(SRC_SAMPLES)
 	$(CXX) \
 		$(CXXFLAGS) \
 		$(LDFLAGS) \
+		-g \
 		-o $@ \
 		-O2 \
 		samples/main.cpp
