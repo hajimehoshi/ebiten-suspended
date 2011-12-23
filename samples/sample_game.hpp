@@ -91,17 +91,16 @@ public:
     
     int i = 0;
     for (auto const& s : this->sprites_) {
-      auto geo_mat = ebiten::graphics::geometry_matrix::identity();
+      auto geo_mat   = ebiten::graphics::geometry_matrix::identity();
+      auto color_mat = ebiten::graphics::color_matrix::identity();
       if (i == 5) {
         geo_mat = ebiten::graphics::geometry_matrix(2, 0, 0, 2, 0, 0);
       } else if (i == 4) {
-        ebiten::graphics::color_matrix mat(ebiten::graphics::color_matrix::identity());
-        mat.set_element<0, 0>(0);
-        g.set_color_matrix(mat);
+        color_mat.set_element<0, 0>(0);
       }
       g.draw_texture(this->texture_,
                      0, 0, 32, 32, s.x, s.y,
-                     geo_mat);
+                     geo_mat, color_mat);
       ++i;
     }
   }

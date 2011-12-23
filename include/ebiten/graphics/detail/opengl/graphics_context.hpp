@@ -37,7 +37,6 @@ private:
   GLuint color_mat_shader_program_;
   GLuint current_program_;
   std::array<float, 16> projection_matrix_;
-  graphics::color_matrix color_matrix_;
   texture empty_texture_;
   std::unordered_map<texture_id, GLuint> framebuffers_;
   bool main_framebuffer_initialized_;
@@ -50,7 +49,6 @@ private:
       current_program_(0),
       main_framebuffer_initialized_(false),
       main_framebuffer_(0) {
-    this->color_matrix_ = color_matrix::identity();
   }
 public:
   void
@@ -66,35 +64,33 @@ public:
       this->empty_texture_ = this->texture_factory_.create(16, 16);
     }
 
-    graphics::geometry_matrix geo_mat;
+    geometry_matrix geo_mat;
     geo_mat.set_a(width  / this->empty_texture_.width());
     geo_mat.set_d(height / this->empty_texture_.height());
 
-    graphics::color_matrix orig_color_mat = this->color_matrix();
-    graphics::color_matrix color_mat;
+    color_matrix color_mat;
     color_mat.set_element<0, 4>(red   / 255.0);
     color_mat.set_element<1, 4>(green / 255.0);
     color_mat.set_element<2, 4>(blue  / 255.0);
     color_mat.set_element<3, 4>(alpha / 255.0);
 
-    this->set_color_matrix(color_mat);
     this->draw_texture(this->empty_texture_,
                        0, 0, this->empty_texture_.width(), this->empty_texture_.height(),
                        x, y,
-                       geo_mat);
-    this->set_color_matrix(orig_color_mat);
+                       geo_mat, color_mat);
   }
   // TODO: dst_width / dst_height?
   void
-  draw_texture(graphics::texture const& texture,
+  draw_texture(texture const& texture,
                double src_x, double src_y, double width, double height,
                double dst_x, double dst_y,
-               graphics::geometry_matrix const& geometry_matrix) {
+               geometry_matrix const& geometry_matrix,
+               color_matrix const& color_matrix) {
     // TODO: Throwing an exception?
     if (!texture) {
       return;
     }
-    this->set_shader_program(geometry_matrix);
+    this->set_shader_program(geometry_matrix, color_matrix);
     // TODO: cache? Check other callings of glBindTexture.
     ::glBindTexture(GL_TEXTURE_2D, texture.id());
     // TODO: replace float to short?
@@ -141,21 +137,9 @@ public:
     ::glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     ::glDisableClientState(GL_VERTEX_ARRAY);
   }
-  graphics::color_matrix
-  color_matrix() const {
-    return this->color_matrix_;
-  }
-  void
-  set_color_matrix(graphics::color_matrix const& mat) {
-    this->color_matrix_ = mat;
-  }
-  void
-  reset_color_matrix() {
-    this->color_matrix_ = color_matrix::identity();
-  }
   // TODO: arguments seem to be strange
   void
-  set_offscreen(graphics::texture const& texture,
+  set_offscreen(texture const& texture,
                 float left, float right, float bottom, float top) {
     if (!this->main_framebuffer_initialized_) {
       GLint framebuffer;
@@ -184,7 +168,6 @@ public:
     };
     this->set_projection_matrix(std::begin(projection_matrix),
                                 std::end(projection_matrix));
-    this->reset_color_matrix();
   }
   void
   reset_offscreen(float left, float right, float bottom, float top) {
@@ -197,7 +180,8 @@ public:
   }
 private:
   void
-  set_shader_program(geometry_matrix const& geo_mat) {
+  set_shader_program(geometry_matrix const& geometry_matrix,
+                     color_matrix const& color_matrix) {
     if (!(this->regular_shader_program_ &&
           this->color_mat_shader_program_)) {
       // TODO: Replace that with logging
@@ -209,7 +193,7 @@ private:
       }
     }
     GLuint program;
-    if (this->color_matrix_.is_identity()) {
+    if (color_matrix.is_identity()) {
       program = this->regular_shader_program_;
     } else {
       program = this->color_mat_shader_program_;
@@ -224,10 +208,11 @@ private:
                            1, GL_FALSE, this->projection_matrix_.data());
     }
     {
-      float const gl_modelview_mat[] = {geo_mat.a(),  geo_mat.c(),  0, 0,
-                                        geo_mat.b(),  geo_mat.d(),  0, 0,
-                                        0,            0,            1, 0,
-                                        geo_mat.tx(), geo_mat.ty(), 0, 1};
+      graphics::geometry_matrix const& mat = geometry_matrix;
+      float const gl_modelview_mat[] = {mat.a(),  mat.c(),  0, 0,
+                                        mat.b(),  mat.d(),  0, 0,
+                                        0,        0,        1, 0,
+                                        mat.tx(), mat.ty(), 0, 1};
       {
         GLint location = ::glGetUniformLocation(program, "modelview_matrix");
         assert(location != -1);
@@ -241,7 +226,7 @@ private:
       ::glUniform1i(location, 0);
     }
     if (program == this->color_mat_shader_program_) {
-      graphics::color_matrix const& mat = this->color_matrix_;
+      graphics::color_matrix const& mat = color_matrix;
       // TODO: Refactoring
       float const gl_color_mat[] = {
         static_cast<float>(mat.element<0, 0>()),
@@ -280,7 +265,7 @@ private:
     }
   }
   GLuint
-  get_framebuffer(graphics::texture const& texture) {
+  get_framebuffer(texture const& texture) {
     if (!texture) {
       return this->main_framebuffer_;      
     }

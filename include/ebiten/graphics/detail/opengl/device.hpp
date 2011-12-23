@@ -90,7 +90,7 @@ public:
     g.draw_texture(this->offscreen_texture_,
                    0, 0, this->screen_width_, this->screen_height_,
                    0, 0,
-                   geo_mat);
+                   geo_mat, color_matrix::identity());
     g.flush();
   }
   graphics_context&
