@@ -84,11 +84,13 @@ public:
     std::size_t const height = this->screen_height_ * this->screen_scale_;
     g.reset_offscreen(0, static_cast<float>(width),
                       static_cast<float>(height), 0);
+    geometry_matrix geo_mat;
+    geo_mat.set_a(this->screen_scale_);
+    geo_mat.set_d(this->screen_scale_);
     g.draw_texture(this->offscreen_texture_,
                    0, 0, this->screen_width_, this->screen_height_,
                    0, 0,
-                   this->screen_width_  * this->screen_scale_,
-                   this->screen_height_ * this->screen_scale_);
+                   geo_mat);
     g.flush();
   }
   graphics_context&

@@ -37,7 +37,6 @@ private:
   GLuint color_mat_shader_program_;
   GLuint current_program_;
   std::array<float, 16> projection_matrix_;
-  graphics::geometry_matrix modelview_matrix_;
   graphics::color_matrix color_matrix_;
   texture empty_texture_;
   std::unordered_map<texture_id, GLuint> framebuffers_;
@@ -51,9 +50,7 @@ private:
       current_program_(0),
       main_framebuffer_initialized_(false),
       main_framebuffer_(0) {
-    this->modelview_matrix_ = geometry_matrix::identity();
-    this->color_matrix_     = color_matrix::identity();
-    assert(this->modelview_matrix_.is_identity());
+    this->color_matrix_ = color_matrix::identity();
   }
 public:
   void
@@ -68,6 +65,11 @@ public:
     if (!this->empty_texture_) {
       this->empty_texture_ = this->texture_factory_.create(16, 16);
     }
+
+    graphics::geometry_matrix geo_mat;
+    geo_mat.set_a(width  / this->empty_texture_.width());
+    geo_mat.set_d(height / this->empty_texture_.height());
+
     graphics::color_matrix orig_color_mat = this->color_matrix();
     graphics::color_matrix color_mat;
     color_mat.set_element<0, 4>(red   / 255.0);
@@ -78,19 +80,21 @@ public:
     this->set_color_matrix(color_mat);
     this->draw_texture(this->empty_texture_,
                        0, 0, this->empty_texture_.width(), this->empty_texture_.height(),
-                       x, y, width, height);
+                       x, y,
+                       geo_mat);
     this->set_color_matrix(orig_color_mat);
   }
   // TODO: dst_width / dst_height?
   void
   draw_texture(graphics::texture const& texture,
-               double src_x, double src_y, double src_width, double src_height,
-               double dst_x, double dst_y, double dst_width, double dst_height) {
+               double src_x, double src_y, double width, double height,
+               double dst_x, double dst_y,
+               graphics::geometry_matrix const& geometry_matrix) {
     // TODO: Throwing an exception?
     if (!texture) {
       return;
     }
-    this->set_shader_program();
+    this->set_shader_program(geometry_matrix);
     // TODO: cache? Check other callings of glBindTexture.
     ::glBindTexture(GL_TEXTURE_2D, texture.id());
     // TODO: replace float to short?
@@ -99,13 +103,13 @@ public:
     float const texture_width  = texture.texture_width();
     float const texture_height = texture.texture_height();
     float const tu1 = src_x                / texture_width;
-    float const tu2 = (src_x + src_width)  / texture_width;
+    float const tu2 = (src_x + width)  / texture_width;
     float const tv1 = src_y                / texture_height;
-    float const tv2 = (src_y + src_height) / texture_height;
+    float const tv2 = (src_y + height) / texture_height;
     float const x1 = dst_x;
-    float const x2 = dst_x + dst_width;
+    float const x2 = dst_x + width;
     float const y1 = dst_y;
-    float const y2 = dst_y + dst_height;
+    float const y2 = dst_y + height;
     float const vertex[] = {x1, y1,
                             x2, y1,
                             x1, y2,
@@ -136,18 +140,6 @@ public:
     ::glDisableVertexAttribArray(vertex_attr_location);
     ::glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     ::glDisableClientState(GL_VERTEX_ARRAY);
-  }
-  graphics::geometry_matrix
-  geometry_matrix() const {
-    return this->modelview_matrix_;
-  }
-  void
-  set_geometry_matrix(graphics::geometry_matrix const& mat) {
-    this->modelview_matrix_ = mat;
-  }
-  void
-  reset_geometry_matrix() {
-    this->modelview_matrix_ = geometry_matrix::identity();
   }
   graphics::color_matrix
   color_matrix() const {
@@ -192,7 +184,6 @@ public:
     };
     this->set_projection_matrix(std::begin(projection_matrix),
                                 std::end(projection_matrix));
-    this->reset_geometry_matrix();
     this->reset_color_matrix();
   }
   void
@@ -206,7 +197,7 @@ public:
   }
 private:
   void
-  set_shader_program() {
+  set_shader_program(geometry_matrix const& geo_mat) {
     if (!(this->regular_shader_program_ &&
           this->color_mat_shader_program_)) {
       // TODO: Replace that with logging
@@ -233,11 +224,10 @@ private:
                            1, GL_FALSE, this->projection_matrix_.data());
     }
     {
-      graphics::geometry_matrix mat = this->modelview_matrix_;
-      float const gl_modelview_mat[] = {mat.a(),  mat.c(),  0, 0,
-                                        mat.b(),  mat.d(),  0, 0,
-                                        0,        0,        1, 0,
-                                        mat.tx(), mat.ty(), 0, 1};
+      float const gl_modelview_mat[] = {geo_mat.a(),  geo_mat.c(),  0, 0,
+                                        geo_mat.b(),  geo_mat.d(),  0, 0,
+                                        0,            0,            1, 0,
+                                        geo_mat.tx(), geo_mat.ty(), 0, 1};
       {
         GLint location = ::glGetUniformLocation(program, "modelview_matrix");
         assert(location != -1);
