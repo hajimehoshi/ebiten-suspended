@@ -36,7 +36,6 @@ private:
   GLuint regular_shader_program_;
   GLuint color_mat_shader_program_;
   GLuint current_program_;
-  graphics::texture texture_;
   std::array<float, 16> projection_matrix_;
   graphics::geometry_matrix modelview_matrix_;
   graphics::color_matrix color_matrix_;
@@ -69,7 +68,6 @@ public:
     if (!this->empty_texture_) {
       this->empty_texture_ = this->texture_factory_.create(16, 16);
     }
-    graphics::texture orig_texture = this->texture();
     graphics::color_matrix orig_color_mat = this->color_matrix();
     graphics::color_matrix color_mat;
     color_mat.set_element<0, 4>(red   / 255.0);
@@ -77,41 +75,29 @@ public:
     color_mat.set_element<2, 4>(blue  / 255.0);
     color_mat.set_element<3, 4>(alpha / 255.0);
 
-    this->set_texture(this->empty_texture_);
     this->set_color_matrix(color_mat);
-    this->draw(0, 0, this->empty_texture_.width(), this->empty_texture_.height(),
-               x, y, width, height);
+    this->draw_texture(this->empty_texture_,
+                       0, 0, this->empty_texture_.width(), this->empty_texture_.height(),
+                       x, y, width, height);
     this->set_color_matrix(orig_color_mat);
-    this->set_texture(orig_texture);
-  }
-  texture
-  texture() const {
-    return this->texture_;
-  }
-  void
-  set_texture(graphics::texture const& texture) {
-    this->texture_ = texture;
-  }
-  void
-  reset_texture() {
-    this->texture_ = ebiten::graphics::texture();
   }
   // TODO: dst_width / dst_height?
   void
-  draw(double src_x, double src_y, double src_width, double src_height,
-       double dst_x, double dst_y, double dst_width, double dst_height) {
+  draw_texture(graphics::texture const& texture,
+               double src_x, double src_y, double src_width, double src_height,
+               double dst_x, double dst_y, double dst_width, double dst_height) {
     // TODO: Throwing an exception?
-    if (!this->texture_) {
+    if (!texture) {
       return;
     }
     this->set_shader_program();
     // TODO: cache? Check other callings of glBindTexture.
-    ::glBindTexture(GL_TEXTURE_2D, this->texture_.id());
+    ::glBindTexture(GL_TEXTURE_2D, texture.id());
     // TODO: replace float to short?
     // http://objective-audio.jp/2009/07/ngmoco-opengl.html
     // 選べるようにするといいかも
-    float const texture_width  = this->texture_.texture_width();
-    float const texture_height = this->texture_.texture_height();
+    float const texture_width  = texture.texture_width();
+    float const texture_height = texture.texture_height();
     float const tu1 = src_x                / texture_width;
     float const tu2 = (src_x + src_width)  / texture_width;
     float const tv1 = src_y                / texture_height;
@@ -175,6 +161,7 @@ public:
   reset_color_matrix() {
     this->color_matrix_ = color_matrix::identity();
   }
+  // TODO: arguments seem to be strange
   void
   set_offscreen(graphics::texture const& texture,
                 float left, float right, float bottom, float top) {

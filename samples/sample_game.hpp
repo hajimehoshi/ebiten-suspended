@@ -82,28 +82,28 @@ public:
     }
   }
   void
-  draw(ebiten::graphics::graphics_context& gc) const {
+  draw(ebiten::graphics::graphics_context& g) const {
     if (!this->texture_) {
       // loading...
       return;
     }
-    gc.draw_rect(0, 0, 100, 100, 51, 102, 153, 128);
+    g.draw_rect(0, 0, 100, 100, 51, 102, 153, 128);
     
-    gc.set_texture(this->texture_);
     int i = 0;
     for (auto const& s : this->sprites_) {
       if (i == 5) {
         auto mat = ebiten::graphics::geometry_matrix(2, 0, 0, 2, 0, 0);
-        gc.set_geometry_matrix(mat);
+        g.set_geometry_matrix(mat);
       } else if (i == 4) {
         ebiten::graphics::color_matrix mat(ebiten::graphics::color_matrix::identity());
         mat.set_element<0, 0>(0);
-        gc.set_color_matrix(mat);
+        g.set_color_matrix(mat);
       } else {
         auto mat = ebiten::graphics::geometry_matrix(1, 0, 0, 1, 0, 0);
-        gc.set_geometry_matrix(mat);
+        g.set_geometry_matrix(mat);
       }
-      gc.draw(0, 0, 32, 32, s.x, s.y, 32, 32);
+      g.draw_texture(this->texture_,
+                     0, 0, 32, 32, s.x, s.y, 32, 32);
       ++i;
     }
   }
