@@ -82,9 +82,8 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     std::size_t const width  = this->screen_width_  * this->screen_scale_;
     std::size_t const height = this->screen_height_ * this->screen_scale_;
-    g.set_offscreen(graphics::texture(),
-                    0, static_cast<float>(width),
-                    static_cast<float>(height), 0);
+    g.reset_offscreen(0, static_cast<float>(width),
+                      static_cast<float>(height), 0);
     g.set_texture(this->offscreen_texture_);
     g.draw(0, 0, this->screen_width_, this->screen_height_,
            0, 0,

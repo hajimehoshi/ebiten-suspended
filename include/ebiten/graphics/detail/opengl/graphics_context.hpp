@@ -209,6 +209,11 @@ public:
     this->reset_color_matrix();
   }
   void
+  reset_offscreen(float left, float right, float bottom, float top) {
+    this->set_offscreen(graphics::texture(),
+                        left, right, bottom, top);
+  }
+  void
   flush() {
     ::glFlush();
   }
