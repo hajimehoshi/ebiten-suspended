@@ -30,6 +30,9 @@ class device;
 class graphics_context : private noncopyable {
   friend class device;
 private:
+  std::size_t const screen_width_;
+  std::size_t const screen_height_;
+  std::size_t const screen_scale_;
   texture_factory& texture_factory_;
   shaders shaders_;
   GLuint current_program_;
@@ -39,8 +42,14 @@ private:
   bool main_framebuffer_initialized_;
   GLuint main_framebuffer_;
 private:
-  graphics_context(texture_factory& texture_factory)
-    : texture_factory_(texture_factory),
+  graphics_context(std::size_t const screen_width,
+                   std::size_t const screen_height,
+                   std::size_t const screen_scale,
+                   texture_factory& texture_factory)
+    : screen_width_(screen_width),
+      screen_height_(screen_height),
+      screen_scale_(screen_scale),
+      texture_factory_(texture_factory),
       current_program_(0),
       main_framebuffer_initialized_(false),
       main_framebuffer_(0) {
@@ -132,10 +141,8 @@ public:
     ::glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     ::glDisableClientState(GL_VERTEX_ARRAY);
   }
-  // TODO: arguments seem to be strange
   void
-  set_offscreen(texture const& texture,
-                float left, float right, float bottom, float top) {
+  set_offscreen(texture const& texture) {
     if (!this->main_framebuffer_initialized_) {
       GLint framebuffer;
       ::glGetIntegerv(GL_FRAMEBUFFER_BINDING, &framebuffer);
@@ -147,12 +154,19 @@ public:
     this->clear();
     ::glEnable(GL_BLEND);
     ::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    float const width  = right - left;
-    float const height = top - bottom;
-    float const tx     = - (right + left) / (right - left);
-    float const ty     = - (top + bottom) / (top - bottom);
-    ::glViewport(std::min(left, right),
-                 std::min(bottom, top),
+    float width, height, tx, ty;
+    if (framebuffer == this->main_framebuffer_) {
+      width  = this->screen_width_ * screen_scale_;
+      height = -1.0 * this->screen_height_ * screen_scale_;
+      tx     = -1;
+      ty     = 1;
+    } else {
+      width  = texture.texture_width();
+      height = texture.texture_height();
+      tx     = -1;
+      ty     = -1;
+    }
+    ::glViewport(0, 0,
                  static_cast<GLsizei>(std::abs(width)),
                  static_cast<GLsizei>(std::abs(height)));
     float const projection_matrix[] = {
@@ -166,9 +180,8 @@ public:
               this->projection_matrix_.data());
   }
   void
-  reset_offscreen(float left, float right, float bottom, float top) {
-    this->set_offscreen(graphics::texture(),
-                        left, right, bottom, top);
+  reset_offscreen() {
+    this->set_offscreen(graphics::texture());
   }
   void
   flush() {

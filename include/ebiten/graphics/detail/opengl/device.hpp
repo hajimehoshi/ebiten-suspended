@@ -46,7 +46,10 @@ public:
       update_func_(update_func),
       draw_func_(draw_func),
       texture_factory_(),
-      graphics_context_(this->texture_factory_) {
+      graphics_context_(screen_width,
+                        screen_height,
+                        screen_scale,
+                        this->texture_factory_) {
     assert(0 < this->screen_width_);
     assert(0 < this->screen_height_);
     assert(0 < this->screen_scale_);
@@ -73,17 +76,12 @@ public:
     ::glEnable(GL_TEXTURE_2D);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    g.set_offscreen(this->offscreen_texture_,
-                    0, static_cast<float>(this->offscreen_texture_.texture_width()),
-                    0, static_cast<float>(this->offscreen_texture_.texture_height()));
+    g.set_offscreen(this->offscreen_texture_);
     this->draw_func_();
     g.flush();
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    std::size_t const width  = this->screen_width_  * this->screen_scale_;
-    std::size_t const height = this->screen_height_ * this->screen_scale_;
-    g.reset_offscreen(0, static_cast<float>(width),
-                      static_cast<float>(height), 0);
+    g.reset_offscreen();
     geometry_matrix geo_mat;
     geo_mat.set_a(this->screen_scale_);
     geo_mat.set_d(this->screen_scale_);

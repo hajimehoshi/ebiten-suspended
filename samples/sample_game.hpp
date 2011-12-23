@@ -87,7 +87,7 @@ public:
       // loading...
       return;
     }
-    g.draw_rect(0, 0, 100, 100, 51, 102, 153, 128);
+    g.draw_rect(0, 0, 320, 240, 51, 102, 153, 128);
     
     int i = 0;
     for (auto const& s : this->sprites_) {
