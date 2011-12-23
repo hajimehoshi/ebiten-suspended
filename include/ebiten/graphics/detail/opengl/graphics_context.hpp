@@ -67,6 +67,8 @@ public:
     geometry_matrix geo_mat;
     geo_mat.set_a(width  / this->empty_texture_.width());
     geo_mat.set_d(height / this->empty_texture_.height());
+    geo_mat.set_tx(x);
+    geo_mat.set_ty(y);
 
     color_matrix color_mat;
     color_mat.set_element<0, 4>(red   / 255.0);
@@ -76,14 +78,12 @@ public:
 
     this->draw_texture(this->empty_texture_,
                        0, 0, this->empty_texture_.width(), this->empty_texture_.height(),
-                       x, y,
                        geo_mat, color_mat);
   }
   // TODO: dst_width / dst_height?
   void
   draw_texture(texture const& texture,
                double src_x, double src_y, double width, double height,
-               double dst_x, double dst_y,
                geometry_matrix const& geometry_matrix,
                color_matrix const& color_matrix) {
     // TODO: Throwing an exception?
@@ -98,14 +98,14 @@ public:
     // 選べるようにするといいかも
     float const texture_width  = texture.texture_width();
     float const texture_height = texture.texture_height();
-    float const tu1 = src_x                / texture_width;
+    float const tu1 = src_x            / texture_width;
     float const tu2 = (src_x + width)  / texture_width;
-    float const tv1 = src_y                / texture_height;
+    float const tv1 = src_y            / texture_height;
     float const tv2 = (src_y + height) / texture_height;
-    float const x1 = dst_x;
-    float const x2 = dst_x + width;
-    float const y1 = dst_y;
-    float const y2 = dst_y + height;
+    float const x1 = 0;
+    float const x2 = width;
+    float const y1 = 0;
+    float const y2 = height;
     float const vertex[] = {x1, y1,
                             x2, y1,
                             x1, y2,

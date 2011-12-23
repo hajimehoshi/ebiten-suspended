@@ -92,14 +92,17 @@ public:
     int i = 0;
     for (auto const& s : this->sprites_) {
       auto geo_mat   = ebiten::graphics::geometry_matrix::identity();
+      geo_mat.set_tx(s.x);
+      geo_mat.set_ty(s.y);
       auto color_mat = ebiten::graphics::color_matrix::identity();
       if (i == 5) {
-        geo_mat = ebiten::graphics::geometry_matrix(2, 0, 0, 2, 0, 0);
+        geo_mat.set_a(2);
+        geo_mat.set_d(2);
       } else if (i == 4) {
         color_mat.set_element<0, 0>(0);
       }
       g.draw_texture(this->texture_,
-                     0, 0, 32, 32, s.x, s.y,
+                     0, 0, 32, 32,
                      geo_mat, color_mat);
       ++i;
     }
