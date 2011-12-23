@@ -44,6 +44,7 @@ bin/$(PROG_TEST): $(SRC_EBITEN) $(SRC_TEST) lib/libgtest_main.a
 	$(CXX) \
 		$(CXXFLAGS) \
 		-DGTEST_HAS_TR1_TUPLE=0 \
+		-Wno-variadic-macros \
 		$(LDFLAGS) \
 		-I$(GTEST_DIR)/include \
 		-g \
