@@ -166,8 +166,9 @@ public:
       0,           0,            1, 0,
       tx,          ty,           0, 1,
     };
-    this->set_projection_matrix(std::begin(projection_matrix),
-                                std::end(projection_matrix));
+    std::copy(std::begin(projection_matrix),
+              std::end(projection_matrix),
+              this->projection_matrix_.data());
   }
   void
   reset_offscreen(float left, float right, float bottom, float top) {
@@ -290,12 +291,6 @@ private:
       throw std::runtime_error("framebuffer is not supported completely");
     }
     return this->framebuffers_[texture.id()] = framebuffer;
-  }
-  // TODO: Remove this function if not needed
-  template<class InputIterator>
-  void
-  set_projection_matrix(InputIterator first, InputIterator last) {
-    std::copy(first, last, this->projection_matrix_.data());
   }
   // TODO: Check multi process
   bool
