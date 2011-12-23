@@ -4,18 +4,19 @@ CXX := clang++
 
 CXXFLAGS := \
 	-W -Wall -Wextra -Wmissing-prototypes -Wshorten-64-to-32 -pedantic \
-	-fPIC \
+	-fPIC -fpedantic \
 	-Iinclude \
 	-x objective-c++ -std=c++0x -stdlib=libc++ \
 	-fobjc-arc
 LDFLAGS := \
 	-framework Cocoa -framework OpenGL -framework QuartzCore
 
-GTEST_DIR := thrid_party/gtest-1.6.0
+GTEST_DIR    := thrid_party/gtest-1.6.0
+SQUIRREL_DIR := thrid_party/squirrel-3.0.2
 
-SRC_EBITEN  := $(shell find include -name "*.hpp" -or -name "*.cpp" -or -name "*.mm")
-SRC_SAMPLES := $(shell find samples -name "*.hpp" -or -name "*.cpp" -or -name "*.mm")
-SRC_TEST    := $(shell find test    -name "*.hpp" -or -name "*.cpp" -or -name "*.mm")
+SRC_EBITEN   := $(shell find include -name "*.hpp" -or -name "*.cpp" -or -name "*.mm")
+SRC_SAMPLES  := $(shell find samples -name "*.hpp" -or -name "*.cpp" -or -name "*.mm")
+SRC_TEST     := $(shell find test    -name "*.hpp" -or -name "*.cpp" -or -name "*.mm")
 
 .PHONY: samples test clean
 
@@ -54,31 +55,44 @@ bin/$(PROG_TEST): $(SRC_EBITEN) $(SRC_TEST) lib/libgtest_main.a
 		-Llib -lgtest_main \
 		test/main.cpp
 
-lib/libgtest_main.a: lib/gtest-all.o lib/gtest_main.o
-	$(AR) $(ARFLAGS) $@ $^
+lib/libsquirrel.a:
+	(cd $(SQUIRREL_DIR)/squirrel; \
+		$(CXX) \
+			-W -Wall -Wno-missing-field-initializers -Wno-unused-parameter \
+			-stdlib=libc++ \
+			-m64 -D_SQ64 \
+			-I../include \
+			-O2 \
+			-c \
+			*.cpp)
+	$(AR) $(ARFLAGS) $@ $(SQUIRREL_DIR)/squirrel/*.o
 
-lib/gtest-all.o:
-	$(CXX) \
-		-W -Wall -Wextra -stdlib=libc++ \
-		-DGTEST_HAS_TR1_TUPLE=0 \
-		-I$(GTEST_DIR) -I$(GTEST_DIR)/include \
-		-g \
-		-o $@ \
-		-c \
-		$(GTEST_DIR)/src/gtest-all.cc
+lib/libsqstdlib.a:
+	(cd $(SQUIRREL_DIR)/sqstdlib; \
+		$(CXX) \
+			-W -Wall -Wno-missing-field-initializers -Wno-unused-parameter \
+			-stdlib=libc++ \
+			-m64 -D_SQ64 \
+			-I../include \
+			-O2 \
+			-c \
+			*.cpp)
+	$(AR) $(ARFLAGS) $@ $(SQUIRREL_DIR)/sqstdlib/*.o
 
-lib/gtest_main.o:
-	$(CXX) \
-		-W -Wall -Wextra -stdlib=libc++ \
-		-DGTEST_HAS_TR1_TUPLE=0 \
-		-I$(GTEST_DIR) -I$(GTEST_DIR)/include \
-		-g \
-		-o $@ \
-		-c \
-		$(GTEST_DIR)/src/gtest_main.cc
+lib/libgtest_main.a:
+	(cd $(GTEST_DIR)/src; \
+		$(CXX) \
+			-W -Wall -Wextra -stdlib=libc++ \
+			-DGTEST_HAS_TR1_TUPLE=0 \
+			-I.. -I../include \
+			-g \
+			-c \
+			gtest-all.cc gtest_main.cc)
+	$(AR) $(ARFLAGS) $@ $(GTEST_DIR)/src/*.o
 
 clean:
 	$(RM) -rf bin/*
 	$(RM) -rf lib/*
 	$(RM) -rf $(PROG_SAMPLES).app
 	$(RM) -rf *.dSYM
+	find . -name "*.o" | xargs $(RM) -rf
