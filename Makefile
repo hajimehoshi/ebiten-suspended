@@ -77,7 +77,7 @@ lib/gtest_main.o:
 		$(GTEST_DIR)/src/gtest_main.cc
 
 clean:
-	rm -rf bin/*
-	rm -rf lib/*
-	rm -rf $(PROG_SAMPLES).app
-	rm -rf *.dSYM
+	$(RM) -rf bin/*
+	$(RM) -rf lib/*
+	$(RM) -rf $(PROG_SAMPLES).app
+	$(RM) -rf *.dSYM
