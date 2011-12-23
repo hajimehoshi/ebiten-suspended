@@ -213,36 +213,22 @@ private:
     }
     if (program == this->shaders_.color_mat_shader_program()) {
       graphics::color_matrix const& mat = color_matrix;
-      // TODO: Refactoring
+#define e(i, j) static_cast<float>(mat.element<i, j>())
       float const gl_color_mat[] = {
-        static_cast<float>(mat.element<0, 0>()),
-        static_cast<float>(mat.element<0, 1>()),
-        static_cast<float>(mat.element<0, 2>()),
-        static_cast<float>(mat.element<0, 3>()),
-        static_cast<float>(mat.element<1, 0>()),
-        static_cast<float>(mat.element<1, 1>()),
-        static_cast<float>(mat.element<1, 2>()),
-        static_cast<float>(mat.element<1, 3>()),
-        static_cast<float>(mat.element<2, 0>()),
-        static_cast<float>(mat.element<2, 1>()),
-        static_cast<float>(mat.element<2, 2>()),
-        static_cast<float>(mat.element<2, 3>()),
-        static_cast<float>(mat.element<3, 0>()),
-        static_cast<float>(mat.element<3, 1>()),
-        static_cast<float>(mat.element<3, 2>()),
-        static_cast<float>(mat.element<3, 3>()),
+        e(0, 0), e(0, 1), e(0, 2), e(0, 3),
+        e(1, 0), e(1, 1), e(1, 2), e(1, 3),
+        e(2, 0), e(2, 1), e(2, 2), e(2, 3),
+        e(3, 0), e(3, 1), e(3, 2), e(3, 3),
       };
+      float const gl_color_mat_translation[] = {
+        e(0, 4), e(1, 4), e(2, 4), e(3, 4),
+      };
+#undef e
       {
         GLint location = glGetUniformLocation(program, "color_matrix");
         assert(location != -1);
         ::glUniformMatrix4fv(location, 1, GL_FALSE, gl_color_mat);
       }
-      float const gl_color_mat_translation[] = {
-        static_cast<float>(mat.element<0, 4>()),
-        static_cast<float>(mat.element<1, 4>()),
-        static_cast<float>(mat.element<2, 4>()),
-        static_cast<float>(mat.element<3, 4>()),
-      };
       {
         GLint location = glGetUniformLocation(program, "color_matrix_translation");
         assert(location != -1);
