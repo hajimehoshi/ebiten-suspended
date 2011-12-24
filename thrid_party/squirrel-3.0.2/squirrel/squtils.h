@@ -2,7 +2,7 @@
 #ifndef _SQUTILS_H_
 #define _SQUTILS_H_
 
-// For LLVM
+// For clang++
 extern void *sq_vm_malloc(SQUnsignedInteger size);
 extern void *sq_vm_realloc(void *p,SQUnsignedInteger oldsize,SQUnsignedInteger size);
 extern void sq_vm_free(void *p,SQUnsignedInteger size);
