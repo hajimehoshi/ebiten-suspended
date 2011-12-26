@@ -31,14 +31,17 @@ $(PROG_SAMPLES).app: bin/$(PROG_SAMPLES)
 	cp $< $@/Contents/MacOS
 	mkdir -p $@/Contents/Resources
 	cp test.png $@/Contents/Resources
+	cp test.nut $@/Contents/Resources
 
-bin/$(PROG_SAMPLES): $(SRC_EBITEN) $(SRC_SAMPLES)
+bin/$(PROG_SAMPLES): $(SRC_EBITEN) $(SRC_SAMPLES) lib/libsquirrel.a lib/libsqstdlib.a
 	$(CXX) \
 		$(CXXFLAGS) \
 		$(LDFLAGS) \
+		-I$(SQUIRREL_DIR)/include \
 		-g \
 		-o $@ \
 		-O0 \
+		-Llib -lsquirrel -lsqstdlib \
 		samples/main.cpp
 
 bin/$(PROG_TEST): $(SRC_EBITEN) $(SRC_TEST) lib/libgtest_main.a
@@ -92,7 +95,6 @@ lib/libgtest_main.a:
 
 clean:
 	$(RM) -rf bin/*
-	$(RM) -rf lib/*
 	$(RM) -rf $(PROG_SAMPLES).app
 	$(RM) -rf *.dSYM
 	find . -name "*.o" | xargs $(RM) -rf
