@@ -84,7 +84,6 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     ::glBindTexture(GL_TEXTURE_2D, 0);
-    typedef std::unique_ptr<graphics::texture const> p;
     return graphics::texture(texture_id, width, height, texture_width, texture_height);
   }
 };

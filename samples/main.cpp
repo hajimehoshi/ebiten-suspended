@@ -55,7 +55,7 @@ main() {
                                    game_draw,
                                    320, 240, 2, 60,
                                    frame.native_view());
-                                   ebiten::kernels::application::run(frame.native_frame());
+    ebiten::kernels::application::run(frame.native_frame());
   } catch (std::runtime_error const& err) {
     std::cerr << err.what() << std::endl;
     return EXIT_FAILURE;
