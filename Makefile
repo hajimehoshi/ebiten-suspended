@@ -26,7 +26,7 @@ samples: $(PROG_SAMPLES).app
 test: bin/$(PROG_TEST)
 	./$<
 
-$(PROG_SAMPLES).app: bin/$(PROG_SAMPLES)
+$(PROG_SAMPLES).app: bin/$(PROG_SAMPLES) test.png test.nut
 	mkdir -p $@/Contents/MacOS
 	cp $< $@/Contents/MacOS
 	mkdir -p $@/Contents/Resources
