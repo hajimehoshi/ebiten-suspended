@@ -11,6 +11,11 @@ namespace graphics {
 template<class Float, std::size_t Dimension, class Self>
 class affine_matrix {
   static_assert(0 < Dimension, "Dimension must be more than 0");
+#ifdef EBITEN_TEST
+private:
+  FRIEND_TEST(affine_matrix, element);
+  FRIEND_TEST(affine_matrix, is_identity);
+#endif
 private:
   static std::size_t const size_ = Dimension * (Dimension - 1);
   typedef std::array<Float, size_> elements_type;
@@ -88,15 +93,19 @@ std::once_flag affine_matrix<Float, Dimension, Self>::identity_once_flag_;
 }
 }
 
-// TODO: test...
-
 #ifdef EBITEN_TEST
 
 namespace ebiten {
 namespace graphics {
 
-/*TEST(affine_matrix, element) {
-  affine_matrix<double, 4> m;
+template<class Float, std::size_t Dimension>
+class affine_matrix_impl : public affine_matrix<Float,
+                                                Dimension,
+                                                affine_matrix_impl<Float, Dimension>> {
+};
+
+TEST(affine_matrix, element) {
+  affine_matrix_impl<double, 4> m;
   m.set_element<0, 0>(1);
   m.set_element<0, 1>(2);
   m.set_element<0, 2>(3);
@@ -138,16 +147,16 @@ namespace graphics {
 }
 
 TEST(affine_matrix, is_identity) {
-  affine_matrix<double, 4> m1;
+  affine_matrix_impl<double, 4> m1;
   m1.set_element<0, 0>(1);
   m1.set_element<1, 1>(1);
   m1.set_element<2, 2>(1);
-  EXEPT_TRUE(m1.is_identity());
-  affine_matrix<double, 4> m2 = m1;
-  EXEPT_TRUE(m2.is_identity());
+  EXPECT_TRUE(m1.is_identity());
+  affine_matrix_impl<double, 4> m2 = m1;
+  EXPECT_TRUE(m2.is_identity());
   m2.set_element<0, 1>(1);
-  EXEPT_FALSE(m2.is_identity());
-  }*/
+  EXPECT_FALSE(m2.is_identity());
+}
 
 }
 }
