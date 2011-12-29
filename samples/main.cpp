@@ -3,7 +3,7 @@
 #include "ebiten/frames/frame.hpp"
 #include "ebiten/kernels/application.hpp"
 
-#include "ebiten_script/squirrel_game.hpp"
+#include "ebiten_script/squirrel/game.hpp"
 
 int
 main() {
@@ -16,11 +16,11 @@ main() {
     } else {
       path = "test.nut";
     }
-    ebiten_script::squirrel_game game(path);
-    auto game_update = std::bind(&ebiten_script::squirrel_game::update,
+    ebiten_script::squirrel::game game(path);
+    auto game_update = std::bind(&ebiten_script::squirrel::game::update,
                                  &game,
                                  std::placeholders::_1);
-    auto game_draw   = std::bind(&ebiten_script::squirrel_game::draw,
+    auto game_draw   = std::bind(&ebiten_script::squirrel::game::draw,
                                  &game,
                                  std::placeholders::_1);
     ebiten::frames::frame frame(640, 480);
