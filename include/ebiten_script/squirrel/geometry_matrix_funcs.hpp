@@ -24,7 +24,7 @@ public:
     delete self;
     return 1;
   }
-  static SQInteger _tostring(HSQUIRRELVM vm) {
+  static SQInteger meta_tostring(HSQUIRRELVM vm) {
     ::sq_pushstring(vm, _SC("GeometryMatrix!"), -1);
     return 1;
   }
