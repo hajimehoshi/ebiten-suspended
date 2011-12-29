@@ -79,10 +79,10 @@ public:
     return identity_;
   }
   Self
-  multiply(Self const& lhs) const {
+  operator *(Self const& rhs) const {
     Self result;
-    elements_type const& lhs_elements = lhs.elements_;
-    elements_type const& rhs_elements = this->elements_;
+    elements_type const& lhs_elements = this->elements_;
+    elements_type const& rhs_elements = rhs.elements_;
     typename elements_type::iterator it = result.elements_.begin();
     for (std::size_t i = 0; i < Dimension - 1; ++i) {
       for (std::size_t j = 0; j < Dimension; ++j, ++it) {
@@ -194,7 +194,7 @@ TEST(affine_matrix, multiply) {
     m2.set_element<0, 2>(1);
     m2.set_element<1, 2>(1);
     {
-      affine_matrix_impl<double, 3> m3 = m1.multiply(m2);
+      affine_matrix_impl<double, 3> m3 = m2 * m1;
       EXPECT_EQ(2, (m3.element<0, 0>()));
       EXPECT_EQ(0, (m3.element<0, 1>()));
       EXPECT_EQ(1, (m3.element<0, 2>()));
@@ -206,7 +206,7 @@ TEST(affine_matrix, multiply) {
       EXPECT_EQ(1, (m3.element<2, 2>()));
     }
     {
-      affine_matrix_impl<double, 3> m3 = m2.multiply(m1);
+      affine_matrix_impl<double, 3> m3 = m1 * m2;
       EXPECT_EQ(2, (m3.element<0, 0>()));
       EXPECT_EQ(0, (m3.element<0, 1>()));
       EXPECT_EQ(2, (m3.element<0, 2>()));
@@ -221,6 +221,68 @@ TEST(affine_matrix, multiply) {
   {
     affine_matrix_impl<double, 4> m1;
     affine_matrix_impl<double, 4> m2;
+    m1.set_element<0, 0>(1);
+    m1.set_element<0, 1>(2);
+    m1.set_element<0, 2>(3);
+    m1.set_element<0, 3>(4);
+    m1.set_element<1, 0>(5);
+    m1.set_element<1, 1>(6);
+    m1.set_element<1, 2>(7);
+    m1.set_element<1, 3>(8);
+    m1.set_element<2, 0>(9);
+    m1.set_element<2, 1>(10);
+    m1.set_element<2, 2>(11);
+    m1.set_element<2, 3>(12);
+    m2.set_element<0, 0>(13);
+    m2.set_element<0, 1>(14);
+    m2.set_element<0, 2>(15);
+    m2.set_element<0, 3>(16);
+    m2.set_element<1, 0>(17);
+    m2.set_element<1, 1>(18);
+    m2.set_element<1, 2>(19);
+    m2.set_element<1, 3>(20);
+    m2.set_element<2, 0>(21);
+    m2.set_element<2, 1>(22);
+    m2.set_element<2, 2>(23);
+    m2.set_element<2, 3>(24);
+    {
+      affine_matrix_impl<double, 4> m3 = m2 * m1;
+      EXPECT_EQ(218, (m3.element<0, 0>()));
+      EXPECT_EQ(260, (m3.element<0, 1>()));
+      EXPECT_EQ(302, (m3.element<0, 2>()));
+      EXPECT_EQ(360, (m3.element<0, 3>()));
+      EXPECT_EQ(278, (m3.element<1, 0>()));
+      EXPECT_EQ(332, (m3.element<1, 1>()));
+      EXPECT_EQ(386, (m3.element<1, 2>()));
+      EXPECT_EQ(460, (m3.element<1, 3>()));
+      EXPECT_EQ(338, (m3.element<2, 0>()));
+      EXPECT_EQ(404, (m3.element<2, 1>()));
+      EXPECT_EQ(470, (m3.element<2, 2>()));
+      EXPECT_EQ(560, (m3.element<2, 3>()));
+      EXPECT_EQ(0,   (m3.element<3, 0>()));
+      EXPECT_EQ(0,   (m3.element<3, 1>()));
+      EXPECT_EQ(0,   (m3.element<3, 2>()));
+      EXPECT_EQ(1,   (m3.element<3, 3>()));
+    }
+    {
+      affine_matrix_impl<double, 4> m3 = m1 * m2;
+      EXPECT_EQ(110, (m3.element<0, 0>()));
+      EXPECT_EQ(116, (m3.element<0, 1>()));
+      EXPECT_EQ(122, (m3.element<0, 2>()));
+      EXPECT_EQ(132, (m3.element<0, 3>()));
+      EXPECT_EQ(314, (m3.element<1, 0>()));
+      EXPECT_EQ(332, (m3.element<1, 1>()));
+      EXPECT_EQ(350, (m3.element<1, 2>()));
+      EXPECT_EQ(376, (m3.element<1, 3>()));
+      EXPECT_EQ(518, (m3.element<2, 0>()));
+      EXPECT_EQ(548, (m3.element<2, 1>()));
+      EXPECT_EQ(578, (m3.element<2, 2>()));
+      EXPECT_EQ(620, (m3.element<2, 3>()));
+      EXPECT_EQ(0,   (m3.element<3, 0>()));
+      EXPECT_EQ(0,   (m3.element<3, 1>()));
+      EXPECT_EQ(0,   (m3.element<3, 2>()));
+      EXPECT_EQ(1,   (m3.element<3, 3>()));
+    }
   }
 }
 
