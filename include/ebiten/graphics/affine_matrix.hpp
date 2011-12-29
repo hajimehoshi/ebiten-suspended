@@ -79,10 +79,10 @@ public:
     return identity_;
   }
   Self
-  operator *(Self const& rhs) const {
+  concat(Self const& other) const {
     Self result;
-    elements_type const& lhs_elements = this->elements_;
-    elements_type const& rhs_elements = rhs.elements_;
+    elements_type const& lhs_elements = other.elements_;
+    elements_type const& rhs_elements = this->elements_;
     typename elements_type::iterator it = result.elements_.begin();
     for (std::size_t i = 0; i < Dimension - 1; ++i) {
       for (std::size_t j = 0; j < Dimension; ++j, ++it) {
@@ -194,7 +194,7 @@ TEST(affine_matrix, multiply) {
     m2.set_element<0, 2>(1);
     m2.set_element<1, 2>(1);
     {
-      affine_matrix_impl<double, 3> m3 = m2 * m1;
+      affine_matrix_impl<double, 3> m3 = m1.concat(m2);
       EXPECT_EQ(2, (m3.element<0, 0>()));
       EXPECT_EQ(0, (m3.element<0, 1>()));
       EXPECT_EQ(1, (m3.element<0, 2>()));
@@ -206,7 +206,7 @@ TEST(affine_matrix, multiply) {
       EXPECT_EQ(1, (m3.element<2, 2>()));
     }
     {
-      affine_matrix_impl<double, 3> m3 = m1 * m2;
+      affine_matrix_impl<double, 3> m3 = m2.concat(m1);
       EXPECT_EQ(2, (m3.element<0, 0>()));
       EXPECT_EQ(0, (m3.element<0, 1>()));
       EXPECT_EQ(2, (m3.element<0, 2>()));
@@ -246,7 +246,7 @@ TEST(affine_matrix, multiply) {
     m2.set_element<2, 2>(23);
     m2.set_element<2, 3>(24);
     {
-      affine_matrix_impl<double, 4> m3 = m2 * m1;
+      affine_matrix_impl<double, 4> m3 = m1.concat(m2);
       EXPECT_EQ(218, (m3.element<0, 0>()));
       EXPECT_EQ(260, (m3.element<0, 1>()));
       EXPECT_EQ(302, (m3.element<0, 2>()));
@@ -265,7 +265,7 @@ TEST(affine_matrix, multiply) {
       EXPECT_EQ(1,   (m3.element<3, 3>()));
     }
     {
-      affine_matrix_impl<double, 4> m3 = m1 * m2;
+      affine_matrix_impl<double, 4> m3 = m2.concat(m1);
       EXPECT_EQ(110, (m3.element<0, 0>()));
       EXPECT_EQ(116, (m3.element<0, 1>()));
       EXPECT_EQ(122, (m3.element<0, 2>()));
