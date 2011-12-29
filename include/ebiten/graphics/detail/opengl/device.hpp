@@ -82,12 +82,12 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     g.reset_offscreen();
-    geometry_matrix geo_mat;
-    geo_mat.set_a(this->screen_scale_);
-    geo_mat.set_d(this->screen_scale_);
+    geometry_matrix geom_mat;
+    geom_mat.set_a(this->screen_scale_);
+    geom_mat.set_d(this->screen_scale_);
     g.draw_texture(this->offscreen_texture_,
                    0, 0, this->screen_width_, this->screen_height_,
-                   geo_mat, color_matrix::identity());
+                   geom_mat, color_matrix::identity());
     g.flush();
   }
   graphics_context&

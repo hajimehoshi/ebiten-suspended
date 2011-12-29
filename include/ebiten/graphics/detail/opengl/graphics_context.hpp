@@ -68,11 +68,11 @@ public:
       this->empty_texture_ = this->texture_factory_.create(16, 16);
     }
 
-    geometry_matrix geo_mat;
-    geo_mat.set_a(width  / this->empty_texture_.width());
-    geo_mat.set_d(height / this->empty_texture_.height());
-    geo_mat.set_tx(x);
-    geo_mat.set_ty(y);
+    geometry_matrix geom_mat;
+    geom_mat.set_a(width  / this->empty_texture_.width());
+    geom_mat.set_d(height / this->empty_texture_.height());
+    geom_mat.set_tx(x);
+    geom_mat.set_ty(y);
 
     color_matrix color_mat;
     color_mat.set_element<0, 4>(red   / 255.0);
@@ -82,7 +82,7 @@ public:
 
     this->draw_texture(this->empty_texture_,
                        0, 0, this->empty_texture_.width(), this->empty_texture_.height(),
-                       geo_mat, color_mat);
+                       geom_mat, color_mat);
   }
   // TODO: dst_width / dst_height?
   void
