@@ -43,10 +43,6 @@ public:
       this->ebiten_texture_ = tf.create(this->width_, this->height_);
     }
   }
-  void
-  flush_drawing_commands(ebiten::graphics::graphics_context&) {
-    // TODO: implement
-  }
   ebiten::graphics::texture&
   ebiten_texture() {
     return this->ebiten_texture_;
@@ -70,13 +66,6 @@ public:
   std::size_t
   height() const {
     return this->ebiten_texture_.height();
-  }
-  void
-  clear() {
-    // コマンドつみ
-  }
-  void
-  draw_sprite(sprite const&) {
   }
 };
 

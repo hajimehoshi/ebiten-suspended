@@ -4,6 +4,7 @@
 #include "ebiten/graphics/texture_factory.hpp"
 #include "ebiten/noncopyable.hpp"
 #include "ebiten_script/texture.hpp"
+#include "ebiten_script/texture_command.hpp"
 #include <squirrel.h> 
 #include <sqstdio.h> 
 #include <sqstdaux.h>
@@ -63,8 +64,11 @@ public:
       }
       std::shared_ptr<texture>& t = p.second.second;
       assert(t->is_created());
-      t->flush_drawing_commands(g);
+      //t->flush_drawing_commands(g);
     }
+  }
+  void
+  add_command(HSQUIRRELVM) {
   }
 };
 
@@ -149,6 +153,14 @@ public:
     texture const& self = textures_.get(key);
     ::sq_pushinteger(vm, self.height());
     return 1;
+  }
+  static SQInteger
+  method_clear(HSQUIRRELVM vm) {
+    SQUserPointer p;
+    ::sq_getinstanceup(vm, 1, &p, 0);
+    //textures::key_type key = reinterpret_cast<textures::key_type>(p);
+    //textures_.add_command(vm, key, );
+    return 0;
   }
 };
 
