@@ -69,7 +69,7 @@ public:
       ::sq_call(this->vm_, 1, SQFalse, SQTrue);
       ::sq_settop(this->vm_, top);
     }
-    texture_funcs::draw(this->vm_, g);
+    texture_funcs::flush_drawing_commands(this->vm_, g);
   }
 private:
   static void

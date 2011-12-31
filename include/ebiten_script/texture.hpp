@@ -44,7 +44,7 @@ public:
     }
   }
   void
-  draw(ebiten::graphics::graphics_context&) {
+  flush_drawing_commands(ebiten::graphics::graphics_context&) {
     // TODO: implement
   }
   ebiten::graphics::texture&
@@ -70,6 +70,13 @@ public:
   std::size_t
   height() const {
     return this->ebiten_texture_.height();
+  }
+  void
+  clear() {
+    // コマンドつみ
+  }
+  void
+  draw_sprite(sprite const&) {
   }
 };
 

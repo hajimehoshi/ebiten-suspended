@@ -56,14 +56,14 @@ public:
     }
   }
   void
-  draw(HSQUIRRELVM vm, ebiten::graphics::graphics_context& g) {
+  flush_drawing_commands(HSQUIRRELVM vm, ebiten::graphics::graphics_context& g) {
     for (auto& p : this->set_) {
       if (vm != p.second.first) {
         continue;
       }
       std::shared_ptr<texture>& t = p.second.second;
       assert(t->is_created());
-      t->draw(g);
+      t->flush_drawing_commands(g);
     }
   }
 };
@@ -80,8 +80,8 @@ public:
     textures_.instantiate(vm, tf);
   }
   static void
-  draw(HSQUIRRELVM vm, ebiten::graphics::graphics_context& g) {
-    textures_.draw(vm, g);
+  flush_drawing_commands(HSQUIRRELVM vm, ebiten::graphics::graphics_context& g) {
+    textures_.flush_drawing_commands(vm, g);
   }
   static SQInteger
   method_constructor(HSQUIRRELVM vm) {
