@@ -11,33 +11,45 @@
 #include <cassert>
 #include <fstream>
 #include <memory>
+#include <string>
 #include <unordered_map>
 #include <unordered_set>
 
 namespace ebiten_script {
 namespace squirrel {
 
+// TODO: Refactoring not to rely on the HSQUIRRELVM
 class texture_holders : private ebiten::noncopyable {
 public:
   typedef std::size_t key_type;
 private:
-  std::unordered_map<key_type, std::pair<HSQUIRRELVM, std::shared_ptr<texture_holder> > > set_;
+  std::unordered_map<key_type, std::pair<HSQUIRRELVM, std::unique_ptr<texture_holder> > > set_;
   key_type unique_number_;
 public:
   texture_holders()
     : unique_number_(0) {
   }
   key_type
-  insert(HSQUIRRELVM vm, std::shared_ptr<texture_holder> const& t) {
+  insert(HSQUIRRELVM vm, std::string const& path) {
     key_type key = this->unique_number_;
-    std::pair<HSQUIRRELVM, std::shared_ptr<texture_holder> > value(vm, t);
+    std::unique_ptr<texture_holder> t(new texture_holder(path));
+    std::pair<HSQUIRRELVM, std::unique_ptr<texture_holder> > value(vm, std::move(t));
+    this->set_.emplace(key, std::move(value));
+    ++this->unique_number_;
+    return key;
+  }
+  key_type
+  insert(HSQUIRRELVM vm, std::size_t width, std::size_t height) {
+    key_type key = this->unique_number_;
+    std::unique_ptr<texture_holder> t(new texture_holder(width, height));
+    std::pair<HSQUIRRELVM, std::unique_ptr<texture_holder> > value(vm, std::move(t));
     this->set_.emplace(key, std::move(value));
     ++this->unique_number_;
     return key;
   }
   texture_holder&
   get(key_type const& key) {
-    return *this->set_[key].second;
+    return *(this->set_.at(key).second);
   }
   void
   remove(key_type const& key) {
@@ -49,11 +61,11 @@ public:
       if (vm != p.second.first) {
         continue;
       }
-      std::shared_ptr<texture_holder>& t = p.second.second;
-      if (t->ebiten_texture()) {
+      texture_holder& t = *(p.second.second);
+      if (t.ebiten_texture()) {
         continue;
       }
-      t->instantiate(tf);
+      t.instantiate(tf);
     }
   }
   void
@@ -62,8 +74,8 @@ public:
       if (vm != p.second.first) {
         continue;
       }
-      std::shared_ptr<texture_holder>& t = p.second.second;
-      assert(static_cast<bool>(t->ebiten_texture()));
+      texture_holder& t = *(p.second.second);
+      assert(static_cast<bool>(t.ebiten_texture()));
       //t->flush_drawing_commands(g);
     }
   }
@@ -96,7 +108,7 @@ public:
     if (3 < n_args) {
       return ::sq_throwerror(vm, _SC("too many arguments"));
     }
-    std::shared_ptr<texture_holder> t(new texture_holder());
+    texture_holders::key_type key;
     if (n_args == 2) {
       if (::sq_gettype(vm, 2) != OT_STRING) {
         return ::sq_throwerror(vm, _SC("invalid argument type"));
@@ -108,15 +120,14 @@ public:
         std::string error_message = std::string("file not found: ") + path;
         return ::sq_throwerror(vm, _SC(error_message.c_str()));
       }
-      t->set_path(path);
+      key = texture_holders_.insert(vm, path);
     }
     if (n_args == 3) {
       SQInteger width, height;
       ::sq_getinteger(vm, 2, &width);
       ::sq_getinteger(vm, 3, &height);
-      t->set_size(width, height);
+      key = texture_holders_.insert(vm, width, height);
     }
-    texture_holders::key_type key = texture_holders_.insert(vm, t);
     ::sq_setinstanceup(vm, 1, reinterpret_cast<SQUserPointer>(key));
     ::sq_setreleasehook(vm, 1, releasehook);
     return 0;

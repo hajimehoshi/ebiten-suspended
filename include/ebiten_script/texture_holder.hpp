@@ -4,7 +4,7 @@
 #include "ebiten/graphics/texture.hpp"
 #include "ebiten/graphics/texture_factory.hpp"
 #include "ebiten/image.hpp"
-#include "ebiten/image_loader.hpp"
+
 #include "ebiten/noncopyable.hpp"
 #include <string>
 
@@ -13,22 +13,19 @@ namespace ebiten_script {
 class texture_holder : private ebiten::noncopyable {
 private:
   ebiten::graphics::texture ebiten_texture_;
-  std::string path_;
-  std::size_t width_;
-  std::size_t height_;
+  std::string const path_;
+  std::size_t const width_;
+  std::size_t const height_;
 public:
-  texture_holder()
-    : width_(0),
+  texture_holder(std::string const& path)
+    : path_(path),
+      width_(0),
       height_(0) {
   }
-  void
-  set_path(std::string const& path) {
-    this->path_ = path;
-  }
-  void
-  set_size(std::size_t width, std::size_t height) {
-    this->width_  = width;
-    this->height_ = height;
+  texture_holder(std::size_t width, std::size_t height)
+    : path_(),
+      width_(width),
+      height_(height) {
   }
   void
   instantiate(ebiten::graphics::texture_factory& tf) {
