@@ -29,6 +29,10 @@ TEST(image_loader, load_png) {
   EXPECT_EQ(32u, img->height());
 }
 
+TEST(image_loader, load_invalid_file) {
+  EXPECT_THROW((image_loader::load_png("foo")), std::runtime_error);
+}
+
 }
 
 #endif

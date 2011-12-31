@@ -4,6 +4,7 @@
 #include "ebiten/image.hpp"
 #import <Cocoa/Cocoa.h>
 #include <algorithm>
+#include <fstream>
 #include <memory>
 
 namespace ebiten {
@@ -16,6 +17,10 @@ public:
   image_loader& operator=(image_loader const&) = delete;
   static std::unique_ptr<image>
   load_png(std::string const& filename) {
+    std::ifstream f(filename);
+    if (!f) {
+      throw std::runtime_error("file not found: " + filename);
+    }
     std::unique_ptr<image> image;
     @autoreleasepool {
       NSString* ns_filename = [NSString stringWithCString:filename.c_str()

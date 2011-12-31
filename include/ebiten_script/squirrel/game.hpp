@@ -3,7 +3,6 @@
 
 #include "ebiten_script/sprite.hpp"
 #include "ebiten_script/squirrel/geometry_matrix_funcs.hpp"
-#include "ebiten_script/squirrel/texture_factory_funcs.hpp"
 #include "ebiten_script/squirrel/texture_funcs.hpp"
 #include "ebiten/graphics/graphics_context.hpp"
 #include "ebiten/graphics/texture_factory.hpp"
@@ -23,11 +22,10 @@ class game : private ebiten::noncopyable {
 private:
   HSQUIRRELVM const vm_;
   SQInteger top_;
-  SQInteger game_idx_;
+  HSQOBJECT game_;
 public:
   game(std::string filename)
-    : vm_(::sq_open(1024)),
-      game_idx_(0) {
+    : vm_(::sq_open(1024)) {
     ::sqstd_seterrorhandlers(this->vm_);
     ::sq_setprintfunc(this->vm_, print_func, error_func);
     // TODO: load the standard library
@@ -39,7 +37,7 @@ public:
                    SQTrue,
                    SQTrue);
     if (::sq_gettype(this->vm_, -1) == OT_INSTANCE) {
-      this->game_idx_ = ::sq_gettop(this->vm_);
+      ::sq_getstackobj(this->vm_, -1, &this->game_);
     }
   }
   virtual
@@ -47,31 +45,30 @@ public:
     ::sq_settop(this->vm_, this->top_);
     ::sq_close(this->vm_);
   }
-  void update(ebiten::graphics::texture_factory& tf) {
-    SQInteger const top = ::sq_gettop(this->vm_);
-    SQInteger texture_factory_idx;
+  void
+  update(ebiten::graphics::texture_factory& tf) {
     {
-      ::sq_pushroottable(this->vm_);
-      ::sq_pushstring(this->vm_, _SC("ebiten"), -1);
+      SQInteger const top = ::sq_gettop(this->vm_);
+      ::sq_pushobject(this->vm_, this->game_);
+      ::sq_pushstring(this->vm_, _SC("update"), -1);
       ::sq_get(this->vm_, -2);
-      ::sq_pushstring(this->vm_, _SC("TextureFactory"), -1);
-      ::sq_get(this->vm_, -2);
-      ::sq_pushroottable(this->vm_); // 'this'
-      ::sq_pushuserpointer(this->vm_, &tf);
-      ::sq_call(this->vm_, 2, SQTrue, SQTrue);
-      texture_factory_idx = ::sq_gettop(this->vm_);
+      ::sq_pushobject(this->vm_, this->game_);
+      ::sq_call(this->vm_, 1, SQFalse, SQTrue);
+      ::sq_settop(this->vm_, top);
     }
-    ::sq_push(this->vm_, this->game_idx_);
-    ::sq_pushstring(this->vm_, _SC("update"), -1);
-    ::sq_get(this->vm_, -2);
-    ::sq_pushroottable(this->vm_); // 'this'
-    ::sq_push(this->vm_, texture_factory_idx);
-    ::sq_call(this->vm_, 2, SQFalse, SQTrue);
-    // TODO: change state of the texture_factory?
-    ::sq_settop(this->vm_, top);
+    texture_funcs::instantiate(this->vm_, tf);
   }
-  void draw(ebiten::graphics::graphics_context&) {
-    this->call_method(this->game_idx_, "draw");
+  void
+  draw(ebiten::graphics::graphics_context&) {
+    {
+      SQInteger const top = ::sq_gettop(this->vm_);
+      ::sq_pushobject(this->vm_, this->game_);
+      ::sq_pushstring(this->vm_, _SC("draw"), -1);
+      ::sq_get(this->vm_, -2);
+      ::sq_pushobject(this->vm_, this->game_);
+      ::sq_call(this->vm_, 1, SQFalse, SQTrue);
+      ::sq_settop(this->vm_, top);
+    }
   }
 private:
   static void
@@ -87,6 +84,8 @@ private:
     ::va_start(vl, s);
     ::vfprintf(stderr, s, vl);
     ::va_end(vl);
+    // TODO: throw?
+    std::abort();
   }
   void
   initialize_ebiten_classes() {
@@ -107,36 +106,12 @@ private:
                           false);
     }
     {
-      static std::string const t("TextureFactory");
-      this->create_class(e, t);
-      this->create_method(e, t,
-                          "constructor",
-                          texture_factory_funcs::constructor,
-                          "xp",
-                          false);
-      this->create_method(e, t,
-                          "_typeof",
-                          texture_factory_funcs::meta_typeof,
-                          "x",
-                          false);
-      this->create_method(e, t,
-                          "load",
-                          texture_factory_funcs::load,
-                          "x",
-                          false);
-      this->create_method(e, t,
-                          "create",
-                          texture_factory_funcs::create,
-                          "x",
-                          false);
-    }
-    {
       static std::string const t("Texture");
       this->create_class(e, t);
       this->create_method(e, t,
                           "constructor",
-                          texture_funcs::constructor,
-                          "x",
+                          texture_funcs::method_constructor,
+                          "",
                           false);
     }
   }
@@ -176,23 +151,10 @@ private:
     ::sq_get(this->vm_, -2);
     ::sq_pushstring(this->vm_, _SC(method_name.c_str()), -1);
     ::sq_newclosure(this->vm_, func, 0);
-    ::sq_setparamscheck(this->vm_, type_mask.size(), _SC(type_mask.c_str()));
-    ::sq_newslot(this->vm_, -3, is_static);
-    ::sq_settop(this->vm_, top);
-  }
-  void
-  call_method(SQInteger idx,
-              std::string const& method_name) {
-    SQInteger const top = ::sq_gettop(this->vm_);
-    ::sq_push(this->vm_, idx);
-    ::sq_pushstring(this->vm_, method_name.c_str(), -1);
-    if (SQ_FAILED(::sq_get(this->vm_, -2))) {
-      std::string msg = std::string("method not found: ") + method_name;
-      ::sq_throwerror(this->vm_, _SC(msg.c_str()));
-      return;
+    if (!type_mask.empty()) {
+      ::sq_setparamscheck(this->vm_, type_mask.size(), _SC(type_mask.c_str()));
     }
-    ::sq_pushroottable(this->vm_); // 'this'
-    ::sq_call(this->vm_, 1, SQFalse, SQTrue);
+    ::sq_newslot(this->vm_, -3, is_static);
     ::sq_settop(this->vm_, top);
   }
 };
