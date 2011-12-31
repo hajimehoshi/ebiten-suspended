@@ -1,5 +1,5 @@
-#ifndef EBITEN_SCRIPT_TEXTURE_HPP
-#define EBITEN_SCRIPT_TEXTURE_HPP
+#ifndef EBITEN_SCRIPT_TEXTURE_HOLDER_HPP
+#define EBITEN_SCRIPT_TEXTURE_HOLDER_HPP
 
 #include "ebiten/graphics/texture.hpp"
 #include "ebiten/graphics/texture_factory.hpp"
@@ -10,14 +10,14 @@
 
 namespace ebiten_script {
 
-class texture : private ebiten::noncopyable {
+class texture_holder : private ebiten::noncopyable {
 private:
   ebiten::graphics::texture ebiten_texture_;
   std::string path_;
   std::size_t width_;
   std::size_t height_;
 public:
-  texture()
+  texture_holder()
     : width_(0),
       height_(0) {
   }
