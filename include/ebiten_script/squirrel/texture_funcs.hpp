@@ -50,7 +50,7 @@ public:
         continue;
       }
       std::shared_ptr<texture>& t = p.second.second;
-      if (t->is_created()) {
+      if (t->ebiten_texture()) {
         continue;
       }
       t->instantiate(tf);
@@ -63,7 +63,7 @@ public:
         continue;
       }
       std::shared_ptr<texture>& t = p.second.second;
-      assert(t->is_created());
+      assert(static_cast<bool>(t->ebiten_texture()));
       //t->flush_drawing_commands(g);
     }
   }
@@ -133,7 +133,7 @@ public:
     ::sq_getinstanceup(vm, 1, &p, 0);
     textures::key_type key = reinterpret_cast<textures::key_type>(p);
     texture const& self = textures_.get(key);
-    ::sq_pushbool(vm, self.is_created());
+    ::sq_pushbool(vm, static_cast<bool>(self.ebiten_texture()));
     return 1;
   }
   static SQInteger
@@ -142,7 +142,7 @@ public:
     ::sq_getinstanceup(vm, 1, &p, 0);
     textures::key_type key = reinterpret_cast<textures::key_type>(p);
     texture const& self = textures_.get(key);
-    ::sq_pushinteger(vm, self.width());
+    ::sq_pushinteger(vm, self.ebiten_texture().width());
     return 1;
   }
   static SQInteger
@@ -151,7 +151,7 @@ public:
     ::sq_getinstanceup(vm, 1, &p, 0);
     textures::key_type key = reinterpret_cast<textures::key_type>(p);
     texture const& self = textures_.get(key);
-    ::sq_pushinteger(vm, self.height());
+    ::sq_pushinteger(vm, self.ebiten_texture().height());
     return 1;
   }
   static SQInteger

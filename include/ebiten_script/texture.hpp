@@ -55,18 +55,6 @@ public:
   set_ebiten_texture(ebiten::graphics::texture const& ebiten_texture) {
     this->ebiten_texture_ = ebiten_texture;
   }
-  bool
-  is_created() const {
-    return this->ebiten_texture_;
-  }
-  std::size_t
-  width() const {
-    return this->ebiten_texture_.width();
-  }
-  std::size_t
-  height() const {
-    return this->ebiten_texture_.height();
-  }
 };
 
 }
