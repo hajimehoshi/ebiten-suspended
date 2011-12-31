@@ -7,6 +7,7 @@
 #include <squirrel.h> 
 #include <sqstdio.h> 
 #include <sqstdaux.h>
+#include <cassert>
 #include <fstream>
 #include <memory>
 #include <unordered_map>
@@ -33,6 +34,10 @@ public:
     ++this->unique_number_;
     return key;
   }
+  texture&
+  get(key_type const& key) {
+    return *this->set_[key].second;
+  }
   void
   remove(key_type const& key) {
     this->set_.erase(key);
@@ -44,10 +49,21 @@ public:
         continue;
       }
       std::shared_ptr<texture>& t = p.second.second;
-      if (t->ebiten_texture()) {
+      if (t->is_created()) {
         continue;
       }
       t->instantiate(tf);
+    }
+  }
+  void
+  draw(HSQUIRRELVM vm, ebiten::graphics::graphics_context& g) {
+    for (auto& p : this->set_) {
+      if (vm != p.second.first) {
+        continue;
+      }
+      std::shared_ptr<texture>& t = p.second.second;
+      assert(t->is_created());
+      t->draw(g);
     }
   }
 };
@@ -62,6 +78,10 @@ public:
   static void
   instantiate(HSQUIRRELVM vm, ebiten::graphics::texture_factory& tf) {
     textures_.instantiate(vm, tf);
+  }
+  static void
+  draw(HSQUIRRELVM vm, ebiten::graphics::graphics_context& g) {
+    textures_.draw(vm, g);
   }
   static SQInteger
   method_constructor(HSQUIRRELVM vm) {
@@ -104,16 +124,31 @@ public:
     return 1;
   }
   static SQInteger
-  method_is_loaded(HSQUIRRELVM) {
-    return 0;
+  method_is_created(HSQUIRRELVM vm) {
+    SQUserPointer p;
+    ::sq_getinstanceup(vm, 1, &p, 0);
+    textures::key_type key = reinterpret_cast<textures::key_type>(p);
+    texture const& self = textures_.get(key);
+    ::sq_pushbool(vm, self.is_created());
+    return 1;
   }
   static SQInteger
-  method_width(HSQUIRRELVM) {
-    return 0;
+  method_get_width(HSQUIRRELVM vm) {
+    SQUserPointer p;
+    ::sq_getinstanceup(vm, 1, &p, 0);
+    textures::key_type key = reinterpret_cast<textures::key_type>(p);
+    texture const& self = textures_.get(key);
+    ::sq_pushinteger(vm, self.width());
+    return 1;
   }
   static SQInteger
-  method_height(HSQUIRRELVM) {
-    return 0;
+  method_get_height(HSQUIRRELVM vm) {
+    SQUserPointer p;
+    ::sq_getinstanceup(vm, 1, &p, 0);
+    textures::key_type key = reinterpret_cast<textures::key_type>(p);
+    texture const& self = textures_.get(key);
+    ::sq_pushinteger(vm, self.height());
+    return 1;
   }
 };
 

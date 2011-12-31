@@ -59,7 +59,7 @@ public:
     texture_funcs::instantiate(this->vm_, tf);
   }
   void
-  draw(ebiten::graphics::graphics_context&) {
+  draw(ebiten::graphics::graphics_context& g) {
     {
       SQInteger const top = ::sq_gettop(this->vm_);
       ::sq_pushobject(this->vm_, this->game_);
@@ -69,6 +69,7 @@ public:
       ::sq_call(this->vm_, 1, SQFalse, SQTrue);
       ::sq_settop(this->vm_, top);
     }
+    texture_funcs::draw(this->vm_, g);
   }
 private:
   static void
@@ -112,6 +113,21 @@ private:
                           "constructor",
                           texture_funcs::method_constructor,
                           "",
+                          false);
+      this->create_method(e, t,
+                          "isCreated",
+                          texture_funcs::method_is_created,
+                          "x",
+                          false);
+      this->create_method(e, t,
+                          "getWidth",
+                          texture_funcs::method_get_width,
+                          "x",
+                          false);
+      this->create_method(e, t,
+                          "getHeight",
+                          texture_funcs::method_get_height,
+                          "x",
                           false);
     }
   }
