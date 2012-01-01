@@ -112,6 +112,19 @@ public:
     //texture_holders_.add_command(vm, key, );
     return 0;
   }
+  static SQInteger
+  method_set_texture(HSQUIRRELVM vm) {
+    SQUserPointer p;
+    ::sq_getinstanceup(vm, 1, &p, 0);
+    texture_holders::key_type key = reinterpret_cast<key_vm_type*>(p)->first;
+    texture_holder& self = get_texture_holders(vm).get(key);
+    SQUserPointer pTexture;
+    ::sq_getuserpointer(vm, 2, &pTexture);
+    ebiten::graphics::texture texture =
+      *reinterpret_cast<ebiten::graphics::texture*>(pTexture);
+    self.set_ebiten_texture(texture);
+    return 0;
+  }
 private:
   static texture_holders&
   get_texture_holders(HSQUIRRELVM vm) {

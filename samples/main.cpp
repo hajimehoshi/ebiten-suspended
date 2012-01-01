@@ -22,7 +22,8 @@ main() {
                                  std::placeholders::_1);
     auto game_draw   = std::bind(&ebiten_script::squirrel::game::draw,
                                  &game,
-                                 std::placeholders::_1);
+                                 std::placeholders::_1,
+                                 std::placeholders::_2);
     ebiten::frames::frame frame(640, 480);
     ebiten::kernels::kernel kernel(game_update,
                                    game_draw,

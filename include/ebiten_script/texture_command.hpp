@@ -9,6 +9,7 @@ namespace ebiten_script {
 
 class texture_command : private ebiten::noncopyable {
 private:
+  // TODO: change texture to texture_holder
   ebiten::graphics::texture& texture_;
 public:
   texture_command(ebiten::graphics::texture& texture)
