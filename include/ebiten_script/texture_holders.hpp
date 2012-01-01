@@ -2,11 +2,12 @@
 #define EBITEN_SCRIPT_TEXTURE_HOLDERS_HPP
 
 #include "ebiten_script/texture_holder.hpp"
+#include "ebiten_script/texture_command.hpp"
 #include "ebiten/graphics/graphics_context.hpp"
 #include "ebiten/graphics/texture_factory.hpp"
 #include "ebiten/noncopyable.hpp"
 #include <unordered_map>
-
+#include <vector>
 
 namespace ebiten_script {
 
@@ -16,6 +17,7 @@ public:
 private:
   std::unordered_map<key_type, texture_holder> set_;
   key_type unique_number_;
+  std::vector<std::unique_ptr<texture_command> > commands_;
 public:
   texture_holders()
     : unique_number_(0) {
@@ -51,12 +53,15 @@ public:
     }
   }
   void
-  flush_drawing_commands(ebiten::graphics::graphics_context&) {
-    for (auto& p : this->set_) {
-      texture_holder& t = p.second;
-      assert(static_cast<bool>(t.ebiten_texture()));
-      //t->flush_drawing_commands(g);
+  add_texture_command(std::unique_ptr<texture_command> command) {
+    this->commands_.push_back(std::move(command));
+  }
+  void
+  flush_texture_commands(ebiten::graphics::graphics_context& g) {
+    for (auto& command : this->commands_) {
+      command->exec(g);
     }
+    this->commands_.clear();
   }
 };
 

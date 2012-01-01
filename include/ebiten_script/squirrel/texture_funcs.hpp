@@ -1,11 +1,11 @@
 #ifndef EBITEN_SCRIPT_SQUIRREL_TEXTURE_FUNCS_HPP
 #define EBITEN_SCRIPT_SQUIRREL_TEXTURE_FUNCS_HPP
 
-#include "ebiten/graphics/texture_factory.hpp"
-#include "ebiten/noncopyable.hpp"
 #include "ebiten_script/texture_holder.hpp"
 #include "ebiten_script/texture_holders.hpp"
-#include "ebiten_script/texture_command.hpp"
+#include "ebiten/graphics/graphics_context.hpp"
+#include "ebiten/graphics/texture_factory.hpp"
+#include "ebiten/noncopyable.hpp"
 #include <squirrel.h> 
 #include <sqstdio.h> 
 #include <sqstdaux.h>
@@ -31,8 +31,8 @@ public:
     get_texture_holders(vm).instantiate(tf);
   }
   static void
-  flush_drawing_commands(HSQUIRRELVM vm, ebiten::graphics::graphics_context& g) {
-    get_texture_holders(vm).flush_drawing_commands(g);
+  flush_texture_commands(HSQUIRRELVM vm, ebiten::graphics::graphics_context& g) {
+    get_texture_holders(vm).flush_texture_commands(g);
   }
   static SQInteger
   method_constructor(HSQUIRRELVM vm) {
