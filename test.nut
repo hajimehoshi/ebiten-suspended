@@ -6,20 +6,17 @@ class Game {
     }
     function update() {
         if (!this.texture) {
-            this.texture = ebiten.Texture("test.png")
+            // TODO: resource path
+            //this.texture = ebiten.Texture("test.png")
         }
         //::print(this.texture.isCreated() + " ")
         //::print(this.texture.getWidth() + " " + this.texture.getHeight() + "\n")
-        if (this.offscreen != null) {
-            ::print(this.offscreen.getWidth() + "\n");
-        }
     }
     function draw(offscreen) {
         //::print("draw!\n");
-        this.offscreen = offscreen;
-        ::print(offscreen.getWidth() + "\n");
+        //::print(offscreen.getWidth() + "\n");
+        offscreen.drawRect(10, 10, 100, 100, 255, 0, 0, 255)
     }
-    offscreen = null;
     texture = null
     width = 0
     height = 0

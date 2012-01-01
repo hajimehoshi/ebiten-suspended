@@ -108,8 +108,32 @@ public:
   method_clear(HSQUIRRELVM vm) {
     SQUserPointer p;
     ::sq_getinstanceup(vm, 1, &p, 0);
-    //texture_holders::key_type key = reinterpret_cast<>(p);
-    //texture_holders_.add_command(vm, key, );
+    texture_holders::key_type key = reinterpret_cast<key_vm_type*>(p)->first;
+    texture_holder& self = get_texture_holders(vm).get(key);
+    std::unique_ptr<texture_command> command(new texture_command_clear(self));
+    get_texture_holders(vm).add_texture_command(command);
+    return 0;
+  }
+  static SQInteger
+  method_draw_rect(HSQUIRRELVM vm) {
+    SQUserPointer p;
+    ::sq_getinstanceup(vm, 1, &p, 0);
+    texture_holders::key_type key = reinterpret_cast<key_vm_type*>(p)->first;
+    texture_holder& self = get_texture_holders(vm).get(key);
+    SQInteger x, y, width, height, red, green, blue, alpha;
+    ::sq_getinteger(vm, 2, &x);
+    ::sq_getinteger(vm, 3, &y);
+    ::sq_getinteger(vm, 4, &width);
+    ::sq_getinteger(vm, 5, &height);
+    ::sq_getinteger(vm, 6, &red);
+    ::sq_getinteger(vm, 7, &green);
+    ::sq_getinteger(vm, 8, &blue);
+    ::sq_getinteger(vm, 9, &alpha);
+    typedef texture_command_draw_rect tcdr;
+    std::unique_ptr<texture_command> command(new tcdr(self,
+                                                      x, y, width, height,
+                                                      red, green, blue, alpha));
+    get_texture_holders(vm).add_texture_command(command);
     return 0;
   }
   static SQInteger

@@ -53,7 +53,7 @@ public:
     }
   }
   void
-  add_texture_command(std::unique_ptr<texture_command> command) {
+  add_texture_command(std::unique_ptr<texture_command>& command) {
     this->commands_.push_back(std::move(command));
   }
   void

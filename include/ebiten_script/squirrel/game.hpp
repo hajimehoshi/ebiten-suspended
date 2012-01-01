@@ -45,7 +45,10 @@ public:
       ::sq_settop(this->vm_, top);
     }
     {
-      // mainOffscreenTexture = ebiten.Texture(0, 0)
+      /*
+       * [Squirrel]
+       * mainOffscreenTexture = ebiten.Texture(0, 0)
+       */
       SQInteger const top = ::sq_gettop(this->vm_);
       ::sq_pushroottable(this->vm_);
       ::sq_pushstring(this->vm_, _SC("ebiten"), -1);
@@ -75,7 +78,10 @@ public:
   void
   update(ebiten::graphics::texture_factory& tf) {
     {
-      // game.update()
+      /*
+       * [Squirrel]
+       * game.update()
+       */
       SQInteger const top = ::sq_gettop(this->vm_);
       ::sq_pushobject(this->vm_, this->game_);
       ::sq_pushstring(this->vm_, _SC("update"), -1);
@@ -93,7 +99,10 @@ public:
     g.set_offscreen(main_offscreen);
     g.clear();
     {
-      // mainOffscreenTexture.setTexture_(main_offscreen)
+      /*
+       * [Squirrel]
+       * mainOffscreenTexture.setTexture_(main_offscreen)
+       */
       SQInteger const top = ::sq_gettop(this->vm_);
       ::sq_pushobject(this->vm_, this->main_offscreen_texture_);
       ::sq_pushstring(this->vm_, _SC("setTexture_"), -1);
@@ -105,7 +114,10 @@ public:
       ::sq_settop(this->vm_, top);
     }
     {
-      // game.draw(mainOffscreenTexture)
+      /*
+       * [Squirrel]
+       * game.draw(mainOffscreenTexture)
+       */
       SQInteger const top = ::sq_gettop(this->vm_);
       ::sq_pushobject(this->vm_, this->game_);
       ::sq_pushstring(this->vm_, _SC("draw"), -1);
@@ -174,6 +186,16 @@ private:
                           "getHeight",
                           texture_funcs::method_get_height,
                           "x",
+                          false);
+      this->create_method(e, t,
+                          "clear",
+                          texture_funcs::method_clear,
+                          "x",
+                          false);
+      this->create_method(e, t,
+                          "drawRect",
+                          texture_funcs::method_draw_rect,
+                          "xiiiiiiii",
                           false);
       this->create_method(e, t,
                           "setTexture_",

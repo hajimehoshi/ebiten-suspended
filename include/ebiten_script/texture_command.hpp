@@ -41,6 +41,9 @@ protected:
 
 class texture_command_clear : public texture_command {
 public:
+  texture_command_clear(class texture_holder& texture_holder)
+    : texture_command(texture_holder) {
+  }
   void
   do_exec(ebiten::graphics::graphics_context& g) {
     ebiten::graphics::texture& t = this->texture_holder().ebiten_texture();
