@@ -42,16 +42,6 @@ public:
       texture_width_(0),
       texture_height_(0) {
   }
-  texture(texture const&) = default;
-  texture& operator=(texture const&) = default;
-  texture(texture&& rhs)
-    : is_null_(std::move(rhs.is_null_)),
-      id_(std::move(rhs.id_)),
-      width_(std::move(rhs.width_)),
-      height_(std::move(rhs.height_)),
-      texture_width_(std::move(rhs.texture_width_)),
-      texture_height_(std::move(rhs.texture_height_)) {
-  }
   std::size_t
   width() const {
     return this->width_;
