@@ -27,6 +27,12 @@ public:
       width_(width),
       height_(height) {
   }
+  texture_holder(texture_holder&& rhs)
+    : ebiten_texture_(std::move(rhs.ebiten_texture_)),
+      path_(std::move(rhs.path_)),
+      width_(std::move(rhs.width_)),
+      height_(std::move(rhs.height_)) {
+  }
   void
   instantiate(ebiten::graphics::texture_factory& tf) {
     if (this->ebiten_texture_) {

@@ -4,6 +4,7 @@
 #include "ebiten/graphics/texture_factory.hpp"
 #include "ebiten/noncopyable.hpp"
 #include "ebiten_script/texture_holder.hpp"
+#include "ebiten_script/texture_holders.hpp"
 #include "ebiten_script/texture_command.hpp"
 #include <squirrel.h> 
 #include <sqstdio.h> 
@@ -13,91 +14,25 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
-#include <unordered_set>
 
 namespace ebiten_script {
 namespace squirrel {
 
-// TODO: Refactoring not to rely on the HSQUIRRELVM
-class texture_holders : private ebiten::noncopyable {
-public:
-  typedef std::size_t key_type;
-private:
-  std::unordered_map<key_type, std::pair<HSQUIRRELVM, std::unique_ptr<texture_holder> > > set_;
-  key_type unique_number_;
-public:
-  texture_holders()
-    : unique_number_(0) {
-  }
-  key_type
-  insert(HSQUIRRELVM vm, std::string const& path) {
-    key_type key = this->unique_number_;
-    std::unique_ptr<texture_holder> t(new texture_holder(path));
-    std::pair<HSQUIRRELVM, std::unique_ptr<texture_holder> > value(vm, std::move(t));
-    this->set_.emplace(key, std::move(value));
-    ++this->unique_number_;
-    return key;
-  }
-  key_type
-  insert(HSQUIRRELVM vm, std::size_t width, std::size_t height) {
-    key_type key = this->unique_number_;
-    std::unique_ptr<texture_holder> t(new texture_holder(width, height));
-    std::pair<HSQUIRRELVM, std::unique_ptr<texture_holder> > value(vm, std::move(t));
-    this->set_.emplace(key, std::move(value));
-    ++this->unique_number_;
-    return key;
-  }
-  texture_holder&
-  get(key_type const& key) {
-    return *(this->set_.at(key).second);
-  }
-  void
-  remove(key_type const& key) {
-    this->set_.erase(key);
-  }
-  void
-  instantiate(HSQUIRRELVM vm, ebiten::graphics::texture_factory& tf) {
-    for (auto& p : this->set_) {
-      if (vm != p.second.first) {
-        continue;
-      }
-      texture_holder& t = *(p.second.second);
-      if (t.ebiten_texture()) {
-        continue;
-      }
-      t.instantiate(tf);
-    }
-  }
-  void
-  flush_drawing_commands(HSQUIRRELVM vm, ebiten::graphics::graphics_context& g) {
-    for (auto& p : this->set_) {
-      if (vm != p.second.first) {
-        continue;
-      }
-      texture_holder& t = *(p.second.second);
-      assert(static_cast<bool>(t.ebiten_texture()));
-      //t->flush_drawing_commands(g);
-    }
-  }
-  void
-  add_command(HSQUIRRELVM) {
-  }
-};
-
 class texture_funcs {
 private:
-  static texture_holders texture_holders_;
+  static std::unordered_map<HSQUIRRELVM, texture_holders> vm_to_texture_holders_;
+  typedef std::pair<texture_holders::key_type, HSQUIRRELVM> key_vm_type;
 public:
   texture_funcs() = delete;
   texture_funcs(texture_funcs const&) = delete;
   texture_funcs& operator=(texture_funcs const&) = delete;
   static void
   instantiate(HSQUIRRELVM vm, ebiten::graphics::texture_factory& tf) {
-    texture_holders_.instantiate(vm, tf);
+    get_texture_holders(vm).instantiate(tf);
   }
   static void
   flush_drawing_commands(HSQUIRRELVM vm, ebiten::graphics::graphics_context& g) {
-    texture_holders_.flush_drawing_commands(vm, g);
+    get_texture_holders(vm).flush_drawing_commands(g);
   }
   static SQInteger
   method_constructor(HSQUIRRELVM vm) {
@@ -120,30 +55,34 @@ public:
         std::string error_message = std::string("file not found: ") + path;
         return ::sq_throwerror(vm, _SC(error_message.c_str()));
       }
-      key = texture_holders_.insert(vm, path);
+      key = get_texture_holders(vm).insert(path);
     }
     if (n_args == 3) {
       SQInteger width, height;
       ::sq_getinteger(vm, 2, &width);
       ::sq_getinteger(vm, 3, &height);
-      key = texture_holders_.insert(vm, width, height);
+      key = get_texture_holders(vm).insert(width, height);
     }
-    ::sq_setinstanceup(vm, 1, reinterpret_cast<SQUserPointer>(key));
+    auto p = new key_vm_type(key, vm);
+    ::sq_setinstanceup(vm, 1, reinterpret_cast<SQUserPointer>(p));
     ::sq_setreleasehook(vm, 1, releasehook);
     return 0;
   }
   static SQInteger
   releasehook(SQUserPointer p, SQInteger) {
-    texture_holders::key_type key = reinterpret_cast<texture_holders::key_type>(p);
-    texture_holders_.remove(key);
+    key_vm_type* key_vm = reinterpret_cast<key_vm_type*>(p);
+    texture_holders::key_type key = key_vm->first;
+    HSQUIRRELVM vm                = key_vm->second;
+    get_texture_holders(vm).remove(key);
+    delete key_vm;
     return 1;
   }
   static SQInteger
   method_is_created(HSQUIRRELVM vm) {
     SQUserPointer p;
     ::sq_getinstanceup(vm, 1, &p, 0);
-    texture_holders::key_type key = reinterpret_cast<texture_holders::key_type>(p);
-    texture_holder const& self = texture_holders_.get(key);
+    texture_holders::key_type key = reinterpret_cast<key_vm_type*>(p)->first;
+    texture_holder const& self = get_texture_holders(vm).get(key);
     ::sq_pushbool(vm, static_cast<bool>(self.ebiten_texture()));
     return 1;
   }
@@ -151,8 +90,8 @@ public:
   method_get_width(HSQUIRRELVM vm) {
     SQUserPointer p;
     ::sq_getinstanceup(vm, 1, &p, 0);
-    texture_holders::key_type key = reinterpret_cast<texture_holders::key_type>(p);
-    texture_holder const& self = texture_holders_.get(key);
+    texture_holders::key_type key = reinterpret_cast<key_vm_type*>(p)->first;
+    texture_holder const& self = get_texture_holders(vm).get(key);
     ::sq_pushinteger(vm, self.ebiten_texture().width());
     return 1;
   }
@@ -160,8 +99,8 @@ public:
   method_get_height(HSQUIRRELVM vm) {
     SQUserPointer p;
     ::sq_getinstanceup(vm, 1, &p, 0);
-    texture_holders::key_type key = reinterpret_cast<texture_holders::key_type>(p);
-    texture_holder const& self = texture_holders_.get(key);
+    texture_holders::key_type key = reinterpret_cast<key_vm_type*>(p)->first;
+    texture_holder const& self = get_texture_holders(vm).get(key);
     ::sq_pushinteger(vm, self.ebiten_texture().height());
     return 1;
   }
@@ -169,13 +108,22 @@ public:
   method_clear(HSQUIRRELVM vm) {
     SQUserPointer p;
     ::sq_getinstanceup(vm, 1, &p, 0);
-    //texture_holders::key_type key = reinterpret_cast<texture_holders::key_type>(p);
+    //texture_holders::key_type key = reinterpret_cast<>(p);
     //texture_holders_.add_command(vm, key, );
     return 0;
   }
+private:
+  static texture_holders&
+  get_texture_holders(HSQUIRRELVM vm) {
+    auto it = vm_to_texture_holders_.find(vm);
+    if (it == vm_to_texture_holders_.end()) {
+      vm_to_texture_holders_.emplace(vm, std::move(texture_holders()));
+    }
+    return vm_to_texture_holders_[vm];
+  }
 };
 
-texture_holders texture_funcs::texture_holders_;
+std::unordered_map<HSQUIRRELVM, texture_holders> texture_funcs::vm_to_texture_holders_;
 
 }
 }
