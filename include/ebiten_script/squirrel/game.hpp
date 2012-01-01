@@ -44,8 +44,8 @@ public:
       }
       ::sq_settop(this->vm_, top);
     }
-    // create main offscreen texture holder
     {
+      // mainOffscreenTexture = ebiten.Texture(0, 0)
       SQInteger const top = ::sq_gettop(this->vm_);
       ::sq_pushroottable(this->vm_);
       ::sq_pushstring(this->vm_, _SC("ebiten"), -1);
@@ -75,6 +75,7 @@ public:
   void
   update(ebiten::graphics::texture_factory& tf) {
     {
+      // game.update()
       SQInteger const top = ::sq_gettop(this->vm_);
       ::sq_pushobject(this->vm_, this->game_);
       ::sq_pushstring(this->vm_, _SC("update"), -1);
@@ -92,6 +93,7 @@ public:
     g.set_offscreen(main_offscreen);
     g.clear();
     {
+      // mainOffscreenTexture.setTexture_(main_offscreen)
       SQInteger const top = ::sq_gettop(this->vm_);
       ::sq_pushobject(this->vm_, this->main_offscreen_texture_);
       ::sq_pushstring(this->vm_, _SC("setTexture_"), -1);
@@ -103,6 +105,7 @@ public:
       ::sq_settop(this->vm_, top);
     }
     {
+      // game.draw(mainOffscreenTexture)
       SQInteger const top = ::sq_gettop(this->vm_);
       ::sq_pushobject(this->vm_, this->game_);
       ::sq_pushstring(this->vm_, _SC("draw"), -1);
