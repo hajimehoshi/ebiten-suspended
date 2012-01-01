@@ -24,17 +24,11 @@ public:
     : set_(std::move(rhs.set_)),
       unique_number_(std::move(rhs.unique_number_)) {
   }
+  template<class... Args>
   key_type
-  insert(std::string const& path) {
+  insert(Args const&... args) {
     key_type key = this->unique_number_;
-    this->set_.emplace(key, std::move(texture_holder(path)));
-    ++this->unique_number_;
-    return key;
-  }
-  key_type
-  insert(std::size_t width, std::size_t height) {
-    key_type key = this->unique_number_;
-    this->set_.emplace(key, std::move(texture_holder(width, height)));
+    this->set_.emplace(key, std::move(texture_holder(args...)));
     ++this->unique_number_;
     return key;
   }
