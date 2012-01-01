@@ -15,13 +15,13 @@ namespace kernels {
 class kernel : private noncopyable {
 private:
   std::function<void(graphics::texture_factory&)> game_update_;
-  std::function<void(graphics::graphics_context&)> game_draw_;
+  std::function<void(graphics::graphics_context&, graphics::texture&)> game_draw_;
   std::size_t const fps_;
   uint64_t before_;
   graphics::device device_;
 public:
   kernel(std::function<void(graphics::texture_factory&)> game_update,
-         std::function<void(graphics::graphics_context&)> game_draw,
+         std::function<void(graphics::graphics_context&, graphics::texture&)> game_draw,
          std::size_t screen_width,
          std::size_t screen_height,
          std::size_t screen_scale, // TODO: check the scale (1 or 2?) not to crash
@@ -35,21 +35,27 @@ public:
               screen_height,
               screen_scale,
               native_view,
-              std::bind(&kernel::update, this),
-              std::bind(&kernel::draw, this)) {
+              std::bind(&kernel::update,
+                        this,
+                        std::placeholders::_1),
+              std::bind(&kernel::draw,
+                        this,
+                        std::placeholders::_1,
+                        std::placeholders::_2)) {
   }
 private:
   void
-  update() {
+  update(ebiten::graphics::texture_factory& tf) {
     uint64_t const now = timers::timer::now_nsec() * this->fps_;
     while (this->before_ + 1000 * 1000 * 1000 < now) {
-      this->game_update_(this->device_.texture_factory());
+      this->game_update_(tf);
       this->before_ += 1000 * 1000 * 1000;
     }
   }
   void
-  draw() {
-    this->game_draw_(this->device_.graphics_context());
+  draw(ebiten::graphics::graphics_context& g,
+       ebiten::graphics::texture& offscreen_texture) {
+    this->game_draw_(g, offscreen_texture);
   }
 };
 

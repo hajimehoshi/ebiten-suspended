@@ -81,7 +81,10 @@ public:
     }
   }
   void
-  draw(ebiten::graphics::graphics_context& g) const {
+  draw(ebiten::graphics::graphics_context& g,
+       ebiten::graphics::texture& main_offscreen) const {
+    g.set_offscreen(main_offscreen);
+    g.clear();
     if (!this->texture_) {
       // loading...
       return;

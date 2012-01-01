@@ -27,6 +27,12 @@ public:
       width_(width),
       height_(height) {
   }
+  texture_holder(ebiten::graphics::texture const& ebiten_texture)
+    : ebiten_texture_(ebiten_texture),
+      path_(),
+      width_(0),
+      height_(0) {
+  }
   texture_holder(texture_holder&& rhs)
     : ebiten_texture_(std::move(rhs.ebiten_texture_)),
       path_(std::move(rhs.path_)),

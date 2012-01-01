@@ -149,9 +149,9 @@ public:
       this->main_framebuffer_ = framebuffer;
       this->main_framebuffer_initialized_ = true;
     }
+    // TODO: cache
     GLuint framebuffer = this->get_framebuffer(texture);
     ::glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-    this->clear();
     ::glEnable(GL_BLEND);
     ::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     float width, height, tx, ty;
@@ -179,6 +179,7 @@ public:
               std::end(projection_matrix),
               this->projection_matrix_.data());
   }
+private:
   void
   reset_offscreen() {
     this->set_offscreen(graphics::texture());
@@ -187,7 +188,6 @@ public:
   flush() {
     ::glFlush();
   }
-private:
   void
   set_shader_program(geometry_matrix const& geometry_matrix,
                      color_matrix const& color_matrix) {

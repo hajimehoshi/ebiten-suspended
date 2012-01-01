@@ -27,8 +27,8 @@ private:
   std::size_t const screen_width_;
   std::size_t const screen_height_;
   std::size_t const screen_scale_;
-  std::function<void()> update_func_;
-  std::function<void()> draw_func_;
+  std::function<void(texture_factory&)> update_func_;
+  std::function<void(graphics_context&, texture&)> draw_func_;
   texture_factory texture_factory_;
   graphics_context graphics_context_;
   texture offscreen_texture_;
@@ -38,8 +38,8 @@ public:
          std::size_t screen_height,
          std::size_t screen_scale,
          native_view native_view,
-         std::function<void()> const& update_func,
-         std::function<void()> const& draw_func)
+         std::function<void(texture_factory&)> const& update_func,
+         std::function<void(graphics_context&, texture&)> const& draw_func)
     : screen_width_(screen_width),
       screen_height_(screen_height),
       screen_scale_(screen_scale),
@@ -71,17 +71,19 @@ public:
                                                                    this->screen_height_);
       assert(static_cast<bool>(this->offscreen_texture_));
     }
-    this->update_func_();
+    this->update_func_(this->texture_factory_);
     detail::graphics_context& g = this->graphics_context_;
     ::glEnable(GL_TEXTURE_2D);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     g.set_offscreen(this->offscreen_texture_);
-    this->draw_func_();
+    g.clear();
+    this->draw_func_(g, this->offscreen_texture_);
     g.flush();
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     g.reset_offscreen();
+    g.clear();
     geometry_matrix geom_mat;
     geom_mat.set_a(this->screen_scale_);
     geom_mat.set_d(this->screen_scale_);
@@ -89,14 +91,6 @@ public:
                    0, 0, this->screen_width_, this->screen_height_,
                    geom_mat, color_matrix::identity());
     g.flush();
-  }
-  graphics_context&
-  graphics_context() {
-    return this->graphics_context_;
-  }
-  texture_factory&
-  texture_factory() {
-    return this->texture_factory_;
   }
 };
 
