@@ -31,6 +31,10 @@ public:
     ::sq_setprintfunc(this->vm_, print_func, error_func);
     // TODO: load the standard library
     {
+      /*
+       * [Squirrel]
+       * game = ::dofile(filename)
+       */
       SQInteger const top = ::sq_gettop(this->vm_);
       this->initialize_ebiten_classes();
       ::sq_pushroottable(this->vm_);
