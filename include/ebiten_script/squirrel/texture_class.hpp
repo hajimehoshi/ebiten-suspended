@@ -1,5 +1,5 @@
-#ifndef EBITEN_SCRIPT_SQUIRREL_TEXTURE_FUNCS_HPP
-#define EBITEN_SCRIPT_SQUIRREL_TEXTURE_FUNCS_HPP
+#ifndef EBITEN_SCRIPT_SQUIRREL_TEXTURE_CLASS_HPP
+#define EBITEN_SCRIPT_SQUIRREL_TEXTURE_CLASS_HPP
 
 #include "ebiten_script/sprite.hpp"
 #include "ebiten_script/texture_holder.hpp"
@@ -19,14 +19,14 @@
 namespace ebiten_script {
 namespace squirrel {
 
-class texture_funcs {
+class texture_class {
 private:
   static std::unordered_map<HSQUIRRELVM, texture_holders> vm_to_texture_holders_;
   typedef std::pair<texture_holders::key_type, HSQUIRRELVM> key_vm_type;
 public:
-  texture_funcs() = delete;
-  texture_funcs(texture_funcs const&) = delete;
-  texture_funcs& operator=(texture_funcs const&) = delete;
+  texture_class() = delete;
+  texture_class(texture_class const&) = delete;
+  texture_class& operator=(texture_class const&) = delete;
   static void
   instantiate(HSQUIRRELVM vm, ebiten::graphics::texture_factory& tf) {
     get_texture_holders(vm).instantiate(tf);
@@ -199,7 +199,7 @@ private:
   }
 };
 
-std::unordered_map<HSQUIRRELVM, texture_holders> texture_funcs::vm_to_texture_holders_;
+std::unordered_map<HSQUIRRELVM, texture_holders> texture_class::vm_to_texture_holders_;
 
 }
 }

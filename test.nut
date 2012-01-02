@@ -11,19 +11,21 @@ class Game {
         }
         //::print(this.texture.isCreated() + " ")
         //::print(this.texture.getWidth() + " " + this.texture.getHeight() + "\n")
-        if (this.offscreen) {
+        /*if (this.offscreen) {
             ::print(this.offscreen.getWidth() + "\n")
-        }
+        }*/
+        this.x++
     }
     function draw(offscreen) {
         //::print("draw!\n");
         //::print(offscreen.getWidth() + "\n");
-        offscreen.drawRect(10, 10, 100, 100, 255, 0, 0, 255)
+        offscreen.drawRect(this.x, 10, 100, 100, 255, 0, 0, 255)
         this.offscreen = offscreen
         ::print(this.offscreen.getWidth() + "\n")
     }
     offscreen = null
     texture = null
+    x = 0
     width = 0
     height = 0
 }

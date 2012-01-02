@@ -1,5 +1,5 @@
-#ifndef EBITEN_SCRIPT_SQUIRREL_GEOMETRY_MATRIX_FUNCS_HPP
-#define EBITEN_SCRIPT_SQUIRREL_GEOMETRY_MATRIX_FUNCS_HPP
+#ifndef EBITEN_SCRIPT_SQUIRREL_GEOMETRY_MATRIX_CLASS_HPP
+#define EBITEN_SCRIPT_SQUIRREL_GEOMETRY_MATRIX_CLASS_HPP
 
 #include "ebiten/graphics/geometry_matrix.hpp"
 #include <squirrel.h> 
@@ -9,7 +9,7 @@
 namespace ebiten_script {
 namespace squirrel {
 
-class geometry_matrix_funcs {
+class geometry_matrix_class {
 private:
   typedef ebiten::graphics::geometry_matrix geometry_matrix;
 public:

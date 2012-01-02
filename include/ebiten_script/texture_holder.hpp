@@ -15,6 +15,7 @@ namespace ebiten_script {
 class texture_holder : private ebiten::noncopyable {
 private:
   std::unique_ptr<ebiten::graphics::texture> ebiten_texture_;
+  // TODO: I don't wanna use pointers!
   ebiten::graphics::texture* external_ebiten_texture_;
   std::string const path_;
   std::size_t const width_;

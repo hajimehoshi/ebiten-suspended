@@ -2,8 +2,8 @@
 #define EBITEN_SCRIPT_SQUIRREL_GAME_HPP
 
 #include "ebiten_script/sprite.hpp"
-#include "ebiten_script/squirrel/geometry_matrix_funcs.hpp"
-#include "ebiten_script/squirrel/texture_funcs.hpp"
+#include "ebiten_script/squirrel/geometry_matrix_class.hpp"
+#include "ebiten_script/squirrel/texture_class.hpp"
 #include "ebiten/graphics/graphics_context.hpp"
 #include "ebiten/graphics/texture_factory.hpp"
 #include "ebiten/noncopyable.hpp"
@@ -66,7 +66,7 @@ public:
       ::sq_call(this->vm_, 1, SQFalse, SQTrue);
       ::sq_settop(this->vm_, top);
     }
-    texture_funcs::instantiate(this->vm_, tf);
+    texture_class::instantiate(this->vm_, tf);
   }
   void
   draw(ebiten::graphics::graphics_context& g,
@@ -129,7 +129,7 @@ public:
       ::sq_call(this->vm_, 2, SQFalse, SQTrue);
       ::sq_settop(this->vm_, top);
     }
-    texture_funcs::flush_texture_commands(this->vm_, g);
+    texture_class::flush_texture_commands(this->vm_, g);
     {
       /*
        * [Squirrel]
@@ -179,51 +179,51 @@ private:
       this->create_class(e, gm, nullptr);
       this->create_method(e, gm,
                           "constructor",
-                          geometry_matrix_funcs::constructor,
+                          geometry_matrix_class::constructor,
                           "x",
                           false);
       this->create_method(e, gm,
                           "_tostring",
-                          geometry_matrix_funcs::meta_tostring,
+                          geometry_matrix_class::meta_tostring,
                           "x",
                           false);
     }
     {
       static std::string const t("Texture");
-      this->create_class(e, t, texture_funcs::type_tag());
+      this->create_class(e, t, texture_class::type_tag());
       this->create_method(e, t,
                           "constructor",
-                          texture_funcs::method_constructor,
+                          texture_class::method_constructor,
                           "",
                           false);
       this->create_method(e, t,
                           "isCreated",
-                          texture_funcs::method_is_created,
+                          texture_class::method_is_created,
                           "x",
                           false);
       this->create_method(e, t,
                           "getWidth",
-                          texture_funcs::method_get_width,
+                          texture_class::method_get_width,
                           "x",
                           false);
       this->create_method(e, t,
                           "getHeight",
-                          texture_funcs::method_get_height,
+                          texture_class::method_get_height,
                           "x",
                           false);
       this->create_method(e, t,
                           "clear",
-                          texture_funcs::method_clear,
+                          texture_class::method_clear,
                           "x",
                           false);
       this->create_method(e, t,
                           "drawRect",
-                          texture_funcs::method_draw_rect,
+                          texture_class::method_draw_rect,
                           "xiiiiiiii",
                           false);
       this->create_method(e, t,
                           "setTexture_",
-                          texture_funcs::method_set_texture,
+                          texture_class::method_set_texture,
                           "xp",
                           false);
     }
