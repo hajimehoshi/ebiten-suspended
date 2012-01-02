@@ -33,6 +33,8 @@ protected:
   affine_matrix() {
     this->elements_.fill(0);
   }
+  ~affine_matrix() {
+  }
 public:
   template<std::size_t I, std::size_t J>
   Float
