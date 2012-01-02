@@ -20,8 +20,9 @@ class Game {
         //::print("draw!\n");
         //::print(offscreen.getWidth() + "\n");
         offscreen.drawRect(this.x, 10, 100, 100, 255, 0, 0, 255)
-        this.offscreen = offscreen
-        ::print(this.offscreen.getWidth() + "\n")
+        // WTF!?
+        //this.offscreen = offscreen
+        ::print(offscreen + "\n")
     }
     offscreen = null
     texture = null

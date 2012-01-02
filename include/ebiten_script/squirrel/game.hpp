@@ -73,7 +73,7 @@ public:
        ebiten::graphics::texture& main_offscreen) {
     g.set_offscreen(main_offscreen);
     g.clear();
-    HSQOBJECT main_offscreen_texture_;
+    HSQOBJECT main_offscreen_texture;
     {
       /*
        * [Squirrel]
@@ -96,8 +96,8 @@ public:
         assert(false);
       }
       assert(::sq_gettype(this->vm_, -1) == OT_INSTANCE);
-      ::sq_getstackobj(this->vm_, -1, &main_offscreen_texture_);
-      ::sq_addref(this->vm_, &main_offscreen_texture_);
+      ::sq_getstackobj(this->vm_, -1, &main_offscreen_texture);
+      ::sq_addref(this->vm_, &main_offscreen_texture);
       ::sq_settop(this->vm_, top);
     }
     {
@@ -106,10 +106,10 @@ public:
        * main_offscreen_texture.setTexture_(main_offscreen)
        */
       SQInteger const top = ::sq_gettop(this->vm_);
-      ::sq_pushobject(this->vm_, main_offscreen_texture_);
+      ::sq_pushobject(this->vm_, main_offscreen_texture);
       ::sq_pushstring(this->vm_, _SC("setTexture_"), -1);
       ::sq_get(this->vm_, -2);
-      ::sq_pushobject(this->vm_, main_offscreen_texture_);
+      ::sq_pushobject(this->vm_, main_offscreen_texture);
       SQUserPointer p = reinterpret_cast<SQUserPointer>(&main_offscreen);
       ::sq_pushuserpointer(this->vm_, p);
       ::sq_call(this->vm_, 2, SQFalse, SQTrue);
@@ -125,7 +125,7 @@ public:
       ::sq_pushstring(this->vm_, _SC("draw"), -1);
       ::sq_get(this->vm_, -2);
       ::sq_pushobject(this->vm_, this->game_);
-      ::sq_pushobject(this->vm_, main_offscreen_texture_);
+      ::sq_pushobject(this->vm_, main_offscreen_texture);
       ::sq_call(this->vm_, 2, SQFalse, SQTrue);
       ::sq_settop(this->vm_, top);
     }
@@ -136,10 +136,10 @@ public:
        * main_offscreen_texture.setTexture_(nullptr)
        */
       SQInteger const top = ::sq_gettop(this->vm_);
-      ::sq_pushobject(this->vm_, main_offscreen_texture_);
+      ::sq_pushobject(this->vm_, main_offscreen_texture);
       ::sq_pushstring(this->vm_, _SC("setTexture_"), -1);
       ::sq_get(this->vm_, -2);
-      ::sq_pushobject(this->vm_, main_offscreen_texture_);
+      ::sq_pushobject(this->vm_, main_offscreen_texture);
       SQUserPointer p = static_cast<SQUserPointer>(nullptr);
       ::sq_pushuserpointer(this->vm_, p);
       ::sq_call(this->vm_, 2, SQFalse, SQTrue);
@@ -150,7 +150,7 @@ public:
        * [Squirrel]
        * (release main_offscreen_texture)
        */
-      //::sq_resetobject(&main_offscreen_texture_);
+      ::sq_release(this->vm_, &main_offscreen_texture);
     }
   }
 private:
