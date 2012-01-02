@@ -15,7 +15,7 @@ class texture_holders : private ebiten::noncopyable {
 public:
   typedef std::size_t key_type;
 private:
-  std::unordered_map<key_type, texture_holder> set_;
+  std::unordered_map<key_type, texture_holder> map_;
   key_type unique_number_;
   std::vector<std::unique_ptr<texture_command> > commands_;
 public:
@@ -23,28 +23,28 @@ public:
     : unique_number_(0) {
   }
   texture_holders(texture_holders&& rhs)
-    : set_(std::move(rhs.set_)),
+    : map_(std::move(rhs.map_)),
       unique_number_(std::move(rhs.unique_number_)) {
   }
   template<class... Args>
   key_type
   insert(Args const&... args) {
     key_type key = this->unique_number_;
-    this->set_.emplace(key, std::move(texture_holder(args...)));
+    this->map_.emplace(key, std::move(texture_holder(args...)));
     ++this->unique_number_;
     return key;
   }
   texture_holder&
   get(key_type const& key) {
-    return this->set_.at(key);
+    return this->map_.at(key);
   }
   void
   remove(key_type const& key) {
-    this->set_.erase(key);
+    this->map_.erase(key);
   }
   void
   instantiate(ebiten::graphics::texture_factory& tf) {
-    for (auto& p : this->set_) {
+    for (auto& p : this->map_) {
       texture_holder& t = p.second;
       if (t.is_instantiate()) {
         continue;

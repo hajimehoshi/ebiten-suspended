@@ -76,7 +76,7 @@ public:
     ::glBindTexture(GL_TEXTURE_2D, 0);
     typedef graphics::texture t;
     texture_pointer p(new t(texture_id, width, height, width, height));
-    return std::move(p);
+    return p;
   }
   std::unique_ptr<graphics::texture, texture_deleter>
   create(std::size_t width, std::size_t height) {
@@ -100,7 +100,7 @@ public:
     ::glBindTexture(GL_TEXTURE_2D, 0);
     typedef graphics::texture t;
     texture_pointer p(new t(texture_id, width, height, texture_width, texture_height));
-    return std::move(p);
+    return p;
   }
 };
 

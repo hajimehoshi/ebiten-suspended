@@ -1,7 +1,7 @@
 #ifndef EBITEN_GRAPHICS_DETAIL_OPENGL_TEXTURE_POINTER_HPP
 #define EBITEN_GRAPHICS_DETAIL_OPENGL_TEXTURE_POINTER_HPP
 
-#include "ebiten/graphics/detail/opengl/graphics_context.hpp"
+#include "ebiten/graphics/detail/opengl/texture_factory.hpp"
 
 namespace ebiten {
 namespace graphics {
