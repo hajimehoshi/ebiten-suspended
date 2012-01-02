@@ -13,6 +13,7 @@ private:
   // TODO: change texture to texture_holder
   texture_holder& texture_holder_;
 public:
+  explicit
   texture_command(texture_holder& texture_holder)
     : texture_holder_(texture_holder) {
   }
@@ -41,6 +42,7 @@ protected:
 
 class texture_command_clear : public texture_command {
 public:
+  explicit
   texture_command_clear(class texture_holder& texture_holder)
     : texture_command(texture_holder) {
   }

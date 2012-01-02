@@ -22,6 +22,7 @@ public:
   texture_holders()
     : unique_number_(0) {
   }
+  explicit
   texture_holders(texture_holders&& rhs)
     : map_(std::move(rhs.map_)),
       unique_number_(std::move(rhs.unique_number_)) {

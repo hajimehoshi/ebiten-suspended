@@ -13,6 +13,9 @@ class geometry_matrix_class {
 private:
   typedef ebiten::graphics::geometry_matrix geometry_matrix;
 public:
+  geometry_matrix_class() = delete;
+  geometry_matrix_class(geometry_matrix_class const&) = delete;
+  geometry_matrix_class& operator=(geometry_matrix_class const&) = delete;
   static SQInteger
   constructor(HSQUIRRELVM vm) {
     geometry_matrix* self = new geometry_matrix();

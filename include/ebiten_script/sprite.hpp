@@ -18,6 +18,7 @@ private:
   ebiten::graphics::color_matrix color_matrix_;
   bool is_visible_;
 public:
+  explicit
   sprite(class texture_holder& texture_holder)
     : texture_holder_(texture_holder),
       src_x_(0),

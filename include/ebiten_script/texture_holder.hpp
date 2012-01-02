@@ -22,6 +22,7 @@ private:
   std::size_t const width_;
   std::size_t const height_;
 public:
+  explicit
   texture_holder(std::string const& path)
     : external_ebiten_texture_(nullptr),
       path_(path),
@@ -34,6 +35,7 @@ public:
       width_(width),
       height_(height) {
   }
+  explicit
   texture_holder(texture_holder&& rhs)
     : ebiten_texture_(std::move(rhs.ebiten_texture_)),
       external_ebiten_texture_(std::move(rhs.external_ebiten_texture_)),
