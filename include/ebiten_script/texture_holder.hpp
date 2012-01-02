@@ -3,6 +3,7 @@
 
 #include "ebiten/graphics/texture.hpp"
 #include "ebiten/graphics/texture_factory.hpp"
+#include "ebiten/graphics/texture_pointer.hpp"
 #include "ebiten/image.hpp"
 #include "ebiten/image_loader.hpp"
 #include "ebiten/noncopyable.hpp"
@@ -14,7 +15,7 @@ namespace ebiten_script {
 // TODO: Make a child class of texture_holder?
 class texture_holder : private ebiten::noncopyable {
 private:
-  std::unique_ptr<ebiten::graphics::texture> ebiten_texture_;
+  ebiten::graphics::texture_pointer ebiten_texture_;
   // TODO: I don't wanna use pointers!
   ebiten::graphics::texture* external_ebiten_texture_;
   std::string const path_;

@@ -4,6 +4,7 @@
 #include "ebiten/graphics/detail/opengl/graphics_context.hpp"
 #include "ebiten/graphics/detail/opengl/opengl_initializer.hpp"
 #include "ebiten/graphics/detail/opengl/texture_factory.hpp"
+#include "ebiten/graphics/detail/opengl/texture_pointer.hpp"
 #include "ebiten/graphics/native_view.hpp"
 #include "ebiten/noncopyable.hpp"
 #include "ebiten/platform.hpp"
@@ -32,7 +33,7 @@ private:
   std::function<void(graphics_context&, texture&)> draw_func_;
   texture_factory texture_factory_;
   graphics_context graphics_context_;
-  std::unique_ptr<texture> offscreen_texture_;
+  texture_pointer offscreen_texture_;
   opengl_initializer opengl_initializer_;
 public:
   device(std::size_t screen_width,

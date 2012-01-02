@@ -33,9 +33,6 @@ private:
   friend class detail::graphics_context;
   friend class detail::texture_factory;
 public:
-  ~texture() {
-    // TODO: implement or set deleter!
-  }
   std::size_t
   width() const {
     return this->width_;

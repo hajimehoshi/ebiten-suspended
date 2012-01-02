@@ -2,6 +2,7 @@
 #define EBITEN_GRAPHICS_DETAIL_OPENGL_GRAPHICS_CONTEXT_HPP
 
 #include "ebiten/graphics/detail/opengl/texture_factory.hpp"
+#include "ebiten/graphics/detail/opengl/texture_pointer.hpp"
 #include "ebiten/graphics/detail/opengl/shaders.hpp"
 #include "ebiten/graphics/color_matrix.hpp"
 #include "ebiten/graphics/geometry_matrix.hpp"
@@ -37,7 +38,7 @@ private:
   shaders shaders_;
   GLuint current_program_;
   std::array<float, 16> projection_matrix_;
-  std::unique_ptr<texture> empty_texture_;
+  texture_pointer empty_texture_;
   std::unordered_map<texture_id, GLuint> framebuffers_;
   bool main_framebuffer_initialized_;
   GLuint main_framebuffer_;

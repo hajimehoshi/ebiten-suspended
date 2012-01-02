@@ -35,12 +35,23 @@ clp2(uint64_t x) {
 class device;
 
 class texture_factory : private noncopyable {
+  friend class texture;
   friend class device;
+private:
+  struct texture_deleter {
+    void
+    operator()(class texture* texture) const {
+      ::glDeleteTextures(1, &texture->id());
+      delete texture;
+    }
+  };
+public:
+  typedef std::unique_ptr<class texture, texture_deleter> texture_pointer;
 private:
   texture_factory() {
   }
 public:
-  std::unique_ptr<graphics::texture>
+  texture_pointer
   from_image(image const& image) {
     std::size_t const width  = image.width();
     std::size_t const height = image.height();
@@ -64,10 +75,10 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     ::glBindTexture(GL_TEXTURE_2D, 0);
     typedef graphics::texture t;
-    std::unique_ptr<t> p(new t(texture_id, width, height, width, height));
-    return p;
+    texture_pointer p(new t(texture_id, width, height, width, height));
+    return std::move(p);
   }
-  std::unique_ptr<graphics::texture>
+  std::unique_ptr<graphics::texture, texture_deleter>
   create(std::size_t width, std::size_t height) {
     std::size_t const texture_width  = clp2(width);
     std::size_t const texture_height = clp2(height);
@@ -88,8 +99,8 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     ::glBindTexture(GL_TEXTURE_2D, 0);
     typedef graphics::texture t;
-    std::unique_ptr<t> p(new t(texture_id, width, height, texture_width, texture_height));
-    return p;
+    texture_pointer p(new t(texture_id, width, height, texture_width, texture_height));
+    return std::move(p);
   }
 };
 
