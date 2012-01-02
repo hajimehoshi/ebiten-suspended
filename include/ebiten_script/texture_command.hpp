@@ -46,16 +46,15 @@ public:
   }
   void
   do_exec(ebiten::graphics::graphics_context& g) {
-    ebiten::graphics::texture& t = this->texture_holder().ebiten_texture();
-    g.set_offscreen(t);
+    g.set_offscreen(this->texture_holder().ebiten_texture());
     g.clear();
   }
 };
 
 class texture_command_draw_rect : public texture_command {
 private:
-  std::size_t x_, y_, width_, height_;
-  uint8_t red_, green_, blue_, alpha_;
+  std::size_t const x_, y_, width_, height_;
+  uint8_t const red_, green_, blue_, alpha_;
 public:
   texture_command_draw_rect(class texture_holder& texture_holder,
                             std::size_t x,
@@ -72,14 +71,38 @@ public:
   }
   void
   do_exec(ebiten::graphics::graphics_context& g) {
-    ebiten::graphics::texture& t = this->texture_holder().ebiten_texture();
-    g.set_offscreen(t);
+    g.set_offscreen(this->texture_holder().ebiten_texture());
     g.draw_rect(this->x_, this->y_, this->width_, this->height_,
                 this->red_, this->green_, this->blue_, this->alpha_);
+  }
+};
+
+class texture_command_draw_sprite : public texture_command {
+private:
+  sprite const& sprite_;
+public:
+  texture_command_draw_sprite(class texture_holder& texture_holder,
+                              class sprite const& sprite)
+    : texture_command(texture_holder),
+      sprite_(sprite) {
+  }
+  void
+  do_exec(ebiten::graphics::graphics_context& g) {
+    if (!this->sprite_.is_visible()) {
+      return;
+    }
+    g.set_offscreen(this->texture_holder().ebiten_texture());
+    g.draw_texture(this->sprite_.texture_holder().ebiten_texture(),
+                   this->sprite_.src_x(),
+                   this->sprite_.src_y(),
+                   this->sprite_.src_width(),
+                   this->sprite_.src_height(),
+                   this->sprite_.final_geometry_matrix(),
+                   this->sprite_.final_color_matrix());
+    // TODO: Draw children
   }
 };
 
 }
 
 #endif
-

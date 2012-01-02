@@ -1,16 +1,16 @@
 #ifndef EBITEN_SCRIPT_SPRITE_HPP
 #define EBITEN_SCRIPT_SPRITE_HPP
 
+#include "ebiten_script/texture_holder.hpp"
 #include "ebiten/graphics/color_matrix.hpp"
 #include "ebiten/graphics/geometry_matrix.hpp"
-#include "ebiten/graphics/texture.hpp"
 #include "ebiten/noncopyable.hpp"
 
 namespace ebiten_script {
 
 class sprite : private ebiten::noncopyable {
 private:
-  ebiten::graphics::texture texture_;
+  texture_holder& texture_holder_;
   int src_x_, src_y_, src_width_, src_height_;
   int x_, y_;
   ebiten::graphics::geometry_matrix geometry_matrix_;
@@ -18,8 +18,9 @@ private:
   ebiten::graphics::color_matrix color_matrix_;
   bool is_visible_;
 public:
-  sprite()
-    : src_x_(0),
+  sprite(class texture_holder& texture_holder)
+    : texture_holder_(texture_holder),
+      src_x_(0),
       src_y_(0),
       src_width_(0),
       src_height_(0),
@@ -30,17 +31,13 @@ public:
       color_matrix_(ebiten::graphics::color_matrix::identity()),
       is_visible_(true) {
   }
-  ebiten::graphics::texture&
-  texture() {
-    return this->texture_;
+  class texture_holder&
+  texture_holder() {
+    return this->texture_holder_;
   }
-  ebiten::graphics::texture const&
-  texture() const {
-    return this->texture_;
-  }
-  void
-  set_texture(ebiten::graphics::texture& texture) {
-    this->texture_ = texture;
+  class texture_holder const&
+  texture_holder() const {
+    return this->texture_holder_;
   }
 #define DEFINE_PROPERTY(type, name) \
   type name() const { return this->name##_; } \

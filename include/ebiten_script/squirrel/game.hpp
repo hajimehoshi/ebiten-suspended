@@ -156,7 +156,7 @@ private:
     this->create_table(e);
     {
       static std::string const gm("GeometryMatrix");
-      this->create_class(e, gm);
+      this->create_class(e, gm, nullptr);
       this->create_method(e, gm,
                           "constructor",
                           geometry_matrix_funcs::constructor,
@@ -170,7 +170,7 @@ private:
     }
     {
       static std::string const t("Texture");
-      this->create_class(e, t);
+      this->create_class(e, t, texture_funcs::type_tag());
       this->create_method(e, t,
                           "constructor",
                           texture_funcs::method_constructor,
@@ -219,13 +219,17 @@ private:
   }
   void
   create_class(std::string const& namespace_name,
-               std::string const& class_name) {
+               std::string const& class_name,
+               SQUserPointer type_tag) {
     SQInteger const top = ::sq_gettop(this->vm_);
     ::sq_pushroottable(this->vm_);
     ::sq_pushstring(this->vm_, _SC(namespace_name.c_str()), -1);
     ::sq_get(this->vm_, -2);
     ::sq_pushstring(this->vm_, _SC(class_name.c_str()), -1);
     ::sq_newclass(this->vm_, SQFalse);
+    if (SQ_FAILED(::sq_settypetag(this->vm_, -1, type_tag))) {
+      throw std::runtime_error("failed to set the type tag");
+    }
     ::sq_newslot(this->vm_, -3, SQFalse);
     ::sq_settop(this->vm_, top);
   }
