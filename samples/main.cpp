@@ -1,4 +1,3 @@
-#include "sample_game.hpp"
 #include "ebiten/ebiten.hpp"
 #include "ebiten/frames/frame.hpp"
 #include "ebiten/kernels/application.hpp"

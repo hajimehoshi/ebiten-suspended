@@ -14,6 +14,7 @@
 #endif
 
 #include <cassert>
+#include <memory>
 
 namespace ebiten {
 namespace graphics {
@@ -39,7 +40,7 @@ private:
   texture_factory() {
   }
 public:
-  graphics::texture
+  std::unique_ptr<graphics::texture>
   from_image(image const& image) {
     std::size_t const width  = image.width();
     std::size_t const height = image.height();
@@ -62,9 +63,11 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     ::glBindTexture(GL_TEXTURE_2D, 0);
-    return graphics::texture(texture_id, width, height, width, height);
+    typedef graphics::texture t;
+    std::unique_ptr<t> p(new t(texture_id, width, height, width, height));
+    return p;
   }
-  graphics::texture
+  std::unique_ptr<graphics::texture>
   create(std::size_t width, std::size_t height) {
     std::size_t const texture_width  = clp2(width);
     std::size_t const texture_height = clp2(height);
@@ -84,7 +87,9 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     ::glBindTexture(GL_TEXTURE_2D, 0);
-    return graphics::texture(texture_id, width, height, texture_width, texture_height);
+    typedef graphics::texture t;
+    std::unique_ptr<t> p(new t(texture_id, width, height, texture_width, texture_height));
+    return p;
   }
 };
 

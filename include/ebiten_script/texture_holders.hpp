@@ -46,7 +46,7 @@ public:
   instantiate(ebiten::graphics::texture_factory& tf) {
     for (auto& p : this->set_) {
       texture_holder& t = p.second;
-      if (t.ebiten_texture()) {
+      if (t.is_instantiate()) {
         continue;
       }
       t.instantiate(tf);

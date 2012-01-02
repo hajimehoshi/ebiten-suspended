@@ -22,8 +22,6 @@ class game : private ebiten::noncopyable {
 private:
   HSQUIRRELVM const vm_;
   HSQOBJECT game_;
-  ebiten::graphics::texture main_offscreen_ebiten_texture_;
-  HSQOBJECT main_offscreen_texture_;
 public:
   game(std::string filename)
     : vm_(::sq_open(1024)) {
@@ -46,32 +44,6 @@ public:
         ::sq_getstackobj(this->vm_, -1, &this->game_);
         ::sq_addref(this->vm_, &this->game_);
       }
-      ::sq_settop(this->vm_, top);
-    }
-    {
-      /*
-       * [Squirrel]
-       * mainOffscreenTexture = ebiten.Texture(0, 0)
-       */
-      SQInteger const top = ::sq_gettop(this->vm_);
-      ::sq_pushroottable(this->vm_);
-      ::sq_pushstring(this->vm_, _SC("ebiten"), -1);
-      if (SQ_FAILED(::sq_get(this->vm_, -2))) {
-        assert(false);
-      }
-      ::sq_pushstring(this->vm_, _SC("Texture"), -1);
-      if (SQ_FAILED(::sq_get(this->vm_, -2))) {
-        assert(false);
-      }
-      ::sq_pushroottable(this->vm_);
-      ::sq_pushinteger(this->vm_, 0);
-      ::sq_pushinteger(this->vm_, 0);
-      if (SQ_FAILED(::sq_call(this->vm_, 3, SQTrue, SQTrue))) {
-        assert(false);
-      }
-      assert(::sq_gettype(this->vm_, -1) == OT_INSTANCE);
-      ::sq_getstackobj(this->vm_, -1, &this->main_offscreen_texture_);
-      ::sq_addref(this->vm_, &this->main_offscreen_texture_);
       ::sq_settop(this->vm_, top);
     }
   }
@@ -99,20 +71,46 @@ public:
   void
   draw(ebiten::graphics::graphics_context& g,
        ebiten::graphics::texture& main_offscreen) {
-    this->main_offscreen_ebiten_texture_ = main_offscreen;
     g.set_offscreen(main_offscreen);
     g.clear();
+    HSQOBJECT main_offscreen_texture_;
     {
       /*
        * [Squirrel]
-       * mainOffscreenTexture.setTexture_(main_offscreen)
+       * main_offscreen_texture = ebiten.Texture(0, 0)
        */
       SQInteger const top = ::sq_gettop(this->vm_);
-      ::sq_pushobject(this->vm_, this->main_offscreen_texture_);
+      ::sq_pushroottable(this->vm_);
+      ::sq_pushstring(this->vm_, _SC("ebiten"), -1);
+      if (SQ_FAILED(::sq_get(this->vm_, -2))) {
+        assert(false);
+      }
+      ::sq_pushstring(this->vm_, _SC("Texture"), -1);
+      if (SQ_FAILED(::sq_get(this->vm_, -2))) {
+        assert(false);
+      }
+      ::sq_pushroottable(this->vm_);
+      ::sq_pushinteger(this->vm_, 0);
+      ::sq_pushinteger(this->vm_, 0);
+      if (SQ_FAILED(::sq_call(this->vm_, 3, SQTrue, SQTrue))) {
+        assert(false);
+      }
+      assert(::sq_gettype(this->vm_, -1) == OT_INSTANCE);
+      ::sq_getstackobj(this->vm_, -1, &main_offscreen_texture_);
+      ::sq_addref(this->vm_, &main_offscreen_texture_);
+      ::sq_settop(this->vm_, top);
+    }
+    {
+      /*
+       * [Squirrel]
+       * main_offscreen_texture.setTexture_(main_offscreen)
+       */
+      SQInteger const top = ::sq_gettop(this->vm_);
+      ::sq_pushobject(this->vm_, main_offscreen_texture_);
       ::sq_pushstring(this->vm_, _SC("setTexture_"), -1);
       ::sq_get(this->vm_, -2);
-      ::sq_pushobject(this->vm_, this->main_offscreen_texture_);
-      SQUserPointer p = reinterpret_cast<SQUserPointer>(&this->main_offscreen_ebiten_texture_);
+      ::sq_pushobject(this->vm_, main_offscreen_texture_);
+      SQUserPointer p = reinterpret_cast<SQUserPointer>(&main_offscreen);
       ::sq_pushuserpointer(this->vm_, p);
       ::sq_call(this->vm_, 2, SQFalse, SQTrue);
       ::sq_settop(this->vm_, top);
@@ -120,18 +118,40 @@ public:
     {
       /*
        * [Squirrel]
-       * game.draw(mainOffscreenTexture)
+       * game.draw(main_offscreen_texture)
        */
       SQInteger const top = ::sq_gettop(this->vm_);
       ::sq_pushobject(this->vm_, this->game_);
       ::sq_pushstring(this->vm_, _SC("draw"), -1);
       ::sq_get(this->vm_, -2);
       ::sq_pushobject(this->vm_, this->game_);
-      ::sq_pushobject(this->vm_, this->main_offscreen_texture_);
+      ::sq_pushobject(this->vm_, main_offscreen_texture_);
       ::sq_call(this->vm_, 2, SQFalse, SQTrue);
       ::sq_settop(this->vm_, top);
     }
     texture_funcs::flush_texture_commands(this->vm_, g);
+    {
+      /*
+       * [Squirrel]
+       * main_offscreen_texture.setTexture_(nullptr)
+       */
+      SQInteger const top = ::sq_gettop(this->vm_);
+      ::sq_pushobject(this->vm_, main_offscreen_texture_);
+      ::sq_pushstring(this->vm_, _SC("setTexture_"), -1);
+      ::sq_get(this->vm_, -2);
+      ::sq_pushobject(this->vm_, main_offscreen_texture_);
+      SQUserPointer p = static_cast<SQUserPointer>(nullptr);
+      ::sq_pushuserpointer(this->vm_, p);
+      ::sq_call(this->vm_, 2, SQFalse, SQTrue);
+      ::sq_settop(this->vm_, top);
+    }
+    {
+      /*
+       * [Squirrel]
+       * (release main_offscreen_texture)
+       */
+      //::sq_resetobject(&main_offscreen_texture_);
+    }
   }
 private:
   static void

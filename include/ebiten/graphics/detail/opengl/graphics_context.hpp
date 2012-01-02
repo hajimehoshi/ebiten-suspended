@@ -37,7 +37,7 @@ private:
   shaders shaders_;
   GLuint current_program_;
   std::array<float, 16> projection_matrix_;
-  texture empty_texture_;
+  std::unique_ptr<texture> empty_texture_;
   std::unordered_map<texture_id, GLuint> framebuffers_;
   bool main_framebuffer_initialized_;
   GLuint main_framebuffer_;
@@ -69,8 +69,8 @@ public:
     }
 
     geometry_matrix geom_mat;
-    geom_mat.set_a(width  / this->empty_texture_.width());
-    geom_mat.set_d(height / this->empty_texture_.height());
+    geom_mat.set_a(width  / this->empty_texture_->width());
+    geom_mat.set_d(height / this->empty_texture_->height());
     geom_mat.set_tx(x);
     geom_mat.set_ty(y);
 
@@ -80,8 +80,8 @@ public:
     color_mat.set_element<2, 4>(blue  / 255.0);
     color_mat.set_element<3, 4>(alpha / 255.0);
 
-    this->draw_texture(this->empty_texture_,
-                       0, 0, this->empty_texture_.width(), this->empty_texture_.height(),
+    this->draw_texture(*this->empty_texture_,
+                       0, 0, this->empty_texture_->width(), this->empty_texture_->height(),
                        geom_mat, color_mat);
   }
   // TODO: dst_width / dst_height?
@@ -90,10 +90,6 @@ public:
                double src_x, double src_y, double width, double height,
                geometry_matrix const& geometry_matrix,
                color_matrix const& color_matrix) {
-    // TODO: Throwing an exception?
-    if (!texture) {
-      return;
-    }
     this->set_shader_program(geometry_matrix, color_matrix);
     // TODO: cache? Check other callings of glBindTexture.
     ::glBindTexture(GL_TEXTURE_2D, texture.id());
@@ -142,7 +138,13 @@ public:
     ::glDisableClientState(GL_VERTEX_ARRAY);
   }
   void
-  set_offscreen(texture const& texture) {
+  set_offscreen(class texture& texture) {
+    this->set_offscreen(&texture);
+  }
+private:
+  // TODO: I don't wanna use pointers!
+  void
+  set_offscreen(class texture* texture) {
     if (!this->main_framebuffer_initialized_) {
       GLint framebuffer;
       ::glGetIntegerv(GL_FRAMEBUFFER_BINDING, &framebuffer);
@@ -150,7 +152,12 @@ public:
       this->main_framebuffer_initialized_ = true;
     }
     // TODO: cache
-    GLuint framebuffer = this->get_framebuffer(texture);
+    GLuint framebuffer;
+    if (texture) {
+      framebuffer = this->get_framebuffer(*texture);
+    } else {
+      framebuffer = this->get_main_framebuffer();
+    }
     ::glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     ::glEnable(GL_BLEND);
     ::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -161,8 +168,8 @@ public:
       tx     = -1;
       ty     = 1;
     } else {
-      width  = texture.texture_width();
-      height = texture.texture_height();
+      width  = texture->texture_width();
+      height = texture->texture_height();
       tx     = -1;
       ty     = -1;
     }
@@ -179,10 +186,9 @@ public:
               std::end(projection_matrix),
               this->projection_matrix_.data());
   }
-private:
   void
   reset_offscreen() {
-    this->set_offscreen(graphics::texture());
+    this->set_offscreen(nullptr);
   }
   void
   flush() {
@@ -250,10 +256,11 @@ private:
     }
   }
   GLuint
+  get_main_framebuffer() {
+    return this->main_framebuffer_;
+  }
+  GLuint
   get_framebuffer(texture const& texture) {
-    if (!texture) {
-      return this->main_framebuffer_;      
-    }
     auto const& it = this->framebuffers_.find(texture.id());
     if (it != this->framebuffers_.end()) {
       return it->second;

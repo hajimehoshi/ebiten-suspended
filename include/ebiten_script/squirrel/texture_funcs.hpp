@@ -90,7 +90,7 @@ public:
     }
     texture_holders::key_type key = reinterpret_cast<key_vm_type*>(p)->first;
     texture_holder const& self = get_texture_holders(vm).get(key);
-    ::sq_pushbool(vm, static_cast<bool>(self.ebiten_texture()));
+    ::sq_pushbool(vm, static_cast<bool>(self.is_instantiate()));
     return 1;
   }
   static SQInteger
@@ -101,6 +101,9 @@ public:
     }
     texture_holders::key_type key = reinterpret_cast<key_vm_type*>(p)->first;
     texture_holder const& self = get_texture_holders(vm).get(key);
+    if (!self.is_instantiate()) {
+      return ::sq_throwerror(vm, "the texture is not created yet");
+    }
     ::sq_pushinteger(vm, self.ebiten_texture().width());
     return 1;
   }
@@ -112,6 +115,9 @@ public:
     }
     texture_holders::key_type key = reinterpret_cast<key_vm_type*>(p)->first;
     texture_holder const& self = get_texture_holders(vm).get(key);
+    if (!self.is_instantiate()) {
+      return ::sq_throwerror(vm, "the texture is not created yet");
+    }
     ::sq_pushinteger(vm, self.ebiten_texture().height());
     return 1;
   }
@@ -177,8 +183,8 @@ public:
     texture_holder& self = get_texture_holders(vm).get(key);
     SQUserPointer p_texture;
     ::sq_getuserpointer(vm, 2, &p_texture);
-    ebiten::graphics::texture& texture =
-      *reinterpret_cast<ebiten::graphics::texture*>(p_texture);
+    ebiten::graphics::texture* texture =
+      reinterpret_cast<ebiten::graphics::texture*>(p_texture);
     self.set_ebiten_texture(texture);
     return 0;
   }
