@@ -1,15 +1,14 @@
 #ifndef EBITEN_SCRIPT_SQUIRREL_TEXTURE_CLASS_HPP
 #define EBITEN_SCRIPT_SQUIRREL_TEXTURE_CLASS_HPP
 
+#include "ebiten_script/squirrel/sprite_class.hpp"
+#include "ebiten_script/squirrel/squirrel_error.hpp"
 #include "ebiten_script/sprite.hpp"
 #include "ebiten_script/texture_holder.hpp"
 #include "ebiten_script/texture_holders.hpp"
 #include "ebiten/graphics/graphics_context.hpp"
 #include "ebiten/graphics/texture_factory.hpp"
-#include "ebiten/noncopyable.hpp"
-#include <squirrel.h> 
-#include <sqstdio.h> 
-#include <sqstdaux.h>
+#include <squirrel.h>
 #include <cassert>
 #include <fstream>
 #include <memory>
@@ -82,111 +81,114 @@ public:
     delete key_vm;
     return 1;
   }
-  static SQInteger
-  method_is_created(HSQUIRRELVM vm) {
+  static texture_holder&
+  get_self(HSQUIRRELVM vm, SQInteger idx) {
     SQUserPointer p;
-    if (SQ_FAILED(::sq_getinstanceup(vm, 1, &p, type_tag()))) {
-      return ::sq_throwerror(vm, "failed to get an instance");
+    {
+      SQRESULT result = ::sq_getinstanceup(vm, idx, &p, type_tag());
+      if (SQ_FAILED(result)) {
+        throw squirrel_error(result);
+      }
     }
     texture_holders::key_type key = reinterpret_cast<key_vm_type*>(p)->first;
-    texture_holder const& self = get_texture_holders(vm).get(key);
-    ::sq_pushbool(vm, static_cast<bool>(self.is_instantiate()));
-    return 1;
+    return get_texture_holders(vm).get(key);
+  }
+  static SQInteger
+  method_is_created(HSQUIRRELVM vm) {
+    try {
+      texture_holder& self = get_self(vm, 1);
+      ::sq_pushbool(vm, static_cast<bool>(self.is_instantiate()));
+      return 1;
+    } catch (squirrel_error const& e) {
+      return e.sq_value();
+    }
   }
   static SQInteger
   method_get_width(HSQUIRRELVM vm) {
-    SQUserPointer p;
-    if (SQ_FAILED(::sq_getinstanceup(vm, 1, &p, type_tag()))) {
-      return ::sq_throwerror(vm, "failed to get an instance");
+    try {
+      texture_holder& self = get_self(vm, 1);
+      if (!self.is_instantiate()) {
+        return ::sq_throwerror(vm, "the texture is not created yet");
+      }
+      ::sq_pushinteger(vm, self.ebiten_texture().width());
+      return 1;
+    } catch (squirrel_error const& e) {
+      return e.sq_value();
     }
-    texture_holders::key_type key = reinterpret_cast<key_vm_type*>(p)->first;
-    texture_holder const& self = get_texture_holders(vm).get(key);
-    if (!self.is_instantiate()) {
-      return ::sq_throwerror(vm, "the texture is not created yet");
-    }
-    ::sq_pushinteger(vm, self.ebiten_texture().width());
-    return 1;
   }
   static SQInteger
   method_get_height(HSQUIRRELVM vm) {
-    SQUserPointer p;
-    if (SQ_FAILED(::sq_getinstanceup(vm, 1, &p, type_tag()))) {
-      return ::sq_throwerror(vm, "failed to get an instance");
+    try {
+      texture_holder& self = get_self(vm, 1);
+      if (!self.is_instantiate()) {
+        return ::sq_throwerror(vm, "the texture is not created yet");
+      }
+      ::sq_pushinteger(vm, self.ebiten_texture().height());
+      return 1;
+    } catch (squirrel_error const& e) {
+      return e.sq_value();
     }
-    texture_holders::key_type key = reinterpret_cast<key_vm_type*>(p)->first;
-    texture_holder const& self = get_texture_holders(vm).get(key);
-    if (!self.is_instantiate()) {
-      return ::sq_throwerror(vm, "the texture is not created yet");
-    }
-    ::sq_pushinteger(vm, self.ebiten_texture().height());
-    return 1;
   }
   static SQInteger
   method_clear(HSQUIRRELVM vm) {
-    SQUserPointer p;
-    if (SQ_FAILED(::sq_getinstanceup(vm, 1, &p, type_tag()))) {
-      return ::sq_throwerror(vm, "failed to get an instance");
+    try {
+      texture_holder& self = get_self(vm, 1);
+      std::unique_ptr<texture_command> command(new texture_command_clear(self));
+      get_texture_holders(vm).add_texture_command(command);
+      return 0;
+    } catch (squirrel_error const& e) {
+      return e.sq_value();
     }
-    texture_holders::key_type key = reinterpret_cast<key_vm_type*>(p)->first;
-    texture_holder& self = get_texture_holders(vm).get(key);
-    std::unique_ptr<texture_command> command(new texture_command_clear(self));
-    get_texture_holders(vm).add_texture_command(command);
-    return 0;
   }
   static SQInteger
   method_draw_rect(HSQUIRRELVM vm) {
-    SQUserPointer p;
-    if (SQ_FAILED(::sq_getinstanceup(vm, 1, &p, type_tag()))) {
-      return ::sq_throwerror(vm, "failed to get an instance");
+    try {
+      texture_holder& self = get_self(vm, 1);
+      SQInteger x, y, width, height, red, green, blue, alpha;
+      ::sq_getinteger(vm, 2, &x);
+      ::sq_getinteger(vm, 3, &y);
+      ::sq_getinteger(vm, 4, &width);
+      ::sq_getinteger(vm, 5, &height);
+      ::sq_getinteger(vm, 6, &red);
+      ::sq_getinteger(vm, 7, &green);
+      ::sq_getinteger(vm, 8, &blue);
+      ::sq_getinteger(vm, 9, &alpha);
+      typedef texture_command_draw_rect tcdr;
+      std::unique_ptr<texture_command> command(new tcdr(self,
+                                                        x, y, width, height,
+                                                        red, green, blue, alpha));
+      get_texture_holders(vm).add_texture_command(command);
+      return 0;
+    } catch (squirrel_error const& e) {
+      return e.sq_value();
     }
-    texture_holders::key_type key = reinterpret_cast<key_vm_type*>(p)->first;
-    texture_holder& self = get_texture_holders(vm).get(key);
-    SQInteger x, y, width, height, red, green, blue, alpha;
-    ::sq_getinteger(vm, 2, &x);
-    ::sq_getinteger(vm, 3, &y);
-    ::sq_getinteger(vm, 4, &width);
-    ::sq_getinteger(vm, 5, &height);
-    ::sq_getinteger(vm, 6, &red);
-    ::sq_getinteger(vm, 7, &green);
-    ::sq_getinteger(vm, 8, &blue);
-    ::sq_getinteger(vm, 9, &alpha);
-    typedef texture_command_draw_rect tcdr;
-    std::unique_ptr<texture_command> command(new tcdr(self,
-                                                      x, y, width, height,
-                                                      red, green, blue, alpha));
-    get_texture_holders(vm).add_texture_command(command);
-    return 0;
   }
   static SQInteger
   method_draw_sprite(HSQUIRRELVM vm) {
-    SQUserPointer p;
-    if (SQ_FAILED(::sq_getinstanceup(vm, 1, &p, type_tag()))) {
-      return ::sq_throwerror(vm, "failed to get an instance");
+    try {
+      texture_holder& self = get_self(vm, 1);
+      class sprite& sprite = sprite_class::get_self(vm, 2);
+      typedef texture_command_draw_sprite tcds;
+      std::unique_ptr<texture_command> command(new tcds(self, sprite));
+      get_texture_holders(vm).add_texture_command(command);
+      return 0;
+    } catch (squirrel_error const& e) {
+      return e.sq_value();
     }
-    texture_holders::key_type key = reinterpret_cast<key_vm_type*>(p)->first;
-    texture_holder& self = get_texture_holders(vm).get(key);
-    SQUserPointer p_sprite;
-    ::sq_getinstanceup(vm, 2, &p_sprite, 0); // TODO: use sprite type tag
-    sprite& sprite = *reinterpret_cast<class sprite*>(p);
-    typedef texture_command_draw_sprite tcds;
-    std::unique_ptr<texture_command> command(new tcds(self, sprite));
-    get_texture_holders(vm).add_texture_command(command);
-    return 0;
   }
   static SQInteger
   method_set_texture(HSQUIRRELVM vm) {
-    SQUserPointer p;
-    if (SQ_FAILED(::sq_getinstanceup(vm, 1, &p, type_tag()))) {
-      return ::sq_throwerror(vm, "failed to get an instance");
+    try {
+      texture_holder& self = get_self(vm, 1);
+      SQUserPointer p_texture;
+      ::sq_getuserpointer(vm, 2, &p_texture);
+      ebiten::graphics::texture* texture =
+        reinterpret_cast<ebiten::graphics::texture*>(p_texture);
+      self.set_ebiten_texture(texture);
+      return 0;
+    } catch (squirrel_error const& e) {
+      return e.sq_value();
     }
-    texture_holders::key_type key = reinterpret_cast<key_vm_type*>(p)->first;
-    texture_holder& self = get_texture_holders(vm).get(key);
-    SQUserPointer p_texture;
-    ::sq_getuserpointer(vm, 2, &p_texture);
-    ebiten::graphics::texture* texture =
-      reinterpret_cast<ebiten::graphics::texture*>(p_texture);
-    self.set_ebiten_texture(texture);
-    return 0;
   }
 private:
   static texture_holders&

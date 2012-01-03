@@ -22,7 +22,8 @@ class Game {
         offscreen.drawRect(this.x, 10, 100, 100, 255, 0, 0, 255)
         // WTF!?
         //this.offscreen = offscreen
-        ::print(offscreen + "\n")
+        //::print(offscreen + "\n")
+        ::print(offscreen.getHeight() + "\n")
     }
     offscreen = null
     texture = null
