@@ -1,7 +1,7 @@
 #ifndef EBITEN_SCRIPT_SQUIRREL_TEXTURE_CLASS_HPP
 #define EBITEN_SCRIPT_SQUIRREL_TEXTURE_CLASS_HPP
 
-#include "ebiten_script/squirrel/sprite_class.hpp"
+//#include "ebiten_script/squirrel/sprite_class.hpp"
 #include "ebiten_script/squirrel/squirrel_error.hpp"
 #include "ebiten_script/sprite.hpp"
 #include "ebiten_script/texture_holder.hpp"
@@ -17,6 +17,16 @@
 
 namespace ebiten_script {
 namespace squirrel {
+
+namespace sprite_class {
+namespace {
+
+sprite&
+get_instance(HSQUIRRELVM, SQInteger);
+
+}
+
+}
 
 class texture_class {
 private:
@@ -40,37 +50,41 @@ public:
   }
   static SQInteger
   method_constructor(HSQUIRRELVM vm) {
-    SQInteger n_args = ::sq_gettop(vm);
-    if (n_args < 2) {
-      return ::sq_throwerror(vm, _SC("too few arguments"));
-    }
-    if (3 < n_args) {
-      return ::sq_throwerror(vm, _SC("too many arguments"));
-    }
-    texture_holders::key_type key;
-    if (n_args == 2) {
-      if (::sq_gettype(vm, 2) != OT_STRING) {
-        return ::sq_throwerror(vm, _SC("invalid argument type"));
+    try {
+      SQInteger n_args = ::sq_gettop(vm);
+      if (n_args < 2) {
+        return ::sq_throwerror(vm, _SC("too few arguments"));
       }
-      SQChar const* path;
-      ::sq_getstring(vm, 2, &path);
-      std::ifstream file(path);
-      if (!file) {
-        std::string error_message = std::string("file not found: ") + path;
-        return ::sq_throwerror(vm, _SC(error_message.c_str()));
+      if (3 < n_args) {
+        return ::sq_throwerror(vm, _SC("too many arguments"));
       }
-      key = get_texture_holders(vm).insert(path);
+      texture_holders::key_type key;
+      if (n_args == 2) {
+        if (::sq_gettype(vm, 2) != OT_STRING) {
+          return ::sq_throwerror(vm, _SC("invalid argument type"));
+        }
+        SQChar const* path;
+        ::sq_getstring(vm, 2, &path);
+        std::ifstream file(path);
+        if (!file) {
+          std::string error_message = std::string("file not found: ") + path;
+          return ::sq_throwerror(vm, _SC(error_message.c_str()));
+        }
+        key = get_texture_holders(vm).insert(path);
+      }
+      if (n_args == 3) {
+        SQInteger width, height;
+        ::sq_getinteger(vm, 2, &width);
+        ::sq_getinteger(vm, 3, &height);
+        key = get_texture_holders(vm).insert(width, height);
+      }
+      auto p = new key_vm_type(key, vm);
+      ::sq_setinstanceup(vm, 1, reinterpret_cast<SQUserPointer>(p));
+      ::sq_setreleasehook(vm, 1, releasehook);
+      return 0;
+    } catch (squirrel_error const& e) {
+      return e.sq_value();
     }
-    if (n_args == 3) {
-      SQInteger width, height;
-      ::sq_getinteger(vm, 2, &width);
-      ::sq_getinteger(vm, 3, &height);
-      key = get_texture_holders(vm).insert(width, height);
-    }
-    auto p = new key_vm_type(key, vm);
-    ::sq_setinstanceup(vm, 1, reinterpret_cast<SQUserPointer>(p));
-    ::sq_setreleasehook(vm, 1, releasehook);
-    return 0;
   }
   static SQInteger
   releasehook(SQUserPointer p, SQInteger) {
@@ -82,7 +96,7 @@ public:
     return 1;
   }
   static texture_holder&
-  get_self(HSQUIRRELVM vm, SQInteger idx) {
+  get_instance(HSQUIRRELVM vm, SQInteger idx) {
     SQUserPointer p;
     {
       SQRESULT result = ::sq_getinstanceup(vm, idx, &p, type_tag());
@@ -96,7 +110,7 @@ public:
   static SQInteger
   method_is_created(HSQUIRRELVM vm) {
     try {
-      texture_holder& self = get_self(vm, 1);
+      texture_holder& self = get_instance(vm, 1);
       ::sq_pushbool(vm, static_cast<bool>(self.is_instantiate()));
       return 1;
     } catch (squirrel_error const& e) {
@@ -106,7 +120,7 @@ public:
   static SQInteger
   method_get_width(HSQUIRRELVM vm) {
     try {
-      texture_holder& self = get_self(vm, 1);
+      texture_holder& self = get_instance(vm, 1);
       if (!self.is_instantiate()) {
         return ::sq_throwerror(vm, "the texture is not created yet");
       }
@@ -119,7 +133,7 @@ public:
   static SQInteger
   method_get_height(HSQUIRRELVM vm) {
     try {
-      texture_holder& self = get_self(vm, 1);
+      texture_holder& self = get_instance(vm, 1);
       if (!self.is_instantiate()) {
         return ::sq_throwerror(vm, "the texture is not created yet");
       }
@@ -132,7 +146,7 @@ public:
   static SQInteger
   method_clear(HSQUIRRELVM vm) {
     try {
-      texture_holder& self = get_self(vm, 1);
+      texture_holder& self = get_instance(vm, 1);
       std::unique_ptr<texture_command> command(new texture_command_clear(self));
       get_texture_holders(vm).add_texture_command(command);
       return 0;
@@ -143,7 +157,7 @@ public:
   static SQInteger
   method_draw_rect(HSQUIRRELVM vm) {
     try {
-      texture_holder& self = get_self(vm, 1);
+      texture_holder& self = get_instance(vm, 1);
       SQInteger x, y, width, height, red, green, blue, alpha;
       ::sq_getinteger(vm, 2, &x);
       ::sq_getinteger(vm, 3, &y);
@@ -166,8 +180,8 @@ public:
   static SQInteger
   method_draw_sprite(HSQUIRRELVM vm) {
     try {
-      texture_holder& self = get_self(vm, 1);
-      class sprite& sprite = sprite_class::get_self(vm, 2);
+      texture_holder& self = get_instance(vm, 1);
+      class sprite& sprite = sprite_class::get_instance(vm, 2);
       typedef texture_command_draw_sprite tcds;
       std::unique_ptr<texture_command> command(new tcds(self, sprite));
       get_texture_holders(vm).add_texture_command(command);
@@ -179,7 +193,7 @@ public:
   static SQInteger
   method_set_texture(HSQUIRRELVM vm) {
     try {
-      texture_holder& self = get_self(vm, 1);
+      texture_holder& self = get_instance(vm, 1);
       SQUserPointer p_texture;
       ::sq_getuserpointer(vm, 2, &p_texture);
       ebiten::graphics::texture* texture =

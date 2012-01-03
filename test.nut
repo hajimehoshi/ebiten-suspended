@@ -7,26 +7,21 @@ class Game {
     function update() {
         if (!this.texture) {
             // TODO: resource path
-            //this.texture = ebiten.Texture("test.png")
+            this.texture = ebiten.Texture("/Users/hajime/ebiten/test.png")
         }
-        //::print(this.texture.isCreated() + " ")
-        //::print(this.texture.getWidth() + " " + this.texture.getHeight() + "\n")
-        /*if (this.offscreen) {
-            ::print(this.offscreen.getWidth() + "\n")
-        }*/
+        if (!this.sprite) {
+            this.sprite = ebiten.Sprite(this.texture)
+            this.sprite.setSrcWidth(32)
+            this.sprite.setSrcHeight(32)
+        }
         this.x++
     }
     function draw(offscreen) {
-        //::print("draw!\n");
-        //::print(offscreen.getWidth() + "\n");
         offscreen.drawRect(this.x, 10, 100, 100, 255, 0, 0, 255)
-        // WTF!?
-        //this.offscreen = offscreen
-        //::print(offscreen + "\n")
-        ::print(offscreen.getHeight() + "\n")
+        offscreen.drawSprite(this.sprite)
     }
-    offscreen = null
     texture = null
+    sprite = null
     x = 0
     width = 0
     height = 0

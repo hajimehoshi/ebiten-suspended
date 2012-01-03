@@ -40,8 +40,8 @@ public:
   texture_holder() const {
     return this->texture_holder_;
   }
-#define DEFINE_PROPERTY(type, name) \
-  type name() const { return this->name##_; } \
+#define DEFINE_PROPERTY(type, name)                    \
+  type name() const { return this->name##_; }          \
   void set_##name(type name) { this->name##_ = name; }
   DEFINE_PROPERTY(int, src_x)
   DEFINE_PROPERTY(int, src_y)
