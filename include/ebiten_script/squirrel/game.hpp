@@ -240,9 +240,9 @@ private:
                           "x", false);
       this->create_method(e, s, "setY", method_set_y,
                           "xi", false);
-      this->create_method(e, s, "getY", method_get_alpha,
+      this->create_method(e, s, "getAlpha", method_get_alpha,
                           "x", false);
-      this->create_method(e, s, "setY", method_set_alpha,
+      this->create_method(e, s, "setAlpha", method_set_alpha,
                           "xf", false);
       this->create_method(e, s, "isVisible", method_is_visible,
                           "x", false);

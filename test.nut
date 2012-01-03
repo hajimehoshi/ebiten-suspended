@@ -15,6 +15,7 @@ class Game {
             this.sprite.setSrcHeight(32)
         }
         this.sprite.setX(this.x);
+        this.sprite.setAlpha(0.8);
         this.x++
     }
     function draw(offscreen) {
@@ -27,14 +28,5 @@ class Game {
     width = 0
     height = 0
 }
-
-class Foo {
-    function _set(name, value) {
-        ::print(name + "\n")
-    }
-}
-
-foo <- Foo()
-foo.bar = "aa"
 
 return Game(320, 240)

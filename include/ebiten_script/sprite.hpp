@@ -88,7 +88,7 @@ public:
     if (this->alpha_ != 1) {
       ebiten::graphics::color_matrix alpha_mat = ebiten::graphics::color_matrix::identity();
       alpha_mat.set_element<3, 3>(this->alpha_);
-      mat.concat(alpha_mat);
+      mat = mat.concat(alpha_mat);
     }
     return mat;
   }

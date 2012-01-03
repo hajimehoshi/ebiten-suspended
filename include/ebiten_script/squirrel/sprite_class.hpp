@@ -135,6 +135,13 @@ DEFINE_PROPERTY_FUNCS_BOOL(visible)
 #undef DEFINE_PROPRETY_FUNCS_INT
 #undef DEFINE_PROPERTY_FUNCS
 
+SQInteger
+metamethod_get(HSQUIRRELVM vm) {
+  sprite& self = get_instance(vm, 1);
+  
+  return 1;
+}
+
 }
 }
 
