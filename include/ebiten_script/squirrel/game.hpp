@@ -190,48 +190,25 @@ private:
                           false);
     }
     {
+      typedef texture_class c;
       static std::string const t("Texture");
-      this->create_class(e, t, texture_class::type_tag());
-      this->create_method(e, t,
-                          "constructor",
-                          texture_class::method_constructor,
-                          "",
-                          false);
-      this->create_method(e, t,
-                          "isCreated",
-                          texture_class::method_is_created,
-                          "x",
-                          false);
-      this->create_method(e, t,
-                          "getWidth",
-                          texture_class::method_get_width,
-                          "x",
-                          false);
-      this->create_method(e, t,
-                          "getHeight",
-                          texture_class::method_get_height,
-                          "x",
-                          false);
-      this->create_method(e, t,
-                          "clear",
-                          texture_class::method_clear,
-                          "x",
-                          false);
-      this->create_method(e, t,
-                          "drawRect",
-                          texture_class::method_draw_rect,
-                          "xiiiiiiii",
-                          false);
-      this->create_method(e, t,
-                          "drawSprite",
-                          texture_class::method_draw_sprite,
-                          "xx",
-                          false);
-      this->create_method(e, t,
-                          "setTexture_",
-                          texture_class::method_set_texture,
-                          "xp",
-                          false);
+      this->create_class(e, t, c::type_tag());
+      this->create_method(e, t, "constructor", c::method_constructor,
+                          "", false);
+      this->create_method(e, t, "isCreated", c::method_is_created,
+                          "x", false);
+      this->create_method(e, t, "getWidth", c::method_get_width,
+                          "x", false);
+      this->create_method(e, t, "getHeight", c::method_get_height,
+                          "x", false);
+      this->create_method(e, t, "clear", c::method_clear,
+                          "x", false);
+      this->create_method(e, t, "drawRect", c::method_draw_rect,
+                          "xiiiiiiii", false);
+      this->create_method(e, t, "drawSprite", c::method_draw_sprite,
+                          "xx", false);
+      this->create_method(e, t, "setTexture_", c::method_set_texture,
+                          "xp", false);
     }
     {
       using namespace sprite_class;

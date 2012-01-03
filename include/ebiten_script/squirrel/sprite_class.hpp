@@ -55,6 +55,8 @@ get_instance(HSQUIRRELVM vm, SQInteger idx) {
   return *self;
 }
 
+// TODO: use slots! (_get and _set)
+
 #define DEFINE_PROPERTY_FUNCS(sq_type,                 \
                               sq_push_func,            \
                               sq_get_func,             \
