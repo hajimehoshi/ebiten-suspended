@@ -178,10 +178,10 @@ private:
                  static_cast<GLsizei>(std::abs(width)),
                  static_cast<GLsizei>(std::abs(height)));
     float const projection_matrix[] = {
-      2.0 / width, 0,            0, 0,
-      0,           2.0 / height, 0, 0,
-      0,           0,            1, 0,
-      tx,          ty,           0, 1,
+      2.0f / width, 0,             0, 0,
+      0,            2.0f / height, 0, 0,
+      0,            0,             1, 0,
+      tx,           ty,            0, 1,
     };
     std::copy(std::begin(projection_matrix),
               std::end(projection_matrix),
@@ -215,10 +215,16 @@ private:
     }
     {
       graphics::geometry_matrix const& mat = geometry_matrix;
-      float const gl_modelview_mat[] = {mat.a(),  mat.c(),  0, 0,
-                                        mat.b(),  mat.d(),  0, 0,
-                                        0,        0,        1, 0,
-                                        mat.tx(), mat.ty(), 0, 1};
+      float a  = static_cast<float>(mat.a());
+      float b  = static_cast<float>(mat.b());
+      float c  = static_cast<float>(mat.c());
+      float d  = static_cast<float>(mat.d());
+      float tx = static_cast<float>(mat.tx());
+      float ty = static_cast<float>(mat.ty());
+      float const gl_modelview_mat[] = {a,  c,  0, 0,
+                                        b,  d,  0, 0,
+                                        0,  0,  1, 0,
+                                        tx, ty, 0, 1};
       {
         GLint location = ::glGetUniformLocation(program, "modelview_matrix");
         assert(location != -1);

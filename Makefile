@@ -8,6 +8,7 @@ CXXFLAGS := \
 	-Iinclude \
 	-x objective-c++ -std=c++0x -stdlib=libc++ \
 	-fobjc-arc
+#	-mmacosx-version-min=10.6
 LDFLAGS := \
 	-framework Cocoa -framework OpenGL -framework QuartzCore
 
