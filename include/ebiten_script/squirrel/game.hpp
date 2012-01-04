@@ -8,9 +8,13 @@
 #include "ebiten/graphics/graphics_context.hpp"
 #include "ebiten/graphics/texture_factory.hpp"
 #include "ebiten/noncopyable.hpp"
-#include <squirrel.h> 
-#include <sqstdio.h> 
+#include <squirrel.h>
 #include <sqstdaux.h>
+#include <sqstdblob.h>
+#include <sqstdio.h>
+#include <sqstdmath.h>
+#include <sqstdstring.h>
+#include <sqstdsystem.h>
 #include <cstdio>
 #include <exception>
 #include <string>
@@ -28,7 +32,11 @@ public:
     : vm_(::sq_open(1024)) {
     ::sqstd_seterrorhandlers(this->vm_);
     ::sq_setprintfunc(this->vm_, print_func, error_func);
-    // TODO: load the standard library
+    ::sqstd_register_bloblib(this->vm_);
+    ::sqstd_register_iolib(this->vm_);
+    ::sqstd_register_mathlib(this->vm_);
+    ::sqstd_register_stringlib(this->vm_);
+    ::sqstd_register_systemlib(this->vm_);
     {
       /*
        * [Squirrel]
