@@ -55,91 +55,99 @@ get_instance(HSQUIRRELVM vm, SQInteger idx) {
   return *self;
 }
 
-// TODO: use slots! (_get and _set)
-
-#define DEFINE_PROPERTY_FUNCS(sq_type,                 \
-                              sq_push_func,            \
-                              sq_get_func,             \
-                              cpp_type,                \
-                              sq_get_name,             \
-                              sq_set_name,             \
-                              cpp_get_name,            \
-                              cpp_set_name)            \
-  SQInteger                                            \
-  method_##sq_get_name(HSQUIRRELVM vm) {               \
-    try {                                              \
-      sprite& self = get_instance(vm, 1);              \
-      sq_push_func(vm, self.cpp_get_name());           \
-      return 1;                                        \
-    } catch (squirrel_error const& e) {                \
-      return e.sq_value();                             \
-    }                                                  \
-  }                                                    \
-  SQInteger                                            \
-  method_##sq_set_name(HSQUIRRELVM vm) {               \
-    try {                                              \
-      sprite& self = get_instance(vm, 1);              \
-      sq_type value;                                   \
-      sq_get_func(vm, 2, &value);                      \
-      self.cpp_set_name(static_cast<cpp_type>(value)); \
-      HSQOBJECT self_obj;                              \
-      ::sq_getstackobj(vm, 1, &self_obj);              \
-      ::sq_pushobject(vm, self_obj);                   \
-      return 1;                                        \
-    } catch (squirrel_error const& e) {                \
-      return e.sq_value();                             \
-    }                                                  \
+SQInteger
+meta_method_get(HSQUIRRELVM vm) {
+  try {
+    sprite& self = get_instance(vm, 1);
+    SQChar const* method_name_p;
+    ::sq_getstring(vm, 2, &method_name_p);
+    std::string method_name(method_name_p);
+    if (method_name == "srcX") {
+      ::sq_pushinteger(vm, self.src_x());
+    } else if (method_name == "srcY") {
+      ::sq_pushinteger(vm, self.src_y());
+    } else if (method_name == "srcWidth") {
+      ::sq_pushinteger(vm, self.src_width());
+    } else if (method_name == "srcHeight") {
+      ::sq_pushinteger(vm, self.src_height());
+    } else if (method_name == "x") {
+      ::sq_pushinteger(vm, self.x());
+    } else if (method_name == "y") {
+      ::sq_pushinteger(vm, self.y());
+    } else if (method_name == "alpha") {
+      ::sq_pushfloat(vm, self.alpha());
+    } else if (method_name == "isVisible") {
+      ::sq_pushbool(vm, self.is_visible());
+    } else {
+      std::string msg = "the index '" + method_name + "' does not exist";
+      return ::sq_throwerror(vm, _SC(msg.c_str()));
+    }
+    return 1;
+  } catch (squirrel_error const& e) {
+    return e.sq_value();
   }
+}
 
-#define DEFINE_PROPERTY_FUNCS_INT(name)   \
-  DEFINE_PROPERTY_FUNCS(SQInteger,        \
-                        ::sq_pushinteger, \
-                        ::sq_getinteger,  \
-                        int,              \
-                        get_##name,       \
-                        set_##name,       \
-                        name,             \
-                        set_##name)
+int
+get_int_value(HSQUIRRELVM vm, HSQOBJECT& obj) {
+  if (!sq_isnumeric(obj)) {
+    throw squirrel_error(vm,
+                         "invalid param type ; expected: 'integer|float'");
+  }
+  return static_cast<int>(::sq_objtointeger(&obj));
+}
 
-#define DEFINE_PROPERTY_FUNCS_DOUBLE(name) \
-  DEFINE_PROPERTY_FUNCS(SQFloat,           \
-                        ::sq_pushfloat,    \
-                        ::sq_getfloat,     \
-                        double,            \
-                        get_##name,        \
-                        set_##name,        \
-                        name,              \
-                        set_##name)
+double
+get_float_value(HSQUIRRELVM vm, HSQOBJECT& obj) {
+  if (!sq_isnumeric(obj)) {
+    throw squirrel_error(vm,
+                         "invalid param type ; expected: 'integer|float'");
+  }
+  return static_cast<double>(::sq_objtofloat(&obj));
+}
 
-#define DEFINE_PROPERTY_FUNCS_BOOL(name) \
-  DEFINE_PROPERTY_FUNCS(SQBool,          \
-                        ::sq_pushbool,   \
-                        ::sq_getbool,    \
-                        bool,            \
-                        is_##name,       \
-                        set_##name,      \
-                        is_##name,       \
-                        set_##name)
-
-DEFINE_PROPERTY_FUNCS_INT(src_x)
-DEFINE_PROPERTY_FUNCS_INT(src_y)
-DEFINE_PROPERTY_FUNCS_INT(src_width)
-DEFINE_PROPERTY_FUNCS_INT(src_height)
-DEFINE_PROPERTY_FUNCS_INT(x)
-DEFINE_PROPERTY_FUNCS_INT(y)
-DEFINE_PROPERTY_FUNCS_DOUBLE(alpha)
-DEFINE_PROPERTY_FUNCS_BOOL(visible)
-
-#undef DEFINE_PROPRETY_FUNCS_BOOL
-#undef DEFINE_PROPRETY_FUNCS_DOUBLE
-#undef DEFINE_PROPRETY_FUNCS_INT
-#undef DEFINE_PROPERTY_FUNCS
+double
+get_bool_value(HSQUIRRELVM vm, HSQOBJECT& obj) {
+  if (!sq_isbool(obj)) {
+    throw squirrel_error(vm,
+                         "invalid param type ; expected: 'bool'");
+  }
+  return static_cast<bool>(::sq_objtobool(&obj));
+}
 
 SQInteger
-metamethod_get(HSQUIRRELVM vm) {
-  sprite& self = get_instance(vm, 1);
-  
-  return 1;
+meta_method_set(HSQUIRRELVM vm) {
+  try {
+    sprite& self = get_instance(vm, 1);
+    SQChar const* method_name_p;
+    ::sq_getstring(vm, 2, &method_name_p);
+    std::string method_name(method_name_p);
+    HSQOBJECT value;
+    ::sq_getstackobj(vm, 3, &value);
+    if (method_name == "srcX") {
+      self.set_src_x(get_int_value(vm, value));
+    } else if (method_name == "srcY") {
+      self.set_src_y(get_int_value(vm, value));
+    } else if (method_name == "srcWidth") {
+      self.set_src_width(get_int_value(vm, value));
+    } else if (method_name == "srcHeight") {
+      self.set_src_height(get_int_value(vm, value));
+    } else if (method_name == "x") {
+      self.set_x(get_int_value(vm, value));
+    } else if (method_name == "y") {
+      self.set_y(get_int_value(vm, value));
+    } else if (method_name == "alpha") {
+      self.set_alpha(get_float_value(vm, value));
+    } else if (method_name == "isVisible") {
+      self.set_visible(get_bool_value(vm, value));
+    } else {
+      std::string msg = "the index '" + method_name + "' does not exist";
+      return ::sq_throwerror(vm, _SC(msg.c_str()));
+    }
+    return 0;
+  } catch (squirrel_error const& e) {
+    return e.sq_value();
+  }
 }
 
 }

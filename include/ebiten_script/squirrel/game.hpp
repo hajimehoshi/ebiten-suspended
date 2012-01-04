@@ -216,38 +216,10 @@ private:
       this->create_class(e, s, type_tag());
       this->create_method(e, s, "constructor", method_constructor,
                           "xx", false);
-      this->create_method(e, s, "getSrcX", method_get_src_x,
-                          "x", false);
-      this->create_method(e, s, "setSrcX", method_set_src_x,
-                          "xi", false);
-      this->create_method(e, s, "getSrcY", method_get_src_y,
-                          "x", false);
-      this->create_method(e, s, "setSrcY", method_set_src_y,
-                          "xi", false);
-      this->create_method(e, s, "getSrcWidth", method_get_src_width,
-                          "x", false);
-      this->create_method(e, s, "setSrcWidth", method_set_src_width,
-                          "xi", false);
-      this->create_method(e, s, "getSrcHeight", method_get_src_height,
-                          "x", false);
-      this->create_method(e, s, "setSrcHeight", method_set_src_height,
-                          "xi", false);
-      this->create_method(e, s, "getX", method_get_x,
-                          "x", false);
-      this->create_method(e, s, "setX", method_set_x,
-                          "xi", false);
-      this->create_method(e, s, "getY", method_get_y,
-                          "x", false);
-      this->create_method(e, s, "setY", method_set_y,
-                          "xi", false);
-      this->create_method(e, s, "getAlpha", method_get_alpha,
-                          "x", false);
-      this->create_method(e, s, "setAlpha", method_set_alpha,
-                          "xf", false);
-      this->create_method(e, s, "isVisible", method_is_visible,
-                          "x", false);
-      this->create_method(e, s, "setVisible", method_set_visible,
-                          "xb", false);
+      this->create_method(e, s, "_get", meta_method_get,
+                          "xs", false);
+      this->create_method(e, s, "_set", meta_method_set,
+                          "xs.", false);
     }
   }
   void

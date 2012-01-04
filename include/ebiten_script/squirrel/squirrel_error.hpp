@@ -15,6 +15,10 @@ public:
     : std::runtime_error("Squirrel error"),
       sq_value_(sq_value) {
   }
+  squirrel_error(HSQUIRRELVM vm, std::string const& message) 
+    : std::runtime_error("Squirrel error"),
+      sq_value_(::sq_throwerror(vm, _SC(message.c_str()))) {
+  }
   SQInteger
   sq_value() const {
     return this->sq_value_;

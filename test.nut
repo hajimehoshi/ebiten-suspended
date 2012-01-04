@@ -11,11 +11,13 @@ class Game {
         }
         if (!this.sprite) {
             this.sprite = ebiten.Sprite(this.texture)
-            this.sprite.setSrcWidth(32)
-            this.sprite.setSrcHeight(32)
+            this.sprite.srcWidth = 32
+            this.sprite.srcHeight = 32
         }
-        this.sprite.setX(this.x);
-        this.sprite.setAlpha(0.8);
+        /*local a = []
+        a.remove(true)*/
+        this.sprite.x = this.x;
+        this.sprite.alpha = 0.8;
         this.x++
     }
     function draw(offscreen) {
