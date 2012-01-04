@@ -20,13 +20,16 @@ main() {
       path = "test.nut";
     }
     ebiten_script::squirrel::game game(path);
-    auto game_update = std::bind(&ebiten_script::squirrel::game::update,
-                                 &game,
-                                 std::placeholders::_1);
-    auto game_draw   = std::bind(&ebiten_script::squirrel::game::draw,
-                                 &game,
-                                 std::placeholders::_1,
-                                 std::placeholders::_2);
+    std::function<void(ebiten::graphics::texture_factory&)> game_update =
+      std::bind(&ebiten_script::squirrel::game::update,
+                &game,
+                std::placeholders::_1);
+    std::function<void(ebiten::graphics::graphics_context&,
+                       ebiten::graphics::texture&)> game_draw =
+      std::bind(&ebiten_script::squirrel::game::draw,
+                &game,
+                std::placeholders::_1,
+                std::placeholders::_2);
     ebiten::frames::frame frame(640, 480);
     ebiten::kernels::kernel kernel(game_update,
                                    game_draw,

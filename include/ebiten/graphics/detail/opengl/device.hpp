@@ -57,7 +57,8 @@ public:
     assert(0 < this->screen_scale_);
     assert(this->update_func_);
     assert(this->draw_func_);
-    this->opengl_initializer_.initialize(native_view, std::bind(&device::update, this));
+    this->opengl_initializer_.initialize(native_view,
+                                         std::bind(&device::update, this));
   }
   // TODO: destructor
   /*
