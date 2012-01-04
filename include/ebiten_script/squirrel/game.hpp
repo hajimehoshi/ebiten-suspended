@@ -212,7 +212,7 @@ private:
       this->create_method(e, t, "clear", c::method_clear,
                           "x", false);
       this->create_method(e, t, "drawRect", c::method_draw_rect,
-                          "xiiiiiiii", false);
+                          "xnnnnnnnn", false);
       this->create_method(e, t, "drawSprite", c::method_draw_sprite,
                           "xx", false);
       this->create_method(e, t, "setTexture_", c::method_set_texture,
