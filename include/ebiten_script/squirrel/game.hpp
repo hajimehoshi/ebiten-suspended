@@ -184,18 +184,18 @@ private:
     static std::string const e("ebiten");
     this->create_table(e);
     {
+      using namespace geometry_matrix_class;
       static std::string const gm("GeometryMatrix");
       this->create_class(e, gm, nullptr);
-      this->create_method(e, gm,
-                          "constructor",
-                          geometry_matrix_class::constructor,
-                          "x",
-                          false);
-      this->create_method(e, gm,
+      this->create_method(e, gm, "constructor", method_constructor,
+                          "xnnnnnn", false);
+      this->create_method(e, gm, "_get", meta_method_get,
+                          "xs", false);
+      /*this->create_method(e, gm,
                           "_tostring",
                           geometry_matrix_class::meta_tostring,
                           "x",
-                          false);
+                          false);*/
     }
     {
       typedef texture_class c;

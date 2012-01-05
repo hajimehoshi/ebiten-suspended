@@ -1,7 +1,6 @@
 #ifndef EBITEN_SCRIPT_SQUIRREL_TEXTURE_CLASS_HPP
 #define EBITEN_SCRIPT_SQUIRREL_TEXTURE_CLASS_HPP
 
-//#include "ebiten_script/squirrel/sprite_class.hpp"
 #include "ebiten_script/squirrel/squirrel_error.hpp"
 #include "ebiten_script/sprite.hpp"
 #include "ebiten_script/texture_holder.hpp"
