@@ -11,7 +11,8 @@ CXXFLAGS := \
 	-x objective-c++ -std=c++0x -stdlib=libc++ \
 	-fobjc-arc \
 	-DEBITEN_VERSION_COMMIT_UNIX_TIME="`git log --pretty="%ct" -1`" \
-	-DEBITEN_VERSION_COMMIT_HASH="\"`git log --pretty="%H" -1`\""
+	-DEBITEN_VERSION_COMMIT_HASH="\"`git log --pretty="%H" -1`\"" \
+	-DEBITEN_VERSION_COMMIT_MODIFIED="`git status --porcelain -uno | wc -l`"
 
 LDFLAGS := \
 	-framework Cocoa -framework OpenGL -framework QuartzCore

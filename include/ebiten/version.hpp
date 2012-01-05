@@ -14,6 +14,10 @@
 # define EBITEN_VERSION_COMMIT_HASH "(unknown)"
 #endif
 
+#ifndef EBITEN_VERSION_COMMIT_MODIFIED
+# define EBITEN_VERSION_COMMIT_MODIFIED (0)
+#endif
+
 namespace ebiten {
 namespace version {
 namespace {
@@ -30,6 +34,11 @@ get_commit_time() {
 std::string
 get_commit_hash() {
   return EBITEN_VERSION_COMMIT_HASH;
+}
+
+bool
+is_commit_modified() {
+  return static_cast<bool>(EBITEN_VERSION_COMMIT_MODIFIED);
 }
 
 }

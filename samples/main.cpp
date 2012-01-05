@@ -8,7 +8,8 @@ main() {
   try {
     std::cout << "Ebiten" << std::endl
               << "  Commit Date: " << ebiten::version::get_commit_time() << std::endl
-              << "  Commit Hash: " << ebiten::version::get_commit_hash() << std::endl;
+              << "  Commit Hash: " << ebiten::version::get_commit_hash() << std::endl
+              << "  Commit Modified: " << (ebiten::version::is_commit_modified() ? "Yes" : "No") << std::endl;
 
     NSBundle* bundle = [NSBundle mainBundle];
     NSString* ns_path = [bundle pathForResource:@"test.nut" ofType:nil];
