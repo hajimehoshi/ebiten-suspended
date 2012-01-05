@@ -5,6 +5,7 @@ class Game {
         this.height = height
     }
     function update() {
+        ebiten.terminate()
         if (!this.texture) {
             // TODO: resource path
             this.texture = ebiten.Texture("/Users/hajime/ebiten/test.png")

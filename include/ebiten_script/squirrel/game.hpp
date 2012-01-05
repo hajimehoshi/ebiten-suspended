@@ -25,11 +25,14 @@ namespace squirrel {
 
 class game : private ebiten::noncopyable {
 private:
+  bool is_terminated_;
   HSQUIRRELVM const vm_;
   HSQOBJECT game_;
 public:
   game(std::string filename)
-    : vm_(::sq_open(1024)) {
+    : is_terminated_(false),
+      vm_(::sq_open(1024)) {
+    ::sq_setforeignptr(this->vm_, reinterpret_cast<SQUserPointer*>(this));
     ::sqstd_seterrorhandlers(this->vm_);
     ::sq_setprintfunc(this->vm_, print_func, error_func);
     ::sqstd_register_bloblib(this->vm_);
@@ -49,10 +52,11 @@ public:
                      _SC(filename.c_str()),
                      SQTrue,
                      SQTrue);
-      if (::sq_gettype(this->vm_, -1) == OT_INSTANCE) {
-        ::sq_getstackobj(this->vm_, -1, &this->game_);
-        ::sq_addref(this->vm_, &this->game_);
+      if (::sq_gettype(this->vm_, -1) != OT_INSTANCE) {
+        throw std::runtime_error("game not found");
       }
+      ::sq_getstackobj(this->vm_, -1, &this->game_);
+      ::sq_addref(this->vm_, &this->game_);
       ::sq_settop(this->vm_, top);
     }
   }
@@ -60,8 +64,11 @@ public:
   ~game() {
     ::sq_close(this->vm_);
   }
-  void
+  bool
   update(ebiten::graphics::texture_factory& tf) {
+    if (this->is_terminated_) {
+      return true;
+    }
     {
       /*
        * [Squirrel]
@@ -75,13 +82,20 @@ public:
       ::sq_call(this->vm_, 1, SQFalse, SQTrue);
       ::sq_settop(this->vm_, top);
     }
+    if (this->is_terminated_) {
+      return true;
+    }
     texture_class::instantiate(this->vm_, tf);
+    return false;
   }
   void
   draw(ebiten::graphics::graphics_context& g,
        ebiten::graphics::texture& main_offscreen) {
     g.set_offscreen(main_offscreen);
     g.clear();
+    if (this->is_terminated_) {
+      return;
+    }
     HSQOBJECT main_offscreen_texture;
     {
       /*
@@ -162,6 +176,10 @@ public:
       ::sq_release(this->vm_, &main_offscreen_texture);
     }
   }
+  bool
+  is_terminated() const {
+    return this->is_terminated_;
+  }
 private:
   static void
   print_func(HSQUIRRELVM, SQChar const* s, ...) {
@@ -176,13 +194,15 @@ private:
     ::va_start(vl, s);
     ::vfprintf(stderr, s, vl);
     ::va_end(vl);
-    // TODO: throw?
-    std::abort();
+    throw std::runtime_error("Squirrel error happened");
   }
   void
   initialize_ebiten_classes() {
     static std::string const e("ebiten");
     this->create_table(e);
+    {
+      this->create_function(e, "terminate", method_terminate, "");
+    }
     {
       using namespace geometry_matrix_class;
       static std::string const gm("GeometryMatrix");
@@ -256,6 +276,23 @@ private:
     ::sq_settop(this->vm_, top);
   }
   void
+  create_function(std::string const& namespace_name,
+                  std::string const& method_name,
+                  SQFUNCTION func,
+                  std::string const& type_mask) {
+    SQInteger const top = ::sq_gettop(this->vm_);
+    ::sq_pushroottable(this->vm_);
+    ::sq_pushstring(this->vm_, _SC(namespace_name.c_str()), -1);
+    ::sq_get(this->vm_, -2);
+    ::sq_pushstring(this->vm_, _SC(method_name.c_str()), -1);
+    ::sq_newclosure(this->vm_, func, 0);
+    if (!type_mask.empty()) {
+      ::sq_setparamscheck(this->vm_, type_mask.size(), _SC(type_mask.c_str()));
+    }
+    ::sq_newslot(this->vm_, -3, SQFalse);
+    ::sq_settop(this->vm_, top);
+  }
+  void
   create_method(std::string const& namespace_name,
                 std::string const& class_name,
                 std::string const& method_name,
@@ -275,6 +312,13 @@ private:
     }
     ::sq_newslot(this->vm_, -3, is_static);
     ::sq_settop(this->vm_, top);
+  }
+  static SQInteger
+  method_terminate(HSQUIRRELVM vm) {
+    SQUserPointer p = ::sq_getforeignptr(vm);
+    game& self = *reinterpret_cast<game*>(p);
+    self.is_terminated_ = true;
+    return 0;
   }
 };
 

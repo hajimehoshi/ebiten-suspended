@@ -10,6 +10,7 @@
 #include "ebiten/frames/native_frame.hpp"
 #include "ebiten/graphics/native_view.hpp"
 #include "ebiten/noncopyable.hpp"
+#include <functional>
 
 namespace ebiten {
 namespace frames {
@@ -21,10 +22,12 @@ private:
   native_frame const native_frame_;
   graphics::native_view native_view_;
 public:
-  frame(std::size_t width, std::size_t height)
+  frame(std::size_t width,
+        std::size_t height,
+        std::function<bool()> is_terminated)
     : width_(width),
       height_(height),
-      native_frame_(detail::generate_native_frame(width, height)),
+      native_frame_(detail::generate_native_frame(width, height, is_terminated)),
       native_view_(detail::get_native_view(this->native_frame_)) {
   }
   std::size_t

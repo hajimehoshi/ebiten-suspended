@@ -14,11 +14,11 @@
 @interface EbitenOpenGLView : NSOpenGLView {
 @private
   CVDisplayLinkRef displayLink_;
-  std::function<void()> updatingFunc_;
+  std::function<bool()> updatingFunc_;
 }
 
 - (CVReturn)getFrameForTime:(CVTimeStamp const*)outputTime;
-- (void)setUpdatingFunc:(std::function<void()> const&)updatingFunc;
+- (void)setUpdatingFunc:(std::function<bool()> const&)updatingFunc;
 - (BOOL)acceptsFirstResponder;
 - (BOOL)becomeFirstResponder;
 - (void)mouseDown:(NSEvent*)theEvent;
@@ -47,7 +47,7 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
 @implementation EbitenOpenGLView
 
 - (void)dealloc {
-  CVDisplayLinkRelease(displayLink_);
+  ::CVDisplayLinkRelease(self->displayLink_);
   // Do not call [super dealloc] because of ARC.
 }
 
@@ -58,14 +58,16 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
   GLint const swapInterval = 1;
   [openGLContext setValues:&swapInterval
               forParameter:NSOpenGLCPSwapInterval]; 
-  CVDisplayLinkCreateWithActiveCGDisplays(&displayLink_);
-  CVDisplayLinkSetOutputCallback(displayLink_,
-                                 &EbitenDisplayLinkCallback,
-                                 (__bridge void*)self);
+  ::CVDisplayLinkCreateWithActiveCGDisplays(&self->displayLink_);
+  ::CVDisplayLinkSetOutputCallback(self->displayLink_,
+                                   &EbitenDisplayLinkCallback,
+                                   (__bridge void*)self);
   CGLContextObj cglContext = (CGLContextObj)[openGLContext CGLContextObj];
   CGLPixelFormatObj cglPixelFormat = (CGLPixelFormatObj)[[self pixelFormat] CGLPixelFormatObj];
-  CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext(displayLink_, cglContext, cglPixelFormat);
-  CVDisplayLinkStart(displayLink_);
+  ::CVDisplayLinkSetCurrentCGDisplayFromOpenGLContext(self->displayLink_,
+                                                      cglContext,
+                                                      cglPixelFormat);
+  ::CVDisplayLinkStart(self->displayLink_);
 }
 
 - (CVReturn)getFrameForTime:(CVTimeStamp const*)outputTime {
@@ -76,14 +78,21 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
   NSOpenGLContext* context = [self openGLContext];
   assert(context != nil);
   [context makeCurrentContext];
-  CGLLockContext((CGLContextObj)[context CGLContextObj]);
-  self->updatingFunc_();
-  [context flushBuffer];
-  CGLUnlockContext((CGLContextObj)[context CGLContextObj]);
+  bool terminated = false;
+  {
+    ::CGLLockContext((CGLContextObj)[context CGLContextObj]);
+    terminated = self->updatingFunc_();
+    [context flushBuffer];
+    ::CGLUnlockContext((CGLContextObj)[context CGLContextObj]);
+  }
+  if (terminated) {
+    ::CVDisplayLinkStop(self->displayLink_);
+    return kCVReturnSuccess;
+  }
   return kCVReturnSuccess;
 }
 
-- (void)setUpdatingFunc:(std::function<void()> const&)updatingFunc {
+- (void)setUpdatingFunc:(std::function<bool()> const&)updatingFunc {
   self->updatingFunc_ = updatingFunc;
 }
 

@@ -14,13 +14,14 @@ namespace kernels {
 
 class kernel : private noncopyable {
 private:
-  std::function<void(graphics::texture_factory&)> game_update_;
+  std::function<bool(graphics::texture_factory&)> game_update_;
   std::function<void(graphics::graphics_context&, graphics::texture&)> game_draw_;
   std::size_t const fps_;
   uint64_t before_;
   graphics::device device_;
+  bool is_terminated_;
 public:
-  kernel(std::function<void(graphics::texture_factory&)> game_update,
+  kernel(std::function<bool(graphics::texture_factory&)> game_update,
          std::function<void(graphics::graphics_context&, graphics::texture&)> game_draw,
          std::size_t screen_width,
          std::size_t screen_height,
@@ -41,20 +42,36 @@ public:
               std::bind(&kernel::draw,
                         this,
                         std::placeholders::_1,
-                        std::placeholders::_2)) {
+                        std::placeholders::_2)),
+      is_terminated_(false) {
+  }
+  bool
+  is_terminated() const {
+    return this->is_terminated_;
   }
 private:
-  void
+  bool
   update(ebiten::graphics::texture_factory& tf) {
+    if (this->is_terminated_) {
+      return true;
+    }
     uint64_t const now = timers::timer::now_nsec() * this->fps_;
     while (this->before_ + 1000 * 1000 * 1000 < now) {
-      this->game_update_(tf);
+      bool const terminated = this->game_update_(tf);
+      if (terminated) {
+        this->is_terminated_ = true;
+        return true;
+      }
       this->before_ += 1000 * 1000 * 1000;
     }
+    return false;
   }
   void
   draw(ebiten::graphics::graphics_context& g,
        ebiten::graphics::texture& offscreen_texture) {
+    if (this->is_terminated_) {
+      return;
+    }
     this->game_draw_(g, offscreen_texture);
   }
 };

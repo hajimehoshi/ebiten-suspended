@@ -5,10 +5,16 @@
 #undef check // solve a confliction with Boost
 
 #include <cstddef>
+#include <functional>
 
-@interface EbitenWindow : NSWindow<NSWindowDelegate>
+@interface EbitenWindow : NSWindow<NSWindowDelegate> {
+@private
+  std::function<bool()> isTerminatedFunc_;
+  NSTimer* timer_;
+}
 
-- (id)initWithSize:(NSSize)size;
+- (id)initWithSize:(NSSize)size
+  isTerminatedFunc:(std::function<bool()>)isTerminatedFunc;
 - (void)alertDidEnd:(NSAlert*)alert
          returnCode:(NSInteger)returnCode
         contextInfo:(void*)contextInfo;
@@ -19,7 +25,8 @@
 #ifndef EBITEN_WITHOUT_OBJC_IMPL
 @implementation EbitenWindow
 
-- (id)initWithSize:(NSSize)size {
+- (id)initWithSize:(NSSize)size
+  isTerminatedFunc:(std::function<bool()>)isTerminatedFunc {
   [NSApplication sharedApplication];
   NSUInteger const style = (NSTitledWindowMask | NSClosableWindowMask |
                             NSMiniaturizableWindowMask);
@@ -40,10 +47,17 @@
   [self setReleasedWhenClosed:YES];
   [self setDelegate:self];
   [self setDocumentEdited:YES];
+  self->isTerminatedFunc_ = isTerminatedFunc;
+  self->timer_ = [NSTimer scheduledTimerWithTimeInterval:0.5
+                                                  target:self
+                                                selector:@selector(tick)
+                                                userInfo:nil
+                                                 repeats:YES];
   return self;
 }
 
 - (BOOL)windowShouldClose:(id)sender {
+  NSLog(@"shouldClose");
   if ([sender isDocumentEdited]) {
     // TODO: add the application's name
     NSAlert* alert = [NSAlert alertWithMessageText:@"Quit the game?"
@@ -65,7 +79,13 @@
   (void)alert;
   (void)contextInfo;
   if (returnCode == NSAlertDefaultReturn) {
-    [NSApp terminate:self];
+    [self close];
+  }
+}
+
+- (void)tick {
+  if (self->isTerminatedFunc_()) {
+    [self close];
   }
 }
 
@@ -73,9 +93,12 @@
 #endif
 
 static NSWindow*
-ebiten_frame_detail_generate_native_frame(std::size_t width, std::size_t height) {
+ebiten_frame_detail_generate_native_frame(std::size_t width,
+                                          std::size_t height,
+                                          std::function<bool()> is_terminated) {
   EbitenWindow* window = [[EbitenWindow alloc]
-                           initWithSize:NSMakeSize(width, height)];
+                           initWithSize:NSMakeSize(width, height)
+                           isTerminatedFunc:is_terminated];
   assert(window != nil);
 
   NSRect const rect = NSMakeRect(0, 0, width, height);

@@ -13,7 +13,7 @@ class opengl_initializer : private noncopyable {
 public:
   void
   initialize(native_view native_view,
-             std::function<void()> const& updating_func) {
+             std::function<bool()> const& updating_func) {
     [native_view setUpdatingFunc:updating_func];
   }
 };

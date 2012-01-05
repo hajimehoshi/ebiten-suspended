@@ -49,18 +49,19 @@ bin/$(PROG_SAMPLES): $(SRC_EBITEN) $(SRC_SAMPLES) lib/libsquirrel.a lib/libsqstd
 		-Llib -lsquirrel -lsqstdlib \
 		samples/main.cpp
 
-bin/$(PROG_TEST): $(SRC_EBITEN) $(SRC_TEST) lib/libgtest_main.a
+bin/$(PROG_TEST): $(SRC_EBITEN) $(SRC_TEST) lib/libgtest_main.a lib/libsquirrel.a lib/libsqstdlib.a
 	$(CXX) \
 		$(CXXFLAGS) \
 		-DGTEST_HAS_TR1_TUPLE=0 \
 		-Wno-variadic-macros \
 		$(LDFLAGS) \
 		-I$(GTEST_DIR)/include \
+		-I$(SQUIRREL_DIR)/include \
 		-g \
 		-o $@ \
 		-O0 \
 		-lpthread \
-		-Llib -lgtest_main \
+		-Llib -lgtest_main -lsquirrel -lsqstdlib \
 		test/main.cpp
 
 lib/libsquirrel.a:

@@ -29,7 +29,7 @@ private:
   std::size_t const screen_width_;
   std::size_t const screen_height_;
   std::size_t const screen_scale_;
-  std::function<void(texture_factory&)> update_func_;
+  std::function<bool(texture_factory&)> update_func_;
   std::function<void(graphics_context&, texture&)> draw_func_;
   texture_factory texture_factory_;
   graphics_context graphics_context_;
@@ -40,7 +40,7 @@ public:
          std::size_t screen_height,
          std::size_t screen_scale,
          native_view native_view,
-         std::function<void(texture_factory&)> const& update_func,
+         std::function<bool(texture_factory&)> const& update_func,
          std::function<void(graphics_context&, texture&)> const& draw_func)
     : screen_width_(screen_width),
       screen_height_(screen_height),
@@ -60,21 +60,22 @@ public:
     this->opengl_initializer_.initialize(native_view,
                                          std::bind(&device::update, this));
   }
-  // TODO: destructor
+  ~device() {
+    // TODO: implement
+  }
   /*
    * NOTICE:
    *   The OpenGL functions should be called only in this method 'update'.
    *   Is that better to add an argument to this method?
    */
-  void
+  bool
   update() {
-    // TODO: If application is terminated, stop
     if (!this->offscreen_texture_) {
       this->offscreen_texture_ = this->texture_factory_.create(this->screen_width_,
-                                                                   this->screen_height_);
+                                                               this->screen_height_);
       assert(static_cast<bool>(this->offscreen_texture_));
     }
-    this->update_func_(this->texture_factory_);
+    bool const terminated = this->update_func_(this->texture_factory_);
     detail::graphics_context& g = this->graphics_context_;
     ::glEnable(GL_TEXTURE_2D);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -94,6 +95,7 @@ public:
                    0, 0, this->screen_width_, this->screen_height_,
                    geom_mat, color_matrix::identity());
     g.flush();
+    return terminated;
   }
 };
 

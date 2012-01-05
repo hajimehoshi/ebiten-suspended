@@ -52,6 +52,11 @@
   [self initMenu];
 }
 
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication*)theApplication {
+  (void)theApplication;
+  return YES;
+}
+
 @end
 #endif
 
