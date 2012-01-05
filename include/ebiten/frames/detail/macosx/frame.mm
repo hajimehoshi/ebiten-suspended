@@ -42,7 +42,8 @@
                                         size.width, size.height);
   self = [super initWithContentRect:contentRect
                           styleMask:style
-                            backing:NSBackingStoreBuffered defer:YES];
+                            backing:NSBackingStoreBuffered
+                              defer:YES];
   assert(self != nil);
   [self setReleasedWhenClosed:YES];
   [self setDelegate:self];
@@ -95,7 +96,7 @@
 static NSWindow*
 ebiten_frame_detail_generate_native_frame(std::size_t width,
                                           std::size_t height,
-                                          std::function<bool()> is_terminated) {
+                                          std::function<bool()> const& is_terminated) {
   EbitenWindow* window = [[EbitenWindow alloc]
                            initWithSize:NSMakeSize(width, height)
                            isTerminatedFunc:is_terminated];

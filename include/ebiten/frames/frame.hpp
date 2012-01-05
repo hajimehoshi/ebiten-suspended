@@ -24,7 +24,7 @@ private:
 public:
   frame(std::size_t width,
         std::size_t height,
-        std::function<bool()> is_terminated)
+        std::function<bool()> const& is_terminated)
     : width_(width),
       height_(height),
       native_frame_(detail::generate_native_frame(width, height, is_terminated)),
