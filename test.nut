@@ -19,6 +19,9 @@ class Game {
         this.sprite.x = this.x;
         this.sprite.alpha = 0.8;
         this.x++
+        if (this.x == 100) {
+            ebiten.terminate()
+        }
     }
     function draw(offscreen) {
         offscreen.drawRect(this.x, 10, 100, 100, 255, 0, 0, 255)

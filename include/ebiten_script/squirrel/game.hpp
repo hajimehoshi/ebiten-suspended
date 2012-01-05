@@ -25,13 +25,14 @@ namespace squirrel {
 
 class game : private ebiten::noncopyable {
 private:
-  bool is_terminated_;
   HSQUIRRELVM const vm_;
   HSQOBJECT game_;
+  bool is_terminated_;
+  std::function<void()> terminated_handler_;
 public:
   game(std::string filename)
-    : is_terminated_(false),
-      vm_(::sq_open(1024)) {
+    : vm_(::sq_open(1024)),
+      is_terminated_(false) {
     ::sq_setforeignptr(this->vm_, reinterpret_cast<SQUserPointer*>(this));
     ::sqstd_seterrorhandlers(this->vm_);
     ::sq_setprintfunc(this->vm_, print_func, error_func);
@@ -176,6 +177,10 @@ public:
       ::sq_release(this->vm_, &main_offscreen_texture);
     }
   }
+  void
+  set_terminated_handler(std::function<void()> const& terminated_handler) {
+    this->terminated_handler_ = terminated_handler;
+  }
   bool
   is_terminated() const {
     return this->is_terminated_;
@@ -318,6 +323,9 @@ private:
     SQUserPointer p = ::sq_getforeignptr(vm);
     game& self = *reinterpret_cast<game*>(p);
     self.is_terminated_ = true;
+    if (self.terminated_handler_) {
+      self.terminated_handler_();
+    }
     return 0;
   }
 };

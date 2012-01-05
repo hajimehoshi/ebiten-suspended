@@ -27,9 +27,8 @@ main(int argc, char* argv[]) {
                                &game,
                                std::placeholders::_1,
                                std::placeholders::_2);
-    auto game_is_terminated = std::bind(&ebiten_script::squirrel::game::is_terminated,
-                                        &game);
-    ebiten::frames::frame frame(640, 480, game_is_terminated);
+    ebiten::frames::frame frame(640, 480);
+    game.set_terminated_handler(std::bind(&ebiten::frames::frame::close, &frame));
     ebiten::kernels::kernel kernel(game_update,
                                    game_draw,
                                    320, 240, 2, 60,
