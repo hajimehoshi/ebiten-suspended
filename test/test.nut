@@ -7,15 +7,6 @@ function assert(exp) {
     ::print(".")
 }
 
-class Foo {
-    static function _get(str) {
-        ::print(str + "\n")
-    }
-    static identity = null
-}
-::print(Foo.identity + "\n")
-Foo.identity <- 3
-
 class Test {
     function update() {
         if (updateTestExecuted && drawTestExecuted) {
@@ -45,6 +36,20 @@ class Test {
             ::assert(geo.d == 1)
             ::assert(geo.tx == 0)
             ::assert(geo.ty == 0)
+        }
+        {
+            local t = ebiten.Texture(10, 20)
+            ::assert(t.isCreated == false)
+            try {
+                t.width
+                ::assert(false)
+            } catch (e) {
+            }
+            try {
+                t.height
+                ::assert(false)
+            } catch (e) {
+            }
         }
         updateTestExecuted = true
     }

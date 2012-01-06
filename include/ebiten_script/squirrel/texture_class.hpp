@@ -105,36 +105,27 @@ public:
     return get_texture_holders(vm).get(key);
   }
   static SQInteger
-  method_is_created(HSQUIRRELVM vm) {
+  metamethod_get(HSQUIRRELVM vm) {
     try {
       texture_holder& self = get_instance(vm, 1);
-      ::sq_pushbool(vm, static_cast<bool>(self.is_instantiate()));
-      return 1;
-    } catch (squirrel_error const& e) {
-      return e.sq_value();
-    }
-  }
-  static SQInteger
-  method_get_width(HSQUIRRELVM vm) {
-    try {
-      texture_holder& self = get_instance(vm, 1);
+      SQChar const* method_name_p;
+      ::sq_getstring(vm, 2, &method_name_p);
+      std::string method_name(method_name_p);
+      if (method_name == "isCreated") {
+        ::sq_pushbool(vm, static_cast<bool>(self.is_instantiate()));        
+        return 1;
+      }
       if (!self.is_instantiate()) {
         return ::sq_throwerror(vm, "the texture is not created yet");
       }
-      ::sq_pushinteger(vm, self.ebiten_texture().width());
-      return 1;
-    } catch (squirrel_error const& e) {
-      return e.sq_value();
-    }
-  }
-  static SQInteger
-  method_get_height(HSQUIRRELVM vm) {
-    try {
-      texture_holder& self = get_instance(vm, 1);
-      if (!self.is_instantiate()) {
-        return ::sq_throwerror(vm, "the texture is not created yet");
+      if (method_name == "width") {
+        ::sq_pushinteger(vm, self.ebiten_texture().width());
+      } else if (method_name == "height") {
+        ::sq_pushinteger(vm, self.ebiten_texture().height());
+      } else {
+        std::string msg = "the index '" + method_name + "' does not exist";
+        return ::sq_throwerror(vm, _SC(msg.c_str()));
       }
-      ::sq_pushinteger(vm, self.ebiten_texture().height());
       return 1;
     } catch (squirrel_error const& e) {
       return e.sq_value();
@@ -206,12 +197,8 @@ public:
     HSQOBJECT klass = util::create_class(vm, "ebiten", "Texture", type_tag());
     util::create_method(vm, klass, "constructor", method_constructor,
                         "", false);
-    util::create_method(vm, klass, "isCreated", method_is_created,
-                        "x", false);
-    util::create_method(vm, klass, "getWidth", method_get_width,
-                        "x", false);
-    util::create_method(vm, klass, "getHeight", method_get_height,
-                        "x", false);
+    util::create_method(vm, klass, "_get", metamethod_get,
+                        "xs", false);
     util::create_method(vm, klass, "clear", method_clear,
                         "x", false);
     util::create_method(vm, klass, "drawRect", method_draw_rect,
