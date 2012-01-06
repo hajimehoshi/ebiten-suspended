@@ -22,6 +22,8 @@ namespace ebiten {
 namespace version {
 namespace {
 
+// TODO: Improve that
+
 std::string
 get_commit_time() {
   time_t const time = EBITEN_VERSION_COMMIT_UNIX_TIME;

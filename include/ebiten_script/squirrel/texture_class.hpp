@@ -2,6 +2,7 @@
 #define EBITEN_SCRIPT_SQUIRREL_TEXTURE_CLASS_HPP
 
 #include "ebiten_script/squirrel/squirrel_error.hpp"
+#include "ebiten_script/squirrel/util.hpp"
 #include "ebiten_script/sprite.hpp"
 #include "ebiten_script/texture_holder.hpp"
 #include "ebiten_script/texture_holders.hpp"
@@ -97,11 +98,8 @@ public:
   static texture_holder&
   get_instance(HSQUIRRELVM vm, SQInteger idx) {
     SQUserPointer p;
-    {
-      SQRESULT result = ::sq_getinstanceup(vm, idx, &p, type_tag());
-      if (SQ_FAILED(result)) {
-        throw squirrel_error(result);
-      }
+    if (SQ_FAILED(::sq_getinstanceup(vm, idx, &p, type_tag()))) {
+      throw squirrel_error(vm);
     }
     texture_holders::key_type key = reinterpret_cast<key_vm_type*>(p)->first;
     return get_texture_holders(vm).get(key);
@@ -202,6 +200,26 @@ public:
     } catch (squirrel_error const& e) {
       return e.sq_value();
     }
+  }
+  static void
+  initialize(HSQUIRRELVM vm) {
+    HSQOBJECT klass = util::create_class(vm, "ebiten", "Texture", type_tag());
+    util::create_method(vm, klass, "constructor", method_constructor,
+                        "", false);
+    util::create_method(vm, klass, "isCreated", method_is_created,
+                        "x", false);
+    util::create_method(vm, klass, "getWidth", method_get_width,
+                        "x", false);
+    util::create_method(vm, klass, "getHeight", method_get_height,
+                        "x", false);
+    util::create_method(vm, klass, "clear", method_clear,
+                        "x", false);
+    util::create_method(vm, klass, "drawRect", method_draw_rect,
+                        "xnnnnnnnn", false);
+    util::create_method(vm, klass, "drawSprite", method_draw_sprite,
+                        "xx", false);
+    util::create_method(vm, klass, "setTexture_", method_set_texture,
+                        "xp", false);
   }
 private:
   static texture_holders&

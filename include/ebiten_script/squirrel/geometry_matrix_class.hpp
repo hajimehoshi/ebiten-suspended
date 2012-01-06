@@ -2,6 +2,7 @@
 #define EBITEN_SCRIPT_SQUIRREL_GEOMETRY_MATRIX_CLASS_HPP
 
 #include "ebiten_script/squirrel/squirrel_error.hpp"
+#include "ebiten_script/squirrel/util.hpp"
 #include "ebiten/graphics/geometry_matrix.hpp"
 #include <squirrel.h> 
 
@@ -43,19 +44,17 @@ method_constructor(HSQUIRRELVM vm) {
 
 SQInteger
 releasehook(SQUserPointer p, SQInteger) {
-  class sprite* self = reinterpret_cast<sprite*>(p);
+  ebiten::graphics::geometry_matrix* self =
+    reinterpret_cast<ebiten::graphics::geometry_matrix*>(p);
   delete self;
   return 1;
 }
 
-ebiten::graphics::geometry_matrix&
+ebiten::graphics::geometry_matrix const&
 get_instance(HSQUIRRELVM vm, SQInteger idx) {
   SQUserPointer p;
-  {
-    SQRESULT result = ::sq_getinstanceup(vm, idx, &p, type_tag());
-    if (SQ_FAILED(result)) {
-      throw squirrel_error(result);
-    }
+  if (SQ_FAILED(::sq_getinstanceup(vm, idx, &p, type_tag()))) {
+    throw squirrel_error(vm);
   }
   ebiten::graphics::geometry_matrix* self =
     reinterpret_cast<ebiten::graphics::geometry_matrix*>(p);
@@ -63,9 +62,9 @@ get_instance(HSQUIRRELVM vm, SQInteger idx) {
 }
 
 SQInteger
-meta_method_get(HSQUIRRELVM vm) {
+metamethod_get(HSQUIRRELVM vm) {
   try {
-    ebiten::graphics::geometry_matrix& self = get_instance(vm, 1);
+    ebiten::graphics::geometry_matrix const& self = get_instance(vm, 1);
     SQChar const* method_name_p;
     ::sq_getstring(vm, 2, &method_name_p);
     std::string method_name(method_name_p);
@@ -89,6 +88,36 @@ meta_method_get(HSQUIRRELVM vm) {
   } catch (squirrel_error const& e) {
     return e.sq_value();
   }
+}
+
+void
+initialize(HSQUIRRELVM vm) {
+  HSQOBJECT klass = util::create_class(vm, "ebiten", "GeometryMatrix", type_tag());
+  util::create_method(vm, klass, "constructor", method_constructor,
+                      "xnnnnnn", false);
+  util::create_method(vm, klass, "_get", metamethod_get,
+                      "xs", false);
+  HSQOBJECT identity;
+  {
+    /*
+     * [Squirrel]
+     * identity = ebiten.GeometryMatrix(1, 0, 0, 1, 0, 0)
+     */
+    SQInteger const top = ::sq_gettop(vm);
+    ::sq_pushobject(vm, klass);
+    ::sq_pushroottable(vm);
+    ::sq_pushinteger(vm, 1);
+    ::sq_pushinteger(vm, 0);
+    ::sq_pushinteger(vm, 0);
+    ::sq_pushinteger(vm, 1);
+    ::sq_pushinteger(vm, 0);
+    ::sq_pushinteger(vm, 0);
+    ::sq_call(vm, 7, SQTrue, SQTrue);
+    ::sq_getstackobj(vm, -1, &identity);
+    ::sq_addref(vm, &identity);
+    ::sq_settop(vm, top);
+  }
+  util::create_variable(vm, klass, "identity", identity, true);
 }
 
 }

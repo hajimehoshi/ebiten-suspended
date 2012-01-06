@@ -11,9 +11,10 @@ class squirrel_error : public std::runtime_error {
 private:
   SQInteger sq_value_;
 public:
-  squirrel_error(SQInteger sq_value) 
-    : std::runtime_error("Squirrel error"),
-      sq_value_(sq_value) {
+  squirrel_error(HSQUIRRELVM vm)
+    : std::runtime_error("Squirrel error") {
+    ::sq_getlasterror(vm);
+    this->sq_value_ = ::sq_throwobject(vm);
   }
   squirrel_error(HSQUIRRELVM vm, std::string const& message) 
     : std::runtime_error("Squirrel error"),
