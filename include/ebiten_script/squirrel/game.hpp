@@ -75,12 +75,15 @@ public:
        * [Squirrel]
        * game.update()
        */
+      ::sq_reseterror(this->vm_);
       SQInteger const top = ::sq_gettop(this->vm_);
       ::sq_pushobject(this->vm_, this->game_);
       ::sq_pushstring(this->vm_, _SC("update"), -1);
       ::sq_get(this->vm_, -2);
       ::sq_pushobject(this->vm_, this->game_);
-      ::sq_call(this->vm_, 1, SQFalse, SQTrue);
+      if (SQ_FAILED(::sq_call(this->vm_, 1, SQFalse, SQTrue))) {
+        throw std::runtime_error("Squirrel error happened");
+      }
       ::sq_settop(this->vm_, top);
     }
     if (this->is_terminated_) {
@@ -150,7 +153,9 @@ public:
       ::sq_get(this->vm_, -2);
       ::sq_pushobject(this->vm_, this->game_);
       ::sq_pushobject(this->vm_, main_offscreen_texture);
-      ::sq_call(this->vm_, 2, SQFalse, SQTrue);
+      if (SQ_FAILED(::sq_call(this->vm_, 2, SQFalse, SQTrue))) {
+        throw std::runtime_error("Squirrel error happened");
+      }
       ::sq_settop(this->vm_, top);
     }
     texture_class::flush_texture_commands(this->vm_, g);
@@ -201,7 +206,6 @@ private:
     ::vfprintf(stderr, s, vl);
     ::va_end(vl);
     ::fflush(stderr);
-    throw std::runtime_error("Squirrel error happened");
   }
   void
   initialize_ebiten_classes() {
