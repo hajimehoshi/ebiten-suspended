@@ -14,8 +14,6 @@ class Game {
             this.sprite.srcWidth = 32
             this.sprite.srcHeight = 32
         }
-        /*local a = []
-        a.remove(true)*/
         this.sprite.x = this.x;
         this.sprite.alpha = 0.8;
         this.x++

@@ -192,6 +192,7 @@ private:
     ::va_start(vl, s);
     ::vfprintf(stdout, s, vl);
     ::va_end(vl);
+    ::fflush(stdout);
   }
   static void
   error_func(HSQUIRRELVM, SQChar const* s, ...) {
@@ -199,6 +200,7 @@ private:
     ::va_start(vl, s);
     ::vfprintf(stderr, s, vl);
     ::va_end(vl);
+    ::fflush(stderr);
     throw std::runtime_error("Squirrel error happened");
   }
   void
@@ -206,54 +208,11 @@ private:
     static std::string const e("ebiten");
     this->create_table(e);
     {
-      this->create_function(e, "terminate", method_terminate, "");
+      util::create_function(this->vm_, e, "terminate", method_terminate, "");
     }
-    {
-      using namespace geometry_matrix_class;
-      static std::string const gm("GeometryMatrix");
-      this->create_class(e, gm, nullptr);
-      this->create_method(e, gm, "constructor", method_constructor,
-                          "xnnnnnn", false);
-      this->create_method(e, gm, "_get", meta_method_get,
-                          "xs", false);
-      /*this->create_method(e, gm,
-                          "_tostring",
-                          geometry_matrix_class::meta_tostring,
-                          "x",
-                          false);*/
-    }
-    {
-      typedef texture_class c;
-      static std::string const t("Texture");
-      this->create_class(e, t, c::type_tag());
-      this->create_method(e, t, "constructor", c::method_constructor,
-                          "", false);
-      this->create_method(e, t, "isCreated", c::method_is_created,
-                          "x", false);
-      this->create_method(e, t, "getWidth", c::method_get_width,
-                          "x", false);
-      this->create_method(e, t, "getHeight", c::method_get_height,
-                          "x", false);
-      this->create_method(e, t, "clear", c::method_clear,
-                          "x", false);
-      this->create_method(e, t, "drawRect", c::method_draw_rect,
-                          "xnnnnnnnn", false);
-      this->create_method(e, t, "drawSprite", c::method_draw_sprite,
-                          "xx", false);
-      this->create_method(e, t, "setTexture_", c::method_set_texture,
-                          "xp", false);
-    }
-    {
-      using namespace sprite_class;
-      static std::string const s("Sprite");
-      this->create_class(e, s, type_tag());
-      this->create_method(e, s, "constructor", method_constructor,
-                          "xx", false);
-      this->create_method(e, s, "_get", meta_method_get,
-                          "xs", false);
-      this->create_method(e, s, "_set", meta_method_set,
-                          "xs.", false);
-    }
+    geometry_matrix_class::initialize(this->vm_);
+    texture_class::initialize(this->vm_);
+    sprite_class::initialize(this->vm_);
   }
   void
   create_table(std::string const& name) {
@@ -262,60 +221,6 @@ private:
     ::sq_pushstring(this->vm_, _SC(name.c_str()), -1);
     ::sq_newtable(this->vm_);
     ::sq_newslot(this->vm_, -3, SQFalse);
-    ::sq_settop(this->vm_, top);
-  }
-  void
-  create_class(std::string const& namespace_name,
-               std::string const& class_name,
-               SQUserPointer type_tag) {
-    SQInteger const top = ::sq_gettop(this->vm_);
-    ::sq_pushroottable(this->vm_);
-    ::sq_pushstring(this->vm_, _SC(namespace_name.c_str()), -1);
-    ::sq_get(this->vm_, -2);
-    ::sq_pushstring(this->vm_, _SC(class_name.c_str()), -1);
-    ::sq_newclass(this->vm_, SQFalse);
-    if (SQ_FAILED(::sq_settypetag(this->vm_, -1, type_tag))) {
-      throw std::runtime_error("failed to set the type tag");
-    }
-    ::sq_newslot(this->vm_, -3, SQFalse);
-    ::sq_settop(this->vm_, top);
-  }
-  void
-  create_function(std::string const& namespace_name,
-                  std::string const& method_name,
-                  SQFUNCTION func,
-                  std::string const& type_mask) {
-    SQInteger const top = ::sq_gettop(this->vm_);
-    ::sq_pushroottable(this->vm_);
-    ::sq_pushstring(this->vm_, _SC(namespace_name.c_str()), -1);
-    ::sq_get(this->vm_, -2);
-    ::sq_pushstring(this->vm_, _SC(method_name.c_str()), -1);
-    ::sq_newclosure(this->vm_, func, 0);
-    if (!type_mask.empty()) {
-      ::sq_setparamscheck(this->vm_, type_mask.size(), _SC(type_mask.c_str()));
-    }
-    ::sq_newslot(this->vm_, -3, SQFalse);
-    ::sq_settop(this->vm_, top);
-  }
-  void
-  create_method(std::string const& namespace_name,
-                std::string const& class_name,
-                std::string const& method_name,
-                SQFUNCTION func,
-                std::string const& type_mask,
-                bool is_static) {
-    SQInteger const top = ::sq_gettop(this->vm_);
-    ::sq_pushroottable(this->vm_);
-    ::sq_pushstring(this->vm_, _SC(namespace_name.c_str()), -1);
-    ::sq_get(this->vm_, -2);
-    ::sq_pushstring(this->vm_, _SC(class_name.c_str()), -1);
-    ::sq_get(this->vm_, -2);
-    ::sq_pushstring(this->vm_, _SC(method_name.c_str()), -1);
-    ::sq_newclosure(this->vm_, func, 0);
-    if (!type_mask.empty()) {
-      ::sq_setparamscheck(this->vm_, type_mask.size(), _SC(type_mask.c_str()));
-    }
-    ::sq_newslot(this->vm_, -3, is_static);
     ::sq_settop(this->vm_, top);
   }
   static SQInteger

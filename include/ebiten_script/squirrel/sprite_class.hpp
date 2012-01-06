@@ -3,6 +3,7 @@
 
 #include "ebiten_script/squirrel/squirrel_error.hpp"
 #include "ebiten_script/squirrel/texture_class.hpp"
+#include "ebiten_script/squirrel/util.hpp"
 #include "ebiten_script/sprite.hpp"
 #include <squirrel.h>
 
@@ -48,6 +49,7 @@ get_instance(HSQUIRRELVM vm, SQInteger idx) {
   {
     SQRESULT result = ::sq_getinstanceup(vm, idx, &p, type_tag());
     if (SQ_FAILED(result)) {
+      // TODO: use ::sq_throwobject(vm); ?
       throw squirrel_error(result);
     }
   }
@@ -56,7 +58,7 @@ get_instance(HSQUIRRELVM vm, SQInteger idx) {
 }
 
 SQInteger
-meta_method_get(HSQUIRRELVM vm) {
+metamethod_get(HSQUIRRELVM vm) {
   try {
     sprite& self = get_instance(vm, 1);
     SQChar const* method_name_p;
@@ -116,7 +118,7 @@ get_bool_value(HSQUIRRELVM vm, HSQOBJECT& obj) {
 }
 
 SQInteger
-meta_method_set(HSQUIRRELVM vm) {
+metamethod_set(HSQUIRRELVM vm) {
   try {
     sprite& self = get_instance(vm, 1);
     SQChar const* method_name_p;
@@ -148,6 +150,17 @@ meta_method_set(HSQUIRRELVM vm) {
   } catch (squirrel_error const& e) {
     return e.sq_value();
   }
+}
+
+void
+initialize(HSQUIRRELVM vm) {
+  HSQOBJECT klass = util::create_class(vm, "ebiten", "Sprite", type_tag());
+  util::create_method(vm, klass, "constructor", method_constructor,
+                      "xx", false);
+  util::create_method(vm, klass, "_get", metamethod_get,
+                      "xs", false);
+  util::create_method(vm, klass, "_set", metamethod_set,
+                      "xs.", false);
 }
 
 }
