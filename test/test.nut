@@ -6,7 +6,7 @@ function assert(exp) {
     }
 }
 
-function testGeometryMatrixConstructor() {
+function test_update_GeometryMatrix_constructor() {
     local geo = ebiten.GeometryMatrix(3.1, 4.1, 5.9, 2.6, 5.3, 5.7)
     ::assert(geo instanceof ebiten.GeometryMatrix)
     ::assert(geo.a == 3.1)
@@ -17,7 +17,7 @@ function testGeometryMatrixConstructor() {
     ::assert(geo.ty == 5.7)
 }
 
-function testGeometryMatrixIdentity() {
+function test_update_GeometryMatrix_identity() {
     local geo = ebiten.GeometryMatrix.identity
     ::assert(geo instanceof ebiten.GeometryMatrix)
     ::assert(geo.a == 1)
@@ -28,22 +28,22 @@ function testGeometryMatrixIdentity() {
     ::assert(geo.ty == 0)
 }
 
-function testGeometryMatrixConcat() {
+function test_update_GeometryMatrix_concat() {
 }
 
-function testGeometryMatrixScale() {
+function test_update_GeometryMatrix_scale() {
 }
 
-function testGeometryMatrixScaleWithCenter() {
+function test_update_GeometryMatrix_scaleWithCenter() {
 }
 
-function testGeometryMatrixRotate() {
+function test_update_GeometryMatrix_rotate() {
 }
 
-function testGeometryMatrixRotateWithCenter() {
+function test_update_GeometryMatrix_rotateWithCenter() {
 }
 
-function testTextureConstructor() {
+function test_update_Texture_constructor() {
     local t = ebiten.Texture(10, 20)
     ::assert(t.isCreated == false)
     try {
@@ -56,6 +56,10 @@ function testTextureConstructor() {
         ::assert(false)
     } catch (e) {
     }
+}
+
+function test_draw_offscrreen(offscreen) {
+    ::assert(offscreen instanceof ebiten.Texture)
 }
 
 class Test {
@@ -71,7 +75,7 @@ class Test {
             if (::type(value) != "function") {
                 continue;
             }
-            if (!::regexp("^test").search(member)) {
+            if (!::regexp("^test_update_").search(member)) {
                 continue;
             }
             ::print("  " + member + "\n")
@@ -86,7 +90,16 @@ class Test {
         if (drawTestExecuted) {
             return
         }
-        ::assert(offscreen instanceof ebiten.Texture)
+        foreach (member, value in ::getroottable()) {
+            if (::type(value) != "function") {
+                continue;
+            }
+            if (!::regexp("^test_draw_").search(member)) {
+                continue;
+            }
+            ::print("  " + member + "\n")
+            value(offscreen)
+        }
         drawTestExecuted = true
     }
     updateTestExecuted = false
