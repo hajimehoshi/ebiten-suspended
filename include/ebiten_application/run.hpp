@@ -1,7 +1,7 @@
 #ifndef EBITEN_APPLICATION_HPP
 #define EBITEN_APPLICATION_HPP
 
-#include "ebiten/frames/native_frame.hpp"
+#include "ebiten_frame/native_frame.hpp"
 #include "ebiten/platform.hpp"
 
 #ifdef EBITEN_MACOSX
@@ -15,7 +15,7 @@
 namespace ebiten_application {
 namespace {
 
-void run(ebiten::frames::native_frame native_frame) {
+void run(ebiten_frame::native_frame native_frame) {
   detail::run(native_frame);
 }
 

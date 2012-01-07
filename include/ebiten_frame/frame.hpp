@@ -1,20 +1,19 @@
-#ifndef EBITEN_FRAMES_FRAME_HPP
-#define EBITEN_FRAMES_FRAME_HPP
+#ifndef EBITEN_FRAME_FRAME_HPP
+#define EBITEN_FRAME_FRAME_HPP
 
 #include "ebiten/platform.hpp"
 
 #ifdef EBITEN_MACOSX
-# include "ebiten/frames/detail/macosx/frame.hpp"
+# include "ebiten_frame/detail/macosx/frame.hpp"
 #endif
 
-#include "ebiten/frames/native_frame.hpp"
+#include "ebiten_frame/native_frame.hpp"
 #include "ebiten/graphics/native_view.hpp"
 #include "ebiten/noncopyable.hpp"
 
-namespace ebiten {
-namespace frames {
+namespace ebiten_frame {
 
-class frame : private noncopyable {
+class frame : private ebiten::noncopyable {
 private:
   std::size_t const width_;
   std::size_t const height_;
@@ -38,7 +37,7 @@ public:
   native_frame() {
     return this->native_frame_;
   }
-  graphics::native_view
+  ebiten::graphics::native_view
   native_view() {
     return detail::get_native_view(this->native_frame_);
   }
@@ -48,7 +47,6 @@ public:
   }
 };
 
-}
 }
 
 #endif

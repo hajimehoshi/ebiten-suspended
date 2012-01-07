@@ -1,9 +1,11 @@
-#ifndef EBITEN_FRAMES_DETAIL_MACOSX_FRAME_MM
-#define EBITEN_FRAMES_DETAIL_MACOSX_FRAME_MM
+#ifndef EBITEN_FRAME_DETAIL_MACOSX_FRAME_MM
+#define EBITEN_FRAME_DETAIL_MACOSX_FRAME_MM
 
 #import <Cocoa/Cocoa.h>
 
+#include "ebiten/graphics/native_view.hpp"
 #include <cstddef>
+#include <type_traits>
 
 @interface EbitenWindow : NSWindow<NSWindowDelegate>
 
@@ -89,8 +91,9 @@ ebiten_frame_detail_generate_native_frame(std::size_t width,
   };
   NSOpenGLPixelFormat* format = [[NSOpenGLPixelFormat alloc]
                                   initWithAttributes:attributes];
-  EbitenOpenGLView* glView = [[EbitenOpenGLView alloc] initWithFrame:rect
-                                                         pixelFormat:format];
+  ebiten::graphics::native_view glView =
+    [[std::remove_pointer<ebiten::graphics::native_view>::type alloc] initWithFrame:rect
+                                                                        pixelFormat:format];
   [window setContentView:glView];
   //[window makeFirstResponder:glView];
 

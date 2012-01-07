@@ -4,7 +4,7 @@
 #include "ebiten/platform.hpp"
 
 #ifdef EBITEN_MACOSX
-# include "macosx_native_view.mm"
+# include "ebiten/graphics/detail/opengl/macosx_native_view.mm"
 #endif
 
 namespace ebiten {

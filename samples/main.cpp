@@ -1,6 +1,6 @@
 #include "ebiten_script/squirrel/game.hpp"
+#include "ebiten_frame/frame.hpp"
 #include "ebiten/ebiten.hpp"
-#include "ebiten/frames/frame.hpp"
 #include "ebiten_application/run.hpp"
 
 int
@@ -27,8 +27,8 @@ main() {
                                &game,
                                std::placeholders::_1,
                                std::placeholders::_2);
-    ebiten::frames::frame frame(640, 480);
-    game.set_terminated_handler(std::bind(&ebiten::frames::frame::close, &frame));
+    ebiten_frame::frame frame(640, 480);
+    game.set_terminated_handler(std::bind(&ebiten_frame::frame::close, &frame));
     ebiten::kernel kernel(game_update,
                           game_draw,
                           320, 240, 2, 60,
