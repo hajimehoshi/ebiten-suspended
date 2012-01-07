@@ -5,7 +5,7 @@
 #include "ebiten/ebiten.hpp"
 #include "ebiten/image_loader.hpp"
 #include "ebiten/frames/frame.hpp"
-#include "ebiten/kernels/application.hpp"
+#include "ebiten_application/run.hpp"
 #include <cstdlib>
 
 int
@@ -30,11 +30,11 @@ main(int argc, char* argv[]) {
                                std::placeholders::_2);
     ebiten::frames::frame frame(640, 480);
     game.set_terminated_handler(std::bind(&ebiten::frames::frame::close, &frame));
-    ebiten::kernels::kernel kernel(game_update,
-                                   game_draw,
-                                   320, 240, 2, 60,
-                                   frame.native_view());
-    ebiten::kernels::application::run(frame.native_frame());
+    ebiten::kernel kernel(game_update,
+                          game_draw,
+                          320, 240, 2, 60,
+                          frame.native_view());
+    ebiten_application::run(frame.native_frame());
   } catch (std::runtime_error const& e) {
     std::cerr << e.what() << std::endl;
     return EXIT_FAILURE;

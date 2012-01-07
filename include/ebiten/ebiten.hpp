@@ -2,6 +2,6 @@
 #define EBITEN_EBITEN_HPP
 
 #include "ebiten/version.hpp"
-#include "ebiten/kernels/kernel.hpp"
+#include "ebiten/kernel.hpp"
 
 #endif

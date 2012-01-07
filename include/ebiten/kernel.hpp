@@ -1,5 +1,5 @@
-#ifndef EBITEN_KERNELS_KERNEL_HPP
-#define EBITEN_KERNELS_KERNEL_HPP
+#ifndef EBITEN_KERNEL_HPP
+#define EBITEN_KERNEL_HPP
 
 #include "ebiten/graphics/device.hpp"
 #include "ebiten/graphics/graphics_context.hpp"
@@ -10,7 +10,6 @@
 #include <functional>
 
 namespace ebiten {
-namespace kernels {
 
 class kernel : private noncopyable {
 private:
@@ -76,7 +75,6 @@ private:
   }
 };
 
-}
 }
 
 #endif
