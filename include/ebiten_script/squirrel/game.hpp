@@ -36,11 +36,20 @@ public:
     ::sq_setforeignptr(this->vm_, reinterpret_cast<SQUserPointer*>(this));
     ::sqstd_seterrorhandlers(this->vm_);
     ::sq_setprintfunc(this->vm_, print_func, error_func);
-    ::sqstd_register_bloblib(this->vm_);
-    ::sqstd_register_iolib(this->vm_);
-    ::sqstd_register_mathlib(this->vm_);
-    ::sqstd_register_stringlib(this->vm_);
-    ::sqstd_register_systemlib(this->vm_);
+    {
+      /*
+       * [Squirrel]
+       * (Load standard libraries)
+       */
+      SQInteger const top = ::sq_gettop(this->vm_);
+      ::sq_pushroottable(this->vm_);
+      ::sqstd_register_bloblib(this->vm_);
+      ::sqstd_register_iolib(this->vm_);
+      ::sqstd_register_mathlib(this->vm_);
+      ::sqstd_register_stringlib(this->vm_);
+      ::sqstd_register_systemlib(this->vm_);
+      ::sq_settop(this->vm_, top);
+    }
     {
       /*
        * [Squirrel]
