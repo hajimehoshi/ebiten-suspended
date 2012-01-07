@@ -46,6 +46,28 @@ function test_update_GeometryMatrix_scaleWithCenter() {
 }
 
 function test_update_GeometryMatrix_rotate() {
+    local theta = 0
+    {
+        local g = ebiten.GeometryMatrix.rotate(theta)
+        ::assert(g instanceof ebiten.GeometryMatrix)
+        ::assert(::abs(g.a - ::cos(theta))  < 0.0001)
+        ::assert(::abs(g.b - -::sin(theta)) < 0.0001)
+        ::assert(::abs(g.c - ::sin(theta))  < 0.0001)
+        ::assert(::abs(g.d - ::cos(theta))  < 0.0001)
+        ::assert(g.tx == 0)
+        ::assert(g.ty == 0)
+    }
+    local theta = 1
+    {
+        local g = ebiten.GeometryMatrix.rotate(theta)
+        ::assert(g instanceof ebiten.GeometryMatrix)
+        ::assert(::abs(g.a - ::cos(theta))  < 0.0001)
+        ::assert(::abs(g.b - -::sin(theta)) < 0.0001)
+        ::assert(::abs(g.c - ::sin(theta))  < 0.0001)
+        ::assert(::abs(g.d - ::cos(theta))  < 0.0001)
+        ::assert(g.tx == 0)
+        ::assert(g.ty == 0)
+    }
 }
 
 function test_update_GeometryMatrix_rotateWithCenter() {

@@ -5,6 +5,7 @@
 #include "ebiten_script/squirrel/util.hpp"
 #include "ebiten/graphics/geometry_matrix.hpp"
 #include <squirrel.h> 
+#include <cmath>
 
 namespace ebiten_script {
 namespace squirrel {
@@ -103,13 +104,42 @@ static_method_scale(HSQUIRRELVM vm) {
        * [Squirrel]
        * identity = ebiten.GeometryMatrix(sx, 0, 0, sy, 0, 0)
        */
-      //SQInteger const top = ::sq_gettop(vm);
       ::sq_pushobject(vm, klass);
       ::sq_pushroottable(vm);
       ::sq_pushfloat(vm, sx);
       ::sq_pushfloat(vm, 0);
       ::sq_pushfloat(vm, 0);
       ::sq_pushfloat(vm, sy);
+      ::sq_pushfloat(vm, 0);
+      ::sq_pushfloat(vm, 0);
+      if (SQ_FAILED(::sq_call(vm, 7, SQTrue, SQTrue))) {
+        throw squirrel_error(vm);
+      }
+    }
+    return 1;
+  } catch (squirrel_error const& e) {
+    return e.sq_value();
+  }
+}
+
+SQInteger
+static_method_rotate(HSQUIRRELVM vm) {
+  try {
+    HSQOBJECT klass;
+    ::sq_getstackobj(vm, 1, &klass);
+    SQFloat theta;
+    ::sq_getfloat(vm, 2, &theta);
+    {
+      /*
+       * [Squirrel]
+       * identity = ebiten.GeometryMatrix(cos(theta), -sin(theta), sin(theta), cos(theta), 0, 0)
+       */
+      ::sq_pushobject(vm, klass);
+      ::sq_pushroottable(vm);
+      ::sq_pushfloat(vm, std::cos(theta));
+      ::sq_pushfloat(vm, -std::sin(theta));
+      ::sq_pushfloat(vm, std::sin(theta));
+      ::sq_pushfloat(vm, std::cos(theta));
       ::sq_pushfloat(vm, 0);
       ::sq_pushfloat(vm, 0);
       if (SQ_FAILED(::sq_call(vm, 7, SQTrue, SQTrue))) {
@@ -131,6 +161,8 @@ initialize(HSQUIRRELVM vm) {
                       "xs", false);
   util::create_method(vm, klass, "scale", static_method_scale,
                       "ynn", true);
+  util::create_method(vm, klass, "rotate", static_method_rotate,
+                      "yn", true);
   HSQOBJECT identity;
   {
     /*
