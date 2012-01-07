@@ -1,3 +1,5 @@
+class Foo {}
+
 function assert(exp) {
     local stackinfo = ::getstackinfos(2)
     if (!exp) {
@@ -7,14 +9,14 @@ function assert(exp) {
 }
 
 function test_update_GeometryMatrix_constructor() {
-    local g = ebiten.GeometryMatrix(3.1, 4.1, 5.9, 2.6, 5.3, 5.7)
+    local g = ebiten.GeometryMatrix(3.1, 4.1, 5.9, 2.6, 5.3, 5.8)
     ::assert(g instanceof ebiten.GeometryMatrix)
     ::assert(g.a == 3.1)
     ::assert(g.b == 4.1)
     ::assert(g.c == 5.9)
     ::assert(g.d == 2.6)
     ::assert(g.tx == 5.3)
-    ::assert(g.ty == 5.7)
+    ::assert(g.ty == 5.8)
 }
 
 function test_update_GeometryMatrix_identity() {
@@ -29,6 +31,57 @@ function test_update_GeometryMatrix_identity() {
 }
 
 function test_update_GeometryMatrix_concat() {
+    local a = ebiten.GeometryMatrix(3.1, 4.1, 5.9, 2.6, 5.3, 5.8)
+    local b = ebiten.GeometryMatrix(9.7, 9.3, 2.3, 8.4, 6.2, 6.4)
+    {
+        local c = a.concat(b)
+        ::assert(::abs(a.a  - 3.1)    < 0.0001)
+        ::assert(::abs(a.b  - 4.1)    < 0.0001)
+        ::assert(::abs(a.c  - 5.9)    < 0.0001)
+        ::assert(::abs(a.d  - 2.6)    < 0.0001)
+        ::assert(::abs(a.tx - 5.3)    < 0.0001)
+        ::assert(::abs(a.ty - 5.8)    < 0.0001)
+        ::assert(::abs(b.a  - 9.7)    < 0.0001)
+        ::assert(::abs(b.b  - 9.3)    < 0.0001)
+        ::assert(::abs(b.c  - 2.3)    < 0.0001)
+        ::assert(::abs(b.d  - 8.4)    < 0.0001)
+        ::assert(::abs(b.tx - 6.2)    < 0.0001)
+        ::assert(::abs(b.ty - 6.4)    < 0.0001)
+        ::assert(::abs(c.a  - 84.94)  < 0.0001)
+        ::assert(::abs(c.b  - 63.95)  < 0.0001)
+        ::assert(::abs(c.c  - 56.69)  < 0.0001)
+        ::assert(::abs(c.d  - 31.27)  < 0.0001)
+        ::assert(::abs(c.tx - 111.55) < 0.0001)
+        ::assert(::abs(c.ty - 67.31)  < 0.0001)
+    }
+    {
+        local c = b.concat(a)
+        ::assert(::abs(a.a  - 3.1)   < 0.0001)
+        ::assert(::abs(a.b  - 4.1)   < 0.0001)
+        ::assert(::abs(a.c  - 5.9)   < 0.0001)
+        ::assert(::abs(a.d  - 2.6)   < 0.0001)
+        ::assert(::abs(a.tx - 5.3)   < 0.0001)
+        ::assert(::abs(a.ty - 5.8)   < 0.0001)
+        ::assert(::abs(b.a  - 9.7)   < 0.0001)
+        ::assert(::abs(b.b  - 9.3)   < 0.0001)
+        ::assert(::abs(b.c  - 2.3)   < 0.0001)
+        ::assert(::abs(b.d  - 8.4)   < 0.0001)
+        ::assert(::abs(b.tx - 6.2)   < 0.0001)
+        ::assert(::abs(b.ty - 6.4)   < 0.0001)
+        ::assert(::abs(c.a  - 39.5)  < 0.0001)
+        ::assert(::abs(c.b  - 63.27) < 0.0001)
+        ::assert(::abs(c.c  - 63.21) < 0.0001)
+        ::assert(::abs(c.d  - 76.71) < 0.0001)
+        ::assert(::abs(c.tx - 50.76) < 0.0001)
+        ::assert(::abs(c.ty - 59.02) < 0.0001)
+    }
+    {
+        try {
+            c = a.concat(Foo())
+            ::assert(false)
+        } catch (e) {
+        }
+    }
 }
 
 function test_update_GeometryMatrix_scale() {
@@ -43,6 +96,7 @@ function test_update_GeometryMatrix_scale() {
 }
 
 function test_update_GeometryMatrix_scaleWithCenter() {
+    
 }
 
 function test_update_GeometryMatrix_rotate() {

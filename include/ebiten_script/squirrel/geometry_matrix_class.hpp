@@ -92,6 +92,35 @@ metamethod_get(HSQUIRRELVM vm) {
 }
 
 SQInteger
+method_concat(HSQUIRRELVM vm) {
+  try {
+    ebiten::graphics::geometry_matrix const& self = get_instance(vm, 1);
+    ebiten::graphics::geometry_matrix const& rhs  = get_instance(vm, 2);
+    ebiten::graphics::geometry_matrix const result = self.concat(rhs);
+    {
+      /*
+       * [Squirrel]
+       * ebiten.GeometryMatrix(result.a, result.b, ...)
+       */
+      ::sq_getclass(vm, 1);
+      ::sq_pushroottable(vm);
+      ::sq_pushfloat(vm, result.a());
+      ::sq_pushfloat(vm, result.b());
+      ::sq_pushfloat(vm, result.c());
+      ::sq_pushfloat(vm, result.d());
+      ::sq_pushfloat(vm, result.tx());
+      ::sq_pushfloat(vm, result.ty());
+      if (SQ_FAILED(::sq_call(vm, 7, SQTrue, SQTrue))) {
+        throw squirrel_error(vm);
+      }
+    }
+    return 1;
+  } catch (squirrel_error const& e) {
+    return e.sq_value();
+  }
+}
+
+SQInteger
 static_method_scale(HSQUIRRELVM vm) {
   try {
     HSQOBJECT klass;
@@ -159,6 +188,8 @@ initialize(HSQUIRRELVM vm) {
                       "xnnnnnn", false);
   util::create_method(vm, klass, "_get", metamethod_get,
                       "xs", false);
+  util::create_method(vm, klass, "concat", method_concat,
+                      "xx", false);
   util::create_method(vm, klass, "scale", static_method_scale,
                       "ynn", true);
   util::create_method(vm, klass, "rotate", static_method_rotate,
