@@ -90,6 +90,38 @@ metamethod_get(HSQUIRRELVM vm) {
   }
 }
 
+SQInteger
+static_method_scale(HSQUIRRELVM vm) {
+  try {
+    HSQOBJECT klass;
+    ::sq_getstackobj(vm, 1, &klass);
+    SQFloat sx, sy;
+    ::sq_getfloat(vm, 2, &sx);
+    ::sq_getfloat(vm, 3, &sy);
+    {
+      /*
+       * [Squirrel]
+       * identity = ebiten.GeometryMatrix(sx, 0, 0, sy, 0, 0)
+       */
+      //SQInteger const top = ::sq_gettop(vm);
+      ::sq_pushobject(vm, klass);
+      ::sq_pushroottable(vm);
+      ::sq_pushfloat(vm, sx);
+      ::sq_pushfloat(vm, 0);
+      ::sq_pushfloat(vm, 0);
+      ::sq_pushfloat(vm, sy);
+      ::sq_pushfloat(vm, 0);
+      ::sq_pushfloat(vm, 0);
+      if (SQ_FAILED(::sq_call(vm, 7, SQTrue, SQTrue))) {
+        throw squirrel_error(vm);
+      }
+    }
+    return 1;
+  } catch (squirrel_error const& e) {
+    return e.sq_value();
+  }
+}
+
 void
 initialize(HSQUIRRELVM vm) {
   HSQOBJECT klass = util::create_class(vm, "ebiten", "GeometryMatrix", type_tag());
@@ -97,6 +129,8 @@ initialize(HSQUIRRELVM vm) {
                       "xnnnnnn", false);
   util::create_method(vm, klass, "_get", metamethod_get,
                       "xs", false);
+  util::create_method(vm, klass, "scale", static_method_scale,
+                      "ynn", true);
   HSQOBJECT identity;
   {
     /*
@@ -106,12 +140,12 @@ initialize(HSQUIRRELVM vm) {
     SQInteger const top = ::sq_gettop(vm);
     ::sq_pushobject(vm, klass);
     ::sq_pushroottable(vm);
-    ::sq_pushinteger(vm, 1);
-    ::sq_pushinteger(vm, 0);
-    ::sq_pushinteger(vm, 0);
-    ::sq_pushinteger(vm, 1);
-    ::sq_pushinteger(vm, 0);
-    ::sq_pushinteger(vm, 0);
+    ::sq_pushfloat(vm, 1);
+    ::sq_pushfloat(vm, 0);
+    ::sq_pushfloat(vm, 0);
+    ::sq_pushfloat(vm, 1);
+    ::sq_pushfloat(vm, 0);
+    ::sq_pushfloat(vm, 0);
     ::sq_call(vm, 7, SQTrue, SQTrue);
     ::sq_getstackobj(vm, -1, &identity);
     ::sq_addref(vm, &identity);

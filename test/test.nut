@@ -7,31 +7,39 @@ function assert(exp) {
 }
 
 function test_update_GeometryMatrix_constructor() {
-    local geo = ebiten.GeometryMatrix(3.1, 4.1, 5.9, 2.6, 5.3, 5.7)
-    ::assert(geo instanceof ebiten.GeometryMatrix)
-    ::assert(geo.a == 3.1)
-    ::assert(geo.b == 4.1)
-    ::assert(geo.c == 5.9)
-    ::assert(geo.d == 2.6)
-    ::assert(geo.tx == 5.3)
-    ::assert(geo.ty == 5.7)
+    local g = ebiten.GeometryMatrix(3.1, 4.1, 5.9, 2.6, 5.3, 5.7)
+    ::assert(g instanceof ebiten.GeometryMatrix)
+    ::assert(g.a == 3.1)
+    ::assert(g.b == 4.1)
+    ::assert(g.c == 5.9)
+    ::assert(g.d == 2.6)
+    ::assert(g.tx == 5.3)
+    ::assert(g.ty == 5.7)
 }
 
 function test_update_GeometryMatrix_identity() {
-    local geo = ebiten.GeometryMatrix.identity
-    ::assert(geo instanceof ebiten.GeometryMatrix)
-    ::assert(geo.a == 1)
-    ::assert(geo.b == 0)
-    ::assert(geo.c == 0)
-    ::assert(geo.d == 1)
-    ::assert(geo.tx == 0)
-    ::assert(geo.ty == 0)
+    local g = ebiten.GeometryMatrix.identity
+    ::assert(g instanceof ebiten.GeometryMatrix)
+    ::assert(g.a == 1)
+    ::assert(g.b == 0)
+    ::assert(g.c == 0)
+    ::assert(g.d == 1)
+    ::assert(g.tx == 0)
+    ::assert(g.ty == 0)
 }
 
 function test_update_GeometryMatrix_concat() {
 }
 
 function test_update_GeometryMatrix_scale() {
+    local g = ebiten.GeometryMatrix.scale(3.1, 4.1)
+    ::assert(g instanceof ebiten.GeometryMatrix)
+    ::assert(g.a == 3.1)
+    ::assert(g.b == 0)
+    ::assert(g.c == 0)
+    ::assert(g.d == 4.1)
+    ::assert(g.tx == 0)
+    ::assert(g.ty == 0)
 }
 
 function test_update_GeometryMatrix_scaleWithCenter() {
@@ -60,6 +68,7 @@ function test_update_Texture_constructor() {
 
 function test_draw_offscrreen(offscreen) {
     ::assert(offscreen instanceof ebiten.Texture)
+    ::assert(offscreen.isCreated)
 }
 
 class Test {
