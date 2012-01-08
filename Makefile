@@ -17,8 +17,8 @@ CXXFLAGS := \
 LDFLAGS := \
 	-framework Cocoa -framework OpenGL -framework QuartzCore
 
-GTEST_DIR    := thrid_party/gtest-1.6.0
-SQUIRREL_DIR := thrid_party/squirrel-3.0.2
+GTEST_DIR    := third_party/gtest-1.6.0
+SQUIRREL_DIR := third_party/squirrel-3.0.2
 
 SRC_EBITEN   := $(shell find include -name "*.hpp" -or -name "*.cpp" -or -name "*.mm")
 SRC_SAMPLES  := $(shell find samples -name "*.hpp" -or -name "*.cpp" -or -name "*.mm")
