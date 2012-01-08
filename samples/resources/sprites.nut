@@ -53,7 +53,7 @@ class Sprites {
         }
         if (sprites == null) {
             // TODO: Modify path!
-            local texture = ebiten.Texture("/Users/hajime/ebiten/samples/test.png")
+            local texture = ebiten.Texture("/Users/hajime/ebiten/samples/resources/test.png")
             this.sprites = []
             for (local i = 0; i < 1000; i++) {
                 this.sprites.push(Sprite(texture, this.screenWidth, this.screenHeight))

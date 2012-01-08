@@ -32,12 +32,11 @@ samples: $(PROG_SAMPLES).app
 test: bin/$(PROG_TEST)
 	./$<
 
-$(PROG_SAMPLES).app: bin/$(PROG_SAMPLES) samples/test.png samples/*.nut
+$(PROG_SAMPLES).app: bin/$(PROG_SAMPLES) samples/resources/*
 	mkdir -p $@/Contents/MacOS
 	cp $< $@/Contents/MacOS
 	mkdir -p $@/Contents/Resources
-	cp samples/test.png $@/Contents/Resources
-	cp samples/*.nut $@/Contents/Resources
+	cp samples/resources/* $@/Contents/Resources
 
 bin/$(PROG_SAMPLES): $(SRC_EBITEN) $(SRC_SAMPLES) lib/libsquirrel.a lib/libsqstdlib.a
 	$(CXX) \

@@ -17,7 +17,7 @@ main() {
     if (ns_path != nil) {
       path = [ns_path UTF8String];
     } else {
-      path = "samples/sprites.nut";
+      path = "samples/resources/sprites.nut";
     }
     ebiten_script::squirrel::game game(path);
     auto game_update = std::bind(&ebiten_script::squirrel::game::update,
