@@ -7,9 +7,13 @@ class Sprite {
         // Texture is not created then!
         this.eSprite.srcWidth  = 32
         this.eSprite.srcHeight = 32
-        // TODO: ebiten.Rand
-        this.eSprite.x = 0
-        this.eSprite.y = 0
+        // TODO: ebiten.rand
+        local regionWidth  = this.screenWidth  - this.eSprite.srcWidth
+        local regionHeight = this.screenHeight - this.eSprite.srcHeight
+        this.eSprite.x = rand() % regionWidth
+        this.eSprite.y = rand() % regionHeight
+        this.vx = (rand() % 2) * 2 - 1
+        this.vy = (rand() % 2) * 2 - 1
     }
     function update() {
         this.eSprite.x += this.vx
