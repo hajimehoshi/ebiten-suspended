@@ -2,7 +2,6 @@ class Sprite {
     constructor(texture, screenWidth, screenHeight) {
         this.screenWidth  = screenWidth
         this.screenHeight = screenHeight
-        // TODO: path
         this.eSprite = ebiten.Sprite(texture)
         // Texture is not created then!
         this.eSprite.srcWidth  = 32
@@ -53,7 +52,8 @@ class Sprites {
             return
         }
         if (sprites == null) {
-            local texture = ebiten.Texture("/Users/hajime/ebiten/test.png")
+            // TODO: Modify path!
+            local texture = ebiten.Texture("/Users/hajime/ebiten/samples/test.png")
             this.sprites = []
             for (local i = 0; i < 1000; i++) {
                 this.sprites.push(Sprite(texture, this.screenWidth, this.screenHeight))
