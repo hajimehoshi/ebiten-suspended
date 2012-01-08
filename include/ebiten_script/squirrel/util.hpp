@@ -78,6 +78,18 @@ create_variable(HSQUIRRELVM const& vm,
   ::sq_settop(vm, top);
 }
 
+void
+create_null_variable(HSQUIRRELVM const& vm,
+                     HSQOBJECT const& klass,
+                     std::string const& variable_name) {
+  SQInteger const top = ::sq_gettop(vm);
+  ::sq_pushobject(vm, klass);
+  ::sq_pushstring(vm, _SC(variable_name.c_str()), -1);
+  ::sq_pushnull(vm);
+  ::sq_newslot(vm, -3, SQFalse);
+  ::sq_settop(vm, top);
+}
+
 }
 }
 

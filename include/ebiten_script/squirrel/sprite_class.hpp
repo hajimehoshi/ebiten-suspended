@@ -28,6 +28,18 @@ method_constructor(HSQUIRRELVM vm) {
   try {
     class texture_holder& texture_holder = texture_class::get_instance(vm, 2);
     sprite* self = new sprite(texture_holder);
+    {
+      /*
+       * [Squirrel]
+       * self.texture_ = texture
+       */
+      SQInteger const top = ::sq_gettop(vm);
+      ::sq_push(vm, 1);
+      ::sq_pushstring(vm, _SC("texture_"), -1);
+      ::sq_push(vm, 2);
+      ::sq_set(vm, -3);
+      ::sq_settop(vm, top);
+    }
     ::sq_setinstanceup(vm, 1, reinterpret_cast<SQUserPointer>(self));
     ::sq_setreleasehook(vm, 1, releasehook);
     return 0;
@@ -157,6 +169,7 @@ initialize(HSQUIRRELVM vm) {
                       "xs", false);
   util::create_method(vm, klass, "_set", metamethod_set,
                       "xs.", false);
+  util::create_null_variable(vm, klass, "texture_");
 }
 
 }
