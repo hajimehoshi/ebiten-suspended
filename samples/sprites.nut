@@ -3,7 +3,6 @@ class Sprite {
         this.screenWidth  = screenWidth
         this.screenHeight = screenHeight
         // TODO: path
-        local texture = texture
         this.eSprite = ebiten.Sprite(texture)
         // Texture is not created then!
         this.eSprite.srcWidth  = 32
@@ -13,8 +12,27 @@ class Sprite {
         this.eSprite.y = 0
     }
     function update() {
-        this.eSprite.x += 1
-        this.eSprite.y += 1
+        throw "h"
+        this.eSprite.x += this.vx
+        this.eSprite.y += this.vy
+        local regionWidth  = this.screenWidth  - this.eSprite.srcWidth
+        local regionHeight = this.screenHeight - this.eSprite.srcHeight
+        if (this.eSprite.x < 0) {
+            this.eSprite.x = - this.eSprite.x
+            this.vx        = -this.vx
+        }
+        if (regionWidth <= this.eSprite.x) {
+            this.eSprite.x = -this.eSprite.x + 2 * regionWidth
+            this.vx        = -this.vx
+        }
+        if (this.eSprite.y < 0) {
+            this.eSprite.y = - this.eSprite.y
+            this.vy        = -this.vy
+        }
+        if (regionHeight <= this.eSprite.y) {
+            this.eSprite.y = -this.eSprite.y + 2 * regionHeight
+            this.vy        = -this.vy
+        }
     }
     function draw(offscreen) {
         offscreen.drawSprite(this.eSprite)
@@ -34,7 +52,7 @@ class Sprites {
         if (sprites == null) {
             local texture = ebiten.Texture("/Users/hajime/ebiten/test.png")
             this.sprites = []
-            for (local i = 0; i < 1000; i++) {
+            for (local i = 0; i < 10; i++) {
                 this.sprites.push(Sprite(texture, this.screenWidth, this.screenHeight))
             }
         }
