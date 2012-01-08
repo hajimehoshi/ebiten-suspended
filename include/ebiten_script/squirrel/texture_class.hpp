@@ -112,10 +112,10 @@ public:
       ::sq_getstring(vm, 2, &method_name_p);
       std::string method_name(method_name_p);
       if (method_name == "isCreated") {
-        ::sq_pushbool(vm, static_cast<bool>(self.is_instantiate()));        
+        ::sq_pushbool(vm, static_cast<bool>(self.is_instantiated()));
         return 1;
       }
-      if (!self.is_instantiate()) {
+      if (!self.is_instantiated()) {
         return ::sq_throwerror(vm, "the texture is not created yet");
       }
       if (method_name == "width") {

@@ -22,7 +22,7 @@ public:
   }
   virtual void
   exec(ebiten::graphics::graphics_context& g) {
-    if (!this->texture_holder_.is_instantiate()) {
+    if (!this->texture_holder_.is_instantiated()) {
       throw std::runtime_error("the texture is not created");
     }
     this->do_exec(g);

@@ -7,6 +7,7 @@
 #include "ebiten/image.hpp"
 #include "ebiten/image_loader.hpp"
 #include "ebiten/noncopyable.hpp"
+#include <cassert>
 #include <memory>
 #include <string>
 
@@ -45,7 +46,7 @@ public:
   }
   void
   instantiate(ebiten::graphics::texture_factory& tf) {
-    if (this->is_instantiate()) {
+    if (this->is_instantiated()) {
       return;
     }
     if (!this->path_.empty()) {
@@ -57,7 +58,7 @@ public:
     }
   }
   bool
-  is_instantiate() const {
+  is_instantiated() const {
     return this->external_ebiten_texture_ || this->ebiten_texture_;
   }
   ebiten::graphics::texture&
@@ -65,6 +66,7 @@ public:
     if (this->external_ebiten_texture_) {
       return *this->external_ebiten_texture_;
     }
+    assert(static_cast<bool>(this->ebiten_texture_));
     return *this->ebiten_texture_;
   }
   ebiten::graphics::texture const&
@@ -72,6 +74,7 @@ public:
     if (this->external_ebiten_texture_) {
       return *this->external_ebiten_texture_;
     }
+    assert(static_cast<bool>(this->ebiten_texture_));
     return *this->ebiten_texture_;
   }
   void

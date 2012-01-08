@@ -47,7 +47,7 @@ public:
   instantiate(ebiten::graphics::texture_factory& tf) {
     for (auto& p : this->map_) {
       texture_holder& t = p.second;
-      if (t.is_instantiate()) {
+      if (t.is_instantiated()) {
         continue;
       }
       t.instantiate(tf);

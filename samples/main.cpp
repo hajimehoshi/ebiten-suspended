@@ -1,7 +1,7 @@
 #include "ebiten_script/squirrel/game.hpp"
 #include "ebiten_frame/frame.hpp"
-#include "ebiten/ebiten.hpp"
 #include "ebiten_application/run.hpp"
+#include "ebiten/ebiten.hpp"
 
 int
 main() {
@@ -12,12 +12,12 @@ main() {
               << "  Commit Modified: " << (ebiten::version::is_commit_modified() ? "Yes" : "No") << std::endl;
 
     NSBundle* bundle = [NSBundle mainBundle];
-    NSString* ns_path = [bundle pathForResource:@"test.nut" ofType:nil];
+    NSString* ns_path = [bundle pathForResource:@"sprites.nut" ofType:nil];
     std::string path;
     if (ns_path != nil) {
       path = [ns_path UTF8String];
     } else {
-      path = "test.nut";
+      path = "samples/sprites.nut";
     }
     ebiten_script::squirrel::game game(path);
     auto game_update = std::bind(&ebiten_script::squirrel::game::update,

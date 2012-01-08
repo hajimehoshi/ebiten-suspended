@@ -96,7 +96,6 @@ function test_update_GeometryMatrix_scale() {
 }
 
 function test_update_GeometryMatrix_scaleWithCenter() {
-    
 }
 
 function test_update_GeometryMatrix_rotate() {

@@ -22,7 +22,9 @@ get_native_view(NSWindow* window) {
 
 static void
 close(NSWindow* window) {
-  [window close];
+  [window performSelectorOnMainThread:@selector(close)
+                           withObject:nil
+                        waitUntilDone:NO];
 }
 
 }
