@@ -1,0 +1,293 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		EFEF2D6E14B9A20F00498699 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFEF2D6D14B9A20F00498699 /* UIKit.framework */; };
+		EFEF2D7014B9A20F00498699 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFEF2D6F14B9A20F00498699 /* Foundation.framework */; };
+		EFEF2D7214B9A20F00498699 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFEF2D7114B9A20F00498699 /* CoreGraphics.framework */; };
+		EFEF2D7814B9A20F00498699 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EFEF2D7614B9A20F00498699 /* InfoPlist.strings */; };
+		EFEF2D7A14B9A20F00498699 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EFEF2D7914B9A20F00498699 /* main.m */; };
+		EFEF2D7E14B9A20F00498699 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EFEF2D7D14B9A20F00498699 /* AppDelegate.m */; };
+		EFEF2D8714B9A2A300498699 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EFEF2D8614B9A2A300498699 /* MainStoryboard.storyboard */; };
+		EFEF2D8914B9A37400498699 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFEF2D8814B9A37400498699 /* GLKit.framework */; };
+		EFEF2D8F14B9A3E200498699 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFEF2D8E14B9A3E200498699 /* OpenGLES.framework */; };
+		EFEF2D9214B9A45D00498699 /* EbitenViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = EFEF2D9114B9A45D00498699 /* EbitenViewController.mm */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		EFEF2D6914B9A20F00498699 /* Ebiten-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Ebiten-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EFEF2D6D14B9A20F00498699 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		EFEF2D6F14B9A20F00498699 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		EFEF2D7114B9A20F00498699 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		EFEF2D7514B9A20F00498699 /* Ebiten-iOS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Ebiten-iOS-Info.plist"; sourceTree = "<group>"; };
+		EFEF2D7714B9A20F00498699 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		EFEF2D7914B9A20F00498699 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		EFEF2D7B14B9A20F00498699 /* Ebiten-iOS-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Ebiten-iOS-Prefix.pch"; sourceTree = "<group>"; };
+		EFEF2D7C14B9A20F00498699 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		EFEF2D7D14B9A20F00498699 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		EFEF2D8614B9A2A300498699 /* MainStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainStoryboard.storyboard; sourceTree = "<group>"; };
+		EFEF2D8814B9A37400498699 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		EFEF2D8E14B9A3E200498699 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		EFEF2D9014B9A45D00498699 /* EbitenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EbitenViewController.h; sourceTree = "<group>"; };
+		EFEF2D9114B9A45D00498699 /* EbitenViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EbitenViewController.mm; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		EFEF2D6614B9A20F00498699 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EFEF2D8F14B9A3E200498699 /* OpenGLES.framework in Frameworks */,
+				EFEF2D8914B9A37400498699 /* GLKit.framework in Frameworks */,
+				EFEF2D6E14B9A20F00498699 /* UIKit.framework in Frameworks */,
+				EFEF2D7014B9A20F00498699 /* Foundation.framework in Frameworks */,
+				EFEF2D7214B9A20F00498699 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		EFEF2D5E14B9A20F00498699 = {
+			isa = PBXGroup;
+			children = (
+				EFEF2D7314B9A20F00498699 /* Ebiten-iOS */,
+				EFEF2D6C14B9A20F00498699 /* Frameworks */,
+				EFEF2D6A14B9A20F00498699 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		EFEF2D6A14B9A20F00498699 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EFEF2D6914B9A20F00498699 /* Ebiten-iOS.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EFEF2D6C14B9A20F00498699 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EFEF2D7114B9A20F00498699 /* CoreGraphics.framework */,
+				EFEF2D6F14B9A20F00498699 /* Foundation.framework */,
+				EFEF2D8814B9A37400498699 /* GLKit.framework */,
+				EFEF2D8E14B9A3E200498699 /* OpenGLES.framework */,
+				EFEF2D6D14B9A20F00498699 /* UIKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EFEF2D7314B9A20F00498699 /* Ebiten-iOS */ = {
+			isa = PBXGroup;
+			children = (
+				EFEF2D8614B9A2A300498699 /* MainStoryboard.storyboard */,
+				EFEF2D9014B9A45D00498699 /* EbitenViewController.h */,
+				EFEF2D9114B9A45D00498699 /* EbitenViewController.mm */,
+				EFEF2D7C14B9A20F00498699 /* AppDelegate.h */,
+				EFEF2D7D14B9A20F00498699 /* AppDelegate.m */,
+				EFEF2D7414B9A20F00498699 /* Supporting Files */,
+			);
+			path = "Ebiten-iOS";
+			sourceTree = "<group>";
+		};
+		EFEF2D7414B9A20F00498699 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				EFEF2D7514B9A20F00498699 /* Ebiten-iOS-Info.plist */,
+				EFEF2D7614B9A20F00498699 /* InfoPlist.strings */,
+				EFEF2D7914B9A20F00498699 /* main.m */,
+				EFEF2D7B14B9A20F00498699 /* Ebiten-iOS-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		EFEF2D6814B9A20F00498699 /* Ebiten-iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EFEF2D8114B9A20F00498699 /* Build configuration list for PBXNativeTarget "Ebiten-iOS" */;
+			buildPhases = (
+				EFEF2D6514B9A20F00498699 /* Sources */,
+				EFEF2D6614B9A20F00498699 /* Frameworks */,
+				EFEF2D6714B9A20F00498699 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Ebiten-iOS";
+			productName = "Ebiten-iOS";
+			productReference = EFEF2D6914B9A20F00498699 /* Ebiten-iOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EFEF2D6014B9A20F00498699 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
+			buildConfigurationList = EFEF2D6314B9A20F00498699 /* Build configuration list for PBXProject "Ebiten-iOS" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = EFEF2D5E14B9A20F00498699;
+			productRefGroup = EFEF2D6A14B9A20F00498699 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EFEF2D6814B9A20F00498699 /* Ebiten-iOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EFEF2D6714B9A20F00498699 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EFEF2D7814B9A20F00498699 /* InfoPlist.strings in Resources */,
+				EFEF2D8714B9A2A300498699 /* MainStoryboard.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EFEF2D6514B9A20F00498699 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EFEF2D7A14B9A20F00498699 /* main.m in Sources */,
+				EFEF2D7E14B9A20F00498699 /* AppDelegate.m in Sources */,
+				EFEF2D9214B9A45D00498699 /* EbitenViewController.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		EFEF2D7614B9A20F00498699 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EFEF2D7714B9A20F00498699 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		EFEF2D7F14B9A20F00498699 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				SDKROOT = iphoneos;
+				USER_HEADER_SEARCH_PATHS = "";
+			};
+			name = Debug;
+		};
+		EFEF2D8014B9A20F00498699 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "compiler-default";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				USER_HEADER_SEARCH_PATHS = "";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		EFEF2D8214B9A20F00498699 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Ebiten-iOS/Ebiten-iOS-Prefix.pch";
+				INFOPLIST_FILE = "Ebiten-iOS/Ebiten-iOS-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "../../third_party/squirrel-3.0.2/include ../../include";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		EFEF2D8314B9A20F00498699 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Ebiten-iOS/Ebiten-iOS-Prefix.pch";
+				INFOPLIST_FILE = "Ebiten-iOS/Ebiten-iOS-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "../../third_party/squirrel-3.0.2/include ../../include";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		EFEF2D6314B9A20F00498699 /* Build configuration list for PBXProject "Ebiten-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EFEF2D7F14B9A20F00498699 /* Debug */,
+				EFEF2D8014B9A20F00498699 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EFEF2D8114B9A20F00498699 /* Build configuration list for PBXNativeTarget "Ebiten-iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EFEF2D8214B9A20F00498699 /* Debug */,
+				EFEF2D8314B9A20F00498699 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EFEF2D6014B9A20F00498699 /* Project object */;
+}
