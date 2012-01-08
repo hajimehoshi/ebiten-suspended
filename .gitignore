@@ -4,6 +4,12 @@
 *.dSYM
 *.o
 .DS_Store
-ebiten
-!include/ebiten
-ebiten_test
+
+# Xcode
+
+*.xcodeproj/*
+!*.xcodeproj/default.*
+!*.xcodeproj/project.pbxproj
+**/*.xcodeproj/*
+!**.xcodeproj/default.*
+!**/*.xcodeproj/project.pbxproj
