@@ -18,7 +18,6 @@
 }
 
 - (CVReturn)getFrameForTime:(CVTimeStamp const*)outputTime;
-- (void)updateFrame;
 - (void)setUpdatingFunc:(std::function<bool()> const&)updatingFunc;
 - (BOOL)acceptsFirstResponder;
 - (BOOL)becomeFirstResponder;
@@ -73,13 +72,8 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
 
 - (CVReturn)getFrameForTime:(CVTimeStamp const*)outputTime {
   (void)outputTime;
-  [self updateFrame];
-  return kCVReturnSuccess;
-}
-
-- (void)updateFrame {
   if (!self->updatingFunc_) {
-    return;
+    return kCVReturnSuccess;;
   }
   NSOpenGLContext* context = [self openGLContext];
   assert(context != nil);
@@ -93,8 +87,9 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
   }
   if (terminated) {
     ::CVDisplayLinkStop(self->displayLink_);
-    return;
+    return kCVReturnSuccess;;
   }
+  return kCVReturnSuccess;
 }
 
 - (void)setUpdatingFunc:(std::function<bool()> const&)updatingFunc {
