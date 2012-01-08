@@ -73,9 +73,7 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
 
 - (CVReturn)getFrameForTime:(CVTimeStamp const*)outputTime {
   (void)outputTime;
-  [self performSelectorOnMainThread:@selector(updateFrame)
-                         withObject:nil
-                      waitUntilDone:NO];
+  [self updateFrame];
   return kCVReturnSuccess;
 }
 

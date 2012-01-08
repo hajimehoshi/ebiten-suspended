@@ -12,7 +12,6 @@ class Sprite {
         this.eSprite.y = 0
     }
     function update() {
-        throw "h"
         this.eSprite.x += this.vx
         this.eSprite.y += this.vy
         local regionWidth  = this.screenWidth  - this.eSprite.srcWidth
@@ -52,7 +51,7 @@ class Sprites {
         if (sprites == null) {
             local texture = ebiten.Texture("/Users/hajime/ebiten/test.png")
             this.sprites = []
-            for (local i = 0; i < 10; i++) {
+            for (local i = 0; i < 10000; i++) {
                 this.sprites.push(Sprite(texture, this.screenWidth, this.screenHeight))
             }
         }
