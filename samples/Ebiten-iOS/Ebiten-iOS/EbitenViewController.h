@@ -10,6 +10,7 @@
 #import <GLKit/GLKit.h>
 #include "ebiten_script/squirrel/game.hpp"
 #include "ebiten/ebiten.hpp"
+#include <memory>
 
 @interface EbitenViewController : GLKViewController {
     ebiten::kernel* _kernel;

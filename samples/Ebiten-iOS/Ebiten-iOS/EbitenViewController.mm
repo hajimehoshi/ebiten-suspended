@@ -14,7 +14,8 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        self->_game = nil;
+        self->_kernel = nil;
     }
     return self;
 }
@@ -36,19 +37,40 @@
 }
 */
 
-/*
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    NSBundle* bundle = [NSBundle mainBundle];
+    NSString* ns_path = [bundle pathForResource:@"sprites.nut" ofType:nil];
+    std::string path([ns_path UTF8String]);
+    self->_game = new ebiten_script::squirrel::game(path);
+    auto game_update = std::bind(&ebiten_script::squirrel::game::update,
+                                 self->_game,
+                                 std::placeholders::_1);
+    auto game_draw = std::bind(&ebiten_script::squirrel::game::draw,
+                               self->_game,
+                               std::placeholders::_1,
+                               std::placeholders::_2);
+    std::size_t const width  = static_cast<std::size_t>(self.view.frame.size.width);
+    std::size_t const height = static_cast<std::size_t>(self.view.frame.size.height);
+    self->_kernel = new ebiten::kernel(game_update,
+                                       game_draw,
+                                       width / 2, height / 2, 2, 60,
+                                       (GLKView*)[self view]);
 }
-*/
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+    if (self->_game) {
+        delete self->_game;
+        self->_game = nil;
+    }
+    if (self->_kernel) {
+        delete self->_kernel;
+        self->_kernel = nil;
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
