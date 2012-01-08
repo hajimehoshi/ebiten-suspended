@@ -7,10 +7,10 @@
 
 @interface EbitenGLKViewDelegate : NSObject<GLKViewDelegate> {
 @private
-  std::function<void()> updatingFunc_;
+  std::function<bool()> updatingFunc_;
 }
 
-- (void)setUpdatingFunc:(std::function<void()> const&)updatingFunc;
+- (void)setUpdatingFunc:(std::function<bool()> const&)updatingFunc;
 - (void)glkView:(GLKView*)view
      drawInRect:(CGRect)rect;
 @end
@@ -18,7 +18,7 @@
 #ifndef EBITEN_WITHOUT_OBJC_IMPL
 @implementation EbitenGLKViewDelegate
 
-- (void)setUpdatingFunc:(std::function<void()> const&)updatingFunc {
+- (void)setUpdatingFunc:(std::function<bool()> const&)updatingFunc {
   self->updatingFunc_ = updatingFunc;
 }
 
@@ -29,6 +29,7 @@
   }
   [EAGLContext setCurrentContext:[view context]];
   self->updatingFunc_();
+  // TODO: Terminating
 }
 
 @end

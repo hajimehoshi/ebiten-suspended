@@ -15,7 +15,7 @@ private:
 public:
   void
   initialize(native_view native_view,
-             std::function<void()> const& updating_func) {
+             std::function<bool()> const& updating_func) {
     GLKView* glkView = native_view;
     this->delegate_ = [[EbitenGLKViewDelegate alloc] init];
     [this->delegate_ setUpdatingFunc: updating_func];
