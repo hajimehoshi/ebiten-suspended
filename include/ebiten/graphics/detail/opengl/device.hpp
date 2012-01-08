@@ -70,32 +70,39 @@ public:
    */
   bool
   update() {
-    if (!this->offscreen_texture_) {
-      this->offscreen_texture_ = this->texture_factory_.create(this->screen_width_,
-                                                               this->screen_height_);
-      assert(static_cast<bool>(this->offscreen_texture_));
+    try {
+      if (!this->offscreen_texture_) {
+        this->offscreen_texture_ = this->texture_factory_.create(this->screen_width_,
+                                                                 this->screen_height_);
+        assert(static_cast<bool>(this->offscreen_texture_));
+      }
+      bool const terminated = this->update_func_(this->texture_factory_);
+      detail::graphics_context& g = this->graphics_context_;
+      ::glEnable(GL_TEXTURE_2D);
+      ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+      ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+      g.set_offscreen(*this->offscreen_texture_);
+      g.clear();
+      this->draw_func_(g, *this->offscreen_texture_);
+      g.flush();
+      ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      g.reset_offscreen();
+      g.clear();
+      geometry_matrix geom_mat;
+      geom_mat.set_a(this->screen_scale_);
+      geom_mat.set_d(this->screen_scale_);
+      g.draw_texture(*this->offscreen_texture_,
+                     0, 0, this->screen_width_, this->screen_height_,
+                     geom_mat, color_matrix::identity());
+      g.flush();
+      return terminated;
+    } catch (std::runtime_error const& e) {
+      // TODO: Logging
+      std::cerr << e.what() << std::endl;
+      std::abort();
     }
-    bool const terminated = this->update_func_(this->texture_factory_);
-    detail::graphics_context& g = this->graphics_context_;
-    ::glEnable(GL_TEXTURE_2D);
-    ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    g.set_offscreen(*this->offscreen_texture_);
-    g.clear();
-    this->draw_func_(g, *this->offscreen_texture_);
-    g.flush();
-    ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    g.reset_offscreen();
-    g.clear();
-    geometry_matrix geom_mat;
-    geom_mat.set_a(this->screen_scale_);
-    geom_mat.set_d(this->screen_scale_);
-    g.draw_texture(*this->offscreen_texture_,
-                   0, 0, this->screen_width_, this->screen_height_,
-                   geom_mat, color_matrix::identity());
-    g.flush();
-    return terminated;
+    return true;
   }
 };
 
