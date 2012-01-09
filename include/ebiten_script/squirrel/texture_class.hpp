@@ -8,6 +8,7 @@
 #include "ebiten_script/texture_holders.hpp"
 #include "ebiten/graphics/graphics_context.hpp"
 #include "ebiten/graphics/texture_factory.hpp"
+#include "ebiten/resources.hpp"
 #include <squirrel.h>
 #include <cassert>
 #include <fstream>
@@ -63,11 +64,11 @@ public:
         if (::sq_gettype(vm, 2) != OT_STRING) {
           return ::sq_throwerror(vm, _SC("invalid argument type"));
         }
-        SQChar const* path;
-        ::sq_getstring(vm, 2, &path);
-        std::ifstream file(path);
-        if (!file) {
-          std::string error_message = std::string("file not found: ") + path;
+        SQChar const* c_path;
+        ::sq_getstring(vm, 2, &c_path);
+        std::string const& path = ebiten::get_resource_path(c_path);
+        if (!std::ifstream(path)) {
+          std::string error_message = std::string("file not found: ") + c_path;
           return ::sq_throwerror(vm, _SC(error_message.c_str()));
         }
         key = get_texture_holders(vm).insert(path);

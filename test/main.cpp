@@ -1,11 +1,12 @@
 #define EBITEN_TEST
 #include <gtest/gtest.h>
 
-#include "ebiten_script/squirrel/game.hpp"
+#include "ebiten_application/run.hpp"
 #include "ebiten_frame/frame.hpp"
+#include "ebiten_script/squirrel/game.hpp"
 #include "ebiten/ebiten.hpp"
 #include "ebiten/image_loader.hpp"
-#include "ebiten_application/run.hpp"
+#include "ebiten/resources.hpp"
 #include <cstdlib>
 
 int
