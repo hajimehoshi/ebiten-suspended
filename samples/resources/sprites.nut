@@ -3,52 +3,54 @@ class Sprite {
         this.texture = texture
         this.screenWidth  = screenWidth
         this.screenHeight = screenHeight
-        this.eSprite = ebiten.Sprite(texture)
         // Texture is not created then!
-        this.eSprite.srcWidth  = 32
-        this.eSprite.srcHeight = 32
+        this.srcWidth  = 32
+        this.srcHeight = 32
         // TODO: ebiten.rand
-        local regionWidth  = this.screenWidth  - this.eSprite.srcWidth
-        local regionHeight = this.screenHeight - this.eSprite.srcHeight
-        this.eSprite.x = rand() % regionWidth
-        this.eSprite.y = rand() % regionHeight
+        local regionWidth  = this.screenWidth  - this.srcWidth
+        local regionHeight = this.screenHeight - this.srcHeight
+        this.x = rand() % regionWidth
+        this.y = rand() % regionHeight
         this.vx = (rand() % 2) * 2 - 1
         this.vy = (rand() % 2) * 2 - 1
     }
     function update() {
-        this.eSprite.x += this.vx
-        this.eSprite.y += this.vy
-        local regionWidth  = this.screenWidth  - this.eSprite.srcWidth
-        local regionHeight = this.screenHeight - this.eSprite.srcHeight
-        if (this.eSprite.x < 0) {
-            this.eSprite.x = - this.eSprite.x
-            this.vx        = -this.vx
+        this.x += this.vx
+        this.y += this.vy
+        local regionWidth  = this.screenWidth  - this.srcWidth
+        local regionHeight = this.screenHeight - this.srcHeight
+        if (this.x < 0) {
+            this.x  = - this.x
+            this.vx = -this.vx
         }
-        if (regionWidth <= this.eSprite.x) {
-            this.eSprite.x = -this.eSprite.x + 2 * regionWidth
-            this.vx        = -this.vx
+        if (regionWidth <= this.x) {
+            this.x  = -this.x + 2 * regionWidth
+            this.vx = -this.vx
         }
-        if (this.eSprite.y < 0) {
-            this.eSprite.y = - this.eSprite.y
-            this.vy        = -this.vy
+        if (this.y < 0) {
+            this.y  = - this.y
+            this.vy = -this.vy
         }
-        if (regionHeight <= this.eSprite.y) {
-            this.eSprite.y = -this.eSprite.y + 2 * regionHeight
-            this.vy        = -this.vy
+        if (regionHeight <= this.y) {
+            this.y  = -this.y + 2 * regionHeight
+            this.vy = -this.vy
         }
     }
     function draw(offscreen) {
         offscreen.drawTexture(this.texture, {
-                x = this.eSprite.x
-                y = this.eSprite.y
-                srcWidth = this.eSprite.srcWidth
-                srcHeight = this.eSprite.srcHeight
+                x = this.x
+                y = this.y
+                srcWidth = this.srcWidth
+                srcHeight = this.srcHeight
             })
     }
     texture = null;
-    eSprite = null
     screenWidth = 0
     screenHeight = 0
+    x = 0
+    y = 0
+    srcWidth = 0
+    srcHeight = 0
     vx = 1
     vy = 1
 }
