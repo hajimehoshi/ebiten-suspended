@@ -79,6 +79,46 @@ public:
   }
 };
 
+class texture_command_draw_texture : public texture_command {
+private:
+  class texture_holder& dst_;
+  int src_x_;
+  int src_y_;
+  int src_width_;
+  int src_height_;
+  ebiten::graphics::geometry_matrix geometry_matrix_;
+  ebiten::graphics::color_matrix color_matrix_;
+public:
+  texture_command_draw_texture(class texture_holder& texture_holder,
+                               class texture_holder& dst,
+                               int src_x,
+                               int src_y,
+                               int src_width,
+                               int src_height,
+                               ebiten::graphics::geometry_matrix const& geometry_matrix,
+                               ebiten::graphics::color_matrix const& color_matrix)
+    : texture_command(texture_holder),
+      dst_(dst),
+      src_x_(src_x),
+      src_y_(src_y),
+      src_width_(src_width),
+      src_height_(src_height),
+      geometry_matrix_(geometry_matrix),
+      color_matrix_(color_matrix) {
+  }
+  void
+  do_exec(ebiten::graphics::graphics_context& g) {
+    g.set_offscreen(this->texture_holder().ebiten_texture());
+    g.draw_texture(this->dst_.ebiten_texture(),
+                   this->src_x_,
+                   this->src_y_,
+                   this->src_width_,
+                   this->src_height_,
+                   this->geometry_matrix_,
+                   this->color_matrix_);
+  }
+};
+
 class texture_command_draw_sprite : public texture_command {
 private:
   sprite const& sprite_;

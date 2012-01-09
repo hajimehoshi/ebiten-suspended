@@ -167,6 +167,101 @@ public:
     }
   }
   static SQInteger
+  method_draw_texture(HSQUIRRELVM vm) {
+    try {
+      class texture_holder& self = get_instance(vm, 1);
+      class texture_holder& dst  = get_instance(vm, 2);
+      SQInteger x = 0;
+      SQInteger y = 0;
+      SQInteger src_x      = 0;
+      SQInteger src_y      = 0;
+      SQInteger src_width  = 0;
+      SQInteger src_height = 0;
+      SQFloat alpha = 1;
+      ebiten::graphics::geometry_matrix geometry_matrix =
+        ebiten::graphics::geometry_matrix::identity();
+      ebiten::graphics::color_matrix color_matrix =
+        ebiten::graphics::color_matrix::identity();
+      {
+        SQInteger const top = ::sq_gettop(vm);
+        ::sq_pushstring(vm, _SC("x"), -1);
+        if (SQ_SUCCEEDED(::sq_get(vm, 3))) {
+          ::sq_getinteger(vm, -1, &x);
+        }
+        ::sq_settop(vm, top);
+      }
+      {
+        SQInteger const top = ::sq_gettop(vm);
+        ::sq_pushstring(vm, _SC("y"), -1);
+        if (SQ_SUCCEEDED(::sq_get(vm, 3))) {
+          ::sq_getinteger(vm, -1, &y);
+        }
+        ::sq_settop(vm, top);
+      }
+      {
+        SQInteger const top = ::sq_gettop(vm);
+        ::sq_pushstring(vm, _SC("srcX"), -1);
+        if (SQ_SUCCEEDED(::sq_get(vm, 3))) {
+          ::sq_getinteger(vm, -1, &src_x);
+        }
+        ::sq_settop(vm, top);
+      }
+      {
+        SQInteger const top = ::sq_gettop(vm);
+        ::sq_pushstring(vm, _SC("srcY"), -1);
+        if (SQ_SUCCEEDED(::sq_get(vm, 3))) {
+          ::sq_getinteger(vm, -1, &src_y);
+        }
+        ::sq_settop(vm, top);
+      }
+      {
+        SQInteger const top = ::sq_gettop(vm);
+        ::sq_pushstring(vm, _SC("srcWidth"), -1);
+        if (SQ_SUCCEEDED(::sq_get(vm, 3))) {
+          ::sq_getinteger(vm, -1, &src_width);
+        }
+        ::sq_settop(vm, top);
+      }
+      {
+        SQInteger const top = ::sq_gettop(vm);
+        ::sq_pushstring(vm, _SC("srcHeight"), -1);
+        if (SQ_SUCCEEDED(::sq_get(vm, 3))) {
+          ::sq_getinteger(vm, -1, &src_height);
+        }
+        ::sq_settop(vm, top);
+      }
+      {
+        SQInteger const top = ::sq_gettop(vm);
+        ::sq_pushstring(vm, _SC("alpha"), -1);
+        if (SQ_SUCCEEDED(::sq_get(vm, 3))) {
+          ::sq_getfloat(vm, -1, &alpha);
+        }
+        ::sq_settop(vm, top);
+      }
+      geometry_matrix.set_tx(geometry_matrix.tx() + x);
+      geometry_matrix.set_ty(geometry_matrix.ty() + y);
+      if (alpha < 1) {
+        ebiten::graphics::color_matrix alpha_mat =
+          ebiten::graphics::color_matrix::identity();
+        alpha_mat.set_element<3, 3>(alpha);
+        color_matrix = color_matrix.concat(alpha_mat);
+      }
+      typedef texture_command_draw_texture tcdt;
+      std::unique_ptr<texture_command> command(new tcdt(self,
+                                                        dst,
+                                                        static_cast<int>(src_x),
+                                                        static_cast<int>(src_y),
+                                                        static_cast<int>(src_width),
+                                                        static_cast<int>(src_height),
+                                                        geometry_matrix,
+                                                        color_matrix));
+      get_texture_holders(vm).add_texture_command(command);
+      return 0;
+    } catch (squirrel_error const& e) {
+      return e.sq_value();
+    }
+  }
+  static SQInteger
   method_draw_sprite(HSQUIRRELVM vm) {
     try {
       texture_holder& self = get_instance(vm, 1);
@@ -204,6 +299,8 @@ public:
                         "x", false);
     util::create_method(vm, klass, "drawRect", method_draw_rect,
                         "xnnnnnnnn", false);
+    util::create_method(vm, klass, "drawTexture", method_draw_texture,
+                        "xxt", false);
     util::create_method(vm, klass, "drawSprite", method_draw_sprite,
                         "xx", false);
     util::create_method(vm, klass, "setTexture_", method_set_texture,

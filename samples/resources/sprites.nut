@@ -1,5 +1,6 @@
 class Sprite {
     constructor(texture, screenWidth, screenHeight) {
+        this.texture = texture
         this.screenWidth  = screenWidth
         this.screenHeight = screenHeight
         this.eSprite = ebiten.Sprite(texture)
@@ -37,8 +38,14 @@ class Sprite {
         }
     }
     function draw(offscreen) {
-        offscreen.drawSprite(this.eSprite)
+        offscreen.drawTexture(this.texture, {
+                x = this.eSprite.x
+                y = this.eSprite.y
+                srcWidth = this.eSprite.srcWidth
+                srcHeight = this.eSprite.srcHeight
+            })
     }
+    texture = null;
     eSprite = null
     screenWidth = 0
     screenHeight = 0

@@ -85,7 +85,8 @@ public:
                        0, 0, this->empty_texture_->width(), this->empty_texture_->height(),
                        geom_mat, color_mat);
   }
-  // TODO: dst_width / dst_height?
+  // TODO: double -> int
+  // TODO: width -> src_width
   void
   draw_texture(texture const& texture,
                double src_x, double src_y, double width, double height,

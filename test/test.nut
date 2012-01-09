@@ -141,6 +141,17 @@ function test_update_Texture_constructor() {
     }
 }
 
+function test_update_sprite() {
+    local s = ebiten.Sprite(ebiten.Texture(10, 20))
+    ::assert(s instanceof ebiten.Sprite)
+    ::assert(s.srcX      == 0)
+    ::assert(s.srcY      == 0)
+    ::assert(s.srcWidth  == 0)
+    ::assert(s.srcHeight == 0)
+    ::assert(s.x         == 0)
+    ::assert(s.y         == 0)
+}
+
 function test_draw_offscrreen(offscreen) {
     ::assert(offscreen instanceof ebiten.Texture)
     ::assert(offscreen.isCreated)
