@@ -15,33 +15,21 @@ Ebiten - A 2D Game Library -
 - Linux (not yet)
 
 
-* How to compile
+* How to use
 
-You need:
-- Xcode 4.2
-- Google Test (optional)
-- OpenGL.framework (Mac OS X)
-- QuartzCore.framework (Mac OS X)
-- GLKit.framework (iOS)
-- OpenGLES.framework (iOS)
+** Mac OS X without Xcode
 
-Do 'make' command to create ebiten.app (a kind of a sample).
+Execute the command 'make'.
 
 
-* Use on the Xcode (4.2)
+** Mac OS X with Xcode
 
-- Add frameworks to 'Linked Frameworks and Libraries'
-  - OpenGL.framework (Mac OS X)
-  - QuartzCore.framework (Mac OS X)
-  - GLKit.framework (iOS)
-  - OpenGLES.framework (iOS)
-- Configure 'Build Setting'
-  - 'User Header Search Path': /path/to/ebiten/src
-  - 'C++ Language Dialect':    C++0x [-std=c++0x]
-  - 'C++ Standard Library':    libc++ (LLVM C++ standard library with C++'0x support)
-- Include 'ebiten/ebiten.hpp' only ONCE in a project.
-- Include 'ebiten/ebiten_without_objc_impl.hpp' if needed.
-(TODO: Add explanations)
+(TODO: Write it)
+
+
+** iOS
+
+See the Xcode project samples/Ebiten-iOS.
 
 
 * License
