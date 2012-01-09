@@ -1,6 +1,7 @@
 #ifndef EBITEN_SCRIPT_SQUIRREL_TEXTURE_CLASS_HPP
 #define EBITEN_SCRIPT_SQUIRREL_TEXTURE_CLASS_HPP
 
+#include "ebiten_script/squirrel/geometry_matrix_class.hpp"
 #include "ebiten_script/squirrel/squirrel_error.hpp"
 #include "ebiten_script/squirrel/util.hpp"
 #include "ebiten_script/texture_holder.hpp"
@@ -227,6 +228,15 @@ public:
         }
         ::sq_settop(vm, top);
       }
+      {
+        SQInteger const top = ::sq_gettop(vm);
+        ::sq_pushstring(vm, _SC("geometryMatrix"), -1);
+        if (SQ_SUCCEEDED(::sq_get(vm, 3))) {
+          geometry_matrix = geometry_matrix_class::get_instance(vm, -1);
+        }
+        ::sq_settop(vm, top);
+      }
+      // TODO: Is that correct?
       geometry_matrix.set_tx(geometry_matrix.tx() + x);
       geometry_matrix.set_ty(geometry_matrix.ty() + y);
       if (alpha < 1) {
