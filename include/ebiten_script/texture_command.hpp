@@ -119,32 +119,6 @@ public:
   }
 };
 
-class texture_command_draw_sprite : public texture_command {
-private:
-  sprite const& sprite_;
-public:
-  texture_command_draw_sprite(class texture_holder& texture_holder,
-                              class sprite const& sprite)
-    : texture_command(texture_holder),
-      sprite_(sprite) {
-  }
-  void
-  do_exec(ebiten::graphics::graphics_context& g) {
-    if (!this->sprite_.is_visible()) {
-      return;
-    }
-    g.set_offscreen(this->texture_holder().ebiten_texture());
-    g.draw_texture(this->sprite_.texture_holder().ebiten_texture(),
-                   this->sprite_.src_x(),
-                   this->sprite_.src_y(),
-                   this->sprite_.src_width(),
-                   this->sprite_.src_height(),
-                   this->sprite_.final_geometry_matrix(),
-                   this->sprite_.final_color_matrix());
-    // TODO: Draw children
-  }
-};
-
 }
 
 #endif

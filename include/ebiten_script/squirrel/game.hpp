@@ -1,9 +1,7 @@
 #ifndef EBITEN_SCRIPT_SQUIRREL_GAME_HPP
 #define EBITEN_SCRIPT_SQUIRREL_GAME_HPP
 
-#include "ebiten_script/sprite.hpp"
 #include "ebiten_script/squirrel/geometry_matrix_class.hpp"
-#include "ebiten_script/squirrel/sprite_class.hpp"
 #include "ebiten_script/squirrel/texture_class.hpp"
 #include "ebiten/graphics/graphics_context.hpp"
 #include "ebiten/graphics/texture_factory.hpp"
@@ -225,7 +223,6 @@ private:
     }
     geometry_matrix_class::initialize(this->vm_);
     texture_class::initialize(this->vm_);
-    sprite_class::initialize(this->vm_);
   }
   void
   create_table(std::string const& name) {

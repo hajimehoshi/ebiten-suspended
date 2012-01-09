@@ -3,7 +3,6 @@
 
 #include "ebiten_script/squirrel/squirrel_error.hpp"
 #include "ebiten_script/squirrel/util.hpp"
-#include "ebiten_script/sprite.hpp"
 #include "ebiten_script/texture_holder.hpp"
 #include "ebiten_script/texture_holders.hpp"
 #include "ebiten/graphics/graphics_context.hpp"
@@ -18,16 +17,6 @@
 
 namespace ebiten_script {
 namespace squirrel {
-
-namespace sprite_class {
-namespace {
-
-sprite&
-get_instance(HSQUIRRELVM, SQInteger);
-
-}
-
-}
 
 class texture_class {
 private:
@@ -262,19 +251,6 @@ public:
     }
   }
   static SQInteger
-  method_draw_sprite(HSQUIRRELVM vm) {
-    try {
-      texture_holder& self = get_instance(vm, 1);
-      class sprite& sprite = sprite_class::get_instance(vm, 2);
-      typedef texture_command_draw_sprite tcds;
-      std::unique_ptr<texture_command> command(new tcds(self, sprite));
-      get_texture_holders(vm).add_texture_command(command);
-      return 0;
-    } catch (squirrel_error const& e) {
-      return e.sq_value();
-    }
-  }
-  static SQInteger
   method_set_texture(HSQUIRRELVM vm) {
     try {
       texture_holder& self = get_instance(vm, 1);
@@ -301,8 +277,6 @@ public:
                         "xnnnnnnnn", false);
     util::create_method(vm, klass, "drawTexture", method_draw_texture,
                         "xxt", false);
-    util::create_method(vm, klass, "drawSprite", method_draw_sprite,
-                        "xx", false);
     util::create_method(vm, klass, "setTexture_", method_set_texture,
                         "xp", false);
   }

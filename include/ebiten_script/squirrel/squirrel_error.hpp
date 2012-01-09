@@ -2,7 +2,8 @@
 #define EBITEN_SCRIPT_SQUIRREL_SQUIRREL_ERROR_HPP
 
 #include <squirrel.h>
-#include <exception>
+#include <stdexcept>
+#include <string>
 
 namespace ebiten_script {
 namespace squirrel {
@@ -11,6 +12,7 @@ class squirrel_error : public std::runtime_error {
 private:
   SQInteger sq_value_;
 public:
+  explicit
   squirrel_error(HSQUIRRELVM vm)
     : std::runtime_error("Squirrel error") {
     ::sq_getlasterror(vm);
