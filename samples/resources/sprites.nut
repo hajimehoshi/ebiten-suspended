@@ -3,12 +3,9 @@ class Sprite {
         this.texture = texture
         this.screenWidth  = screenWidth
         this.screenHeight = screenHeight
-        // Texture is not created then!
-        this.srcWidth  = 32
-        this.srcHeight = 32
         // TODO: ebiten.rand
-        local regionWidth  = this.screenWidth  - this.srcWidth
-        local regionHeight = this.screenHeight - this.srcHeight
+        local regionWidth  = this.screenWidth  - this.texture.width
+        local regionHeight = this.screenHeight - this.texture.height
         this.x = rand() % regionWidth
         this.y = rand() % regionHeight
         this.vx = (rand() % 2) * 2 - 1
@@ -17,8 +14,8 @@ class Sprite {
     function update() {
         this.x += this.vx
         this.y += this.vy
-        local regionWidth  = this.screenWidth  - this.srcWidth
-        local regionHeight = this.screenHeight - this.srcHeight
+        local regionWidth  = this.screenWidth  - this.texture.width
+        local regionHeight = this.screenHeight - this.texture.height
         if (this.x < 0) {
             this.x  = - this.x
             this.vx = -this.vx
@@ -40,8 +37,8 @@ class Sprite {
         offscreen.drawTexture(this.texture, {
                 x = this.x
                 y = this.y
-                srcWidth = this.srcWidth
-                srcHeight = this.srcHeight
+                srcWidth = this.texture.width
+                srcHeight = this.texture.height
             })
     }
     texture = null;
@@ -49,8 +46,6 @@ class Sprite {
     screenHeight = 0
     x = 0
     y = 0
-    srcWidth = 0
-    srcHeight = 0
     vx = 1
     vy = 1
 }

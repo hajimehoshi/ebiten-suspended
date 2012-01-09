@@ -105,14 +105,10 @@ public:
       if (method_name == "isCreated") {
         ::sq_pushbool(vm, static_cast<bool>(self.is_instantiated()));
         return 1;
-      }
-      if (!self.is_instantiated()) {
-        return ::sq_throwerror(vm, "the texture is not created yet");
-      }
-      if (method_name == "width") {
-        ::sq_pushinteger(vm, self.ebiten_texture().width());
+      } else if (method_name == "width") {
+        ::sq_pushinteger(vm, self.width());
       } else if (method_name == "height") {
-        ::sq_pushinteger(vm, self.ebiten_texture().height());
+        ::sq_pushinteger(vm, self.height());
       } else {
         std::string msg = "the index '" + method_name + "' does not exist";
         return ::sq_throwerror(vm, _SC(msg.c_str()));

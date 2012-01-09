@@ -10,6 +10,7 @@
 #include <cassert>
 #include <memory>
 #include <string>
+#include <iostream>
 
 namespace ebiten_script {
 
@@ -19,20 +20,19 @@ private:
   ebiten::graphics::texture_pointer ebiten_texture_;
   // TODO: use weak_ptr?
   ebiten::graphics::texture* external_ebiten_texture_;
-  std::string const path_;
   std::size_t const width_;
   std::size_t const height_;
+  std::unique_ptr<ebiten::image const> image_;
 public:
   explicit
   texture_holder(std::string const& path)
     : external_ebiten_texture_(nullptr),
-      path_(path),
       width_(0),
-      height_(0) {
+      height_(0),
+      image_(ebiten::image_loader::load_png(path)) {
   }
   texture_holder(std::size_t width, std::size_t height)
     : external_ebiten_texture_(nullptr),
-      path_(),
       width_(width),
       height_(height) {
   }
@@ -40,19 +40,18 @@ public:
   texture_holder(texture_holder&& rhs)
     : ebiten_texture_(std::move(rhs.ebiten_texture_)),
       external_ebiten_texture_(std::move(rhs.external_ebiten_texture_)),
-      path_(std::move(rhs.path_)),
       width_(std::move(rhs.width_)),
-      height_(std::move(rhs.height_)) {
+      height_(std::move(rhs.height_)),
+      image_(std::move(rhs.image_)) {
   }
   void
   instantiate(ebiten::graphics::texture_factory& tf) {
     if (this->is_instantiated()) {
       return;
     }
-    if (!this->path_.empty()) {
-      std::unique_ptr<ebiten::image const> image =
-        ebiten::image_loader::load_png(this->path_);
-      this->ebiten_texture_ = tf.from_image(*image);
+    if (this->image_) {
+      this->ebiten_texture_ = tf.from_image(*this->image_);
+      //this->image_.reset();
     } else if (0 < this->width_ && 0 < this->height_) {
       this->ebiten_texture_ = tf.create(this->width_, this->height_);
     }
@@ -80,6 +79,32 @@ public:
   void
   set_ebiten_texture(ebiten::graphics::texture* ebiten_texture) {
     this->external_ebiten_texture_ = ebiten_texture;
+  }
+  std::size_t
+  width() const {
+    if (this->external_ebiten_texture_) {
+      return this->external_ebiten_texture_->width();
+    }
+    if (this->width_) {
+      return this->width_;
+    }
+    if (this->image_) {
+      return this->image_->width();
+    }
+    return 0;
+  }
+  std::size_t
+  height() const {
+    if (this->external_ebiten_texture_) {
+      return this->external_ebiten_texture_->height();
+    }
+    if (this->height_) {
+      return this->height_;
+    }
+    if (this->image_) {
+      return this->image_->height();
+    }
+    return 0;
   }
 };
 
