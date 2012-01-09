@@ -128,14 +128,12 @@ function test_update_GeometryMatrix_rotateWithCenter() {
 
 function test_update_Texture_constructor() {
     local t = ebiten.Texture(10, 20)
-    ::assert(t.isCreated == false)
     ::assert(t.width == 10)
     ::assert(t.height == 20)
 }
 
 function test_draw_offscrreen(offscreen) {
     ::assert(offscreen instanceof ebiten.Texture)
-    ::assert(offscreen.isCreated)
 }
 
 class Test {

@@ -102,10 +102,7 @@ public:
       SQChar const* method_name_p;
       ::sq_getstring(vm, 2, &method_name_p);
       std::string method_name(method_name_p);
-      if (method_name == "isCreated") {
-        ::sq_pushbool(vm, static_cast<bool>(self.is_instantiated()));
-        return 1;
-      } else if (method_name == "width") {
+      if (method_name == "width") {
         ::sq_pushinteger(vm, self.width());
       } else if (method_name == "height") {
         ::sq_pushinteger(vm, self.height());
