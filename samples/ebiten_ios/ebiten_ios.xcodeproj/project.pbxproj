@@ -44,14 +44,14 @@
 /* Begin PBXFileReference section */
 		EFD8509F14B9C68300504763 /* sprites.nut */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sprites.nut; sourceTree = "<group>"; };
 		EFD850A014B9C68300504763 /* test.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = test.png; sourceTree = "<group>"; };
-		EFEF2D6914B9A20F00498699 /* Ebiten-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Ebiten-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EFEF2D6914B9A20F00498699 /* ebiten_ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ebiten_ios.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EFEF2D6D14B9A20F00498699 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		EFEF2D6F14B9A20F00498699 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		EFEF2D7114B9A20F00498699 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		EFEF2D7514B9A20F00498699 /* Ebiten-iOS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Ebiten-iOS-Info.plist"; sourceTree = "<group>"; };
+		EFEF2D7514B9A20F00498699 /* ebiten_ios-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ebiten_ios-Info.plist"; sourceTree = "<group>"; };
 		EFEF2D7714B9A20F00498699 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		EFEF2D7914B9A20F00498699 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		EFEF2D7B14B9A20F00498699 /* Ebiten-iOS-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Ebiten-iOS-Prefix.pch"; sourceTree = "<group>"; };
+		EFEF2D7B14B9A20F00498699 /* ebiten_ios-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ebiten_ios-Prefix.pch"; sourceTree = "<group>"; };
 		EFEF2D7C14B9A20F00498699 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		EFEF2D7D14B9A20F00498699 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		EFEF2D8614B9A2A300498699 /* MainStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainStoryboard.storyboard; sourceTree = "<group>"; };
@@ -136,7 +136,7 @@
 		EFEF2D5E14B9A20F00498699 = {
 			isa = PBXGroup;
 			children = (
-				EFEF2D7314B9A20F00498699 /* Ebiten-iOS */,
+				EFEF2D7314B9A20F00498699 /* ebiten_ios */,
 				EFEF2D6C14B9A20F00498699 /* Frameworks */,
 				EFEF2D6A14B9A20F00498699 /* Products */,
 				EFD8509E14B9C68300504763 /* resources */,
@@ -147,7 +147,7 @@
 		EFEF2D6A14B9A20F00498699 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				EFEF2D6914B9A20F00498699 /* Ebiten-iOS.app */,
+				EFEF2D6914B9A20F00498699 /* ebiten_ios.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -164,7 +164,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		EFEF2D7314B9A20F00498699 /* Ebiten-iOS */ = {
+		EFEF2D7314B9A20F00498699 /* ebiten_ios */ = {
 			isa = PBXGroup;
 			children = (
 				EFEF2D8614B9A2A300498699 /* MainStoryboard.storyboard */,
@@ -174,16 +174,17 @@
 				EFEF2D7D14B9A20F00498699 /* AppDelegate.m */,
 				EFEF2D7414B9A20F00498699 /* Supporting Files */,
 			);
-			path = "Ebiten-iOS";
+			name = ebiten_ios;
+			path = "ebiten_ios";
 			sourceTree = "<group>";
 		};
 		EFEF2D7414B9A20F00498699 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				EFEF2D7514B9A20F00498699 /* Ebiten-iOS-Info.plist */,
+				EFEF2D7514B9A20F00498699 /* ebiten_ios-Info.plist */,
 				EFEF2D7614B9A20F00498699 /* InfoPlist.strings */,
 				EFEF2D7914B9A20F00498699 /* main.m */,
-				EFEF2D7B14B9A20F00498699 /* Ebiten-iOS-Prefix.pch */,
+				EFEF2D7B14B9A20F00498699 /* ebiten_ios-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -269,9 +270,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		EFEF2D6814B9A20F00498699 /* Ebiten-iOS */ = {
+		EFEF2D6814B9A20F00498699 /* ebiten_ios */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = EFEF2D8114B9A20F00498699 /* Build configuration list for PBXNativeTarget "Ebiten-iOS" */;
+			buildConfigurationList = EFEF2D8114B9A20F00498699 /* Build configuration list for PBXNativeTarget "ebiten_ios" */;
 			buildPhases = (
 				EFEF2D6514B9A20F00498699 /* Sources */,
 				EFEF2D6614B9A20F00498699 /* Frameworks */,
@@ -281,9 +282,9 @@
 			);
 			dependencies = (
 			);
-			name = "Ebiten-iOS";
-			productName = "Ebiten-iOS";
-			productReference = EFEF2D6914B9A20F00498699 /* Ebiten-iOS.app */;
+			name = ebiten_ios;
+			productName = "ebiten_ios";
+			productReference = EFEF2D6914B9A20F00498699 /* ebiten_ios.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -294,7 +295,7 @@
 			attributes = {
 				LastUpgradeCheck = 0420;
 			};
-			buildConfigurationList = EFEF2D6314B9A20F00498699 /* Build configuration list for PBXProject "Ebiten-iOS" */;
+			buildConfigurationList = EFEF2D6314B9A20F00498699 /* Build configuration list for PBXProject "ebiten_ios" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -306,7 +307,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				EFEF2D6814B9A20F00498699 /* Ebiten-iOS */,
+				EFEF2D6814B9A20F00498699 /* ebiten_ios */,
 			);
 		};
 /* End PBXProject section */
@@ -421,11 +422,11 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Ebiten-iOS/Ebiten-iOS-Prefix.pch";
+				GCC_PREFIX_HEADER = "ebiten_ios/ebiten_ios-Prefix.pch";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				HEADER_SEARCH_PATHS = "../../third_party/squirrel-3.0.2/include";
-				INFOPLIST_FILE = "Ebiten-iOS/Ebiten-iOS-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "ebiten_ios/ebiten_ios-Info.plist";
+				PRODUCT_NAME = ebiten_ios;
 				USER_HEADER_SEARCH_PATHS = ../../include;
 				WRAPPER_EXTENSION = app;
 			};
@@ -437,11 +438,11 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Ebiten-iOS/Ebiten-iOS-Prefix.pch";
+				GCC_PREFIX_HEADER = "ebiten_ios/ebiten_ios-Prefix.pch";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				HEADER_SEARCH_PATHS = "../../third_party/squirrel-3.0.2/include";
-				INFOPLIST_FILE = "Ebiten-iOS/Ebiten-iOS-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				INFOPLIST_FILE = "ebiten_ios/ebiten_ios-Info.plist";
+				PRODUCT_NAME = ebiten_ios;
 				USER_HEADER_SEARCH_PATHS = ../../include;
 				WRAPPER_EXTENSION = app;
 			};
@@ -450,7 +451,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		EFEF2D6314B9A20F00498699 /* Build configuration list for PBXProject "Ebiten-iOS" */ = {
+		EFEF2D6314B9A20F00498699 /* Build configuration list for PBXProject "ebiten_ios" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EFEF2D7F14B9A20F00498699 /* Debug */,
@@ -459,7 +460,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		EFEF2D8114B9A20F00498699 /* Build configuration list for PBXNativeTarget "Ebiten-iOS" */ = {
+		EFEF2D8114B9A20F00498699 /* Build configuration list for PBXNativeTarget "ebiten_ios" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EFEF2D8214B9A20F00498699 /* Debug */,
