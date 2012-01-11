@@ -1,10 +1,20 @@
 class Foo {}
 
+class AssertFailure {
+    constructor(message) {
+        this.message = message
+    }
+    function _tostring() {
+        return this.message
+    }
+    message = null
+}
+
 function assert(exp) {
     local stackinfo = ::getstackinfos(2)
     if (!exp) {
         ::print("line " + stackinfo.line + " failed!")
-        throw "test failed"
+        throw AssertFailure("test failed\n")
     }
 }
 
@@ -80,6 +90,9 @@ function test_update_GeometryMatrix_concat() {
             c = a.concat(Foo())
             ::assert(false)
         } catch (e) {
+            if (e instanceof AssertFailure) {
+                throw e
+            }
         }
     }
 }
