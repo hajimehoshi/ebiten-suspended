@@ -139,6 +139,10 @@ function test_update_GeometryMatrix_rotate() {
 function test_update_GeometryMatrix_rotateWithCenter() {
 }
 
+function test_update_ColorMatrix_constructor() {
+    // TODO
+}
+
 function test_update_Texture_constructor() {
     local t = ebiten.Texture(10, 20)
     ::assert(t.width == 10)
@@ -168,7 +172,6 @@ class Test {
             ::print("  " + member + "\n")
             value()
         }
-        // TODO: Color matrix test
         // TODO: Another texture test 
         updateTestExecuted = true
     }
