@@ -1,10 +1,28 @@
 #ifndef EBITEN_SCRIPT_SQUIRREL_UTIL_HPP
 #define EBITEN_SCRIPT_SQUIRREL_UTIL_HPP
 
+#include "ebiten/noncopyable.hpp"
+#include <squirrel.h>
+
 namespace ebiten_script {
 namespace squirrel {
 
 namespace util {
+
+class stack_restorer : private ebiten::noncopyable {
+private:
+  HSQUIRRELVM vm_;
+  SQInteger const top_;
+public:
+  stack_restorer(HSQUIRRELVM vm)
+    : vm_(vm),
+      top_(::sq_gettop(vm)) {
+  }
+  ~stack_restorer() {
+    ::sq_settop(this->vm_, this->top_);
+  }
+};
+
 namespace {
 
 void
@@ -13,7 +31,7 @@ create_function(HSQUIRRELVM const& vm,
                 std::string const& method_name,
                 SQFUNCTION const& func,
                 std::string const& type_mask) {
-  SQInteger const top = ::sq_gettop(vm);
+  stack_restorer r(vm);
   ::sq_pushroottable(vm);
   ::sq_pushstring(vm, _SC(namespace_name.c_str()), -1);
   ::sq_get(vm, -2);
@@ -24,7 +42,6 @@ create_function(HSQUIRRELVM const& vm,
     ::sq_setparamscheck(vm, type_mask.size(), _SC(type_mask.c_str()));
   }
   ::sq_newslot(vm, -3, SQFalse);
-  ::sq_settop(vm, top);
 }
 
 HSQOBJECT
@@ -32,7 +49,7 @@ create_class(HSQUIRRELVM const& vm,
              std::string const& namespace_name,
              std::string const& class_name,
              SQUserPointer const& type_tag) {
-  SQInteger const top = ::sq_gettop(vm);
+  stack_restorer r(vm);
   ::sq_pushroottable(vm);
   ::sq_pushstring(vm, _SC(namespace_name.c_str()), -1);
   ::sq_get(vm, -2);
@@ -42,7 +59,6 @@ create_class(HSQUIRRELVM const& vm,
   HSQOBJECT klass;
   ::sq_getstackobj(vm, -1, &klass);
   ::sq_newslot(vm, -3, SQFalse);
-  ::sq_settop(vm, top);
   return klass;
 }
 
@@ -53,7 +69,7 @@ create_method(HSQUIRRELVM const& vm,
               SQFUNCTION const& func,
               std::string const& type_mask,
               bool is_static) {
-  SQInteger const top = ::sq_gettop(vm);
+  stack_restorer r(vm);
   ::sq_pushobject(vm, klass);
   ::sq_pushstring(vm, _SC(method_name.c_str()), -1);
   ::sq_newclosure(vm, func, 0);
@@ -61,7 +77,6 @@ create_method(HSQUIRRELVM const& vm,
     ::sq_setparamscheck(vm, type_mask.size(), _SC(type_mask.c_str()));
   }
   ::sq_newslot(vm, -3, is_static);
-  ::sq_settop(vm, top);
 }
 
 void
@@ -70,24 +85,22 @@ create_variable(HSQUIRRELVM const& vm,
                 std::string const& variable_name,
                 HSQOBJECT const& value,
                 bool is_static) {
-  SQInteger const top = ::sq_gettop(vm);
+  stack_restorer r(vm);
   ::sq_pushobject(vm, klass);
   ::sq_pushstring(vm, _SC(variable_name.c_str()), -1);
   ::sq_pushobject(vm, value);
   ::sq_newslot(vm, -3, is_static);
-  ::sq_settop(vm, top);
 }
 
 void
 create_null_variable(HSQUIRRELVM const& vm,
                      HSQOBJECT const& klass,
                      std::string const& variable_name) {
-  SQInteger const top = ::sq_gettop(vm);
+  stack_restorer r(vm);
   ::sq_pushobject(vm, klass);
   ::sq_pushstring(vm, _SC(variable_name.c_str()), -1);
   ::sq_pushnull(vm);
   ::sq_newslot(vm, -3, SQFalse);
-  ::sq_settop(vm, top);
 }
 
 }

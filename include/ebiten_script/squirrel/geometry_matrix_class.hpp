@@ -200,7 +200,7 @@ initialize(HSQUIRRELVM vm) {
      * [Squirrel]
      * identity = ebiten.GeometryMatrix(1, 0, 0, 1, 0, 0)
      */
-    SQInteger const top = ::sq_gettop(vm);
+    util::stack_restorer r(vm);
     ::sq_pushobject(vm, klass);
     ::sq_pushroottable(vm);
     ::sq_pushfloat(vm, 1);
@@ -212,7 +212,6 @@ initialize(HSQUIRRELVM vm) {
     ::sq_call(vm, 7, SQTrue, SQTrue);
     ::sq_getstackobj(vm, -1, &identity);
     ::sq_addref(vm, &identity);
-    ::sq_settop(vm, top);
   }
   util::create_variable(vm, klass, "identity", identity, true);
 }

@@ -43,27 +43,25 @@ public:
        * [Squirrel]
        * (Load standard libraries)
        */
-      SQInteger const top = ::sq_gettop(this->vm_);
+      util::stack_restorer r(this->vm_);
       ::sq_pushroottable(this->vm_);
       ::sqstd_register_bloblib(this->vm_);
       ::sqstd_register_iolib(this->vm_);
       ::sqstd_register_mathlib(this->vm_);
       ::sqstd_register_stringlib(this->vm_);
       ::sqstd_register_systemlib(this->vm_);
-      ::sq_settop(this->vm_, top);
     }
     {
-      SQInteger const top = ::sq_gettop(this->vm_);
+      util::stack_restorer r(this->vm_);
       ::sq_pushroottable(this->vm_);
       this->initialize_ebiten_classes();
-      ::sq_settop(this->vm_, top);
     }
     {
       /*
        * [Squirrel]
        * input_ = ::ebiten.Input()
        */
-      SQInteger const top = ::sq_gettop(this->vm_);
+      util::stack_restorer r(this->vm_);
       ::sq_pushroottable(this->vm_);
       ::sq_pushstring(this->vm_, _SC("ebiten"), -1);
       ::sq_get(this->vm_, -2);
@@ -77,14 +75,13 @@ public:
         throw squirrel_error(this->vm_);
       }
       ::sq_addref(this->vm_, &this->input_);
-      ::sq_settop(this->vm_, top);
     }
     {
       /*
        * [Squirrel]
        * system_ = ::ebiten.System(input_)
        */
-      SQInteger const top = ::sq_gettop(this->vm_);
+      util::stack_restorer r(this->vm_);
       ::sq_pushroottable(this->vm_);
       ::sq_pushstring(this->vm_, _SC("ebiten"), -1);
       ::sq_get(this->vm_, -2);
@@ -99,14 +96,13 @@ public:
         throw squirrel_error(this->vm_);
       }
       ::sq_addref(this->vm_, &this->system_);
-      ::sq_settop(this->vm_, top);
     }
     {
       /*
        * [Squirrel]
        * game = ::dofile(filename)
        */
-      SQInteger const top = ::sq_gettop(this->vm_);
+      util::stack_restorer r(this->vm_);
       ::sq_pushroottable(this->vm_);
       ::sqstd_dofile(this->vm_,
                      _SC(filename.c_str()),
@@ -117,7 +113,6 @@ public:
       }
       ::sq_getstackobj(this->vm_, -1, &this->game_);
       ::sq_addref(this->vm_, &this->game_);
-      ::sq_settop(this->vm_, top);
     }
   }
   virtual
@@ -134,8 +129,7 @@ public:
        * [Squirrel]
        * game.update(system_)
        */
-      ::sq_reseterror(this->vm_);
-      SQInteger const top = ::sq_gettop(this->vm_);
+      util::stack_restorer r(this->vm_);
       ::sq_pushobject(this->vm_, this->game_);
       ::sq_pushstring(this->vm_, _SC("update"), -1);
       ::sq_get(this->vm_, -2);
@@ -144,7 +138,6 @@ public:
       if (SQ_FAILED(::sq_call(this->vm_, 2, SQFalse, SQTrue))) {
         throw std::runtime_error("Squirrel error happened");
       }
-      ::sq_settop(this->vm_, top);
     }
     if (this->is_terminated_) {
       return true;
@@ -166,7 +159,7 @@ public:
        * [Squirrel]
        * main_offscreen_texture = ebiten.Texture(0, 0)
        */
-      SQInteger const top = ::sq_gettop(this->vm_);
+      util::stack_restorer r(this->vm_);
       ::sq_pushroottable(this->vm_);
       ::sq_pushstring(this->vm_, _SC("ebiten"), -1);
       if (SQ_FAILED(::sq_get(this->vm_, -2))) {
@@ -185,14 +178,13 @@ public:
       assert(::sq_gettype(this->vm_, -1) == OT_INSTANCE);
       ::sq_getstackobj(this->vm_, -1, &main_offscreen_texture);
       ::sq_addref(this->vm_, &main_offscreen_texture);
-      ::sq_settop(this->vm_, top);
     }
     {
       /*
        * [Squirrel]
        * main_offscreen_texture.setTexture_(main_offscreen)
        */
-      SQInteger const top = ::sq_gettop(this->vm_);
+      util::stack_restorer r(this->vm_);
       ::sq_pushobject(this->vm_, main_offscreen_texture);
       ::sq_pushstring(this->vm_, _SC("setTexture_"), -1);
       ::sq_get(this->vm_, -2);
@@ -200,14 +192,13 @@ public:
       SQUserPointer p = reinterpret_cast<SQUserPointer>(&main_offscreen);
       ::sq_pushuserpointer(this->vm_, p);
       ::sq_call(this->vm_, 2, SQFalse, SQTrue);
-      ::sq_settop(this->vm_, top);
     }
     {
       /*
        * [Squirrel]
        * game.draw(main_offscreen_texture)
        */
-      SQInteger const top = ::sq_gettop(this->vm_);
+      util::stack_restorer r(this->vm_);
       ::sq_pushobject(this->vm_, this->game_);
       ::sq_pushstring(this->vm_, _SC("draw"), -1);
       ::sq_get(this->vm_, -2);
@@ -216,7 +207,6 @@ public:
       if (SQ_FAILED(::sq_call(this->vm_, 2, SQFalse, SQTrue))) {
         throw std::runtime_error("Squirrel error happened");
       }
-      ::sq_settop(this->vm_, top);
     }
     texture_class::flush_texture_commands(this->vm_, g);
     {
@@ -224,7 +214,7 @@ public:
        * [Squirrel]
        * main_offscreen_texture.setTexture_(nullptr)
        */
-      SQInteger const top = ::sq_gettop(this->vm_);
+      util::stack_restorer r(this->vm_);
       ::sq_pushobject(this->vm_, main_offscreen_texture);
       ::sq_pushstring(this->vm_, _SC("setTexture_"), -1);
       ::sq_get(this->vm_, -2);
@@ -232,7 +222,6 @@ public:
       SQUserPointer p = static_cast<SQUserPointer>(nullptr);
       ::sq_pushuserpointer(this->vm_, p);
       ::sq_call(this->vm_, 2, SQFalse, SQTrue);
-      ::sq_settop(this->vm_, top);
     }
     {
       /*
@@ -281,12 +270,11 @@ private:
   }
   void
   create_table(std::string const& name) {
-    SQInteger const top = ::sq_gettop(this->vm_);
+    util::stack_restorer r(this->vm_);
     ::sq_pushroottable(this->vm_);
     ::sq_pushstring(this->vm_, _SC(name.c_str()), -1);
     ::sq_newtable(this->vm_);
     ::sq_newslot(this->vm_, -3, SQFalse);
-    ::sq_settop(this->vm_, top);
   }
   static SQInteger
   method_terminate(HSQUIRRELVM vm) {

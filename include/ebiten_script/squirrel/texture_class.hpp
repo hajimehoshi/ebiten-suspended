@@ -166,68 +166,60 @@ public:
       ebiten::graphics::color_matrix color_matrix =
         ebiten::graphics::color_matrix::identity();
       {
-        SQInteger const top = ::sq_gettop(vm);
+        util::stack_restorer r(vm);
         ::sq_pushstring(vm, _SC("x"), -1);
         if (SQ_SUCCEEDED(::sq_get(vm, 3))) {
           ::sq_getinteger(vm, -1, &x);
         }
-        ::sq_settop(vm, top);
       }
       {
-        SQInteger const top = ::sq_gettop(vm);
+        util::stack_restorer r(vm);
         ::sq_pushstring(vm, _SC("y"), -1);
         if (SQ_SUCCEEDED(::sq_get(vm, 3))) {
           ::sq_getinteger(vm, -1, &y);
         }
-        ::sq_settop(vm, top);
       }
       {
-        SQInteger const top = ::sq_gettop(vm);
+        util::stack_restorer r(vm);
         ::sq_pushstring(vm, _SC("srcX"), -1);
         if (SQ_SUCCEEDED(::sq_get(vm, 3))) {
           ::sq_getinteger(vm, -1, &src_x);
         }
-        ::sq_settop(vm, top);
       }
       {
-        SQInteger const top = ::sq_gettop(vm);
+        util::stack_restorer r(vm);
         ::sq_pushstring(vm, _SC("srcY"), -1);
         if (SQ_SUCCEEDED(::sq_get(vm, 3))) {
           ::sq_getinteger(vm, -1, &src_y);
         }
-        ::sq_settop(vm, top);
       }
       {
-        SQInteger const top = ::sq_gettop(vm);
+        util::stack_restorer r(vm);
         ::sq_pushstring(vm, _SC("srcWidth"), -1);
         if (SQ_SUCCEEDED(::sq_get(vm, 3))) {
           ::sq_getinteger(vm, -1, &src_width);
         }
-        ::sq_settop(vm, top);
       }
       {
-        SQInteger const top = ::sq_gettop(vm);
+        util::stack_restorer r(vm);
         ::sq_pushstring(vm, _SC("srcHeight"), -1);
         if (SQ_SUCCEEDED(::sq_get(vm, 3))) {
           ::sq_getinteger(vm, -1, &src_height);
         }
-        ::sq_settop(vm, top);
       }
       {
-        SQInteger const top = ::sq_gettop(vm);
+        util::stack_restorer r(vm);
         ::sq_pushstring(vm, _SC("alpha"), -1);
         if (SQ_SUCCEEDED(::sq_get(vm, 3))) {
           ::sq_getfloat(vm, -1, &alpha);
         }
-        ::sq_settop(vm, top);
       }
       {
-        SQInteger const top = ::sq_gettop(vm);
+        util::stack_restorer r(vm);
         ::sq_pushstring(vm, _SC("geometryMatrix"), -1);
         if (SQ_SUCCEEDED(::sq_get(vm, 3))) {
           geometry_matrix = geometry_matrix_class::get_instance(vm, -1);
         }
-        ::sq_settop(vm, top);
       }
       // TODO: Is that correct?
       geometry_matrix.set_tx(geometry_matrix.tx() + x);
