@@ -3,6 +3,7 @@
 
 #include "ebiten_script/squirrel/geometry_matrix_class.hpp"
 #include "ebiten_script/squirrel/texture_class.hpp"
+#include "ebiten_script/squirrel/system_class.hpp"
 #include "ebiten/graphics/graphics_context.hpp"
 #include "ebiten/graphics/texture_factory.hpp"
 #include "ebiten/noncopyable.hpp"
@@ -24,6 +25,7 @@ namespace squirrel {
 class game : private ebiten::noncopyable {
 private:
   HSQUIRRELVM const vm_;
+  HSQOBJECT system_;
   HSQOBJECT game_;
   bool is_terminated_;
   std::function<void()> terminated_handler_;
@@ -49,12 +51,36 @@ public:
       ::sq_settop(this->vm_, top);
     }
     {
+      SQInteger const top = ::sq_gettop(this->vm_);
+      ::sq_pushroottable(this->vm_);
+      this->initialize_ebiten_classes();
+      ::sq_settop(this->vm_, top);
+    }
+    {
+      /*
+       * [Squirrel]
+       * system = ::ebiten.System()
+       */
+      SQInteger const top = ::sq_gettop(this->vm_);
+      ::sq_pushroottable(this->vm_);
+      ::sq_pushstring(this->vm_, "ebiten", -1);
+      ::sq_get(this->vm_, -2);
+      ::sq_pushstring(this->vm_, "System", -1);
+      ::sq_get(this->vm_, -2);
+      ::sq_pushroottable(this->vm_);
+      ::sq_call(this->vm_, 1, SQTrue, SQTrue);
+      if (SQ_FAILED(::sq_getstackobj(this->vm_, -1, &this->system_))) {
+        assert(false);
+      }
+      ::sq_addref(this->vm_, &this->system_);
+      ::sq_settop(this->vm_, top);
+    }
+    {
       /*
        * [Squirrel]
        * game = ::dofile(filename)
        */
       SQInteger const top = ::sq_gettop(this->vm_);
-      this->initialize_ebiten_classes();
       ::sq_pushroottable(this->vm_);
       ::sqstd_dofile(this->vm_,
                      _SC(filename.c_str()),
@@ -88,7 +114,8 @@ public:
       ::sq_pushstring(this->vm_, _SC("update"), -1);
       ::sq_get(this->vm_, -2);
       ::sq_pushobject(this->vm_, this->game_);
-      if (SQ_FAILED(::sq_call(this->vm_, 1, SQFalse, SQTrue))) {
+      ::sq_pushobject(this->vm_, this->system_);
+      if (SQ_FAILED(::sq_call(this->vm_, 2, SQFalse, SQTrue))) {
         throw std::runtime_error("Squirrel error happened");
       }
       ::sq_settop(this->vm_, top);
@@ -223,6 +250,7 @@ private:
     }
     geometry_matrix_class::initialize(this->vm_);
     texture_class::initialize(this->vm_);
+    system_class::initialize(this->vm_);
   }
   void
   create_table(std::string const& name) {

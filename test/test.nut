@@ -18,7 +18,11 @@ function assert(exp) {
     }
 }
 
-function test_update_GeometryMatrix_constructor() {
+function test_update_system(system) {
+    ::assert(system instanceof ebiten.System);
+}
+
+function test_update_GeometryMatrix_constructor(system) {
     local g = ebiten.GeometryMatrix(3.1, 4.1, 5.9, 2.6, 5.3, 5.8)
     ::assert(g instanceof ebiten.GeometryMatrix)
     ::assert(g.a == 3.1)
@@ -29,7 +33,7 @@ function test_update_GeometryMatrix_constructor() {
     ::assert(g.ty == 5.8)
 }
 
-function test_update_GeometryMatrix_identity() {
+function test_update_GeometryMatrix_identity(system) {
     local g = ebiten.GeometryMatrix.identity
     ::assert(g instanceof ebiten.GeometryMatrix)
     ::assert(g.a == 1)
@@ -40,7 +44,7 @@ function test_update_GeometryMatrix_identity() {
     ::assert(g.ty == 0)
 }
 
-function test_update_GeometryMatrix_concat() {
+function test_update_GeometryMatrix_concat(system) {
     local a = ebiten.GeometryMatrix(3.1, 4.1, 5.9, 2.6, 5.3, 5.8)
     local b = ebiten.GeometryMatrix(9.7, 9.3, 2.3, 8.4, 6.2, 6.4)
     {
@@ -97,7 +101,7 @@ function test_update_GeometryMatrix_concat() {
     }
 }
 
-function test_update_GeometryMatrix_scale() {
+function test_update_GeometryMatrix_scale(system) {
     local g = ebiten.GeometryMatrix.scale(3.1, 4.1)
     ::assert(g instanceof ebiten.GeometryMatrix)
     ::assert(g.a == 3.1)
@@ -108,10 +112,10 @@ function test_update_GeometryMatrix_scale() {
     ::assert(g.ty == 0)
 }
 
-function test_update_GeometryMatrix_scaleWithCenter() {
+function test_update_GeometryMatrix_scaleWithCenter(system) {
 }
 
-function test_update_GeometryMatrix_rotate() {
+function test_update_GeometryMatrix_rotate(system) {
     local theta = 0
     {
         local g = ebiten.GeometryMatrix.rotate(theta)
@@ -136,14 +140,14 @@ function test_update_GeometryMatrix_rotate() {
     }
 }
 
-function test_update_GeometryMatrix_rotateWithCenter() {
+function test_update_GeometryMatrix_rotateWithCenter(system) {
 }
 
-function test_update_ColorMatrix_constructor() {
+function test_update_ColorMatrix_constructor(system) {
     // TODO
 }
 
-function test_update_Texture_constructor() {
+function test_update_Texture_constructor(system) {
     local t = ebiten.Texture(10, 20)
     ::assert(t.width == 10)
     ::assert(t.height == 20)
@@ -154,7 +158,7 @@ function test_draw_offscrreen(offscreen) {
 }
 
 class Test {
-    function update() {
+    function update(system) {
         if (updateTestExecuted && drawTestExecuted) {
             ::print("Squirrel Test End\n")
             ebiten.terminate()
@@ -170,7 +174,7 @@ class Test {
                 continue;
             }
             ::print("  " + member + "\n")
-            value()
+            value(system)
         }
         // TODO: Another texture test 
         updateTestExecuted = true

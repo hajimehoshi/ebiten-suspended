@@ -51,7 +51,7 @@ class Sprite {
 }
 
 class Sprites {
-    function update() {
+    function update(system) {
         if (this.screenWidth == 0 || this.screenHeight == 0) {
             return
         }

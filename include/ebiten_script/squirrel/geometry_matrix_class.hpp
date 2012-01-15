@@ -4,7 +4,7 @@
 #include "ebiten_script/squirrel/squirrel_error.hpp"
 #include "ebiten_script/squirrel/util.hpp"
 #include "ebiten/graphics/geometry_matrix.hpp"
-#include <squirrel.h> 
+#include <squirrel.h>
 #include <cmath>
 
 namespace ebiten_script {
