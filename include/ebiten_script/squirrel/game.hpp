@@ -136,7 +136,7 @@ public:
       ::sq_pushobject(this->vm_, this->game_);
       ::sq_pushobject(this->vm_, this->system_);
       if (SQ_FAILED(::sq_call(this->vm_, 2, SQFalse, SQTrue))) {
-        throw std::runtime_error("Squirrel error happened");
+        throw squirrel_error(this->vm_);
       }
     }
     if (this->is_terminated_) {
@@ -163,17 +163,17 @@ public:
       ::sq_pushroottable(this->vm_);
       ::sq_pushstring(this->vm_, _SC("ebiten"), -1);
       if (SQ_FAILED(::sq_get(this->vm_, -2))) {
-        assert(false);
+        throw squirrel_error(this->vm_);
       }
       ::sq_pushstring(this->vm_, _SC("Texture"), -1);
       if (SQ_FAILED(::sq_get(this->vm_, -2))) {
-        assert(false);
+        throw squirrel_error(this->vm_);
       }
       ::sq_pushroottable(this->vm_);
       ::sq_pushinteger(this->vm_, 0);
       ::sq_pushinteger(this->vm_, 0);
       if (SQ_FAILED(::sq_call(this->vm_, 3, SQTrue, SQTrue))) {
-        assert(false);
+        throw squirrel_error(this->vm_);
       }
       assert(::sq_gettype(this->vm_, -1) == OT_INSTANCE);
       ::sq_getstackobj(this->vm_, -1, &main_offscreen_texture);
@@ -205,7 +205,7 @@ public:
       ::sq_pushobject(this->vm_, this->game_);
       ::sq_pushobject(this->vm_, main_offscreen_texture);
       if (SQ_FAILED(::sq_call(this->vm_, 2, SQFalse, SQTrue))) {
-        throw std::runtime_error("Squirrel error happened");
+        throw squirrel_error(this->vm_);
       }
     }
     texture_class::flush_texture_commands(this->vm_, g);
