@@ -99,15 +99,15 @@ public:
   metamethod_get(HSQUIRRELVM vm) {
     try {
       texture_holder& self = get_instance(vm, 1);
-      SQChar const* method_name_p;
-      ::sq_getstring(vm, 2, &method_name_p);
-      std::string method_name(method_name_p);
-      if (method_name == "width") {
+      SQChar const* slot_name_p;
+      ::sq_getstring(vm, 2, &slot_name_p);
+      std::string slot_name(slot_name_p);
+      if (slot_name == "width") {
         ::sq_pushinteger(vm, self.width());
-      } else if (method_name == "height") {
+      } else if (slot_name == "height") {
         ::sq_pushinteger(vm, self.height());
       } else {
-        std::string msg = "the index '" + method_name + "' does not exist";
+        std::string msg = "the index '" + slot_name + "' does not exist";
         return ::sq_throwerror(vm, _SC(msg.c_str()));
       }
       return 1;

@@ -20,6 +20,7 @@ function assert(exp) {
 
 function test_update_system(system) {
     ::assert(system instanceof ebiten.System);
+    ::assert(system.input instanceof ebiten.Input);
 }
 
 function test_update_GeometryMatrix_constructor(system) {

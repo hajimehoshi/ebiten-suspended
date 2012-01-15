@@ -2,6 +2,7 @@
 #define EBITEN_SCRIPT_SQUIRREL_GAME_HPP
 
 #include "ebiten_script/squirrel/geometry_matrix_class.hpp"
+#include "ebiten_script/squirrel/input_class.hpp"
 #include "ebiten_script/squirrel/texture_class.hpp"
 #include "ebiten_script/squirrel/system_class.hpp"
 #include "ebiten/graphics/graphics_context.hpp"
@@ -25,6 +26,7 @@ namespace squirrel {
 class game : private ebiten::noncopyable {
 private:
   HSQUIRRELVM const vm_;
+  HSQOBJECT input_;
   HSQOBJECT system_;
   HSQOBJECT game_;
   bool is_terminated_;
@@ -59,18 +61,42 @@ public:
     {
       /*
        * [Squirrel]
-       * system = ::ebiten.System()
+       * input_ = ::ebiten.Input()
        */
       SQInteger const top = ::sq_gettop(this->vm_);
       ::sq_pushroottable(this->vm_);
-      ::sq_pushstring(this->vm_, "ebiten", -1);
+      ::sq_pushstring(this->vm_, _SC("ebiten"), -1);
       ::sq_get(this->vm_, -2);
-      ::sq_pushstring(this->vm_, "System", -1);
+      ::sq_pushstring(this->vm_, _SC("Input"), -1);
       ::sq_get(this->vm_, -2);
       ::sq_pushroottable(this->vm_);
-      ::sq_call(this->vm_, 1, SQTrue, SQTrue);
+      if (SQ_FAILED(::sq_call(this->vm_, 1, SQTrue, SQTrue))) {
+        throw squirrel_error(this->vm_);
+      }
+      if (SQ_FAILED(::sq_getstackobj(this->vm_, -1, &this->input_))) {
+        throw squirrel_error(this->vm_);
+      }
+      ::sq_addref(this->vm_, &this->input_);
+      ::sq_settop(this->vm_, top);
+    }
+    {
+      /*
+       * [Squirrel]
+       * system_ = ::ebiten.System(input_)
+       */
+      SQInteger const top = ::sq_gettop(this->vm_);
+      ::sq_pushroottable(this->vm_);
+      ::sq_pushstring(this->vm_, _SC("ebiten"), -1);
+      ::sq_get(this->vm_, -2);
+      ::sq_pushstring(this->vm_, _SC("System"), -1);
+      ::sq_get(this->vm_, -2);
+      ::sq_pushroottable(this->vm_);
+      ::sq_pushobject(this->vm_, this->input_);
+      if (SQ_FAILED(::sq_call(this->vm_, 2, SQTrue, SQTrue))) {
+        throw squirrel_error(this->vm_);
+      }
       if (SQ_FAILED(::sq_getstackobj(this->vm_, -1, &this->system_))) {
-        assert(false);
+        throw squirrel_error(this->vm_);
       }
       ::sq_addref(this->vm_, &this->system_);
       ::sq_settop(this->vm_, top);
@@ -106,7 +132,7 @@ public:
     {
       /*
        * [Squirrel]
-       * game.update()
+       * game.update(system_)
        */
       ::sq_reseterror(this->vm_);
       SQInteger const top = ::sq_gettop(this->vm_);
@@ -249,6 +275,7 @@ private:
       util::create_function(this->vm_, e, "terminate", method_terminate, "");
     }
     geometry_matrix_class::initialize(this->vm_);
+    input_class::initialize(this->vm_);
     texture_class::initialize(this->vm_);
     system_class::initialize(this->vm_);
   }
