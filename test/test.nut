@@ -20,7 +20,11 @@ function assert(exp) {
 
 function test_update_system(system) {
     ::assert(system instanceof ebiten.System);
-    ::assert(system.input instanceof ebiten.Input);
+    local input = system.input
+    ::assert(input instanceof ebiten.Input);
+    ::assert(typeof(input.touchX) == "integer");
+    ::assert(typeof(input.touchY) == "integer");
+    ::assert(typeof(input.isTouched) == "bool");
 }
 
 function test_update_GeometryMatrix_constructor(system) {
