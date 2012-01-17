@@ -1,12 +1,6 @@
 #ifndef EBITEN_INPUT_HPP
 #define EBITEN_INPUT_HPP
 
-/*#include "ebiten/platform.hpp"
-
-#ifdef EBITEN_MACOSX
-# include "ebiten/detail/macosx/input.hpp"
-#endif*/
-
 #include "ebiten/graphics/native_view.hpp"
 #include "ebiten/noncopyable.hpp"
 #include <tuple>
