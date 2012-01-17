@@ -15,14 +15,12 @@
 @private
   CVDisplayLinkRef displayLink_;
   std::function<bool()> updatingFunc_;
+  std::function<void(int, int, int)> settingTouchesLocationFunc_;
+  std::function<void(int, bool)> settingTouchedFunc_;
 }
 
 - (CVReturn)getFrameForTime:(CVTimeStamp const*)outputTime;
 - (void)setUpdatingFunc:(std::function<bool()> const&)updatingFunc;
-- (BOOL)acceptsFirstResponder;
-- (BOOL)becomeFirstResponder;
-- (void)mouseDown:(NSEvent*)theEvent;
-- (void)keyDown:(NSEvent*)theEvent;
 
 @end
 
@@ -92,26 +90,50 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
   return kCVReturnSuccess;
 }
 
-- (void)setUpdatingFunc:(std::function<bool()> const&)updatingFunc {
-  self->updatingFunc_ = updatingFunc;
+- (void)setUpdatingFunc:(std::function<bool()> const&)func {
+  self->updatingFunc_ = func;
 }
 
-- (BOOL)acceptsFirstResponder {
-  return YES;
+- (void)setSettingTouchesLocationFunc:(std::function<void(int, int, int)> const&)func {
+  self->settingTouchesLocationFunc_ = func;
 }
 
-- (BOOL)becomeFirstResponder {
-  return YES;
+- (void)setSettingTouchedFunc:(std::function<void(int, bool)> const&)func {
+  self->settingTouchedFunc_ = func;
 }
 
 - (void)mouseDown:(NSEvent*)theEvent {
   NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-  NSLog(@"%@", NSStringFromPoint(location));
+  if (self->settingTouchesLocationFunc_) {
+    self->settingTouchesLocationFunc_(0,
+                                      static_cast<int>(location.x),
+                                      static_cast<int>(location.y));
+  }
+  if (self->settingTouchedFunc_) {
+    self->settingTouchedFunc_(0, true);
+  }
 }
 
-- (void)keyDown:(NSEvent*)theEvent {
-  NSString* chars = [theEvent characters];
-  NSLog(@"%@", chars);
+- (void)mouseUp:(NSEvent*)theEvent {
+  (void)theEvent;
+  if (self->settingTouchesLocationFunc_) {
+    self->settingTouchesLocationFunc_(0, -1, -1);
+  }
+  if (self->settingTouchedFunc_) {
+    self->settingTouchedFunc_(0, false);
+  }
+}
+
+- (void)mouseDragged:(NSEvent*)theEvent {
+  NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+  if (self->settingTouchesLocationFunc_) {
+    self->settingTouchesLocationFunc_(0,
+                                      static_cast<int>(location.x),
+                                      static_cast<int>(location.y));
+  }
+  if (self->settingTouchedFunc_) {
+    self->settingTouchedFunc_(0, true);
+  }
 }
 
 @end

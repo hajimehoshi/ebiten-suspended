@@ -7,6 +7,7 @@
 #include "ebiten_script/squirrel/system_class.hpp"
 #include "ebiten/graphics/graphics_context.hpp"
 #include "ebiten/graphics/texture_factory.hpp"
+#include "ebiten/input.hpp"
 #include "ebiten/noncopyable.hpp"
 #include <squirrel.h>
 #include <sqstdaux.h>
@@ -120,7 +121,8 @@ public:
     ::sq_close(this->vm_);
   }
   bool
-  update(ebiten::graphics::texture_factory& tf) {
+  update(ebiten::graphics::texture_factory& tf,
+         ebiten::input&) {
     if (this->is_terminated_) {
       return true;
     }
