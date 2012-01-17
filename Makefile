@@ -29,6 +29,7 @@ SRC_TEST     := $(shell find test    -name "*.hpp" -or -name "*.cpp" -or -name "
 samples: $(PROG_SAMPLES).app
 	open $<
 
+# TODO: add xcodebuild?
 test: bin/$(PROG_TEST)
 	./$<
 

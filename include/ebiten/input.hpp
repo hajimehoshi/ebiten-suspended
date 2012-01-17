@@ -44,7 +44,7 @@ public:
   }
 private:
   // TODO: Threading?
-  // TODO: Integrate thease functions?
+  // TODO: Integrate these functions?
   void
   set_touches_location(int, int x, int y) {
     NSLog(@"Set Touches Location: %d, %d", x, y);
