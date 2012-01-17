@@ -1,7 +1,7 @@
 #ifndef EBITEN_GRAPHICS_DETAIL_OPENGL_IOS_OPENGL_INITIALIZER_HPP
 #define EBITEN_GRAPHICS_DETAIL_OPENGL_IOS_OPENGL_INITIALIZER_HPP
 
-#include "ebiten/graphics/detail/opengl/ios_opengl_initializer.mm"
+#include "ebiten/graphics/detail/opengl/ios_native_view.mm"
 #include "ebiten/graphics/native_view.hpp"
 #include "ebiten/noncopyable.hpp"
 
