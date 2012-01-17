@@ -7,6 +7,7 @@
  *   http://www.alecjacobson.com/weblog/?p=2185
  */
 
+#include "ebiten/input.hpp"
 #import <Cocoa/Cocoa.h>
 #import <QuartzCore/QuartzCore.h>
 #include <functional>
@@ -15,8 +16,7 @@
 @private
   CVDisplayLinkRef displayLink_;
   std::function<bool()> updatingFunc_;
-  std::function<void(int, int, int)> settingTouchesLocationFunc_;
-  std::function<void(int, bool)> settingTouchedFunc_;
+  ebiten::input* input_; // TODO: initialize by nil?
 }
 
 - (CVReturn)getFrameForTime:(CVTimeStamp const*)outputTime;
@@ -94,45 +94,37 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
   self->updatingFunc_ = func;
 }
 
-- (void)setSettingTouchesLocationFunc:(std::function<void(int, int, int)> const&)func {
-  self->settingTouchesLocationFunc_ = func;
-}
-
-- (void)setSettingTouchedFunc:(std::function<void(int, bool)> const&)func {
-  self->settingTouchedFunc_ = func;
+- (void)setInput:(ebiten::input&)input {
+  self->input_ = &input;
 }
 
 - (void)mouseDown:(NSEvent*)theEvent {
   NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-  if (self->settingTouchesLocationFunc_) {
-    self->settingTouchesLocationFunc_(0,
-                                      static_cast<int>(location.x),
-                                      static_cast<int>(location.y));
-  }
-  if (self->settingTouchedFunc_) {
-    self->settingTouchedFunc_(0, true);
+  // TODO: Screen size
+  // TODO: direction (y axis)
+  if (self->input_) {
+    self->input_->set_touches_location(0,
+                                       static_cast<int>(location.x),
+                                       static_cast<int>(location.y));
+    self->input_->set_touched(0, true);
   }
 }
 
 - (void)mouseUp:(NSEvent*)theEvent {
   (void)theEvent;
-  if (self->settingTouchesLocationFunc_) {
-    self->settingTouchesLocationFunc_(0, -1, -1);
-  }
-  if (self->settingTouchedFunc_) {
-    self->settingTouchedFunc_(0, false);
+  if (self->input_) {
+    self->input_->set_touches_location(0, -1, -1);
+    self->input_->set_touched(0, false);
   }
 }
 
 - (void)mouseDragged:(NSEvent*)theEvent {
   NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-  if (self->settingTouchesLocationFunc_) {
-    self->settingTouchesLocationFunc_(0,
-                                      static_cast<int>(location.x),
-                                      static_cast<int>(location.y));
-  }
-  if (self->settingTouchedFunc_) {
-    self->settingTouchedFunc_(0, true);
+  if (self->input_) {
+    self->input_->set_touches_location(0,
+                                       static_cast<int>(location.x),
+                                       static_cast<int>(location.y));
+    self->input_->set_touched(0, true);
   }
 }
 

@@ -52,6 +52,7 @@ public:
                         std::placeholders::_2)),
       input_(input),
       is_terminated_(false) {
+    graphics::detail::native_view_set_input(native_view, this->input_);
   }
   bool
   is_terminated() const {

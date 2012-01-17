@@ -1,7 +1,6 @@
 #ifndef EBITEN_INPUT_HPP
 #define EBITEN_INPUT_HPP
 
-#include "ebiten/graphics/native_view.hpp"
 #include "ebiten/noncopyable.hpp"
 #include <tuple>
 
@@ -13,20 +12,10 @@ private:
   int touch_y_;
   bool is_touched_;
 public:
-  input(graphics::native_view native_view)
+  input()
     : touch_x_(-1),
       touch_y_(-1),
       is_touched_(false) {
-    graphics::detail::set_input_funcs(native_view,
-                                      std::bind(&input::set_touches_location,
-                                                this,
-                                                std::placeholders::_1,
-                                                std::placeholders::_2,
-                                                std::placeholders::_3),
-                                      std::bind(&input::set_touched,
-                                                this,
-                                                std::placeholders::_1,
-                                                std::placeholders::_2));
   }
   std::tuple<int, int>
   touches(int) const {
@@ -36,9 +25,7 @@ public:
   is_touched(int) const {
     return this->is_touched_;
   }
-private:
   // TODO: Threading?
-  // TODO: Integrate these functions?
   void
   set_touches_location(int, int x, int y) {
     NSLog(@"Set Touches Location: %d, %d", x, y);

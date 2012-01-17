@@ -24,7 +24,7 @@ main() {
                                std::placeholders::_2);
     ebiten_frame::frame frame(640, 480);
     game.set_terminated_handler(std::bind(&ebiten_frame::frame::close, &frame));
-    ebiten::input input(frame.native_view());
+    ebiten::input input;
     ebiten::kernel kernel(game_update,
                           game_draw,
                           320, 240, 2, 60,
