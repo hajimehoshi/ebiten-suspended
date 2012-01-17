@@ -122,7 +122,7 @@ public:
   }
   bool
   update(ebiten::graphics::texture_factory& tf,
-         ebiten::input&) {
+         ebiten::input const&) {
     if (this->is_terminated_) {
       return true;
     }
