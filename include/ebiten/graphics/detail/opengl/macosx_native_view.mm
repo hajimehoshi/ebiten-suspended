@@ -16,7 +16,7 @@
 @private
   CVDisplayLinkRef displayLink_;
   std::function<bool()> updatingFunc_;
-  ebiten::input* input_; // TODO: initialize by nil?
+  ebiten::input* input_; // It should be initialized with nil thanks to Objective-C.
 }
 
 - (CVReturn)getFrameForTime:(CVTimeStamp const*)outputTime;
