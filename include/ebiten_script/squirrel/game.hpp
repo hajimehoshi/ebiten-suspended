@@ -122,9 +122,23 @@ public:
   }
   bool
   update(ebiten::graphics::texture_factory& tf,
-         ebiten::input const&) {
+         ebiten::input const& input) {
     if (this->is_terminated_) {
       return true;
+    }
+    {
+      /*
+       * [Squirrel]
+       * input_.setInput_(input);
+       */
+      util::stack_restorer r(this->vm_);
+      ::sq_pushobject(this->vm_, this->input_);
+      ::sq_pushstring(this->vm_, _SC("setInput_"), -1);
+      ::sq_get(this->vm_, -2);
+      ::sq_pushobject(this->vm_, this->input_);
+      SQUserPointer p = reinterpret_cast<SQUserPointer>(const_cast<ebiten::input*>(&input));
+      ::sq_pushuserpointer(this->vm_, p);
+      ::sq_call(this->vm_, 2, SQFalse, SQTrue);
     }
     {
       /*
@@ -140,6 +154,20 @@ public:
       if (SQ_FAILED(::sq_call(this->vm_, 2, SQFalse, SQTrue))) {
         throw squirrel_error(this->vm_);
       }
+    }
+    {
+      /*
+       * [Squirrel]
+       * input_.setInput_(nullptr);
+       */
+      util::stack_restorer r(this->vm_);
+      ::sq_pushobject(this->vm_, this->input_);
+      ::sq_pushstring(this->vm_, _SC("setInput_"), -1);
+      ::sq_get(this->vm_, -2);
+      ::sq_pushobject(this->vm_, this->input_);
+      SQUserPointer p = static_cast<SQUserPointer>(nullptr);
+      ::sq_pushuserpointer(this->vm_, p);
+      ::sq_call(this->vm_, 2, SQFalse, SQTrue);
     }
     if (this->is_terminated_) {
       return true;

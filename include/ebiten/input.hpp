@@ -28,13 +28,11 @@ public:
   // TODO: Threading?
   void
   set_touches_location(int, int x, int y) {
-    NSLog(@"Set Touches Location: %d, %d", x, y);
     this->touch_x_ = x;
     this->touch_y_ = y;
   }
   void
   set_touched(int, bool is_touched) {
-    NSLog(@"Set Touched: %@", is_touched ? @"True" : @"False");
     this->is_touched_ = is_touched;
   }
 };

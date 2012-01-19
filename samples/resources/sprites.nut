@@ -52,6 +52,10 @@ class Sprite {
 
 class Sprites {
     function update(system) {
+        local input = system.input
+        if (input.isTouched) {
+            ::print(input.touchX + ", " + input.touchY + "\n")
+        }
         if (this.screenWidth == 0 || this.screenHeight == 0) {
             return
         }
