@@ -98,14 +98,20 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
   self->input_ = &input;
 }
 
+- (BOOL)isFlipped {
+  return YES;
+}
+
 - (void)mouseDown:(NSEvent*)theEvent {
-  NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-  // TODO: Screen size
-  // TODO: direction (y axis)
+  NSPoint location = [self convertPoint:[theEvent locationInWindow]
+                               fromView:nil];
   if (self->input_) {
+    int x = location.x;
+    int y = location.y;
+    // TODO: Screen size
     self->input_->set_touches_location(0,
-                                       static_cast<int>(location.x),
-                                       static_cast<int>(location.y));
+                                       static_cast<int>(x),
+                                       static_cast<int>(y));
     self->input_->set_touched(0, true);
   }
 }
@@ -119,11 +125,14 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
 }
 
 - (void)mouseDragged:(NSEvent*)theEvent {
-  NSPoint location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+  NSPoint location = [self convertPoint:[theEvent locationInWindow]
+                               fromView:nil];
   if (self->input_) {
+    int x = location.x;
+    int y = location.y;
     self->input_->set_touches_location(0,
-                                       static_cast<int>(location.x),
-                                       static_cast<int>(location.y));
+                                       static_cast<int>(x),
+                                       static_cast<int>(y));
     self->input_->set_touched(0, true);
   }
 }
