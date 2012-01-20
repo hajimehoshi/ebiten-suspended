@@ -126,35 +126,17 @@ public:
     if (this->is_terminated_) {
       return true;
     }
-    {
-      /*
-       * [Squirrel]
-       * input_.setInput_(input);
-       */
-      util::call(this->vm_,
-                 this->input_,
-                 "setInput_",
-                 false,
-                 reinterpret_cast<SQUserPointer>(const_cast<ebiten::input*>(&input)));
-    }
-    {
-      /*
-       * [Squirrel]
-       * game.update(system_)
-       */
-      util::call(this->vm_, this->game_, "update", false, this->system_);
-    }
-    {
-      /*
-       * [Squirrel]
-       * input_.setInput_(nullptr);
-       */
-      util::call(this->vm_,
-                 this->input_,
-                 "setInput_",
-                 false,
-                 static_cast<SQUserPointer>(nullptr));
-    }
+    util::call(this->vm_,
+               this->input_,
+               "setInput_",
+               false,
+               reinterpret_cast<SQUserPointer>(const_cast<ebiten::input*>(&input)));
+    util::call(this->vm_, this->game_, "update", false, this->system_);
+    util::call(this->vm_,
+               this->input_,
+               "setInput_",
+               false,
+               static_cast<SQUserPointer>(nullptr));
     if (this->is_terminated_) {
       return true;
     }
@@ -195,47 +177,23 @@ public:
       ::sq_getstackobj(this->vm_, -1, &main_offscreen_texture);
       ::sq_addref(this->vm_, &main_offscreen_texture);
     }
-    {
-      /*
-       * [Squirrel]
-       * main_offscreen_texture.setTexture_(main_offscreen)
-       */
-      util::call(this->vm_,
-                 main_offscreen_texture,
-                 "setTexture_",
-                 false,
-                 reinterpret_cast<SQUserPointer>(&main_offscreen));
-    }
-    {
-      /*
-       * [Squirrel]
-       * game.draw(main_offscreen_texture)
-       */
-      util::call(this->vm_,
-                 this->game_,
-                 "draw",
-                 false,
-                 main_offscreen_texture);
-    }
+    util::call(this->vm_,
+               main_offscreen_texture,
+               "setTexture_",
+               false,
+               reinterpret_cast<SQUserPointer>(&main_offscreen));
+    util::call(this->vm_,
+               this->game_,
+               "draw",
+               false,
+               main_offscreen_texture);
     texture_class::flush_texture_commands(this->vm_, g);
-    {
-      /*
-       * [Squirrel]
-       * main_offscreen_texture.setTexture_(nullptr)
-       */
-      util::call(this->vm_,
-                 main_offscreen_texture,
-                 "setTexture_",
-                 false,
-                 static_cast<SQUserPointer>(nullptr));
-    }
-    {
-      /*
-       * [Squirrel]
-       * (release main_offscreen_texture)
-       */
-      ::sq_release(this->vm_, &main_offscreen_texture);
-    }
+    util::call(this->vm_,
+               main_offscreen_texture,
+               "setTexture_",
+               false,
+               static_cast<SQUserPointer>(nullptr));
+    ::sq_release(this->vm_, &main_offscreen_texture);
   }
   void
   set_terminated_handler(std::function<void()> const& terminated_handler) {

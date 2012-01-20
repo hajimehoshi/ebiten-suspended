@@ -23,6 +23,7 @@ public:
   }
 };
 
+// TODO: make class?
 namespace {
 
 void
