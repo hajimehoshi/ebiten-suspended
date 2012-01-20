@@ -103,6 +103,49 @@ create_null_variable(HSQUIRRELVM const& vm,
   ::sq_newslot(vm, -3, SQFalse);
 }
 
+void
+push_values(HSQUIRRELVM const&) {
+}
+
+template<class... Args>
+void
+push_values(HSQUIRRELVM const& vm, int value, Args... args) {
+  ::sq_pushinteger(vm, value);
+  push_values(vm, args...);
+}
+
+template<class... Args>
+void
+push_values(HSQUIRRELVM const& vm, SQUserPointer const& value, Args... args) {
+  ::sq_pushuserpointer(vm, value);
+  push_values(vm, args...);
+}
+
+template<class... Args>
+void
+push_values(HSQUIRRELVM const& vm, HSQOBJECT const& value, Args... args) {
+  ::sq_pushobject(vm, value);
+  push_values(vm, args...);
+}
+
+template<class... Args>
+void
+call(HSQUIRRELVM const& vm,
+     HSQOBJECT const& receiver,
+     std::string const& method_name,
+     bool return_value,
+     Args... args) {
+  stack_restorer r(vm);
+  ::sq_pushobject(vm, receiver);
+  ::sq_pushstring(vm, _SC(method_name.c_str()), -1);
+  ::sq_get(vm, -2);
+  ::sq_pushobject(vm, receiver);
+  push_values(vm, args...);
+  if (SQ_FAILED(::sq_call(vm, sizeof...(Args) + 1, SQFalse, return_value))) {
+    throw squirrel_error(vm);
+  }
+}
+
 }
 }
 

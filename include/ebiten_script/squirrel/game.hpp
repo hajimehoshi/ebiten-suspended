@@ -131,43 +131,29 @@ public:
        * [Squirrel]
        * input_.setInput_(input);
        */
-      util::stack_restorer r(this->vm_);
-      ::sq_pushobject(this->vm_, this->input_);
-      ::sq_pushstring(this->vm_, _SC("setInput_"), -1);
-      ::sq_get(this->vm_, -2);
-      ::sq_pushobject(this->vm_, this->input_);
-      SQUserPointer p = reinterpret_cast<SQUserPointer>(const_cast<ebiten::input*>(&input));
-      ::sq_pushuserpointer(this->vm_, p);
-      ::sq_call(this->vm_, 2, SQFalse, SQTrue);
+      util::call(this->vm_,
+                 this->input_,
+                 "setInput_",
+                 false,
+                 reinterpret_cast<SQUserPointer>(const_cast<ebiten::input*>(&input)));
     }
     {
       /*
        * [Squirrel]
        * game.update(system_)
        */
-      util::stack_restorer r(this->vm_);
-      ::sq_pushobject(this->vm_, this->game_);
-      ::sq_pushstring(this->vm_, _SC("update"), -1);
-      ::sq_get(this->vm_, -2);
-      ::sq_pushobject(this->vm_, this->game_);
-      ::sq_pushobject(this->vm_, this->system_);
-      if (SQ_FAILED(::sq_call(this->vm_, 2, SQFalse, SQTrue))) {
-        throw squirrel_error(this->vm_);
-      }
+      util::call(this->vm_, this->game_, "update", false, this->system_);
     }
     {
       /*
        * [Squirrel]
        * input_.setInput_(nullptr);
        */
-      util::stack_restorer r(this->vm_);
-      ::sq_pushobject(this->vm_, this->input_);
-      ::sq_pushstring(this->vm_, _SC("setInput_"), -1);
-      ::sq_get(this->vm_, -2);
-      ::sq_pushobject(this->vm_, this->input_);
-      SQUserPointer p = static_cast<SQUserPointer>(nullptr);
-      ::sq_pushuserpointer(this->vm_, p);
-      ::sq_call(this->vm_, 2, SQFalse, SQTrue);
+      util::call(this->vm_,
+                 this->input_,
+                 "setInput_",
+                 false,
+                 static_cast<SQUserPointer>(nullptr));
     }
     if (this->is_terminated_) {
       return true;
@@ -214,29 +200,22 @@ public:
        * [Squirrel]
        * main_offscreen_texture.setTexture_(main_offscreen)
        */
-      util::stack_restorer r(this->vm_);
-      ::sq_pushobject(this->vm_, main_offscreen_texture);
-      ::sq_pushstring(this->vm_, _SC("setTexture_"), -1);
-      ::sq_get(this->vm_, -2);
-      ::sq_pushobject(this->vm_, main_offscreen_texture);
-      SQUserPointer p = reinterpret_cast<SQUserPointer>(&main_offscreen);
-      ::sq_pushuserpointer(this->vm_, p);
-      ::sq_call(this->vm_, 2, SQFalse, SQTrue);
+      util::call(this->vm_,
+                 main_offscreen_texture,
+                 "setTexture_",
+                 false,
+                 reinterpret_cast<SQUserPointer>(&main_offscreen));
     }
     {
       /*
        * [Squirrel]
        * game.draw(main_offscreen_texture)
        */
-      util::stack_restorer r(this->vm_);
-      ::sq_pushobject(this->vm_, this->game_);
-      ::sq_pushstring(this->vm_, _SC("draw"), -1);
-      ::sq_get(this->vm_, -2);
-      ::sq_pushobject(this->vm_, this->game_);
-      ::sq_pushobject(this->vm_, main_offscreen_texture);
-      if (SQ_FAILED(::sq_call(this->vm_, 2, SQFalse, SQTrue))) {
-        throw squirrel_error(this->vm_);
-      }
+      util::call(this->vm_,
+                 this->game_,
+                 "draw",
+                 false,
+                 main_offscreen_texture);
     }
     texture_class::flush_texture_commands(this->vm_, g);
     {
@@ -244,14 +223,11 @@ public:
        * [Squirrel]
        * main_offscreen_texture.setTexture_(nullptr)
        */
-      util::stack_restorer r(this->vm_);
-      ::sq_pushobject(this->vm_, main_offscreen_texture);
-      ::sq_pushstring(this->vm_, _SC("setTexture_"), -1);
-      ::sq_get(this->vm_, -2);
-      ::sq_pushobject(this->vm_, main_offscreen_texture);
-      SQUserPointer p = static_cast<SQUserPointer>(nullptr);
-      ::sq_pushuserpointer(this->vm_, p);
-      ::sq_call(this->vm_, 2, SQFalse, SQTrue);
+      util::call(this->vm_,
+                 main_offscreen_texture,
+                 "setTexture_",
+                 false,
+                 static_cast<SQUserPointer>(nullptr));
     }
     {
       /*
@@ -289,7 +265,17 @@ private:
   void
   initialize_ebiten_classes() {
     static std::string const e("ebiten");
-    this->create_table(e);
+    {
+      /*
+       * [Squirrel]
+       * ebiten = {}
+       */
+      util::stack_restorer r(this->vm_);
+      ::sq_pushroottable(this->vm_);
+      ::sq_pushstring(this->vm_, _SC(e.c_str()), -1);
+      ::sq_newtable(this->vm_);
+      ::sq_newslot(this->vm_, -3, SQFalse);
+    }
     {
       util::create_function(this->vm_, e, "terminate", method_terminate, "");
     }
@@ -297,14 +283,6 @@ private:
     input_class::initialize(this->vm_);
     texture_class::initialize(this->vm_);
     system_class::initialize(this->vm_);
-  }
-  void
-  create_table(std::string const& name) {
-    util::stack_restorer r(this->vm_);
-    ::sq_pushroottable(this->vm_);
-    ::sq_pushstring(this->vm_, _SC(name.c_str()), -1);
-    ::sq_newtable(this->vm_);
-    ::sq_newslot(this->vm_, -3, SQFalse);
   }
   static SQInteger
   method_terminate(HSQUIRRELVM vm) {
