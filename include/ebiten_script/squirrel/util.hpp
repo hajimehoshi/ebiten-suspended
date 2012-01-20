@@ -164,7 +164,7 @@ call(HSQUIRRELVM const& vm,
   }
   HSQOBJECT return_obj;
   ::sq_getstackobj(vm, -1, &return_obj);
-  // TODO: Add ref?
+  ::sq_addref(vm, &return_obj);
   return return_obj;
 }
 

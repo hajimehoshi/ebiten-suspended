@@ -27,6 +27,7 @@ namespace squirrel {
 class game : private ebiten::noncopyable {
 private:
   HSQUIRRELVM const vm_;
+  HSQOBJECT ebiten_;
   HSQOBJECT input_;
   HSQOBJECT system_;
   HSQOBJECT game_;
@@ -57,47 +58,8 @@ public:
       ::sq_pushroottable(this->vm_);
       this->initialize_ebiten_classes();
     }
-    {
-      /*
-       * [Squirrel]
-       * input_ = ::ebiten.Input()
-       */
-      util::stack_restorer r(this->vm_);
-      ::sq_pushroottable(this->vm_);
-      ::sq_pushstring(this->vm_, _SC("ebiten"), -1);
-      ::sq_get(this->vm_, -2);
-      ::sq_pushstring(this->vm_, _SC("Input"), -1);
-      ::sq_get(this->vm_, -2);
-      ::sq_pushroottable(this->vm_);
-      if (SQ_FAILED(::sq_call(this->vm_, 1, SQTrue, SQTrue))) {
-        throw squirrel_error(this->vm_);
-      }
-      if (SQ_FAILED(::sq_getstackobj(this->vm_, -1, &this->input_))) {
-        throw squirrel_error(this->vm_);
-      }
-      ::sq_addref(this->vm_, &this->input_);
-    }
-    {
-      /*
-       * [Squirrel]
-       * system_ = ::ebiten.System(input_)
-       */
-      util::stack_restorer r(this->vm_);
-      ::sq_pushroottable(this->vm_);
-      ::sq_pushstring(this->vm_, _SC("ebiten"), -1);
-      ::sq_get(this->vm_, -2);
-      ::sq_pushstring(this->vm_, _SC("System"), -1);
-      ::sq_get(this->vm_, -2);
-      ::sq_pushroottable(this->vm_);
-      ::sq_pushobject(this->vm_, this->input_);
-      if (SQ_FAILED(::sq_call(this->vm_, 2, SQTrue, SQTrue))) {
-        throw squirrel_error(this->vm_);
-      }
-      if (SQ_FAILED(::sq_getstackobj(this->vm_, -1, &this->system_))) {
-        throw squirrel_error(this->vm_);
-      }
-      ::sq_addref(this->vm_, &this->system_);
-    }
+    this->input_ = util::call(this->vm_, this->ebiten_, "Input", true);
+    this->system_ = util::call(this->vm_, this->ebiten_, "System", true, this->input_);
     {
       /*
        * [Squirrel]
@@ -126,16 +88,11 @@ public:
     if (this->is_terminated_) {
       return true;
     }
-    util::call(this->vm_,
-               this->input_,
-               "setInput_",
-               false,
+    util::call(this->vm_, this->input_, "setInput_", false,
                reinterpret_cast<SQUserPointer>(const_cast<ebiten::input*>(&input)));
-    util::call(this->vm_, this->game_, "update", false, this->system_);
-    util::call(this->vm_,
-               this->input_,
-               "setInput_",
-               false,
+    util::call(this->vm_, this->game_, "update", false,
+               this->system_);
+    util::call(this->vm_, this->input_, "setInput_", false,
                static_cast<SQUserPointer>(nullptr));
     if (this->is_terminated_) {
       return true;
@@ -151,32 +108,9 @@ public:
     if (this->is_terminated_) {
       return;
     }
-    HSQOBJECT main_offscreen_texture;
-    {
-      /*
-       * [Squirrel]
-       * main_offscreen_texture = ebiten.Texture(0, 0)
-       */
-      util::stack_restorer r(this->vm_);
-      ::sq_pushroottable(this->vm_);
-      ::sq_pushstring(this->vm_, _SC("ebiten"), -1);
-      if (SQ_FAILED(::sq_get(this->vm_, -2))) {
-        throw squirrel_error(this->vm_);
-      }
-      ::sq_pushstring(this->vm_, _SC("Texture"), -1);
-      if (SQ_FAILED(::sq_get(this->vm_, -2))) {
-        throw squirrel_error(this->vm_);
-      }
-      ::sq_pushroottable(this->vm_);
-      ::sq_pushinteger(this->vm_, 0);
-      ::sq_pushinteger(this->vm_, 0);
-      if (SQ_FAILED(::sq_call(this->vm_, 3, SQTrue, SQTrue))) {
-        throw squirrel_error(this->vm_);
-      }
-      assert(::sq_gettype(this->vm_, -1) == OT_INSTANCE);
-      ::sq_getstackobj(this->vm_, -1, &main_offscreen_texture);
-      ::sq_addref(this->vm_, &main_offscreen_texture);
-    }
+    HSQOBJECT main_offscreen_texture =
+      util::call(this->vm_, this->ebiten_, "Texture", true,
+                 0, 0);
     util::call(this->vm_,
                main_offscreen_texture,
                "setTexture_",
@@ -232,6 +166,7 @@ private:
       ::sq_pushroottable(this->vm_);
       ::sq_pushstring(this->vm_, _SC(e.c_str()), -1);
       ::sq_newtable(this->vm_);
+      ::sq_getstackobj(this->vm_, -1, &this->ebiten_);
       ::sq_newslot(this->vm_, -3, SQFalse);
     }
     {
