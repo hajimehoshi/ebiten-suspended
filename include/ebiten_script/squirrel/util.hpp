@@ -144,7 +144,7 @@ push_values(HSQUIRRELVM const& vm, HSQOBJECT const& value, Args... args) {
 }
 
 template<class... Args>
-void
+HSQOBJECT
 call(HSQUIRRELVM const& vm,
      HSQOBJECT const& receiver,
      std::string const& method_name,
@@ -156,9 +156,16 @@ call(HSQUIRRELVM const& vm,
   ::sq_get(vm, -2);
   ::sq_pushobject(vm, receiver);
   push_values(vm, args...);
-  if (SQ_FAILED(::sq_call(vm, sizeof...(Args) + 1, SQFalse, return_value))) {
+  if (SQ_FAILED(::sq_call(vm, sizeof...(Args) + 1, return_value, SQTrue))) {
     throw squirrel_error(vm);
   }
+  if (!return_value) {
+    ::sq_pushnull(vm);
+  }
+  HSQOBJECT return_obj;
+  ::sq_getstackobj(vm, -1, &return_obj);
+  // TODO: Add ref?
+  return return_obj;
 }
 
 }
