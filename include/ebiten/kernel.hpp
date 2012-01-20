@@ -22,7 +22,7 @@ private:
   std::size_t const fps_;
   uint64_t before_;
   graphics::device device_;
-  input& input_;
+  input input_;
   bool is_terminated_;
 public:
   kernel(std::function<bool(graphics::texture_factory&,
@@ -33,8 +33,7 @@ public:
          std::size_t screen_height,
          std::size_t screen_scale, // TODO: check the scale (1 or 2?) not to crash
          std::size_t fps,
-         graphics::native_view native_view,
-         class input& input)
+         graphics::native_view native_view)
     : game_update_(game_update),
       game_draw_(game_draw),
       fps_(fps),
@@ -50,7 +49,7 @@ public:
                         this,
                         std::placeholders::_1,
                         std::placeholders::_2)),
-      input_(input),
+      input_(screen_scale),
       is_terminated_(false) {
     graphics::detail::native_view_set_input(native_view, this->input_);
   }

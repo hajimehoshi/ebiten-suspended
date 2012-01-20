@@ -109,9 +109,9 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
     int x = location.x;
     int y = location.y;
     // TODO: Screen size
-    self->input_->set_touches_location(0,
-                                       static_cast<int>(x),
-                                       static_cast<int>(y));
+    self->input_->set_touches_real_location(0,
+                                            static_cast<int>(x),
+                                            static_cast<int>(y));
     self->input_->set_touched(0, true);
   }
 }
@@ -119,7 +119,7 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
 - (void)mouseUp:(NSEvent*)theEvent {
   (void)theEvent;
   if (self->input_) {
-    self->input_->set_touches_location(0, -1, -1);
+    self->input_->set_touches_real_location(0, -1, -1);
     self->input_->set_touched(0, false);
   }
 }
@@ -130,9 +130,9 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
   if (self->input_) {
     int x = location.x;
     int y = location.y;
-    self->input_->set_touches_location(0,
-                                       static_cast<int>(x),
-                                       static_cast<int>(y));
+    self->input_->set_touches_real_location(0,
+                                            static_cast<int>(x),
+                                            static_cast<int>(y));
     self->input_->set_touched(0, true);
   }
 }

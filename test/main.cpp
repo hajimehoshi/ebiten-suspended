@@ -32,12 +32,10 @@ main(int argc, char* argv[]) {
                                std::placeholders::_2);
     ebiten_frame::frame frame(640, 480);
     game.set_terminated_handler(std::bind(&ebiten_frame::frame::close, &frame));
-    ebiten::input input;
     ebiten::kernel kernel(game_update,
                           game_draw,
                           320, 240, 2, 60,
-                          frame.native_view(),
-                          input);
+                          frame.native_view());
     ebiten_application::run(frame.native_frame());
   } catch (std::runtime_error const& e) {
     std::cerr << e.what() << std::endl;
