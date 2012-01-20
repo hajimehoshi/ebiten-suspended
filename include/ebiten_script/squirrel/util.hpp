@@ -117,6 +117,20 @@ push_values(HSQUIRRELVM const& vm, int value, Args... args) {
 
 template<class... Args>
 void
+push_values(HSQUIRRELVM const& vm, float value, Args... args) {
+  ::sq_pushfloat(vm, value);
+  push_values(vm, args...);
+}
+
+template<class... Args>
+void
+push_values(HSQUIRRELVM const& vm, double value, Args... args) {
+  ::sq_pushfloat(vm, value);
+  push_values(vm, args...);
+}
+
+template<class... Args>
+void
 push_values(HSQUIRRELVM const& vm, SQUserPointer const& value, Args... args) {
   ::sq_pushuserpointer(vm, value);
   push_values(vm, args...);
