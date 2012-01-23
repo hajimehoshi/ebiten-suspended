@@ -47,7 +47,8 @@
     self->_game = new ebiten_script::squirrel::game(path);
     auto game_update = std::bind(&ebiten_script::squirrel::game::update,
                                  self->_game,
-                                 std::placeholders::_1);
+                                 std::placeholders::_1,
+                                 std::placeholders::_2);
     auto game_draw = std::bind(&ebiten_script::squirrel::game::draw,
                                self->_game,
                                std::placeholders::_1,

@@ -9,8 +9,8 @@ namespace detail {
 namespace {
 
 void
-native_view_set_input(EbitenOpenGLView* v, class input& input) {
-  [v setInput:input];
+native_view_set_input(EbitenOpenGLView* native_view, class input& input) {
+  [native_view setInput:input];
 }
 
 }

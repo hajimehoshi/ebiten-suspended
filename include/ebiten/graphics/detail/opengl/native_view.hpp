@@ -8,6 +8,11 @@
 # include "ebiten/graphics/detail/opengl/macosx_native_view.hpp"
 #endif
 
+#ifdef EBITEN_IOS
+# include "ebiten/graphics/detail/opengl/ios_native_view.mm"
+# include "ebiten/graphics/detail/opengl/ios_native_view.hpp"
+#endif
+
 namespace ebiten {
 namespace graphics {
 namespace detail {
