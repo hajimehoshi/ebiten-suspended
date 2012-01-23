@@ -7,6 +7,16 @@
 //
 
 #import "EbitenViewController.h"
+#include "ebiten_script/squirrel/game.hpp"
+#include "ebiten/ebiten.hpp"
+
+@interface EbitenViewController () {
+@private
+    ebiten::kernel* _kernel;
+    ebiten_script::squirrel::game* _game;
+}
+
+@end
 
 @implementation EbitenViewController
 
