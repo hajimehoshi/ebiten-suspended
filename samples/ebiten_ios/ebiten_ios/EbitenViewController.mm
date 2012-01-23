@@ -58,12 +58,18 @@
     self->_kernel = new ebiten::kernel(game_update,
                                        game_draw,
                                        width / 2, height / 2, 2, 60,
-                                       (GLKView*)[self view]);
+                                       (GLKView*)self.view);
+}
+
+- (void)touchesBegan:(NSSet*)touches
+           withEvent:(UIEvent*)event
+{
+    EbitenGLKViewDelegate* d = ((GLKView*)self.view).delegate;
+    [d touchesBegan:touches withEvent:event];
 }
 
 - (void)viewDidUnload
 {
-    [super viewDidUnload];
     if (self->_game) {
         delete self->_game;
         self->_game = nil;
@@ -72,6 +78,7 @@
         delete self->_kernel;
         self->_kernel = nil;
     }
+    [super viewDidUnload];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

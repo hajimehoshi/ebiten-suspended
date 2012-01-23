@@ -7,6 +7,8 @@
  *   http://www.alecjacobson.com/weblog/?p=2185
  */
 
+// TODO: Use NSViewController?
+
 #include "ebiten/input.hpp"
 #import <Cocoa/Cocoa.h>
 #import <QuartzCore/QuartzCore.h>
@@ -16,7 +18,7 @@
 @private
   CVDisplayLinkRef displayLink_;
   std::function<bool()> updatingFunc_;
-  ebiten::input* input_; // It should be initialized with nil thanks to Objective-C.
+  ebiten::input* input_;
 }
 
 - (CVReturn)getFrameForTime:(CVTimeStamp const*)outputTime;

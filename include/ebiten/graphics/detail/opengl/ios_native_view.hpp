@@ -11,6 +11,8 @@ namespace {
 void
 native_view_set_input(GLKView* native_view, class input& input) {
   // TODO: implement
+  EbitenGLKViewDelegate* delegate = native_view.delegate;
+  [delegate setInput:input];
 }
 
 }
