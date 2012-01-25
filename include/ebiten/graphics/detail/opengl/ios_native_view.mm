@@ -15,6 +15,20 @@
 - (void)setUpdatingFunc:(std::function<bool()> const&)updatingFunc;
 - (void)glkView:(GLKView*)view
      drawInRect:(CGRect)rect;
+- (void)setInput:(ebiten::input&)input;
+- (void)touchesBegan:(NSSet*)touches
+           withEvent:(UIEvent*)event
+            withView:(UIView*)view;
+- (void)touchesMoved:(NSSet*)touches
+           withEvent:(UIEvent*)event
+            withView:(UIView*)view;
+- (void)touchesEnded:(NSSet*)touches
+           withEvent:(UIEvent*)event
+            withView:(UIView*)view;
+- (void)touchesCancelled:(NSSet*)touches
+               withEvent:(UIEvent*)event
+                withView:(UIView*)view;
+
 @end
 
 #ifndef EBITEN_WITHOUT_OBJC_IMPL
@@ -39,23 +53,100 @@
 }
 
 - (void)touchesBegan:(NSSet*)touches
+           withEvent:(UIEvent*)event
+            withView:(UIView*)view {
+  if ([touches count] == 0) {
+    self->input_->set_touches_real_location(0, -1, -1);
+    self->input_->set_touched(0, false);
+    return;
+  }
+  int sumX = 0;
+  int sumY = 0;
+  for (UITouch* touch in touches) {
+    CGPoint location = [touch locationInView:view];
+    sumX += location.x;
+    sumY += location.y;
+  }
+  int x = sumX / [touches count];
+  int y = sumY / [touches count];
+  self->input_->set_touches_real_location(0, x, y);
+  self->input_->set_touched(0, true);
+}
+
+- (void)touchesMoved:(NSSet*)touches
+           withEvent:(UIEvent*)event
+            withView:(UIView*)view {
+  if ([touches count] == 0) {
+    self->input_->set_touches_real_location(0, -1, -1);
+    self->input_->set_touched(0, false);
+    return;
+  }
+  int sumX = 0;
+  int sumY = 0;
+  for (UITouch* touch in touches) {
+    CGPoint location = [touch locationInView:view];
+    sumX += location.x;
+    sumY += location.y;
+  }
+  int x = sumX / [touches count];
+  int y = sumY / [touches count];
+  self->input_->set_touches_real_location(0, x, y);
+  self->input_->set_touched(0, true);
+}
+
+- (void)touchesEnded:(NSSet*)touches
+           withEvent:(UIEvent*)event
+            withView:(UIView*)view {
+  self->input_->set_touches_real_location(0, -1, -1);
+  self->input_->set_touched(0, false);
+}
+
+- (void)touchesCancelled:(NSSet*)touches
+               withEvent:(UIEvent*)event
+                withView:(UIView*)view {
+  self->input_->set_touches_real_location(0, -1, -1);
+  self->input_->set_touched(0, false);
+}
+
+@end
+#endif
+
+@interface EbitenGLKViewController : GLKViewController
+@end
+
+#ifndef EBITEN_WITHOUT_OBJC_IMPL
+@implementation EbitenGLKViewController
+
+- (void)touchesBegan:(NSSet*)touches
            withEvent:(UIEvent*)event {
-  NSLog(@"delegate touchesBegan");
+  EbitenGLKViewDelegate* delegate = ((GLKView*)self.view).delegate;
+  [delegate touchesBegan:touches
+               withEvent:event
+                withView:self.view];
 }
 
 - (void)touchesMoved:(NSSet*)touches
            withEvent:(UIEvent*)event {
-  NSLog(@"delegate touchesMoved");
+  EbitenGLKViewDelegate* delegate = ((GLKView*)self.view).delegate;
+  [delegate touchesMoved:touches
+               withEvent:event
+                withView:self.view];
 }
 
 - (void)touchesEnded:(NSSet*)touches
            withEvent:(UIEvent*)event {
-  NSLog(@"delegate touchesEnded");
+  EbitenGLKViewDelegate* delegate = ((GLKView*)self.view).delegate;
+  [delegate touchesEnded:touches
+               withEvent:event
+                withView:self.view];
 }
 
 - (void)touchesCancelled:(NSSet*)touches
                withEvent:(UIEvent*)event {
-  NSLog(@"delegate touchesCancelled");
+  EbitenGLKViewDelegate* delegate = ((GLKView*)self.view).delegate;
+  [delegate touchesCancelled:touches
+                   withEvent:event
+                    withView:self.view];
 }
 
 @end

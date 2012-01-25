@@ -8,7 +8,6 @@
 
 #import "EbitenViewController.h"
 #include "ebiten_script/squirrel/game.hpp"
-#include "ebiten/ebiten.hpp"
 
 @interface EbitenViewController () {
 @private
@@ -69,13 +68,6 @@
                                        game_draw,
                                        width / 2, height / 2, 2, 60,
                                        (GLKView*)self.view);
-}
-
-- (void)touchesBegan:(NSSet*)touches
-           withEvent:(UIEvent*)event
-{
-    EbitenGLKViewDelegate* d = ((GLKView*)self.view).delegate;
-    [d touchesBegan:touches withEvent:event];
 }
 
 - (void)viewDidUnload

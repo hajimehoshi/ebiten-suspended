@@ -7,7 +7,8 @@
 //
 
 #import <GLKit/GLKit.h>
+#include "ebiten/ebiten.hpp"
 
-@interface EbitenViewController : GLKViewController
+@interface EbitenViewController : EbitenGLKViewController
 
 @end

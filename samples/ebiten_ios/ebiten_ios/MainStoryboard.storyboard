@@ -20,7 +20,10 @@
         </scene>
     </scenes>
     <classes>
-        <class className="EbitenViewController" superclassName="GLKViewController">
+        <class className="EbitenGLKViewController" superclassName="GLKViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/EbitenGLKViewController.h"/>
+        </class>
+        <class className="EbitenViewController" superclassName="EbitenGLKViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/EbitenViewController.h"/>
         </class>
     </classes>
