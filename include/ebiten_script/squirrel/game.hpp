@@ -111,21 +111,12 @@ public:
     HSQOBJECT main_offscreen_texture =
       util::call(this->vm_, this->ebiten_, "Texture", true,
                  0, 0);
-    util::call(this->vm_,
-               main_offscreen_texture,
-               "setTexture_",
-               false,
+    util::call(this->vm_, main_offscreen_texture, "setTexture_", false,
                reinterpret_cast<SQUserPointer>(&main_offscreen));
-    util::call(this->vm_,
-               this->game_,
-               "draw",
-               false,
+    util::call(this->vm_, this->game_, "draw", false,
                main_offscreen_texture);
     texture_class::flush_texture_commands(this->vm_, g);
-    util::call(this->vm_,
-               main_offscreen_texture,
-               "setTexture_",
-               false,
+    util::call(this->vm_, main_offscreen_texture, "setTexture_", false,
                static_cast<SQUserPointer>(nullptr));
     ::sq_release(this->vm_, &main_offscreen_texture);
   }
