@@ -154,7 +154,11 @@ call(HSQUIRRELVM const& vm,
   ::sq_pushobject(vm, receiver);
   ::sq_pushstring(vm, _SC(method_name.c_str()), -1);
   ::sq_get(vm, -2);
-  ::sq_pushobject(vm, receiver);
+  if (::sq_gettype(vm, -2) == OT_INSTANCE) {
+    ::sq_pushobject(vm, receiver);
+  } else {
+    ::sq_pushroottable(vm);
+  }
   push_values(vm, args...);
   if (SQ_FAILED(::sq_call(vm, sizeof...(Args) + 1, return_value, SQTrue))) {
     throw squirrel_error(vm);

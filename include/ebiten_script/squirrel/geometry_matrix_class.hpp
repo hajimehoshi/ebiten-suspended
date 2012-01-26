@@ -194,25 +194,16 @@ initialize(HSQUIRRELVM vm) {
                       "ynn", true);
   util::create_method(vm, klass, "rotate", static_method_rotate,
                       "yn", true);
-  HSQOBJECT identity;
+  HSQOBJECT ebiten;
   {
-    /*
-     * [Squirrel]
-     * identity = ebiten.GeometryMatrix(1, 0, 0, 1, 0, 0)
-     */
     util::stack_restorer r(vm);
-    ::sq_pushobject(vm, klass);
     ::sq_pushroottable(vm);
-    ::sq_pushfloat(vm, 1);
-    ::sq_pushfloat(vm, 0);
-    ::sq_pushfloat(vm, 0);
-    ::sq_pushfloat(vm, 1);
-    ::sq_pushfloat(vm, 0);
-    ::sq_pushfloat(vm, 0);
-    ::sq_call(vm, 7, SQTrue, SQTrue);
-    ::sq_getstackobj(vm, -1, &identity);
-    ::sq_addref(vm, &identity);
+    ::sq_pushstring(vm, _SC("ebiten"), -1);
+    ::sq_get(vm, -2);
+    ::sq_getstackobj(vm, -1, &ebiten);
   }
+  HSQOBJECT identity = util::call(vm, ebiten, "GeometryMatrix", true,
+                                  1, 0, 0, 1, 0, 0);
   util::create_variable(vm, klass, "identity", identity, true);
 }
 
