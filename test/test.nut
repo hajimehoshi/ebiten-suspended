@@ -150,17 +150,34 @@ function test_update_GeometryMatrix_rotateWithCenter(system) {
 
 function test_update_ColorMatrix_constructor(system) {
     {
-        local values = [
+        local elements = [
             3.1, 4.1, 5.9, 2.6, 5.3,
             5.8, 9.7, 9.3, 2.3, 8.4,
             6.2, 6.4, 3.3, 8.3, 2.7,
             9.5, 0.2, 8.8, 4.1, 9.7,
         ]
-        local c = ebiten.ColorMatrix(values)
+        local c = ebiten.ColorMatrix(elements)
         ::assert(c instanceof ebiten.ColorMatrix)
-        /*::assert(c.value(0, 0) == 3.1)
-        ::assert(c.value(0, 1) == 4.1)
-        ::assert(c.value(0, 4) == 5.3)*/
+        ::assert(c.e00 == 3.1)
+        ::assert(c.e01 == 4.1)
+        ::assert(c.e02 == 5.9)
+        ::assert(c.e03 == 2.6)
+        ::assert(c.e04 == 5.3)
+        ::assert(c.e10 == 5.8)
+        ::assert(c.e11 == 9.7)
+        ::assert(c.e12 == 9.3)
+        ::assert(c.e13 == 2.3)
+        ::assert(c.e14 == 8.4)
+        ::assert(c.e20 == 6.2)
+        ::assert(c.e21 == 6.4)
+        ::assert(c.e22 == 3.3)
+        ::assert(c.e23 == 8.3)
+        ::assert(c.e24 == 2.7)
+        ::assert(c.e30 == 9.5)
+        ::assert(c.e31 == 0.2)
+        ::assert(c.e32 == 8.8)
+        ::assert(c.e33 == 4.1)
+        ::assert(c.e34 == 9.7)
     }
 }
 
