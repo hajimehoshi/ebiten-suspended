@@ -149,7 +149,26 @@ function test_update_GeometryMatrix_rotateWithCenter(system) {
 }
 
 function test_update_ColorMatrix_constructor(system) {
-    // TODO
+    {
+        local values = [
+            3.1, 4.1, 5.9, 2.6, 5.3,
+            5.8, 9.7, 9.3, 2.3, 8.4,
+            6.2, 6.4, 3.3, 8.3, 2.7,
+            9.5, 0.2, 8.8, 4.1, 9.7,
+        ]
+        local c = ebiten.ColorMatrix(values)
+        ::assert(c instanceof ebiten.ColorMatrix)
+        // TODO: check values
+    }
+}
+
+/*function test_update_ColorMatrix_identity(system) {
+    local c = ebiten.ColorMatrix.identity
+    ::assert(c instanceof ebiten.ColorMatrix)
+    ::assert(c.e00 == 1)
+}*/
+
+function test_update_ColorMatrix_concat(system) {
 }
 
 function test_update_Texture_constructor(system) {

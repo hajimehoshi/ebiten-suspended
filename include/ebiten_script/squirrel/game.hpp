@@ -1,6 +1,7 @@
 #ifndef EBITEN_SCRIPT_SQUIRREL_GAME_HPP
 #define EBITEN_SCRIPT_SQUIRREL_GAME_HPP
 
+#include "ebiten_script/squirrel/color_matrix_class.hpp"
 #include "ebiten_script/squirrel/geometry_matrix_class.hpp"
 #include "ebiten_script/squirrel/input_class.hpp"
 #include "ebiten_script/squirrel/texture_class.hpp"
@@ -163,6 +164,7 @@ private:
     {
       util::create_function(this->vm_, e, "terminate", method_terminate, "");
     }
+    color_matrix_class::initialize(this->vm_);
     geometry_matrix_class::initialize(this->vm_);
     input_class::initialize(this->vm_);
     texture_class::initialize(this->vm_);
