@@ -43,11 +43,38 @@ releasehook(SQUserPointer p, SQInteger) {
   return 1;
 }
 
+ebiten::graphics::color_matrix const&
+get_instance(HSQUIRRELVM vm, SQInteger idx) {
+  SQUserPointer p;
+  if (SQ_FAILED(::sq_getinstanceup(vm, idx, &p, type_tag()))) {
+    throw squirrel_error(vm);
+  }
+  ebiten::graphics::color_matrix* self =
+    reinterpret_cast<ebiten::graphics::color_matrix*>(p);
+  return *self;
+}
+
+SQInteger
+method_values(HSQUIRRELVM vm) {
+  try {
+    ebiten::graphics::color_matrix const& self = get_instance(vm, 1);
+    /*SQInteger i, j;
+    ::sq_getinteger(vm, 2, &i);
+    ::sq_getinteger(vm, 3, &j);
+    ::sq_pushfloat();*/
+    return 1;
+  } catch (squirrel_error const& e) {
+    return e.sq_value();
+  }
+}
+
 void
 initialize(HSQUIRRELVM vm) {
   HSQOBJECT klass = util::create_class(vm, "ebiten", "ColorMatrix", type_tag());
   util::create_method(vm, klass, "constructor", method_constructor,
                       "xa", false);
+  /*util::create_method(vm, klass, "value", method_value,
+    "xii", false);*/
 }
 
 }

@@ -1,6 +1,8 @@
 #ifndef EBITEN_SCRIPT_SQUIRREL_GAME_HPP
 #define EBITEN_SCRIPT_SQUIRREL_GAME_HPP
 
+// TODO: Use sq_rawget instead of sq_get
+
 #include "ebiten_script/squirrel/color_matrix_class.hpp"
 #include "ebiten_script/squirrel/geometry_matrix_class.hpp"
 #include "ebiten_script/squirrel/input_class.hpp"

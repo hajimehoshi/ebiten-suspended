@@ -158,7 +158,9 @@ function test_update_ColorMatrix_constructor(system) {
         ]
         local c = ebiten.ColorMatrix(values)
         ::assert(c instanceof ebiten.ColorMatrix)
-        // TODO: check values
+        /*::assert(c.value(0, 0) == 3.1)
+        ::assert(c.value(0, 1) == 4.1)
+        ::assert(c.value(0, 4) == 5.3)*/
     }
 }
 
