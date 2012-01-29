@@ -108,7 +108,7 @@ metamethod_get(HSQUIRRELVM vm) {
       std::size_t i = slot_name[1] - '0';
       std::size_t j = slot_name[2] - '0';
       double value = 0;
-      // TODO: Refactoring
+      // TODO: Refactoring: use hash?
       get_element_guard(value, self, i, j, 0, 0);
       get_element_guard(value, self, i, j, 0, 1);
       get_element_guard(value, self, i, j, 0, 2);
@@ -129,6 +129,11 @@ metamethod_get(HSQUIRRELVM vm) {
       get_element_guard(value, self, i, j, 3, 2);
       get_element_guard(value, self, i, j, 3, 3);
       get_element_guard(value, self, i, j, 3, 4);
+      get_element_guard(value, self, i, j, 4, 0);
+      get_element_guard(value, self, i, j, 4, 1);
+      get_element_guard(value, self, i, j, 4, 2);
+      get_element_guard(value, self, i, j, 4, 3);
+      get_element_guard(value, self, i, j, 4, 4);
       ::sq_pushfloat(vm, value);
     } else {
       std::string msg = "the index '" + slot_name + "' does not exist";
@@ -141,20 +146,6 @@ metamethod_get(HSQUIRRELVM vm) {
 }
 
 #undef get_element_guard
-
-/*SQInteger
-method_values(HSQUIRRELVM vm) {
-  try {
-    ebiten::graphics::color_matrix const& self = get_instance(vm, 1);
-    SQInteger i, j;
-    ::sq_getinteger(vm, 2, &i);
-    ::sq_getinteger(vm, 3, &j);
-    ::sq_pushfloat();
-    return 1;
-  } catch (squirrel_error const& e) {
-    return e.sq_value();
-  }
-}*/
 
 void
 initialize(HSQUIRRELVM vm) {

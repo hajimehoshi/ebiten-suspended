@@ -178,6 +178,12 @@ function test_update_ColorMatrix_constructor(system) {
         ::assert(c.e32 == 8.8)
         ::assert(c.e33 == 4.1)
         ::assert(c.e34 == 9.7)
+        ::assert(c.e40 == 0)
+        ::assert(c.e41 == 0)
+        ::assert(c.e42 == 0)
+        ::assert(c.e43 == 0)
+        ::assert(c.e44 == 1)
+        // TODO: range check
     }
 }
 
@@ -185,6 +191,10 @@ function test_update_ColorMatrix_constructor(system) {
     local c = ebiten.ColorMatrix.identity
     ::assert(c instanceof ebiten.ColorMatrix)
     ::assert(c.e00 == 1)
+    ::assert(c.e01 == 0)
+    ::assert(c.e02 == 0)
+    ::assert(c.e03 == 0)
+    ::assert(c.e04 == 0)
 }*/
 
 function test_update_ColorMatrix_concat(system) {
