@@ -67,13 +67,6 @@ get_instance(HSQUIRRELVM vm, SQInteger idx) {
   return *self;
 }
 
-#define get_element_guard(v, c, iv, jv, i, j) \
-  do {                                        \
-    if (iv == i && jv == j) {                 \
-      v = c.element<i, j>();                  \
-    }                                         \
-  } while (false)
-
 SQInteger
 metamethod_get(HSQUIRRELVM vm) {
   try {
@@ -82,37 +75,11 @@ metamethod_get(HSQUIRRELVM vm) {
     ::sq_getstring(vm, 2, &slot_name_p);
     std::string slot_name(slot_name_p);
     if (slot_name[0] == 'e') {
+      // TODO: length check
       // TODO: range check
       std::size_t i = slot_name[1] - '0';
       std::size_t j = slot_name[2] - '0';
-      double value = 0;
-      // TODO: Refactoring: use hash?
-      get_element_guard(value, self, i, j, 0, 0);
-      get_element_guard(value, self, i, j, 0, 1);
-      get_element_guard(value, self, i, j, 0, 2);
-      get_element_guard(value, self, i, j, 0, 3);
-      get_element_guard(value, self, i, j, 0, 4);
-      get_element_guard(value, self, i, j, 1, 0);
-      get_element_guard(value, self, i, j, 1, 1);
-      get_element_guard(value, self, i, j, 1, 2);
-      get_element_guard(value, self, i, j, 1, 3);
-      get_element_guard(value, self, i, j, 1, 4);
-      get_element_guard(value, self, i, j, 2, 0);
-      get_element_guard(value, self, i, j, 2, 1);
-      get_element_guard(value, self, i, j, 2, 2);
-      get_element_guard(value, self, i, j, 2, 3);
-      get_element_guard(value, self, i, j, 2, 4);
-      get_element_guard(value, self, i, j, 3, 0);
-      get_element_guard(value, self, i, j, 3, 1);
-      get_element_guard(value, self, i, j, 3, 2);
-      get_element_guard(value, self, i, j, 3, 3);
-      get_element_guard(value, self, i, j, 3, 4);
-      get_element_guard(value, self, i, j, 4, 0);
-      get_element_guard(value, self, i, j, 4, 1);
-      get_element_guard(value, self, i, j, 4, 2);
-      get_element_guard(value, self, i, j, 4, 3);
-      get_element_guard(value, self, i, j, 4, 4);
-      ::sq_pushfloat(vm, value);
+      ::sq_pushfloat(vm, self.element(i, j));
     } else {
       std::string msg = "the index '" + slot_name + "' does not exist";
       return ::sq_throwerror(vm, _SC(msg.c_str()));
@@ -122,8 +89,6 @@ metamethod_get(HSQUIRRELVM vm) {
     return e.sq_value();
   }
 }
-
-#undef get_element_guard
 
 void
 initialize(HSQUIRRELVM vm) {

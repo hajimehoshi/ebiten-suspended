@@ -24,27 +24,27 @@ public:
   }
   Float
   a() const {
-    return this->template element<0, 0>();
+    return this->element(0, 0);
   }
   Float
   b() const {
-    return this->template element<0, 1>();
+    return this->element(0, 1);
   }
   Float
   c() const {
-    return this->template element<1, 0>();
+    return this->element(1, 0);
   }
   Float
   d() const {
-    return this->template element<1, 1>();
+    return this->element(1, 1);
   }
   Float
   tx() const {
-    return this->template element<0, 2>();
+    return this->element(0, 2);
   }
   Float
   ty() const {
-    return this->template element<1, 2>();
+    return this->element(1, 2);
   }
   void
   set_a(Float a) {

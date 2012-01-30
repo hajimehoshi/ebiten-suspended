@@ -240,7 +240,7 @@ private:
     }
     if (program == this->shaders_.color_mat_shader_program()) {
       graphics::color_matrix const& mat = color_matrix;
-#define e(i, j) static_cast<float>(mat.element<i, j>())
+#define e(i, j) static_cast<float>(mat.element(i, j))
       float const gl_color_mat[] = {
         e(0, 0), e(0, 1), e(0, 2), e(0, 3),
         e(1, 0), e(1, 1), e(1, 2), e(1, 3),
