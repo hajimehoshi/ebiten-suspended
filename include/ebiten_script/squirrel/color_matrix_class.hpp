@@ -5,6 +5,7 @@
 #include "ebiten_script/squirrel/util.hpp"
 #include "ebiten/graphics/color_matrix.hpp"
 #include <squirrel.h>
+#include <array>
 
 namespace ebiten_script {
 namespace squirrel {
@@ -22,44 +23,23 @@ type_tag() {
   return reinterpret_cast<SQUserPointer>(method_constructor);
 }
 
-#define set_element_iterating(c, i, j) \
-  do {                                 \
-    ::sq_next(vm, 2);                  \
-    SQFloat value;                     \
-    ::sq_getfloat(vm, -1, &value);     \
-    c->set_element<i, j>(value);       \
-    ::sq_pop(vm, 2);                   \
-  } while (false)
-
 SQInteger
 method_constructor(HSQUIRRELVM vm) {
   try {
-    ebiten::graphics::color_matrix* self =
-      new ebiten::graphics::color_matrix();
+    std::array<SQFloat, 20> elements;
     {
-      ::sq_pushnull(vm); // null iterator
-      set_element_iterating(self, 0, 0);
-      set_element_iterating(self, 0, 1);
-      set_element_iterating(self, 0, 2);
-      set_element_iterating(self, 0, 3);
-      set_element_iterating(self, 0, 4);
-      set_element_iterating(self, 1, 0);
-      set_element_iterating(self, 1, 1);
-      set_element_iterating(self, 1, 2);
-      set_element_iterating(self, 1, 3);
-      set_element_iterating(self, 1, 4);
-      set_element_iterating(self, 2, 0);
-      set_element_iterating(self, 2, 1);
-      set_element_iterating(self, 2, 2);
-      set_element_iterating(self, 2, 3);
-      set_element_iterating(self, 2, 4);
-      set_element_iterating(self, 3, 0);
-      set_element_iterating(self, 3, 1);
-      set_element_iterating(self, 3, 2);
-      set_element_iterating(self, 3, 3);
-      set_element_iterating(self, 3, 4);
-      ::sq_pop(vm, 1);
+      util::stack_restorer r(vm);
+      ::sq_pushnull(vm);
+      for (std::size_t i = 0; i < elements.size(); ++i) {
+        ::sq_next(vm, 2);
+        SQFloat value;
+        ::sq_getfloat(vm, -1, &value);
+        ::sq_pop(vm, 2);
+        elements[i] = value;
+      }
     }
+    ebiten::graphics::color_matrix* self =
+      new ebiten::graphics::color_matrix(elements.begin(), elements.end());
     ::sq_setinstanceup(vm, 1, reinterpret_cast<SQUserPointer>(self));
     ::sq_setreleasehook(vm, 1, releasehook);
     return 0;
@@ -67,8 +47,6 @@ method_constructor(HSQUIRRELVM vm) {
     return e.sq_value();
   }
 }
-
-#undef set_element_iterating
 
 SQInteger
 releasehook(SQUserPointer p, SQInteger) {

@@ -32,6 +32,10 @@ protected:
   affine_matrix() {
     this->elements_.fill(0);
   }
+  template<class InputIterator>
+  affine_matrix(InputIterator const& begin, InputIterator const& end) {
+    std::copy(begin, end, this->elements_.begin());
+  }
   virtual
   ~affine_matrix() {
   }
