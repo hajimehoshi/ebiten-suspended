@@ -35,7 +35,7 @@ create_function(HSQUIRRELVM const& vm,
   stack_restorer r(vm);
   ::sq_pushroottable(vm);
   ::sq_pushstring(vm, _SC(namespace_name.c_str()), -1);
-  ::sq_get(vm, -2);
+  ::sq_rawget(vm, -2);
   ::sq_pushstring(vm, _SC(method_name.c_str()), -1);
   ::sq_newclosure(vm, func, 0);
   if (!type_mask.empty()) {
@@ -53,7 +53,7 @@ create_class(HSQUIRRELVM const& vm,
   stack_restorer r(vm);
   ::sq_pushroottable(vm);
   ::sq_pushstring(vm, _SC(namespace_name.c_str()), -1);
-  ::sq_get(vm, -2);
+  ::sq_rawget(vm, -2);
   ::sq_pushstring(vm, _SC(class_name.c_str()), -1);
   ::sq_newclass(vm, SQFalse);
   ::sq_settypetag(vm, -1, type_tag);
@@ -153,7 +153,7 @@ call(HSQUIRRELVM const& vm,
   stack_restorer r(vm);
   ::sq_pushobject(vm, receiver);
   ::sq_pushstring(vm, _SC(method_name.c_str()), -1);
-  ::sq_get(vm, -2);
+  ::sq_rawget(vm, -2);
   if (::sq_gettype(vm, -2) == OT_INSTANCE) {
     ::sq_pushobject(vm, receiver);
   } else {

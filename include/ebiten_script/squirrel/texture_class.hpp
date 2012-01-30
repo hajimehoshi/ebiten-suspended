@@ -168,56 +168,56 @@ public:
       {
         util::stack_restorer r(vm);
         ::sq_pushstring(vm, _SC("x"), -1);
-        if (SQ_SUCCEEDED(::sq_get(vm, 3))) {
+        if (SQ_SUCCEEDED(::sq_rawget(vm, 3))) {
           ::sq_getinteger(vm, -1, &x);
         }
       }
       {
         util::stack_restorer r(vm);
         ::sq_pushstring(vm, _SC("y"), -1);
-        if (SQ_SUCCEEDED(::sq_get(vm, 3))) {
+        if (SQ_SUCCEEDED(::sq_rawget(vm, 3))) {
           ::sq_getinteger(vm, -1, &y);
         }
       }
       {
         util::stack_restorer r(vm);
         ::sq_pushstring(vm, _SC("srcX"), -1);
-        if (SQ_SUCCEEDED(::sq_get(vm, 3))) {
+        if (SQ_SUCCEEDED(::sq_rawget(vm, 3))) {
           ::sq_getinteger(vm, -1, &src_x);
         }
       }
       {
         util::stack_restorer r(vm);
         ::sq_pushstring(vm, _SC("srcY"), -1);
-        if (SQ_SUCCEEDED(::sq_get(vm, 3))) {
+        if (SQ_SUCCEEDED(::sq_rawget(vm, 3))) {
           ::sq_getinteger(vm, -1, &src_y);
         }
       }
       {
         util::stack_restorer r(vm);
         ::sq_pushstring(vm, _SC("srcWidth"), -1);
-        if (SQ_SUCCEEDED(::sq_get(vm, 3))) {
+        if (SQ_SUCCEEDED(::sq_rawget(vm, 3))) {
           ::sq_getinteger(vm, -1, &src_width);
         }
       }
       {
         util::stack_restorer r(vm);
         ::sq_pushstring(vm, _SC("srcHeight"), -1);
-        if (SQ_SUCCEEDED(::sq_get(vm, 3))) {
+        if (SQ_SUCCEEDED(::sq_rawget(vm, 3))) {
           ::sq_getinteger(vm, -1, &src_height);
         }
       }
       {
         util::stack_restorer r(vm);
         ::sq_pushstring(vm, _SC("alpha"), -1);
-        if (SQ_SUCCEEDED(::sq_get(vm, 3))) {
+        if (SQ_SUCCEEDED(::sq_rawget(vm, 3))) {
           ::sq_getfloat(vm, -1, &alpha);
         }
       }
       {
         util::stack_restorer r(vm);
         ::sq_pushstring(vm, _SC("geometryMatrix"), -1);
-        if (SQ_SUCCEEDED(::sq_get(vm, 3))) {
+        if (SQ_SUCCEEDED(::sq_rawget(vm, 3))) {
           geometry_matrix = geometry_matrix_class::get_instance(vm, -1);
         }
       }

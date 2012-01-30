@@ -102,7 +102,7 @@ initialize(HSQUIRRELVM vm) {
     util::stack_restorer r(vm);
     ::sq_pushroottable(vm);
     ::sq_pushstring(vm, _SC("ebiten"), -1);
-    ::sq_get(vm, -2);
+    ::sq_rawget(vm, -2);
     ::sq_getstackobj(vm, -1, &ebiten);
   }
   {

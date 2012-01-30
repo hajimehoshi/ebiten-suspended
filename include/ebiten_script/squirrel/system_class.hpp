@@ -41,7 +41,7 @@ metamethod_get(HSQUIRRELVM vm) {
     std::string slot_name(slot_name_p);
     if (slot_name == "input") {
       ::sq_pushstring(vm, _SC("input_"), -1);
-      if (SQ_FAILED(::sq_get(vm, 1))) {
+      if (SQ_FAILED(::sq_rawget(vm, 1))) {
         throw squirrel_error(vm);
       }
     } else {
