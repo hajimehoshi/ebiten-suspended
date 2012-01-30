@@ -30,12 +30,12 @@ method_constructor(HSQUIRRELVM vm) {
     {
       util::stack_restorer r(vm);
       ::sq_pushnull(vm);
-      for (std::size_t i = 0; i < elements.size(); ++i) {
+      for (auto it = elements.begin(); it != elements.end(); ++it) {
         ::sq_next(vm, 2);
         SQFloat value;
         ::sq_getfloat(vm, -1, &value);
         ::sq_pop(vm, 2);
-        elements[i] = value;
+        *it = value;
       }
     }
     ebiten::graphics::color_matrix* self =
