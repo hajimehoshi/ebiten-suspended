@@ -76,9 +76,17 @@ metamethod_get(HSQUIRRELVM vm) {
     std::string slot_name(slot_name_p);
     if (slot_name[0] == 'e') {
       // TODO: length check
-      // TODO: range check
+      if (slot_name[1] < '0' || '9' < slot_name[1] ||
+          slot_name[2] < '0' || '9' < slot_name[2]) {
+        std::string msg = "the index '" + slot_name + "' does not exist";
+        return ::sq_throwerror(vm, _SC(msg.c_str()));
+      }
       std::size_t i = slot_name[1] - '0';
       std::size_t j = slot_name[2] - '0';
+      if ((5 <= i && i <= 9) ||
+          (5 <= j && j <= 9)) {
+        return ::sq_throwerror(vm, _SC("out of range"));
+      }
       ::sq_pushfloat(vm, self.element(i, j));
     } else {
       std::string msg = "the index '" + slot_name + "' does not exist";

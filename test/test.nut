@@ -183,7 +183,30 @@ function test_update_ColorMatrix_constructor(system) {
         ::assert(c.e42 == 0)
         ::assert(c.e43 == 0)
         ::assert(c.e44 == 1)
-        // TODO: range check
+        try {
+            local v = c.e54
+            ::assert(false)
+        } catch (e) {
+            if (e instanceof AssertFailure) {
+                throw e
+            }
+        }
+        try {
+            local v = c.e45
+            ::assert(false)
+        } catch (e) {
+            if (e instanceof AssertFailure) {
+                throw e
+            }
+        }
+        try {
+            local v = c.eaa
+            ::assert(false)
+        } catch (e) {
+            if (e instanceof AssertFailure) {
+                throw e
+            }
+        }
     }
 }
 
