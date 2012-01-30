@@ -27,7 +27,6 @@ private:
   static std::size_t const size_ = Dimension * (Dimension - 1);
   typedef std::array<Float, size_> elements_type;
   static std::once_flag identity_once_flag_;
-protected:
   elements_type elements_;
 protected:
   affine_matrix() {
