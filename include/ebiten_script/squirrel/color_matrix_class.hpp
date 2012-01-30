@@ -154,8 +154,34 @@ initialize(HSQUIRRELVM vm) {
                       "xa", false);
   util::create_method(vm, klass, "_get", metamethod_get,
                       "xs", false);
-  /*util::create_method(vm, klass, "value", method_value,
-    "xii", false);*/
+  HSQOBJECT ebiten;
+  {
+    util::stack_restorer r(vm);
+    ::sq_pushroottable(vm);
+    ::sq_pushstring(vm, _SC("ebiten"), -1);
+    ::sq_get(vm, -2);
+    ::sq_getstackobj(vm, -1, &ebiten);
+  }
+  {
+    util::stack_restorer r(vm);
+    ::sq_newarray(vm, 20);
+    HSQOBJECT arr;
+    ::sq_getstackobj(vm, -1, &arr);
+    for (int i = 0; i < 4; i++) {
+      for (int j = 0; j < 5; j++) {
+        util::stack_restorer r(vm);
+        ::sq_pushinteger(vm, i * 5 + j);
+        if (i == j) {
+          ::sq_pushinteger(vm, 1);
+        } else {
+          ::sq_pushinteger(vm, 0);
+        }
+        ::sq_rawset(vm, -3);
+      }
+    }
+    HSQOBJECT identity = util::call(vm, ebiten, "ColorMatrix", true, arr);
+    util::create_variable(vm, klass, "identity", identity, true);
+  }
 }
 
 }

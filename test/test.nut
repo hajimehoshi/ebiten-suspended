@@ -187,7 +187,7 @@ function test_update_ColorMatrix_constructor(system) {
     }
 }
 
-/*function test_update_ColorMatrix_identity(system) {
+function test_update_ColorMatrix_identity(system) {
     local c = ebiten.ColorMatrix.identity
     ::assert(c instanceof ebiten.ColorMatrix)
     ::assert(c.e00 == 1)
@@ -195,7 +195,27 @@ function test_update_ColorMatrix_constructor(system) {
     ::assert(c.e02 == 0)
     ::assert(c.e03 == 0)
     ::assert(c.e04 == 0)
-}*/
+    ::assert(c.e10 == 0)
+    ::assert(c.e11 == 1)
+    ::assert(c.e12 == 0)
+    ::assert(c.e13 == 0)
+    ::assert(c.e14 == 0)
+    ::assert(c.e20 == 0)
+    ::assert(c.e21 == 0)
+    ::assert(c.e22 == 1)
+    ::assert(c.e23 == 0)
+    ::assert(c.e24 == 0)
+    ::assert(c.e30 == 0)
+    ::assert(c.e31 == 0)
+    ::assert(c.e32 == 0)
+    ::assert(c.e33 == 1)
+    ::assert(c.e34 == 0)
+    ::assert(c.e40 == 0)
+    ::assert(c.e41 == 0)
+    ::assert(c.e42 == 0)
+    ::assert(c.e43 == 0)
+    ::assert(c.e44 == 1)
+}
 
 function test_update_ColorMatrix_concat(system) {
 }
