@@ -54,11 +54,11 @@ public:
     return this->elements_[I * Dimension + J];
   }
   template<std::size_t I, std::size_t J>
-  Float
+  void
   set_element(Float element) {
     static_assert(I < Dimension - 1, "I must be less than Dimension - 1");
     static_assert(J < Dimension,     "J must be less than Dimension");
-    return this->elements_[I * Dimension + J] = element;
+    this->elements_[I * Dimension + J] = element;
   }
   bool
   is_identity() const {
