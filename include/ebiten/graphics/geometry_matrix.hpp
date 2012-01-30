@@ -48,27 +48,27 @@ public:
   }
   void
   set_a(Float a) {
-    this->template set_element<0, 0>(a);
+    this->set_element(0, 0, a);
   }
   void
   set_b(Float b) {
-    this->template set_element<0, 1>(b);
+    this->set_element(0, 1, b);
   }
   void
   set_c(Float c) {
-    this->template set_element<1, 0>(c);
+    this->set_element(1, 0, c);
   }
   void
   set_d(Float d) {
-    this->template set_element<1, 1>(d);
+    this->set_element(1, 1, d);
   }
   void
   set_tx(Float tx) {
-    this->template set_element<0, 2>(tx);
+    this->set_element(0, 2, tx);
   }
   void
   set_ty(Float ty) {
-    this->template set_element<1, 2>(ty);
+    this->set_element(1, 2, ty);
   }
 };
 

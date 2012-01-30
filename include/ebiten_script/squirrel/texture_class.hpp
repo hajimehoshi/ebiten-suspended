@@ -227,7 +227,7 @@ public:
       if (alpha < 1) {
         ebiten::graphics::color_matrix alpha_mat =
           ebiten::graphics::color_matrix::identity();
-        alpha_mat.set_element<3, 3>(alpha);
+        alpha_mat.set_element(3, 3, alpha);
         color_matrix = color_matrix.concat(alpha_mat);
       }
       typedef texture_command_draw_texture tcdt;

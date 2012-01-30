@@ -52,12 +52,11 @@ public:
     }
     return this->elements_[i * Dimension + j];
   }
-  template<std::size_t I, std::size_t J>
   void
-  set_element(Float element) {
-    static_assert(I < Dimension - 1, "I must be less than Dimension - 1");
-    static_assert(J < Dimension,     "J must be less than Dimension");
-    this->elements_[I * Dimension + J] = element;
+  set_element(std::size_t i, std::size_t j, Float element) {
+    assert(i < Dimension - 1);
+    assert(j < Dimension);
+    this->elements_[i * Dimension + j] = element;
   }
   bool
   is_identity() const {
@@ -138,9 +137,9 @@ class affine_matrix_impl : public affine_matrix<Float,
 
 TEST(affine_matrix, element) {
   affine_matrix_impl<double, 4> m;
-  m.set_element<0, 0>(1);
-  m.set_element<0, 1>(2);
-  m.set_element<0, 2>(3);
+  m.set_element(0, 0, 1);
+  m.set_element(0, 1, 2);
+  m.set_element(0, 2, 3);
   EXPECT_EQ(1, (m.element(0, 0)));
   EXPECT_EQ(2, (m.element(0, 1)));
   EXPECT_EQ(3, (m.element(0, 2)));
@@ -157,9 +156,9 @@ TEST(affine_matrix, element) {
   EXPECT_EQ(0, (m.element(3, 1)));
   EXPECT_EQ(0, (m.element(3, 2)));
   EXPECT_EQ(1, (m.element(3, 3)));
-  m.set_element<1, 0>(4);
-  m.set_element<1, 1>(5);
-  m.set_element<2, 3>(6);
+  m.set_element(1, 0, 4);
+  m.set_element(1, 1, 5);
+  m.set_element(2, 3, 6);
   EXPECT_EQ(1, (m.element(0, 0)));
   EXPECT_EQ(2, (m.element(0, 1)));
   EXPECT_EQ(3, (m.element(0, 2)));
@@ -180,13 +179,13 @@ TEST(affine_matrix, element) {
 
 TEST(affine_matrix, is_identity) {
   affine_matrix_impl<double, 4> m1;
-  m1.set_element<0, 0>(1);
-  m1.set_element<1, 1>(1);
-  m1.set_element<2, 2>(1);
+  m1.set_element(0, 0, 1);
+  m1.set_element(1, 1, 1);
+  m1.set_element(2, 2, 1);
   EXPECT_TRUE(m1.is_identity());
   affine_matrix_impl<double, 4> m2 = m1;
   EXPECT_TRUE(m2.is_identity());
-  m2.set_element<0, 1>(1);
+  m2.set_element(0, 1, 1);
   EXPECT_FALSE(m2.is_identity());
 }
 
@@ -194,10 +193,10 @@ TEST(affine_matrix, multiply) {
   {
     affine_matrix_impl<double, 3> m1 = affine_matrix_impl<double, 3>::identity();
     affine_matrix_impl<double, 3> m2 = affine_matrix_impl<double, 3>::identity();
-    m1.set_element<0, 0>(2);
-    m1.set_element<1, 1>(2);
-    m2.set_element<0, 2>(1);
-    m2.set_element<1, 2>(1);
+    m1.set_element(0, 0, 2);
+    m1.set_element(1, 1, 2);
+    m2.set_element(0, 2, 1);
+    m2.set_element(1, 2, 1);
     {
       affine_matrix_impl<double, 3> m3 = m1.concat(m2);
       EXPECT_EQ(2, (m3.element(0, 0)));
@@ -226,30 +225,30 @@ TEST(affine_matrix, multiply) {
   {
     affine_matrix_impl<double, 4> m1;
     affine_matrix_impl<double, 4> m2;
-    m1.set_element<0, 0>(1);
-    m1.set_element<0, 1>(2);
-    m1.set_element<0, 2>(3);
-    m1.set_element<0, 3>(4);
-    m1.set_element<1, 0>(5);
-    m1.set_element<1, 1>(6);
-    m1.set_element<1, 2>(7);
-    m1.set_element<1, 3>(8);
-    m1.set_element<2, 0>(9);
-    m1.set_element<2, 1>(10);
-    m1.set_element<2, 2>(11);
-    m1.set_element<2, 3>(12);
-    m2.set_element<0, 0>(13);
-    m2.set_element<0, 1>(14);
-    m2.set_element<0, 2>(15);
-    m2.set_element<0, 3>(16);
-    m2.set_element<1, 0>(17);
-    m2.set_element<1, 1>(18);
-    m2.set_element<1, 2>(19);
-    m2.set_element<1, 3>(20);
-    m2.set_element<2, 0>(21);
-    m2.set_element<2, 1>(22);
-    m2.set_element<2, 2>(23);
-    m2.set_element<2, 3>(24);
+    m1.set_element(0, 0, 1);
+    m1.set_element(0, 1, 2);
+    m1.set_element(0, 2, 3);
+    m1.set_element(0, 3, 4);
+    m1.set_element(1, 0, 5);
+    m1.set_element(1, 1, 6);
+    m1.set_element(1, 2, 7);
+    m1.set_element(1, 3, 8);
+    m1.set_element(2, 0, 9);
+    m1.set_element(2, 1, 10);
+    m1.set_element(2, 2, 11);
+    m1.set_element(2, 3, 12);
+    m2.set_element(0, 0, 13);
+    m2.set_element(0, 1, 14);
+    m2.set_element(0, 2, 15);
+    m2.set_element(0, 3, 16);
+    m2.set_element(1, 0, 17);
+    m2.set_element(1, 1, 18);
+    m2.set_element(1, 2, 19);
+    m2.set_element(1, 3, 20);
+    m2.set_element(2, 0, 21);
+    m2.set_element(2, 1, 22);
+    m2.set_element(2, 2, 23);
+    m2.set_element(2, 3, 24);
     {
       affine_matrix_impl<double, 4> m3 = m1.concat(m2);
       EXPECT_EQ(218, (m3.element(0, 0)));

@@ -76,10 +76,10 @@ public:
     geom_mat.set_ty(y);
 
     color_matrix color_mat;
-    color_mat.set_element<0, 4>(red   / 255.0);
-    color_mat.set_element<1, 4>(green / 255.0);
-    color_mat.set_element<2, 4>(blue  / 255.0);
-    color_mat.set_element<3, 4>(alpha / 255.0);
+    color_mat.set_element(0, 4, red   / 255.0);
+    color_mat.set_element(1, 4, green / 255.0);
+    color_mat.set_element(2, 4, blue  / 255.0);
+    color_mat.set_element(3, 4, alpha / 255.0);
 
     this->draw_texture(*this->empty_texture_,
                        0, 0, this->empty_texture_->width(), this->empty_texture_->height(),
