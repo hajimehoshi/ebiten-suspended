@@ -32,6 +32,7 @@ protected:
   affine_matrix() {
     this->elements_.fill(0);
   }
+  virtual
   ~affine_matrix() {
   }
 public:
