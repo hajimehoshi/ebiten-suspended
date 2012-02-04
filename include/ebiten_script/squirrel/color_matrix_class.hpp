@@ -27,6 +27,9 @@ SQInteger
 method_constructor(HSQUIRRELVM vm) {
   try {
     std::array<SQFloat, 20> elements;
+    if (static_cast<std::size_t>(::sq_getsize(vm, 2)) != elements.size()) {
+      return ::sq_throwerror(vm, _SC("array size must be 20"));
+    }
     {
       util::stack_restorer r(vm);
       ::sq_pushnull(vm);
