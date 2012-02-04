@@ -15,6 +15,11 @@ function assert(exp) {
     ::assertLine(exp, stackinfo.line)
 }
 
+function assertDelta(a, b, delta) {
+    local stackinfo = ::getstackinfos(2)
+    ::assertLine(::abs(a - b) < delta, stackinfo.line)
+}
+
 function assertError(func) {
     local stackinfo = ::getstackinfos(2)
     try {
@@ -71,45 +76,45 @@ function test_update_GeometryMatrix_concat(system) {
     local b = ebiten.GeometryMatrix(9.7, 9.3, 2.3, 8.4, 6.2, 6.4)
     {
         local c = a.concat(b)
-        ::assert(::abs(a.a  - 3.1)    < 0.0001)
-        ::assert(::abs(a.b  - 4.1)    < 0.0001)
-        ::assert(::abs(a.c  - 5.9)    < 0.0001)
-        ::assert(::abs(a.d  - 2.6)    < 0.0001)
-        ::assert(::abs(a.tx - 5.3)    < 0.0001)
-        ::assert(::abs(a.ty - 5.8)    < 0.0001)
-        ::assert(::abs(b.a  - 9.7)    < 0.0001)
-        ::assert(::abs(b.b  - 9.3)    < 0.0001)
-        ::assert(::abs(b.c  - 2.3)    < 0.0001)
-        ::assert(::abs(b.d  - 8.4)    < 0.0001)
-        ::assert(::abs(b.tx - 6.2)    < 0.0001)
-        ::assert(::abs(b.ty - 6.4)    < 0.0001)
-        ::assert(::abs(c.a  - 84.94)  < 0.0001)
-        ::assert(::abs(c.b  - 63.95)  < 0.0001)
-        ::assert(::abs(c.c  - 56.69)  < 0.0001)
-        ::assert(::abs(c.d  - 31.27)  < 0.0001)
-        ::assert(::abs(c.tx - 111.55) < 0.0001)
-        ::assert(::abs(c.ty - 67.31)  < 0.0001)
+        ::assertDelta(a.a,  3.1,  0.0001)
+        ::assertDelta(a.b,  4.1,    0.0001)
+        ::assertDelta(a.c,  5.9,    0.0001)
+        ::assertDelta(a.d,  2.6,    0.0001)
+        ::assertDelta(a.tx, 5.3,    0.0001)
+        ::assertDelta(a.ty, 5.8,    0.0001)
+        ::assertDelta(b.a,  9.7,    0.0001)
+        ::assertDelta(b.b,  9.3,    0.0001)
+        ::assertDelta(b.c,  2.3,    0.0001)
+        ::assertDelta(b.d,  8.4,    0.0001)
+        ::assertDelta(b.tx, 6.2,    0.0001)
+        ::assertDelta(b.ty, 6.4,    0.0001)
+        ::assertDelta(c.a,  84.94,  0.0001)
+        ::assertDelta(c.b,  63.95,  0.0001)
+        ::assertDelta(c.c,  56.69,  0.0001)
+        ::assertDelta(c.d,  31.27,  0.0001)
+        ::assertDelta(c.tx, 111.55, 0.0001)
+        ::assertDelta(c.ty, 67.31,  0.0001)
     }
     {
         local c = b.concat(a)
-        ::assert(::abs(a.a  - 3.1)   < 0.0001)
-        ::assert(::abs(a.b  - 4.1)   < 0.0001)
-        ::assert(::abs(a.c  - 5.9)   < 0.0001)
-        ::assert(::abs(a.d  - 2.6)   < 0.0001)
-        ::assert(::abs(a.tx - 5.3)   < 0.0001)
-        ::assert(::abs(a.ty - 5.8)   < 0.0001)
-        ::assert(::abs(b.a  - 9.7)   < 0.0001)
-        ::assert(::abs(b.b  - 9.3)   < 0.0001)
-        ::assert(::abs(b.c  - 2.3)   < 0.0001)
-        ::assert(::abs(b.d  - 8.4)   < 0.0001)
-        ::assert(::abs(b.tx - 6.2)   < 0.0001)
-        ::assert(::abs(b.ty - 6.4)   < 0.0001)
-        ::assert(::abs(c.a  - 39.5)  < 0.0001)
-        ::assert(::abs(c.b  - 63.27) < 0.0001)
-        ::assert(::abs(c.c  - 63.21) < 0.0001)
-        ::assert(::abs(c.d  - 76.71) < 0.0001)
-        ::assert(::abs(c.tx - 50.76) < 0.0001)
-        ::assert(::abs(c.ty - 59.02) < 0.0001)
+        ::assertDelta(a.a,  3.1,   0.0001)
+        ::assertDelta(a.b,  4.1,   0.0001)
+        ::assertDelta(a.c,  5.9,   0.0001)
+        ::assertDelta(a.d,  2.6,   0.0001)
+        ::assertDelta(a.tx, 5.3,   0.0001)
+        ::assertDelta(a.ty, 5.8,   0.0001)
+        ::assertDelta(b.a,  9.7,   0.0001)
+        ::assertDelta(b.b,  9.3,   0.0001)
+        ::assertDelta(b.c,  2.3,   0.0001)
+        ::assertDelta(b.d,  8.4,   0.0001)
+        ::assertDelta(b.tx, 6.2,   0.0001)
+        ::assertDelta(b.ty, 6.4,   0.0001)
+        ::assertDelta(c.a,  39.5,  0.0001)
+        ::assertDelta(c.b,  63.27, 0.0001)
+        ::assertDelta(c.c,  63.21, 0.0001)
+        ::assertDelta(c.d,  76.71, 0.0001)
+        ::assertDelta(c.tx, 50.76, 0.0001)
+        ::assertDelta(c.ty, 59.02, 0.0001)
     }
     {
         ::assertError(function () {
@@ -137,10 +142,10 @@ function test_update_GeometryMatrix_rotate(system) {
     {
         local g = ebiten.GeometryMatrix.rotate(theta)
         ::assert(g instanceof ebiten.GeometryMatrix)
-        ::assert(::abs(g.a - ::cos(theta))  < 0.0001)
-        ::assert(::abs(g.b - -::sin(theta)) < 0.0001)
-        ::assert(::abs(g.c - ::sin(theta))  < 0.0001)
-        ::assert(::abs(g.d - ::cos(theta))  < 0.0001)
+        ::assertDelta(g.a, ::cos(theta),  0.0001)
+        ::assertDelta(g.b, -::sin(theta), 0.0001)
+        ::assertDelta(g.c, ::sin(theta),  0.0001)
+        ::assertDelta(g.d, ::cos(theta),  0.0001)
         ::assert(g.tx == 0)
         ::assert(g.ty == 0)
     }
@@ -148,10 +153,10 @@ function test_update_GeometryMatrix_rotate(system) {
     {
         local g = ebiten.GeometryMatrix.rotate(theta)
         ::assert(g instanceof ebiten.GeometryMatrix)
-        ::assert(::abs(g.a - ::cos(theta))  < 0.0001)
-        ::assert(::abs(g.b - -::sin(theta)) < 0.0001)
-        ::assert(::abs(g.c - ::sin(theta))  < 0.0001)
-        ::assert(::abs(g.d - ::cos(theta))  < 0.0001)
+        ::assertDelta(g.a, ::cos(theta),  0.0001)
+        ::assertDelta(g.b, -::sin(theta), 0.0001)
+        ::assertDelta(g.c, ::sin(theta),  0.0001)
+        ::assertDelta(g.d, ::cos(theta),  0.0001)
         ::assert(g.tx == 0)
         ::assert(g.ty == 0)
     }
@@ -261,6 +266,21 @@ function test_update_ColorMatrix_identity(system) {
 }
 
 function test_update_ColorMatrix_concat(system) {
+    local c1 = ebiten.ColorMatrix([
+            3.1, 4.1, 5.9, 2.6, 5.3,
+            5.8, 9.7, 9.3, 2.3, 8.4,
+            6.2, 6.4, 3.3, 8.3, 2.7,
+            9.5, 0.2, 8.8, 4.1, 9.7,
+        ])
+    local c2 = ebiten.ColorMatrix([
+            1.6, 9.3, 9.9, 3.8, 1.9,
+            6.8, 2.1, 4.8, 0.8, 6.5,
+            1.3, 2.8, 2.3, 0.6, 6.4,
+            7.0, 9.3, 8.4, 4.6, 0.9,
+        ])
+    {
+//        local c3 = c1.concat(c2)
+    }
 }
 
 function test_update_Texture_constructor(system) {
