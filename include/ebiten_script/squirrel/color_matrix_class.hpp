@@ -101,6 +101,41 @@ metamethod_get(HSQUIRRELVM vm) {
   }
 }
 
+SQInteger
+method_concat(HSQUIRRELVM vm) {
+  try {
+    ebiten::graphics::color_matrix const& self = get_instance(vm, 1);
+    ebiten::graphics::color_matrix const& rhs  = get_instance(vm, 2);
+    ebiten::graphics::color_matrix const result = self.concat(rhs);
+    {
+      /*
+       * [Squirrel]
+       * ebiten.ColorMatrix([...])
+       */
+      ::sq_newarray(vm, 20);
+      HSQOBJECT arr;
+      ::sq_getstackobj(vm, -1, &arr);
+      for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 5; j++) {
+          util::stack_restorer r(vm);
+          ::sq_pushinteger(vm, i * 5 + j);
+          ::sq_pushfloat(vm, result.element(i, j));
+          ::sq_rawset(vm, -3);
+        }
+      }
+      ::sq_getclass(vm, 1);
+      ::sq_pushroottable(vm);
+      ::sq_pushobject(vm, arr);
+      if (SQ_FAILED(::sq_call(vm, 2, SQTrue, SQTrue))) {
+        throw squirrel_error(vm);
+      }
+    }
+    return 1;
+  } catch (squirrel_error const& e) {
+    return e.sq_value();
+  }
+}
+
 void
 initialize(HSQUIRRELVM vm) {
   HSQOBJECT klass = util::create_class(vm, "ebiten", "ColorMatrix", type_tag());
@@ -108,6 +143,8 @@ initialize(HSQUIRRELVM vm) {
                       "xa", false);
   util::create_method(vm, klass, "_get", metamethod_get,
                       "xs", false);
+  util::create_method(vm, klass, "concat", method_concat,
+                      "xx", false);
   HSQOBJECT ebiten;
   {
     util::stack_restorer r(vm);
