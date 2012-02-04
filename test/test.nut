@@ -12,10 +12,27 @@ class AssertFailure {
 
 function assert(exp) {
     local stackinfo = ::getstackinfos(2)
-    if (!exp) {
-        ::print("line " + stackinfo.line + " failed!")
-        throw AssertFailure("test failed\n")
+    ::assertLine(exp, stackinfo.line)
+}
+
+function assertError(func) {
+    local stackinfo = ::getstackinfos(2)
+    try {
+        func()
+        ::assertLine(false, stackinfo.line)
+    } catch (e) {
+        if (e instanceof AssertFailure) {
+            throw e
+        }
     }
+}
+
+function assertLine(exp, line) {
+    if (exp) {
+        return
+    }
+    ::print("line " + line + " failed!")
+    throw AssertFailure("test failed\n")
 }
 
 function test_update_system(system) {
@@ -95,14 +112,9 @@ function test_update_GeometryMatrix_concat(system) {
         ::assert(::abs(c.ty - 59.02) < 0.0001)
     }
     {
-        try {
-            c = a.concat(Foo())
-            ::assert(false)
-        } catch (e) {
-            if (e instanceof AssertFailure) {
-                throw e
-            }
-        }
+        ::assertError(function () {
+                c = a.concat(Foo())                
+            })
     }
 }
 
@@ -183,30 +195,15 @@ function test_update_ColorMatrix_constructor(system) {
         ::assert(c.e42 == 0)
         ::assert(c.e43 == 0)
         ::assert(c.e44 == 1)
-        try {
-            local v = c.e54
-            ::assert(false)
-        } catch (e) {
-            if (e instanceof AssertFailure) {
-                throw e
-            }
-        }
-        try {
-            local v = c.e45
-            ::assert(false)
-        } catch (e) {
-            if (e instanceof AssertFailure) {
-                throw e
-            }
-        }
-        try {
-            local v = c.eaa
-            ::assert(false)
-        } catch (e) {
-            if (e instanceof AssertFailure) {
-                throw e
-            }
-        }
+        ::assertError(function () {
+                local v = c.e54
+            })
+        ::assertError(function () {
+                local v = c.e45
+            })
+        ::assertError(function () {
+                local v = c.eaa
+            })
     }
 }
 
