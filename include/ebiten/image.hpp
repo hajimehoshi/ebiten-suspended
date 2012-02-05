@@ -32,6 +32,8 @@ public:
                       std::size_t width,
                       std::size_t height) const {
     assert(values.size() == width * height * 4);
+    assert(this->width_  <= width);
+    assert(this->height_ <= height);
     values.clear();
     for (std::size_t j = 0; j < this->height_; ++j) {
       std::copy(this->pixels_.begin() + j       * this->width_ * 4,
