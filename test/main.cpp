@@ -21,7 +21,7 @@ main(int argc, char* argv[]) {
     if (result != EXIT_SUCCESS) {
       return result;
     }
-    ebiten_script::squirrel::game game("./test/test.nut");
+    ebiten_script::squirrel::game game("./test/main.nut");
     auto game_update = std::bind(&ebiten_script::squirrel::game::update,
                                  &game,
                                  std::placeholders::_1,
