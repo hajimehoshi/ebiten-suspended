@@ -52,9 +52,9 @@ private:
   }
 public:
   texture_pointer
-  from_image(image const& image) {
-    std::size_t const width  = image.width();
-    std::size_t const height = image.height();
+  from_image(image const& img) {
+    std::size_t const width  = img.width();
+    std::size_t const height = img.height();
     std::size_t const texture_width  = clp2(width);
     std::size_t const texture_height = clp2(height);
     GLuint texture_id = 0;
@@ -62,18 +62,11 @@ public:
     assert(texture_id);
     ::glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
     ::glBindTexture(GL_TEXTURE_2D, texture_id);
-    {
-      std::vector<uint8_t> pixels(texture_width * texture_height * 4, 0);
-      image.pixels_with_padding(pixels, texture_width, texture_height);
-      ::glTexImage2D(GL_TEXTURE_2D,
-                     0,
-                     GL_RGBA,
-                     static_cast<GLsizei>(texture_width),
-                     static_cast<GLsizei>(texture_height),
-                     0,
-                     GL_RGBA,
-                     GL_UNSIGNED_BYTE,
-                     pixels.data());
+    if (width == texture_width && height == texture_height) {
+      this->gl_tex_image2d(img);
+    } else {
+      image const img_with_padding(img, texture_width, texture_height);
+      this->gl_tex_image2d(img_with_padding);
     }
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -82,6 +75,20 @@ public:
     texture_pointer p(new t(texture_id, width, height, texture_width, texture_height));
     return p;
   }
+private:
+  void
+  gl_tex_image2d(image const& img_with_padding) {
+    ::glTexImage2D(GL_TEXTURE_2D,
+                   0,
+                   GL_RGBA,
+                   static_cast<GLsizei>(img_with_padding.width()),
+                   static_cast<GLsizei>(img_with_padding.height()),
+                   0,
+                   GL_RGBA,
+                   GL_UNSIGNED_BYTE,
+                   img_with_padding.pixels().data());
+  }
+public:
   std::unique_ptr<graphics::texture, texture_deleter>
   create(std::size_t width, std::size_t height) {
     std::size_t const texture_width  = clp2(width);
