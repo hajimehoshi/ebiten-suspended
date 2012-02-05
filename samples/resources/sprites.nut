@@ -60,7 +60,6 @@ class Sprites {
             return
         }
         if (sprites == null) {
-            // TODO: Modify path!
             local texture = ebiten.Texture("test.png")
             this.sprites = []
             for (local i = 0; i < 100; i++) {
