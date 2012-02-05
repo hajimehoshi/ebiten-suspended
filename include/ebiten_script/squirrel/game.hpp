@@ -109,6 +109,7 @@ public:
     if (this->is_terminated_) {
       return;
     }
+    // TODO: check references of local variables
     HSQOBJECT main_offscreen_texture =
       util::call(this->vm_, this->ebiten_, "Texture", true,
                  0, 0);

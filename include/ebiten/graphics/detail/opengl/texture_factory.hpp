@@ -55,27 +55,31 @@ public:
   from_image(image const& image) {
     std::size_t const width  = image.width();
     std::size_t const height = image.height();
-    assert(width  == clp2(width));
-    assert(height == clp2(height));
+    std::size_t const texture_width  = clp2(width);
+    std::size_t const texture_height = clp2(height);
     GLuint texture_id = 0;
     ::glGenTextures(1, &texture_id);
     assert(texture_id);
     ::glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
     ::glBindTexture(GL_TEXTURE_2D, texture_id);
-    ::glTexImage2D(GL_TEXTURE_2D,
-                   0,
-                   GL_RGBA,
-                   static_cast<GLsizei>(width),
-                   static_cast<GLsizei>(height),
-                   0,
-                   GL_RGBA,
-                   GL_UNSIGNED_BYTE,
-                   image.pixels().data());
+    {
+      std::vector<uint8_t> pixels(texture_width * texture_height * 4, 0);
+      image.pixels_with_padding(pixels, texture_width, texture_height);
+      ::glTexImage2D(GL_TEXTURE_2D,
+                     0,
+                     GL_RGBA,
+                     static_cast<GLsizei>(texture_width),
+                     static_cast<GLsizei>(texture_height),
+                     0,
+                     GL_RGBA,
+                     GL_UNSIGNED_BYTE,
+                     pixels.data());
+    }
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     ::glBindTexture(GL_TEXTURE_2D, 0);
     typedef graphics::texture t;
-    texture_pointer p(new t(texture_id, width, height, width, height));
+    texture_pointer p(new t(texture_id, width, height, texture_width, texture_height));
     return p;
   }
   std::unique_ptr<graphics::texture, texture_deleter>

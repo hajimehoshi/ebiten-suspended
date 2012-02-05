@@ -27,6 +27,18 @@ public:
   pixels() const {
     return this->pixels_;
   }
+  void
+  pixels_with_padding(std::vector<uint8_t>& values,
+                      std::size_t width,
+                      std::size_t height) const {
+    assert(values.size() == width * height * 4);
+    values.clear();
+    for (std::size_t j = 0; j < this->height_; ++j) {
+      std::copy(this->pixels_.begin() + j       * this->width_ * 4,
+                this->pixels_.begin() + (j + 1) * this->width_ * 4,
+                values.begin() + j * width * 4);
+    }
+  }
   std::size_t
   width() const {
     return this->width_;
