@@ -98,6 +98,7 @@ public:
     if (this->is_terminated_) {
       return true;
     }
+    // TODO: Can I move into the function 'draw'?
     texture_class::instantiate(this->vm_, tf);
     return false;
   }

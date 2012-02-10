@@ -89,7 +89,7 @@ private:
                    img_with_padding.pixels().data());
   }
 public:
-  std::unique_ptr<graphics::texture, texture_deleter>
+  texture_pointer
   create(std::size_t width, std::size_t height) {
     std::size_t const texture_width  = clp2(width);
     std::size_t const texture_height = clp2(height);

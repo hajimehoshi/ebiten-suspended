@@ -1,6 +1,9 @@
 // To instinate
 g_texture <- null
 
+// draw の廃止
+// update の中で何か?
+
 function test_update_Texture_constructor(system) {
     {
         local t = ebiten.Texture(10, 20)
@@ -9,6 +12,7 @@ function test_update_Texture_constructor(system) {
     }
     {
         // TODO: path?
+        // TODO: Use system.loadTexture
         local t = ebiten.Texture("samples/resources/test.png")
         ::assert(t.width  == 32)
         ::assert(t.height == 32)
@@ -20,6 +24,11 @@ function test_update_Texture_constructor(system) {
     }
 }
 
-function test_draw_Texture_x(offscreen) {
-    //::assert(false);
-}
+/*// temporal
+t <- null
+
+function test_draw_Texture_drawTexture(offscreen) {
+    ::assert(offscreen != null)
+    ::t = ebiten.Texture("samples/resources/blocks.png")
+    offscreen.drawTexture(::t, {})
+}*/
