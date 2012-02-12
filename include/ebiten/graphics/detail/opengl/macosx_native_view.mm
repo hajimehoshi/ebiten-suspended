@@ -86,8 +86,10 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
     ::CGLUnlockContext((CGLContextObj)[context CGLContextObj]);
   }
   if (terminated) {
-    ::CVDisplayLinkStop(self->displayLink_);
-    return kCVReturnSuccess;;
+    // It may cause problems when closing the window.
+    // TODO: Move it?
+    //::CVDisplayLinkStop(self->displayLink_);
+    return kCVReturnSuccess;
   }
   return kCVReturnSuccess;
 }
