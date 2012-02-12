@@ -67,7 +67,9 @@
   (void)alert;
   (void)contextInfo;
   if (returnCode == NSAlertDefaultReturn) {
-    [self close];    
+    [self performSelectorOnMainThread:@selector(close)
+                           withObject:nil
+                        waitUntilDone:NO];
   }
 }
 
