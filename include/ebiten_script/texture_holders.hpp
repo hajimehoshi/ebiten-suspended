@@ -31,16 +31,26 @@ public:
   key_type
   insert(Args const&... args) {
     key_type key = this->unique_number_;
+    //std::cout << "insert: " << key << std::endl;
     this->map_.emplace(key, std::move(texture_holder(args...)));
     ++this->unique_number_;
     return key;
   }
   texture_holder&
   get(key_type const& key) {
+    //std::cout << "get: " << key << std::endl;
+    assert(this->map_.find(key) != this->map_.end());
+    return this->map_.at(key);
+  }
+  texture_holder const&
+  get(key_type const& key) const {
+    //std::cout << "get: " << key << std::endl;
+    assert(this->map_.find(key) != this->map_.end());
     return this->map_.at(key);
   }
   void
   remove(key_type const& key) {
+    //std::cout << "remove: " << key << std::endl;
     this->map_.erase(key);
   }
   void

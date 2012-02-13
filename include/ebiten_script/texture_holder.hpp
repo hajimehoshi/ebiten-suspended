@@ -85,11 +85,11 @@ public:
     if (this->external_ebiten_texture_) {
       return this->external_ebiten_texture_->width();
     }
-    if (this->width_) {
-      return this->width_;
-    }
     if (this->image_) {
       return this->image_->width();
+    }
+    if (this->width_) {
+      return this->width_;
     }
     return 0;
   }
@@ -98,11 +98,11 @@ public:
     if (this->external_ebiten_texture_) {
       return this->external_ebiten_texture_->height();
     }
-    if (this->height_) {
-      return this->height_;
-    }
     if (this->image_) {
       return this->image_->height();
+    }
+    if (this->height_) {
+      return this->height_;
     }
     return 0;
   }

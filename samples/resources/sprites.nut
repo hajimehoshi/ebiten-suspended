@@ -11,26 +11,30 @@ class Sprite {
         this.vx = (rand() % 2) * 2 - 1
         this.vy = (rand() % 2) * 2 - 1
     }
-    function update() {
-        this.x += this.vx
-        this.y += this.vy
-        local regionWidth  = this.screenWidth  - this.texture.width
-        local regionHeight = this.screenHeight - this.texture.height
-        if (this.x < 0) {
-            this.x  = - this.x
-            this.vx = -this.vx
-        }
-        if (regionWidth <= this.x) {
-            this.x  = -this.x + 2 * regionWidth
-            this.vx = -this.vx
-        }
-        if (this.y < 0) {
-            this.y  = - this.y
-            this.vy = -this.vy
-        }
-        if (regionHeight <= this.y) {
-            this.y  = -this.y + 2 * regionHeight
-            this.vy = -this.vy
+    function update(texture) {
+        // ??
+        local regionWidth  = this.screenWidth  - texture.width
+        local regionHeight = this.screenHeight - texture.height
+        while (true) {
+            this.x += this.vx
+            this.y += this.vy
+            if (this.x < 0) {
+                this.x  = - this.x
+                this.vx = -this.vx
+            }
+            if (regionWidth <= this.x) {
+                this.x  = -this.x + 2 * regionWidth
+                this.vx = -this.vx
+            }
+            if (this.y < 0) {
+                this.y  = - this.y
+                this.vy = -this.vy
+            }
+            if (regionHeight <= this.y) {
+                this.y  = -this.y + 2 * regionHeight
+                this.vy = -this.vy
+            }
+            ::suspend()
         }
     }
     function draw(offscreen) {
@@ -62,12 +66,24 @@ class Sprites {
         if (sprites == null) {
             local texture = ebiten.Texture("test.png")
             this.sprites = []
+            this.spritesThreads = []
             for (local i = 0; i < 100; i++) {
-                this.sprites.push(Sprite(texture, this.screenWidth, this.screenHeight))
+                local sprite = Sprite(texture, this.screenWidth, this.screenHeight)
+                this.sprites.push(sprite)
+                local thread = ::newthread(function () {
+                        sprite.update(texture)
+                    })
+                this.spritesThreads.push(thread)
             }
         }
-        foreach (sprite in this.sprites) {
-            sprite.update()
+        for (local i = 0; i < this.spritesThreads.len(); i++) {
+            local thread = this.spritesThreads[i]
+            local status = thread.getstatus()
+            if (status == "idle") {
+                thread.call()
+            } else if (status == "suspended") {
+                thread.wakeup()
+            }
         }
     }
     function draw(offscreen) {
@@ -76,11 +92,15 @@ class Sprites {
             this.screenHeight = offscreen.height
             return
         }
+        if (this.sprites == null) {
+            return
+        }
         foreach (sprite in this.sprites) {
             sprite.draw(offscreen)
         }
     }
     sprites = null
+    spritesThreads = null
     screenWidth  = 0
     screenHeight = 0
 }

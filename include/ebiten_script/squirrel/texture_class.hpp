@@ -14,14 +14,13 @@
 #include <fstream>
 #include <memory>
 #include <string>
-#include <unordered_map>
 
 namespace ebiten_script {
 namespace squirrel {
 
 class texture_class {
 private:
-  static std::unordered_map<HSQUIRRELVM, texture_holders> vm_to_texture_holders_;
+  static texture_holders texture_holders_;
   typedef std::pair<texture_holders::key_type, HSQUIRRELVM> key_vm_type;
 public:
   texture_class() = delete;
@@ -79,6 +78,7 @@ public:
   }
   static SQInteger
   releasehook(SQUserPointer p, SQInteger) {
+    // TODO: logging
     key_vm_type* key_vm = reinterpret_cast<key_vm_type*>(p);
     texture_holders::key_type key = key_vm->first;
     HSQUIRRELVM vm                = key_vm->second;
@@ -98,7 +98,7 @@ public:
   static SQInteger
   metamethod_get(HSQUIRRELVM vm) {
     try {
-      texture_holder& self = get_instance(vm, 1);
+      texture_holder const& self = get_instance(vm, 1);
       SQChar const* slot_name_p;
       ::sq_getstring(vm, 2, &slot_name_p);
       std::string slot_name(slot_name_p);
@@ -277,16 +277,13 @@ public:
   }
 private:
   static texture_holders&
-  get_texture_holders(HSQUIRRELVM vm) {
-    auto it = vm_to_texture_holders_.find(vm);
-    if (it == vm_to_texture_holders_.end()) {
-      vm_to_texture_holders_.emplace(vm, std::move(texture_holders()));
-    }
-    return vm_to_texture_holders_[vm];
+  get_texture_holders(HSQUIRRELVM) {
+    // TODO: Multi-thread?
+    return texture_holders_;
   }
 };
 
-std::unordered_map<HSQUIRRELVM, texture_holders> texture_class::vm_to_texture_holders_;
+texture_holders texture_class::texture_holders_;
 
 }
 }
