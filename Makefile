@@ -7,7 +7,6 @@ CXXFLAGS := \
 	-W -Wall -Wextra -Wmissing-prototypes -Wshorten-64-to-32 -pedantic \
 	-fPIC \
 	-Iinclude \
-	-I~/c++_std_include \
 	-x objective-c++ -std=c++0x -stdlib=libc++ \
 	-fobjc-arc \
 	-DEBITEN_VERSION_COMMIT_UNIX_TIME="`git log --pretty="%ct" -1`" \
