@@ -69,7 +69,7 @@ bin/$(PROG_TEST): $(SRC_EBITEN) $(SRC_TEST) lib/libgtest_main.a lib/libv8.a
 
 lib/libv8.a:
 	(cd $(V8_DIR); \
-		scons)
+		scons arch=x64)
 	cp $(V8_DIR)/libv8.a $@
 
 lib/libgtest_main.a:

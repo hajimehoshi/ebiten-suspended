@@ -7,6 +7,7 @@
 #include "ebiten/noncopyable.hpp"
 
 #pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-function"
 #pragma clang diagnostic ignored "-Wunused-parameter"
 #include "v8.h"
 #pragma clang diagnostic pop
@@ -19,6 +20,7 @@ namespace v8 {
 class game : private ebiten::noncopyable {
 public:
   game(std::string) {
+    ::v8::HandleScope foo;
   }
   ~game() {
   }
