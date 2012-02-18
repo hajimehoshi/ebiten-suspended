@@ -19,6 +19,7 @@ Ebiten - A 2D Game Library -
 
 ** Mac OS X without Xcode
 
+You need to have 'scons'.
 Execute the command 'make'.
 
 
