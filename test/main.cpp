@@ -3,7 +3,7 @@
 
 #include "ebiten_application/run.hpp"
 #include "ebiten_frame/frame.hpp"
-#include "ebiten_script/squirrel/game.hpp"
+#include "ebiten_script/v8/game.hpp"
 #include "ebiten/ebiten.hpp"
 #include "ebiten/image_loader.hpp"
 #include "ebiten/resources.hpp"
@@ -21,12 +21,12 @@ main(int argc, char* argv[]) {
     if (result != EXIT_SUCCESS) {
       return result;
     }
-    ebiten_script::squirrel::game game("./test/main.nut");
-    auto game_update = std::bind(&ebiten_script::squirrel::game::update,
+    ebiten_script::v8::game game("./test/main.js");
+    auto game_update = std::bind(&ebiten_script::v8::game::update,
                                  &game,
                                  std::placeholders::_1,
                                  std::placeholders::_2);
-    auto game_draw = std::bind(&ebiten_script::squirrel::game::draw,
+    auto game_draw = std::bind(&ebiten_script::v8::game::draw,
                                &game,
                                std::placeholders::_1,
                                std::placeholders::_2);

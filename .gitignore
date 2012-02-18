@@ -4,6 +4,8 @@
 *.dSYM
 *.o
 .DS_Store
+.sconsign.dblite
+obj
 
 # Xcode
 

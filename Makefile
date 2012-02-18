@@ -16,12 +16,12 @@ CXXFLAGS := \
 LDFLAGS := \
 	-framework Cocoa -framework OpenGL -framework QuartzCore
 
-GTEST_DIR    := third_party/gtest-1.6.0
-SQUIRREL_DIR := third_party/squirrel-3.0.2
+GTEST_DIR := third_party/gtest-1.6.0
+V8_DIR    := third_party/v8-3.8.9
 
-SRC_EBITEN   := $(shell find include -name "*.hpp" -or -name "*.cpp" -or -name "*.mm")
-SRC_SAMPLES  := $(shell find samples -name "*.hpp" -or -name "*.cpp" -or -name "*.mm")
-SRC_TEST     := $(shell find test    -name "*.hpp" -or -name "*.cpp" -or -name "*.mm")
+SRC_EBITEN  := $(shell find include -name "*.hpp" -or -name "*.cpp" -or -name "*.mm")
+SRC_SAMPLES := $(shell find samples -name "*.hpp" -or -name "*.cpp" -or -name "*.mm")
+SRC_TEST    := $(shell find test    -name "*.hpp" -or -name "*.cpp" -or -name "*.mm")
 
 .PHONY: samples test clean
 
@@ -38,55 +38,39 @@ $(PROG_SAMPLES).app: bin/$(PROG_SAMPLES) samples/resources/*
 	mkdir -p $@/Contents/Resources
 	cp samples/resources/* $@/Contents/Resources
 
-bin/$(PROG_SAMPLES): $(SRC_EBITEN) $(SRC_SAMPLES) lib/libsquirrel.a lib/libsqstdlib.a
+bin/$(PROG_SAMPLES): $(SRC_EBITEN) $(SRC_SAMPLES) lib/libv8.a
+	[ -f lib/libv8.a ]
 	$(CXX) \
 		$(CXXFLAGS) \
 		$(LDFLAGS) \
-		-I$(SQUIRREL_DIR)/include \
+		-I$(V8_DIR)/include \
 		-g \
 		-o $@ \
 		-O0 \
-		-Llib -lsquirrel -lsqstdlib \
+		-Llib -lv8 \
 		samples/main.cpp
 
-bin/$(PROG_TEST): $(SRC_EBITEN) $(SRC_TEST) lib/libgtest_main.a lib/libsquirrel.a lib/libsqstdlib.a
+bin/$(PROG_TEST): $(SRC_EBITEN) $(SRC_TEST) lib/libgtest_main.a lib/libv8.a
+	[ -f lib/libgtest_main.a ]
+	[ -f lib/libv8.a ]
 	$(CXX) \
 		$(CXXFLAGS) \
 		-DGTEST_HAS_TR1_TUPLE=0 \
 		-Wno-variadic-macros \
 		$(LDFLAGS) \
 		-I$(GTEST_DIR)/include \
-		-I$(SQUIRREL_DIR)/include \
+		-I$(V8_DIR)/include \
 		-g \
 		-o $@ \
 		-O0 \
 		-lpthread \
-		-Llib -lgtest_main -lsquirrel -lsqstdlib \
+		-Llib -lgtest_main -lv8 \
 		test/main.cpp
 
-lib/libsquirrel.a:
-	(cd $(SQUIRREL_DIR)/squirrel; \
-		$(CXX) \
-			-W -Wall -Wno-missing-field-initializers -Wno-unused-parameter \
-			-stdlib=libc++ \
-			-m64 -D_SQ64 \
-			-I../include \
-			-O2 \
-			-c \
-			*.cpp)
-	$(AR) $(ARFLAGS) $@ $(SQUIRREL_DIR)/squirrel/*.o
-
-lib/libsqstdlib.a:
-	(cd $(SQUIRREL_DIR)/sqstdlib; \
-		$(CXX) \
-			-W -Wall -Wno-missing-field-initializers -Wno-unused-parameter \
-			-stdlib=libc++ \
-			-m64 -D_SQ64 \
-			-I../include \
-			-O2 \
-			-c \
-			*.cpp)
-	$(AR) $(ARFLAGS) $@ $(SQUIRREL_DIR)/sqstdlib/*.o
+lib/libv8.a:
+	(cd $(V8_DIR); \
+		scons)
+	cp $(V8_DIR)/libv8.a $@
 
 lib/libgtest_main.a:
 	(cd $(GTEST_DIR)/src; \
