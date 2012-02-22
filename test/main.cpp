@@ -8,6 +8,7 @@
 #include "ebiten/image_loader.hpp"
 #include "ebiten/resources.hpp"
 #include <cstdlib>
+#include <iostream>
 
 int
 main(int argc, char* argv[]) {
@@ -21,7 +22,7 @@ main(int argc, char* argv[]) {
     if (result != EXIT_SUCCESS) {
       return result;
     }
-    ebiten_script::v8::game game("./test/main.js");
+    ebiten_script::v8::game game("./test/test.js");
     auto game_update = std::bind(&ebiten_script::v8::game::update,
                                  &game,
                                  std::placeholders::_1,

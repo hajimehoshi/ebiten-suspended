@@ -12,15 +12,21 @@
 #include "v8.h"
 #pragma clang diagnostic pop
 
+#include <cassert>
+#include <fstream>
 #include <string>
 
 namespace ebiten_script {
 namespace v8 {
 
 class game : private ebiten::noncopyable {
+private:
+  ::v8::HandleScope handle_scope_;
 public:
-  game(std::string) {
-    ::v8::HandleScope foo;
+  game(std::string const& filename)
+    : handle_scope_() {
+    std::ifstream f(filename);
+    assert(f);
   }
   ~game() {
   }
