@@ -19,6 +19,8 @@
 #include <wx/toolbar.h>
 #pragma clang diagnostic pop
 
+#include <iostream>
+
 namespace shrimp {
 
 class gl_canvas : public wxGLCanvas {
@@ -44,17 +46,32 @@ public:
               wxID_ANY,
               _T("Shrimp")),
       gl_canvas_(0) {
-    long style = wxTB_TOP;
-    wxToolBar* tool_bar = this->CreateToolBar(style);
-    // TODO: Modify tool_bar
-    tool_bar->Realize();
+    {
+      wxMenu* file_menu = new wxMenu();
+      file_menu->Append(wxID_EXIT, _T("E&xit\tALT-X"));
+      wxMenuBar* menu_bar = new wxMenuBar();
+      menu_bar->Append(file_menu, _T("&File"));
+      this->SetMenuBar(menu_bar);
+    }
+    {
+      long style = wxTB_TOP;
+      wxToolBar* tool_bar = this->CreateToolBar(style);
+      // TODO: Modify tool_bar
+      tool_bar->Realize();
+    }
     this->gl_canvas_ = new gl_canvas(this);
   }
   virtual void
-  OnQuit(wxCommandEvent&) {
+  OnExit(wxCommandEvent&) {
     this->Close(true);
   }
+private:
+  DECLARE_EVENT_TABLE()
 };
+
+BEGIN_EVENT_TABLE(frame, wxFrame)
+EVT_MENU(wxID_EXIT, frame::OnExit)
+END_EVENT_TABLE()
 
 class app : public wxApp {
 public:
