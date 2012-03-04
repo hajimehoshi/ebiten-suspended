@@ -4,11 +4,9 @@ PROG_TEST    := ebiten_test
 CXX := clang++
 
 CXXFLAGS := \
-	-v \
-	-W -Wall -Wextra -Wmissing-prototypes -Wshorten-64-to-32 -pedantic \
+	-W -Wall -Wextra -Wmissing-prototypes -Wshorten-64-to-32 \
 	-fPIC \
 	-Iinclude \
-	-x objective-c++ -std=c++0x -stdlib=libc++ \
 	-DEBITEN_VERSION_COMMIT_UNIX_TIME="`git log --pretty="%ct" -1`" \
 	-DEBITEN_VERSION_COMMIT_HASH="\"`git log --pretty="%H" -1`\"" \
 	-DEBITEN_VERSION_COMMIT_MODIFIED="`git status --porcelain -uno | wc -l`"
@@ -47,19 +45,29 @@ $(PROG_SAMPLES).app: bin/$(PROG_SAMPLES) samples/resources/*
 	mkdir -p $@/Contents/Resources
 	cp samples/resources/* $@/Contents/Resources
 
-bin/$(PROG_SHRIMP): $(SRC_INCLUDE) $(SRC_SAMPLES)
+bin/$(PROG_SHRIMP): lib/$(PROG_SHRIMP).o
 	$(CXX) \
-		$(CXXFLAGS) \
 		$(LDFLAGS) \
 		-g \
 		-o $@ \
 		-O0 \
-		`wx-config --cppflags --libs` \
+		`wx-config --libs --gl-libs` \
+		$<
+
+lib/$(PROG_SHRIMP).o: $(SRC_INCLUDE) $(SRC_SAMPLES)
+	$(CXX) \
+		$(CXXFLAGS) \
+		-c \
+		-g \
+		-o $@ \
+		-O0 \
+		`wx-config --cppflags` \
 		samples/main_shrimp.cpp
 
 bin/$(PROG_SAMPLES): $(SRC_INCLUDE) $(SRC_SAMPLES) lib/libsquirrel.a lib/libsqstdlib.a
 	$(CXX) \
 		$(CXXFLAGS) \
+		-x objective-c++ -std=c++0x -stdlib=libc++ \
 		-fobjc-arc \
 		$(LDFLAGS) \
 		-I$(SQUIRREL_DIR)/include \
@@ -72,6 +80,7 @@ bin/$(PROG_SAMPLES): $(SRC_INCLUDE) $(SRC_SAMPLES) lib/libsquirrel.a lib/libsqst
 bin/$(PROG_TEST): $(SRC_INCLUDE) $(SRC_TEST) lib/libgtest_main.a lib/libsquirrel.a lib/libsqstdlib.a
 	$(CXX) \
 		$(CXXFLAGS) \
+		-x objective-c++ -std=c++0x -stdlib=libc++ \
 		-fobjc-arc \
 		-DGTEST_HAS_TR1_TUPLE=0 \
 		-Wno-variadic-macros \
