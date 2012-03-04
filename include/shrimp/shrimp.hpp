@@ -18,7 +18,11 @@ public:
               _T("Shrimp"),
               ::wxPoint(50, 50),
               ::wxSize(450, 340)) {
-    // TODO: Add menus
+    long style = wxTB_TOP;
+    wxToolBar* tool_bar = this->CreateToolBar(style);
+    // TODO: Modify tool_bar
+    tool_bar->AddSeparator();
+    tool_bar->Realize();
   }
   virtual void
   OnQuit(wxCommandEvent&) {
