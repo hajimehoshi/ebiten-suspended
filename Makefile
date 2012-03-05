@@ -5,6 +5,7 @@ CXX := clang++
 
 CXXFLAGS := \
 	-W -Wall -Wextra -Wmissing-prototypes -Wshorten-64-to-32 \
+	-std=c++0x -stdlib=libc++ \
 	-fPIC \
 	-Iinclude \
 	-DEBITEN_VERSION_COMMIT_UNIX_TIME="`git log --pretty="%ct" -1`" \
@@ -12,7 +13,7 @@ CXXFLAGS := \
 	-DEBITEN_VERSION_COMMIT_MODIFIED="`git status --porcelain -uno | wc -l`"
 
 LDFLAGS := \
-	-framework Cocoa -framework OpenGL -framework QuartzCore
+	 -stdlib=libc++ -framework Cocoa -framework OpenGL -framework QuartzCore
 
 GTEST_DIR    := third_party/gtest-1.6.0
 SQUIRREL_DIR := third_party/squirrel-3.0.2
@@ -67,7 +68,7 @@ lib/$(PROG_SHRIMP).o: $(SRC_INCLUDE) $(SRC_SAMPLES)
 bin/$(PROG_SAMPLES): $(SRC_INCLUDE) $(SRC_SAMPLES) lib/libsquirrel.a lib/libsqstdlib.a
 	$(CXX) \
 		$(CXXFLAGS) \
-		-x objective-c++ -std=c++0x -stdlib=libc++ \
+		-x objective-c++ \
 		-fobjc-arc \
 		$(LDFLAGS) \
 		-I$(SQUIRREL_DIR)/include \
@@ -80,7 +81,7 @@ bin/$(PROG_SAMPLES): $(SRC_INCLUDE) $(SRC_SAMPLES) lib/libsquirrel.a lib/libsqst
 bin/$(PROG_TEST): $(SRC_INCLUDE) $(SRC_TEST) lib/libgtest_main.a lib/libsquirrel.a lib/libsqstdlib.a
 	$(CXX) \
 		$(CXXFLAGS) \
-		-x objective-c++ -std=c++0x -stdlib=libc++ \
+		-x objective-c++ \
 		-fobjc-arc \
 		-DGTEST_HAS_TR1_TUPLE=0 \
 		-Wno-variadic-macros \

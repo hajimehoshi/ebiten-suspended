@@ -1,7 +1,7 @@
 #ifndef SHRIMP_SHRIMP_HPP
 #define SHRIMP_SHRIMP_HPP
 
-// TODO: Check how to use C++11
+#define wxNO__T
 
 #pragma clang diagnostic push
 // TODO: Ignore -pedantic
@@ -13,7 +13,7 @@
 #pragma clang diagnostic ignored "-Wshorten-64-to-32"
 #include <wx/wxprec.h>
 #ifndef WX_PRECOMP
-#include <wx/wx.h>
+# include <wx/wx.h>
 #endif
 #include <wx/glcanvas.h>
 #include <wx/toolbar.h>
@@ -44,13 +44,13 @@ public:
   frame()
     : wxFrame(0,
               wxID_ANY,
-              _T("Shrimp")),
+              wxT("Shrimp")),
       gl_canvas_(0) {
     {
       wxMenu* file_menu = new wxMenu();
-      file_menu->Append(wxID_EXIT, _T("E&xit\tALT-X"));
+      file_menu->Append(wxID_EXIT, wxT("E&xit\tALT-X"));
       wxMenuBar* menu_bar = new wxMenuBar();
-      menu_bar->Append(file_menu, _T("&File"));
+      menu_bar->Append(file_menu, wxT("&File"));
       this->SetMenuBar(menu_bar);
     }
     {

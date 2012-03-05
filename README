@@ -1,9 +1,19 @@
-Ebiten - A 2D Game Library -
+Ebiten - A 2D Game Library? -
+
+** Now we're changing the concept! **
 
 - Specialized to develop 2D games
 - Headers only (#include "ebiten/ebiten.hpp")
 - Minimal dependencies
 - Written in C++11 / Objective-C++11
+
+
+* Dependencies
+
+- wxWidgets 2.9.3 with c++0x made with
+  `./configure CXX="clang++ -std=c++0x -stdlib=libc++ -DwxNO__T -DHAVE_TYPE_TRAITS -Dfinite=isfinite" \
+    --enable-unicode --enable-debug --disable-shared --disable-webview --with-opengl \
+    --with-macosx-sdk=/Developer/SDKs/MacOSX10.7.sdk --with-macosx-version-min=10.7 --with-cocoa`
 
 
 * Platform
