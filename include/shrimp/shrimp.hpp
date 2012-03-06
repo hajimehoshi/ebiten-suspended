@@ -28,7 +28,7 @@ public:
   gl_canvas(wxWindow* parent)
     : wxGLCanvas(parent,
                  wxID_ANY,
-                 0,
+                 nullptr,
                  wxDefaultPosition,
                  wxDefaultSize,
                  0,
@@ -42,10 +42,10 @@ private:
   gl_canvas* gl_canvas_;
 public:
   frame()
-    : wxFrame(0,
+    : wxFrame(nullptr,
               wxID_ANY,
               wxT("Shrimp")),
-      gl_canvas_(0) {
+      gl_canvas_(nullptr) {
     {
       wxMenu* file_menu = new wxMenu();
       file_menu->Append(wxID_EXIT, wxT("E&xit\tALT-X"));
