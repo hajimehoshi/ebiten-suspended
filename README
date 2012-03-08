@@ -1,9 +1,6 @@
-Ebiten - A 2D Game Library? -
+Ebiten - JRPG Maker -
 
-** Now we're changing the concept! **
-
-- Specialized to develop 2D games
-- Headers only (#include "ebiten/ebiten.hpp")
+- Specialized to develop 2D JRPG
 - Minimal dependencies
 - Written in C++11 / Objective-C++11
 
