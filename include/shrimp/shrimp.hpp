@@ -24,6 +24,8 @@
 namespace shrimp {
 
 class gl_canvas : public wxGLCanvas {
+private:
+  wxGLContext* context_;
 public:
   gl_canvas(wxWindow* parent)
     : wxGLCanvas(parent,
@@ -33,9 +35,25 @@ public:
                  wxDefaultSize,
                  0,
                  wxGLCanvasName,
-                 wxNullPalette) {
+                 wxNullPalette),
+      context_(new wxGLContext(this)) {
   }
+  void
+  OnPaint(wxPaintEvent&) {
+    wxPaintDC dc(this);
+    this->SetCurrent(*this->context_);
+    ::glClearColor(0, 0, 0, 0);
+    ::glClear(GL_COLOR_BUFFER_BIT);
+    ::glFlush();
+    this->SwapBuffers();
+  }
+private:
+  DECLARE_EVENT_TABLE()
 };
+
+BEGIN_EVENT_TABLE(gl_canvas, wxGLCanvas)
+EVT_PAINT(gl_canvas::OnPaint)
+END_EVENT_TABLE()
 
 class frame : public wxFrame {
 private:
