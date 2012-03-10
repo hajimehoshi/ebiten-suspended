@@ -12,8 +12,8 @@ typedef EbitenOpenGLView* native_view;
 namespace {
 
 void
-native_view_set_input(EbitenOpenGLView* native_view, class input& input) {
-  [native_view setInput:input];
+native_view_set_input(native_view nv, class input& input) {
+  [nv setInput:input];
 }
 
 }
