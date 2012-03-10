@@ -2,7 +2,6 @@
 #define SHRIMP_VIEWS_DETAIL_WX_GL_CANVS_HPP
 
 #include "shrimp/views/detail/wx/wx.hpp"
-#include <memory>
 
 namespace shrimp {
 namespace views {
@@ -10,21 +9,7 @@ namespace detail {
 
 class gl_canvas : public wxGLCanvas {
 private:
-  class refresh_timer : public wxTimer {
-  private:
-    wxWindow* window_;
-  public:
-    refresh_timer(wxWindow* parent)
-      : window_(parent) {
-    }
-    void
-    Notify() {
-      this->window_->Refresh(false);
-    }
-  };
-private:
   wxGLContext* context_;
-  std::unique_ptr<refresh_timer> timer_;
   int x_ = 0;
 public:
   gl_canvas(wxWindow* parent)
@@ -36,13 +21,11 @@ public:
                  wxFULL_REPAINT_ON_RESIZE,
                  wxGLCanvasName,
                  wxNullPalette),
-      context_(new wxGLContext(this)),
-      timer_(new refresh_timer(this)) {
-    this->timer_->Start(16);
+      context_(new wxGLContext(this)) {
   }
   void
-  on_close(wxCloseEvent&) {
-    this->timer_->Stop();
+  on_idle(wxIdleEvent&) {
+    this->Refresh(false);
   }
   void
   on_paint(wxPaintEvent&) {
@@ -66,7 +49,7 @@ private:
 };
 
 wxBEGIN_EVENT_TABLE(gl_canvas, wxGLCanvas)
-EVT_CLOSE(gl_canvas::on_close)
+EVT_IDLE(gl_canvas::on_idle)
 EVT_PAINT(gl_canvas::on_paint)
 wxEND_EVENT_TABLE()
 
