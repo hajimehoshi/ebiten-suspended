@@ -24,11 +24,15 @@ public:
 wxIMPLEMENT_APP_NO_MAIN(shrimp::views::detail::app);
 #pragma clang diagnostic pop
 
-static int
+namespace {
+
+int
 run_main_loop() {
   int argc = 0;
   char** argv = nullptr;
   return ::wxEntry(argc, argv);
+}
+
 }
 
 }

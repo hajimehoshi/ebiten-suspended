@@ -4,8 +4,8 @@
 #include "ebiten/noncopyable.hpp"
 #include "ebiten/platform.hpp"
 
-#if defined(EBITEN_MACOSX) || defined(EBITEN_IOS)
-#include "ebiten/graphics/detail/opengl/texture_id.hpp"
+#ifdef EBITEN_OPENGL
+# include "ebiten/graphics/detail/opengl/texture_id.hpp"
 #endif
 
 #include <cstddef>

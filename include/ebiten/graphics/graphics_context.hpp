@@ -3,7 +3,7 @@
 
 #include "ebiten/platform.hpp"
 
-#if defined(EBITEN_MACOSX) || defined(EBITEN_IOS)
+#ifdef EBITEN_OPENGL
 # include "ebiten/graphics/detail/opengl/graphics_context.hpp"
 #endif
 

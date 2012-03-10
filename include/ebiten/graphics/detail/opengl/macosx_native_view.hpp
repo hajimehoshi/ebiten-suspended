@@ -6,6 +6,9 @@
 namespace ebiten {
 namespace graphics {
 namespace detail {
+
+typedef EbitenOpenGLView* native_view;
+
 namespace {
 
 void

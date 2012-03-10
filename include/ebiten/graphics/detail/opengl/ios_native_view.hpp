@@ -6,6 +6,9 @@
 namespace ebiten {
 namespace graphics {
 namespace detail {
+
+typedef GLKView* native_view;
+
 namespace {
 
 void

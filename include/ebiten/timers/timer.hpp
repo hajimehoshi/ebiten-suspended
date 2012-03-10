@@ -1,9 +1,7 @@
 #ifndef EBITEN_TIMERS_TIMER_HPP
 #define EBITEN_TIMERS_TIMER_HPP
 
-#include "ebiten/platform.hpp"
-
-#if defined(EBITEN_MACOSX) || defined(EBITEN_IOS)
+#if __APPLE__
 #include "ebiten/timers/detail/mach/timer.hpp"
 #endif
 

@@ -3,6 +3,10 @@
 
 #include "ebiten/platform.hpp"
 
+#ifdef EBITEN_WX
+# include "ebiten/graphics/detail/opengl/wx_opengl_initializer.hpp"
+#endif
+
 #ifdef EBITEN_MACOSX
 # include "ebiten/graphics/detail/opengl/macosx_opengl_initializer.hpp"
 #endif
