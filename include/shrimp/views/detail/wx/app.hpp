@@ -19,6 +19,18 @@ public:
   }
 };
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmissing-prototypes"
+IMPLEMENT_APP_NO_MAIN(shrimp::views::detail::app);
+#pragma clang diagnostic pop
+
+static int
+run_main_loop() {
+  int argc = 0;
+  char** argv = nullptr;
+  return wxEntry(argc, argv);
+}
+
 }
 }
 }

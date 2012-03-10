@@ -6,13 +6,12 @@
 namespace shrimp {
 namespace views {
 
-}
+static int
+run_main_loop() {
+  return detail::run_main_loop();
 }
 
-// TODO: Use IMPLEMENT_APP_NO_MAIN
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wmissing-prototypes"
-IMPLEMENT_APP(shrimp::views::detail::app);
-#pragma clang diagnostic pop
+}
+}
 
 #endif

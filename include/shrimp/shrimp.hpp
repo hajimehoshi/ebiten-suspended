@@ -3,4 +3,9 @@
 
 #include "shrimp/views/view.hpp"
 
+int
+main() {
+  return shrimp::views::run_main_loop();
+}
+
 #endif
