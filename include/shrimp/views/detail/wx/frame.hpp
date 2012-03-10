@@ -32,17 +32,17 @@ public:
     }
     this->gl_canvas_ = new gl_canvas(this);
   }
-  virtual void
-  OnExit(wxCommandEvent&) {
+  void
+  on_exit(wxCommandEvent&) {
     this->Close(true);
   }
 private:
-  DECLARE_EVENT_TABLE()
+  wxDECLARE_EVENT_TABLE();
 };
 
-BEGIN_EVENT_TABLE(frame, wxFrame)
-EVT_MENU(wxID_EXIT, frame::OnExit)
-END_EVENT_TABLE()
+wxBEGIN_EVENT_TABLE(frame, wxFrame)
+EVT_MENU(wxID_EXIT, frame::on_exit)
+wxEND_EVENT_TABLE()
 
 }
 }

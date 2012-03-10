@@ -12,23 +12,23 @@ class app : public wxApp {
 public:
   virtual bool
   OnInit() {
-    frame* f = new frame();
-    f->Show(true);
-    this->SetTopWindow(f);
+    frame* frame_ = new frame();
+    frame_->Show(true);
+    this->SetTopWindow(frame_);
     return true;
   }
 };
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wmissing-prototypes"
-IMPLEMENT_APP_NO_MAIN(shrimp::views::detail::app);
+wxIMPLEMENT_APP_NO_MAIN(shrimp::views::detail::app);
 #pragma clang diagnostic pop
 
 static int
 run_main_loop() {
   int argc = 0;
   char** argv = nullptr;
-  return wxEntry(argc, argv);
+  return ::wxEntry(argc, argv);
 }
 
 }
