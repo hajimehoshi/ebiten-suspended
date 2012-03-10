@@ -2,6 +2,7 @@
 #define SHRIMP_VIEWS_DETAIL_WX_GL_CANVS_HPP
 
 #include "shrimp/views/detail/wx/wx.hpp"
+#include <memory>
 
 namespace shrimp {
 namespace views {
@@ -14,8 +15,7 @@ private:
     wxWindow* window_;
   public:
     refresh_timer(wxWindow* parent)
-      : wxTimer(parent),
-        window_(parent) {
+      : window_(parent) {
     }
     void
     Notify() {
@@ -24,7 +24,7 @@ private:
   };
 private:
   wxGLContext* context_;
-  refresh_timer* timer_;
+  std::unique_ptr<refresh_timer> timer_;
   int x_ = 0;
 public:
   gl_canvas(wxWindow* parent)
@@ -47,10 +47,6 @@ public:
   void
   on_paint(wxPaintEvent&) {
     this->draw();
-  }
-  void
-  on_timer(wxTimerEvent&) {
-    this->Refresh(false);
   }
 private:
   void
