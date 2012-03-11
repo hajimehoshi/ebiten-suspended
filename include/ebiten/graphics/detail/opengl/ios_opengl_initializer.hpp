@@ -11,12 +11,15 @@ namespace detail {
 
 class opengl_initializer : private noncopyable {
 private:
+  native_view native_view_;
   EbitenGLKViewDelegate* delegate_;
 public:
+  opengl_initializer(native_view native_view)
+    : native_view_(native_view) {
+  }
   void
-  initialize(native_view native_view,
-             std::function<bool()> const& updating_func) {
-    GLKView* glkView = native_view;
+  initialize(std::function<bool()> const& updating_func) {
+    GLKView* glkView = this->native_view_;
     this->delegate_ = [[EbitenGLKViewDelegate alloc] init];
     [this->delegate_ setUpdatingFunc: updating_func];
     glkView.delegate = this->delegate_;

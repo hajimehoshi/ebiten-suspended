@@ -68,6 +68,7 @@ public:
     if (!this->empty_texture_) {
       this->empty_texture_ = this->texture_factory_.create(16, 16);
     }
+    assert(static_cast<bool>(this->empty_texture_));
 
     geometry_matrix geom_mat;
     geom_mat.set_a(width  / this->empty_texture_->width());

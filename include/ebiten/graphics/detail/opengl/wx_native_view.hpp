@@ -12,7 +12,7 @@ typedef wxGLCanvas* native_view;
 
 namespace {
 void
-native_view_set_input(native_view nv, class input& input) {
+native_view_set_input(native_view, class input&) {
   //EbitenGLKViewDelegate* delegate = native_view.delegate;
   //[delegate setInput:input];
 }

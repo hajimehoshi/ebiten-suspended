@@ -36,6 +36,14 @@ public:
   run() {
     return wxTheApp->OnRun();
   }
+  class view&
+  view() {
+    return this->view_;
+  }
+  class view const&
+  view() const {
+    return this->view_;
+  }
 };
 
 }

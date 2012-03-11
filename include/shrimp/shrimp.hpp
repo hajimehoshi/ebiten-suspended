@@ -2,6 +2,7 @@
 #define SHRIMP_SHRIMP_HPP
 
 #include "shrimp/views/app.hpp"
+#include "shrimp/presenters/presenter.hpp"
 #include "ebiten/version.hpp"
 
 int
@@ -12,6 +13,7 @@ main() {
             << "  Commit Hash: " << ebiten::version::get_commit_hash() << std::endl
             << "  Commit Modified: " << (ebiten::version::is_commit_modified() ? "Yes" : "No") << std::endl;
   shrimp::views::app app;
+  shrimp::presenters::presenter presenter(app.view());
   return app.run();
 }
 

@@ -3,6 +3,9 @@
 
 #include "shrimp/views/detail/wx/gl_canvas.hpp"
 #include "shrimp/views/detail/wx/wx.hpp"
+#include "ebiten/ebiten.hpp"
+#include <functional>
+#include <memory>
 
 namespace shrimp {
 namespace views {
@@ -10,13 +13,31 @@ namespace detail {
 
 class frame : public wxFrame {
 private:
-  gl_canvas* gl_canvas_;
+  class map_editor_drawer {
+  public:
+    bool
+    update(ebiten::graphics::texture_factory&,
+           ebiten::input const&) {
+      return false;
+    }
+    void
+    draw(ebiten::graphics::graphics_context& g,
+         ebiten::graphics::texture& main_offscreen) {
+      g.set_offscreen(main_offscreen);
+      g.clear();
+      g.draw_rect(100, 100, 100, 100,
+                  128, 128, 255, 128);
+    }
+  };
+  std::unique_ptr<map_editor_drawer> map_editor_drawer_;
+private:
+  gl_canvas* map_editor_;
 public:
   frame()
     : wxFrame(nullptr,
               wxID_ANY,
               wxT("Shrimp")),
-      gl_canvas_(nullptr) {
+      map_editor_(nullptr) {
     {
       wxMenu* file_menu = new wxMenu();
       file_menu->Append(wxID_EXIT, wxT("E&xit\tALT-X"));
@@ -30,7 +51,15 @@ public:
       // TODO: Modify tool_bar
       tool_bar->Realize();
     }
-    this->gl_canvas_ = new gl_canvas(this);
+    auto update = std::bind(&map_editor_drawer::update,
+                            this->map_editor_drawer_.get(),
+                            std::placeholders::_1,
+                            std::placeholders::_2);
+    auto draw = std::bind(&map_editor_drawer::draw,
+                          this->map_editor_drawer_.get(),
+                          std::placeholders::_1,
+                          std::placeholders::_2);
+    this->map_editor_ = new gl_canvas(this, update, draw);
   }
   void
   on_exit(wxCommandEvent&) {

@@ -51,14 +51,14 @@ public:
       graphics_context_(screen_width,
                         screen_height,
                         screen_scale,
-                        this->texture_factory_) {
+                        this->texture_factory_),
+      opengl_initializer_(native_view) {
     assert(0 < this->screen_width_);
     assert(0 < this->screen_height_);
     assert(0 < this->screen_scale_);
     assert(this->update_func_);
     assert(this->draw_func_);
-    this->opengl_initializer_.initialize(native_view,
-                                         std::bind(&device::update, this));
+    this->opengl_initializer_.initialize(std::bind(&device::update, this));
   }
   ~device() {
     // TODO: implement
@@ -95,7 +95,7 @@ public:
       g.draw_texture(*this->offscreen_texture_,
                      0, 0, this->screen_width_, this->screen_height_,
                      geom_mat, color_matrix::identity());
-      g.flush();
+                     g.flush();
       return terminated;
     } catch (std::runtime_error const& e) {
       // TODO: Logging

@@ -10,11 +10,15 @@ namespace graphics {
 namespace detail {
 
 class opengl_initializer : private noncopyable {
+private:
+  native_view native_view_;
 public:
+  opengl_initializer(native_view native_view)
+    : native_view_(native_view) {
+  }
   void
-  initialize(native_view native_view,
-             std::function<bool()> const& updating_func) {
-    [native_view setUpdatingFunc:updating_func];
+  initialize(std::function<bool()> const& updating_func) {
+    [this->native_view_ setUpdatingFunc:updating_func];
   }
 };
 
