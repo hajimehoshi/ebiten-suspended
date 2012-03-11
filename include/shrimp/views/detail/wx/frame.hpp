@@ -25,7 +25,7 @@ private:
          ebiten::graphics::texture& main_offscreen) {
       g.set_offscreen(main_offscreen);
       g.clear();
-      g.draw_rect(50, 50, 100, 100,
+      g.draw_rect(0, 50, 100, 100,
                   0, 128, 255, 255);
     }
   };

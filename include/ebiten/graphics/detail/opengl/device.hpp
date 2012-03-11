@@ -56,6 +56,9 @@ public:
     assert(0 < this->screen_width_);
     assert(0 < this->screen_height_);
     assert(0 < this->screen_scale_);
+    assert(this->screen_width_ <= 4096);
+    assert(this->screen_height_ <= 4096);
+    assert(this->screen_scale_ <= 4);
     assert(this->update_func_);
     assert(this->draw_func_);
     this->opengl_initializer_.initialize(std::bind(&device::update, this));

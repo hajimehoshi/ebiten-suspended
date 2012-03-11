@@ -31,7 +31,7 @@ public:
                                         draw_func,
                                         320,
                                         240,
-                                        1, 60,
+                                        2, 60,
                                         this)) {
     std::cout << wxDefaultSize.GetWidth() << std::endl;
   }
