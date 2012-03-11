@@ -40,16 +40,6 @@ public:
     this->Refresh(false);
   }
 private:
-  int const*
-  get_attributes() const {
-    static int const attributes[] = {
-      WX_GL_RGBA,
-      WX_GL_DOUBLEBUFFER,
-      0,
-    };
-    return attributes;
-  }
-private:
   wxDECLARE_EVENT_TABLE();
 };
 
