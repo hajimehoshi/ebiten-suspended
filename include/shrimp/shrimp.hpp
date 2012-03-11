@@ -1,11 +1,18 @@
 #ifndef SHRIMP_SHRIMP_HPP
 #define SHRIMP_SHRIMP_HPP
 
-#include "shrimp/views/view.hpp"
+#include "shrimp/views/app.hpp"
+#include "ebiten/version.hpp"
 
 int
 main() {
-  return shrimp::views::run_main_loop();
+  // TODO: Is it nessesary?
+  std::cout << "Ebiten" << std::endl
+            << "  Commit Date: " << ebiten::version::get_commit_time() << std::endl
+            << "  Commit Hash: " << ebiten::version::get_commit_hash() << std::endl
+            << "  Commit Modified: " << (ebiten::version::is_commit_modified() ? "Yes" : "No") << std::endl;
+  shrimp::views::app app;
+  return app.run();
 }
 
 #endif

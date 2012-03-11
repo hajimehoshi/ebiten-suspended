@@ -2,6 +2,7 @@
 #define EBITEN_DETAIL_MACOSX_RESOURCES_HPP
 
 #import <Foundation/Foundation.h>
+#include <string>
 
 namespace ebiten {
 namespace detail {

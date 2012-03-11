@@ -2,38 +2,41 @@
 #define SHRIMP_VIEWS_DETAIL_WX_APP_HPP
 
 #include "shrimp/views/detail/wx/frame.hpp"
+#include "shrimp/views/detail/wx/view.hpp"
 #include "shrimp/views/detail/wx/wx.hpp"
+#include "ebiten/noncopyable.hpp"
 
 namespace shrimp {
 namespace views {
 namespace detail {
 
-class app : public wxApp {
+class app : private ebiten::noncopyable {
+private:
+  view view_;
 public:
-  virtual bool
-  OnInit() {
-    frame* frame_ = new frame();
-    frame_->Show(true);
-    this->SetTopWindow(frame_);
-    return true;
+  app()
+    : view_() {
+    wxApp::SetInstance(new wxApp());
+    int argc = 0;
+    char** argv = nullptr;
+    ::wxEntryStart(argc, argv);
+    wxTheApp->OnInit();
+    {
+      wxTheApp->SetExitOnFrameDelete(true);
+      frame* frame_ = new frame();
+      frame_->Show(true);
+      wxTheApp->SetTopWindow(frame_);
+    }
+  }
+  ~app() {
+    wxTheApp->OnExit();
+    ::wxEntryCleanup();
+  }
+  int
+  run() {
+    return wxTheApp->OnRun();
   }
 };
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wmissing-prototypes"
-wxIMPLEMENT_APP_NO_MAIN(shrimp::views::detail::app);
-#pragma clang diagnostic pop
-
-namespace {
-
-int
-run_main_loop() {
-  int argc = 0;
-  char** argv = nullptr;
-  return ::wxEntry(argc, argv);
-}
-
-}
 
 }
 }

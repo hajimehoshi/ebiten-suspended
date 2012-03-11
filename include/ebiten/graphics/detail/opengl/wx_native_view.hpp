@@ -8,7 +8,7 @@ namespace ebiten {
 namespace graphics {
 namespace detail {
 
-typedef wxWindow* native_view;
+typedef wxGLCanvas* native_view;
 
 namespace {
 void

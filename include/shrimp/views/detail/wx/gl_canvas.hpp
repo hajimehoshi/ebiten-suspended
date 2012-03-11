@@ -2,7 +2,6 @@
 #define SHRIMP_VIEWS_DETAIL_WX_GL_CANVS_HPP
 
 #include "shrimp/views/detail/wx/wx.hpp"
-#include "ebiten/ebiten.hpp"
 
 namespace shrimp {
 namespace views {
