@@ -74,8 +74,8 @@ public:
       if (!this->offscreen_texture_) {
         this->offscreen_texture_ = this->texture_factory_.create(this->screen_width_,
                                                                  this->screen_height_);
-        assert(static_cast<bool>(this->offscreen_texture_));
       }
+      assert(static_cast<bool>(this->offscreen_texture_));
       bool const terminated = this->update_func_(this->texture_factory_);
       detail::graphics_context& g = this->graphics_context_;
       ::glEnable(GL_TEXTURE_2D);
@@ -95,7 +95,7 @@ public:
       g.draw_texture(*this->offscreen_texture_,
                      0, 0, this->screen_width_, this->screen_height_,
                      geom_mat, color_matrix::identity());
-                     g.flush();
+      g.flush();
       return terminated;
     } catch (std::runtime_error const& e) {
       // TODO: Logging

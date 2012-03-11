@@ -13,7 +13,6 @@ namespace detail {
 class gl_canvas : public wxGLCanvas {
 private:
   std::unique_ptr<ebiten::kernel> ebiten_kernel_;
-  int x_ = 0;
 public:
   gl_canvas(wxWindow* parent,
             std::function<bool(ebiten::graphics::texture_factory&,
@@ -30,38 +29,32 @@ public:
                  wxNullPalette),
       ebiten_kernel_(new ebiten::kernel(update_func,
                                         draw_func,
-                                        wxDefaultSize.GetWidth(),
-                                        wxDefaultSize.GetHeight(),
+                                        320,
+                                        240,
                                         1, 60,
                                         this)) {
+    std::cout << wxDefaultSize.GetWidth() << std::endl;
   }
   void
   on_idle(wxIdleEvent&) {
     this->Refresh(false);
   }
-  /*void
-  on_paint(wxPaintEvent&) {
-    this->draw();
-    }*/
 private:
-  /*void
-  draw() {
-    // TODO: Use ebiten!
-    wxPaintDC dc(this);
-    this->x_ += 1;
-    this->x_ %= 256;
-    ::glClearColor(this->x_ / 255.0, 0.5, 1, 0);
-    ::glClear(GL_COLOR_BUFFER_BIT);
-    ::glFlush();
-    this->SwapBuffers();
-    }*/
+  int const*
+  get_attributes() const {
+    static int const attributes[] = {
+      WX_GL_RGBA,
+      WX_GL_DOUBLEBUFFER,
+      0,
+    };
+    return attributes;
+  }
 private:
   wxDECLARE_EVENT_TABLE();
 };
 
 wxBEGIN_EVENT_TABLE(gl_canvas, wxGLCanvas)
 EVT_IDLE(gl_canvas::on_idle)
-//EVT_PAINT(gl_canvas::on_paint)
 wxEND_EVENT_TABLE()
 
 }

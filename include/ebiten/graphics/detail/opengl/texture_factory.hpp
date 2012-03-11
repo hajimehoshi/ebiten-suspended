@@ -70,6 +70,8 @@ public:
     }
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+    ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
     ::glBindTexture(GL_TEXTURE_2D, 0);
     typedef graphics::texture t;
     texture_pointer p(new t(texture_id, width, height, texture_width, texture_height));
@@ -105,9 +107,11 @@ public:
                    0,
                    GL_RGBA,
                    GL_UNSIGNED_BYTE,
-                   0);
+                   nullptr);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+    ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
     ::glBindTexture(GL_TEXTURE_2D, 0);
     typedef graphics::texture t;
     texture_pointer p(new t(texture_id, width, height, texture_width, texture_height));

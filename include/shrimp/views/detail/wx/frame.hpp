@@ -25,8 +25,8 @@ private:
          ebiten::graphics::texture& main_offscreen) {
       g.set_offscreen(main_offscreen);
       g.clear();
-      g.draw_rect(100, 100, 100, 100,
-                  128, 128, 255, 128);
+      g.draw_rect(50, 50, 100, 100,
+                  0, 128, 255, 255);
     }
   };
   std::unique_ptr<map_editor_drawer> map_editor_drawer_;
