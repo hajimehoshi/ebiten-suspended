@@ -40,8 +40,7 @@ private:
   std::array<float, 16> projection_matrix_;
   texture_pointer empty_texture_;
   std::unordered_map<texture_id, GLuint> framebuffers_;
-  bool main_framebuffer_initialized_;
-  GLuint main_framebuffer_;
+  GLuint const main_framebuffer_;
 private:
   graphics_context(std::size_t const screen_width,
                    std::size_t const screen_height,
@@ -52,13 +51,20 @@ private:
       screen_scale_(screen_scale),
       texture_factory_(texture_factory),
       current_program_(0),
-      main_framebuffer_initialized_(false),
       main_framebuffer_(0) {
   }
 public:
   void
   clear() {
     ::glClearColor(0, 0, 0, 1);
+    ::glClear(GL_COLOR_BUFFER_BIT);
+  }
+  void
+  fill(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) {
+    ::glClearColor(red   / 255.0,
+                   green / 255.0,
+                   blue  / 255.0,
+                   alpha / 255.0);
     ::glClear(GL_COLOR_BUFFER_BIT);
   }
   // Only for debugging?
@@ -158,18 +164,12 @@ private:
   // TODO: I don't wanna use pointers!
   void
   set_offscreen(class texture* texture) {
-    if (!this->main_framebuffer_initialized_) {
-      GLint framebuffer;
-      ::glGetIntegerv(GL_FRAMEBUFFER_BINDING, &framebuffer);
-      this->main_framebuffer_ = framebuffer;
-      this->main_framebuffer_initialized_ = true;
-    }
     // TODO: cache
     GLuint framebuffer;
     if (texture) {
       framebuffer = this->get_framebuffer(*texture);
     } else {
-      framebuffer = this->get_main_framebuffer();
+      framebuffer = this->main_framebuffer_;
     }
     ::glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     assert(::glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
