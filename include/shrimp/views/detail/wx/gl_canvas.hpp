@@ -4,7 +4,6 @@
 #include "shrimp/views/detail/wx/wx.hpp"
 #include "ebiten/ebiten.hpp"
 #include <functional>
-#include <memory>
 
 namespace shrimp {
 namespace views {
@@ -12,7 +11,7 @@ namespace detail {
 
 class gl_canvas : public wxGLCanvas {
 private:
-  std::unique_ptr<ebiten::kernel> ebiten_kernel_;
+  ebiten::kernel ebiten_kernel_;
 public:
   gl_canvas(wxWindow* parent,
             std::function<bool(ebiten::graphics::texture_factory&,
@@ -27,17 +26,21 @@ public:
                  wxFULL_REPAINT_ON_RESIZE,
                  wxGLCanvasName,
                  wxNullPalette),
-      ebiten_kernel_(new ebiten::kernel(update_func,
-                                        draw_func,
-                                        320,
-                                        240,
-                                        2, 60,
-                                        this)) {
-    std::cout << wxDefaultSize.GetWidth() << std::endl;
+      ebiten_kernel_(update_func,
+                     draw_func,
+                     320,
+                     240,
+                     1, 60,
+                     this) {
   }
   void
   on_idle(wxIdleEvent&) {
     this->Refresh(false);
+  }
+  void
+  on_size(wxSizeEvent& e) {
+    wxSize const& size = e.GetSize();
+    this->ebiten_kernel_.set_screen_size(size.GetWidth(), size.GetHeight());
   }
 private:
   wxDECLARE_EVENT_TABLE();
@@ -45,6 +48,7 @@ private:
 
 wxBEGIN_EVENT_TABLE(gl_canvas, wxGLCanvas)
 EVT_IDLE(gl_canvas::on_idle)
+EVT_SIZE(gl_canvas::on_size)
 wxEND_EVENT_TABLE()
 
 }

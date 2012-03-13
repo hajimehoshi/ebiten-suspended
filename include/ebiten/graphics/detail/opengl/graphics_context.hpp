@@ -31,8 +31,8 @@ class device;
 class graphics_context : private noncopyable {
   friend class device;
 private:
-  std::size_t const screen_width_;
-  std::size_t const screen_height_;
+  std::size_t screen_width_;
+  std::size_t screen_height_;
   std::size_t const screen_scale_;
   texture_factory& texture_factory_;
   shaders shaders_;
@@ -145,6 +145,16 @@ public:
     this->set_offscreen(&texture);
   }
 private:
+  void
+  set_screen_size(std::size_t screen_width,
+                  std::size_t screen_height) {
+    assert(0 < screen_width);
+    assert(0 < screen_height);
+    assert(screen_width  <= 4096);
+    assert(screen_height <= 4096);
+    this->screen_width_  = screen_width;
+    this->screen_height_ = screen_height;
+  }
   // TODO: I don't wanna use pointers!
   void
   set_offscreen(class texture* texture) {
@@ -292,6 +302,15 @@ private:
       throw std::runtime_error("framebuffer is not supported completely");
     }
     return this->framebuffers_[texture.id()] = framebuffer;
+  }
+  void
+  delete_framebuffer(texture const& texture) {
+    auto const& it = this->framebuffers_.find(texture.id());
+    if (it == this->framebuffers_.end()) {
+      return;
+    }
+    ::glDeleteFramebuffers(1, &it->second);
+    this->framebuffers_.erase(texture.id());
   }
 };
 

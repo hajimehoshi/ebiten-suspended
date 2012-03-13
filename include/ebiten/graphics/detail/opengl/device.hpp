@@ -26,8 +26,8 @@ namespace detail {
 
 class device : private noncopyable {
 private:
-  std::size_t const screen_width_;
-  std::size_t const screen_height_;
+  std::size_t screen_width_;
+  std::size_t screen_height_;
   std::size_t const screen_scale_;
   std::function<bool(texture_factory&)> update_func_;
   std::function<void(graphics_context&, texture&)> draw_func_;
@@ -56,9 +56,9 @@ public:
     assert(0 < this->screen_width_);
     assert(0 < this->screen_height_);
     assert(0 < this->screen_scale_);
-    assert(this->screen_width_ <= 4096);
+    assert(this->screen_width_  <= 4096);
     assert(this->screen_height_ <= 4096);
-    assert(this->screen_scale_ <= 4);
+    assert(this->screen_scale_  <= 4);
     assert(this->update_func_);
     assert(this->draw_func_);
     this->opengl_initializer_.initialize(std::bind(&device::update, this));
@@ -66,6 +66,22 @@ public:
   ~device() {
     // TODO: implement
   }
+  void
+  set_screen_size(std::size_t screen_width,
+                  std::size_t screen_height) {
+    assert(0 < screen_width);
+    assert(0 < screen_height);
+    assert(screen_width  <= 4096);
+    assert(screen_height <= 4096);
+    this->screen_width_  = screen_width;
+    this->screen_height_ = screen_height;
+    if (!this->offscreen_texture_) {
+      return;
+    }
+    this->graphics_context_.delete_framebuffer(*this->offscreen_texture_);
+    this->offscreen_texture_ = nullptr;
+  }
+private:
   /*
    * NOTICE:
    *   The OpenGL functions should be called only in this method 'update'.

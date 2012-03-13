@@ -57,6 +57,11 @@ public:
   is_terminated() const {
     return this->is_terminated_;
   }
+  void
+  set_screen_size(std::size_t screen_width,
+                std::size_t screen_height) {
+    this->device_.set_screen_size(screen_width, screen_height);
+  }
 private:
   bool
   update(ebiten::graphics::texture_factory& tf) {
