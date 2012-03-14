@@ -23,11 +23,11 @@ private:
     }
     void
     draw(ebiten::graphics::graphics_context& g,
-         ebiten::graphics::texture& main_offscreen) {
-      g.set_offscreen(main_offscreen);
+         ebiten::graphics::texture&) {
+      //g.set_offscreen(main_offscreen);
       g.clear();
       g.fill(0, 128, 255, 255);
-      g.draw_rect(0, 100, 50, 50,
+      g.draw_rect(20, 40, 500, 100,
                   0, 255, 255, 255);
     }
   };

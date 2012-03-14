@@ -20,7 +20,9 @@ namespace ebiten {
 namespace graphics {
 namespace detail {
 
-static uint64_t
+namespace {
+
+uint64_t
 clp2(uint64_t x) {
   x -= 1;
   x |= (x >> 1);
@@ -30,6 +32,8 @@ clp2(uint64_t x) {
   x |= (x >> 16);
   x |= (x >> 32);
   return x + 1;
+}
+
 }
 
 class device;

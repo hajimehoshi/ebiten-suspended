@@ -75,8 +75,8 @@ public:
     assert(static_cast<bool>(this->empty_texture_));
 
     geometry_matrix geom_mat;
-    geom_mat.set_a(width  / this->empty_texture_->width());
-    geom_mat.set_d(height / this->empty_texture_->height());
+    geom_mat.set_a(static_cast<double>(width)  / this->empty_texture_->width());
+    geom_mat.set_d(static_cast<double>(height) / this->empty_texture_->height());
     geom_mat.set_tx(x);
     geom_mat.set_ty(y);
 
@@ -91,10 +91,9 @@ public:
                        geom_mat, color_mat);
   }
   // TODO: double -> int
-  // TODO: width -> src_width
   void
   draw_texture(texture const& texture,
-               double src_x, double src_y, double width, double height,
+               double src_x, double src_y, double src_width, double src_height,
                geometry_matrix const& geometry_matrix,
                color_matrix const& color_matrix) {
     this->set_shader_program(geometry_matrix, color_matrix);
@@ -105,14 +104,14 @@ public:
     // 選べるようにするといいかも
     float const texture_width  = texture.texture_width();
     float const texture_height = texture.texture_height();
-    float const tu1 = src_x            / texture_width;
-    float const tu2 = (src_x + width)  / texture_width;
-    float const tv1 = src_y            / texture_height;
-    float const tv2 = (src_y + height) / texture_height;
+    float const tu1 = src_x                / texture_width;
+    float const tu2 = (src_x + src_width)  / texture_width;
+    float const tv1 = src_y                / texture_height;
+    float const tv2 = (src_y + src_height) / texture_height;
     float const x1 = 0;
-    float const x2 = width;
+    float const x2 = src_width;
     float const y1 = 0;
-    float const y2 = height;
+    float const y2 = src_height;
     float const vertex[] = {x1, y1,
                             x2, y1,
                             x1, y2,
@@ -166,6 +165,7 @@ private:
     GLuint framebuffer;
     if (texture) {
       framebuffer = this->get_framebuffer(*texture);
+      assert(framebuffer != 0);
     } else {
       framebuffer = 0;
     }
@@ -174,16 +174,16 @@ private:
     ::glEnable(GL_BLEND);
     ::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     float width, height, tx, ty;
-    if (framebuffer == 0) {
-      width  = this->screen_width_ * screen_scale_;
-      height = -1.0 * this->screen_height_ * screen_scale_;
-      tx     = -1;
-      ty     = 1;
-    } else {
+    if (framebuffer != 0) {
       width  = texture->texture_width();
       height = texture->texture_height();
       tx     = -1;
       ty     = -1;
+    } else {
+      width  = this->screen_width_ * this->screen_scale_;
+      height = -1.0 * this->screen_height_ * this->screen_scale_;
+      tx     = -1;
+      ty     = 1;
     }
     ::glViewport(0, 0,
                  static_cast<GLsizei>(std::abs(width)),

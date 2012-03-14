@@ -75,6 +75,7 @@ public:
     assert(screen_height <= 4096);
     this->screen_width_  = screen_width;
     this->screen_height_ = screen_height;
+    this->graphics_context_.set_screen_size(screen_width, screen_height);
     if (!this->offscreen_texture_) {
       return;
     }
