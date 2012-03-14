@@ -28,8 +28,7 @@ public:
                  wxNullPalette),
       ebiten_kernel_(update_func,
                      draw_func,
-                     320,
-                     240,
+                     16, 16,
                      1, 60,
                      this) {
   }
