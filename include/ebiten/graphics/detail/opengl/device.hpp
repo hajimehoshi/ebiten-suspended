@@ -79,6 +79,7 @@ public:
     if (!this->offscreen_texture_) {
       return;
     }
+    // TODO: How about the OpenGL context?
     // TODO: Should a texture include its framebuffer?
     this->graphics_context_.delete_framebuffer(*this->offscreen_texture_);
     this->offscreen_texture_ = nullptr;
