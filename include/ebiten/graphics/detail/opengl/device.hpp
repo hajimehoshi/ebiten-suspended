@@ -35,6 +35,7 @@ private:
   graphics_context graphics_context_;
   texture_pointer offscreen_texture_;
   opengl_initializer opengl_initializer_;
+  bool to_destory_offscreen_texture_;
 public:
   device(std::size_t screen_width,
          std::size_t screen_height,
@@ -52,7 +53,8 @@ public:
                         screen_height,
                         screen_scale,
                         this->texture_factory_),
-      opengl_initializer_(native_view) {
+      opengl_initializer_(native_view),
+      to_destory_offscreen_texture_(false) {
     assert(0 < this->screen_width_);
     assert(0 < this->screen_height_);
     assert(0 < this->screen_scale_);
@@ -76,13 +78,7 @@ public:
     this->screen_width_  = screen_width;
     this->screen_height_ = screen_height;
     this->graphics_context_.set_screen_size(screen_width, screen_height);
-    if (!this->offscreen_texture_) {
-      return;
-    }
-    // TODO: How about the OpenGL context?
-    // TODO: Should a texture include its framebuffer?
-    this->graphics_context_.delete_framebuffer(*this->offscreen_texture_);
-    this->offscreen_texture_ = nullptr;
+    this->to_destory_offscreen_texture_ = true;
   }
 private:
   /*
@@ -93,6 +89,14 @@ private:
   bool
   update() {
     try {
+      if (this->to_destory_offscreen_texture_) {
+        if (this->offscreen_texture_) {
+          // TODO: Should a texture include its framebuffer?
+          this->graphics_context_.delete_framebuffer(*this->offscreen_texture_);
+          this->offscreen_texture_ = nullptr;
+        }
+        this->to_destory_offscreen_texture_ = false;
+      }
       if (!this->offscreen_texture_) {
         this->offscreen_texture_ = this->texture_factory_.create(this->screen_width_,
                                                                  this->screen_height_);
