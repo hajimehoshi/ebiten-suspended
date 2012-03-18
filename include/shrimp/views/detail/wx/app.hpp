@@ -1,8 +1,7 @@
 #ifndef SHRIMP_VIEWS_DETAIL_WX_APP_HPP
 #define SHRIMP_VIEWS_DETAIL_WX_APP_HPP
 
-#include "shrimp/views/detail/wx/frame.hpp"
-#include "shrimp/views/detail/wx/view.hpp"
+#include "shrimp/views/detail/wx/main_frame.hpp"
 #include "shrimp/views/detail/wx/wx.hpp"
 #include "ebiten/noncopyable.hpp"
 
@@ -12,10 +11,10 @@ namespace detail {
 
 class app : private ebiten::noncopyable {
 private:
-  view view_;
+  main_frame* main_frame_;
 public:
   app()
-    : view_() {
+    : main_frame_(nullptr) {
     wxApp::SetInstance(new wxApp());
     int argc = 0;
     char** argv = nullptr;
@@ -23,9 +22,9 @@ public:
     wxTheApp->OnInit();
     {
       wxTheApp->SetExitOnFrameDelete(true);
-      frame* frame_ = new frame();
-      frame_->Show(true);
-      wxTheApp->SetTopWindow(frame_);
+      this->main_frame_ = new class main_frame();
+      this->main_frame_->Show(true);
+      wxTheApp->SetTopWindow(this->main_frame_);
     }
   }
   ~app() {
@@ -36,13 +35,13 @@ public:
   run() {
     return wxTheApp->OnRun();
   }
-  class view&
-  view() {
-    return this->view_;
+  class main_frame&
+  main_frame() {
+    return *this->main_frame_;
   }
-  class view const&
-  view() const {
-    return this->view_;
+  class main_frame const&
+  main_frame() const {
+    return *this->main_frame_;
   }
 };
 

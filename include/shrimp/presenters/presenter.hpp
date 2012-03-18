@@ -1,7 +1,7 @@
 #ifndef SHRIMP_PRESENTERS_PRESENTER_HPP
 #define SHRIMP_PRESENTERS_PRESENTER_HPP
 
-#include "shrimp/views/view.hpp"
+#include "shrimp/views/main_frame.hpp"
 #include "ebiten/noncopyable.hpp"
 
 namespace shrimp {
@@ -9,10 +9,20 @@ namespace presenters {
 
 class presenter : private ebiten::noncopyable {
 private:
-  views::view& view_;
+  views::main_frame& main_frame_;
+  enum {
+    EDITOR_MAP,
+  } editor_state_;
 public:
-  presenter(views::view& view)
-    : view_(view) {
+  presenter(views::main_frame& main_frame)
+    : main_frame_(main_frame),
+      editor_state_(EDITOR_MAP) {
+    this->refresh_view();
+  }
+private:
+  void
+  refresh_view() {
+    
   }
 };
 

@@ -1,5 +1,5 @@
-#ifndef SHRIMP_VIEWS_DETAIL_WX_FRAME_HPP
-#define SHRIMP_VIEWS_DETAIL_WX_FRAME_HPP
+#ifndef SHRIMP_VIEWS_DETAIL_WX_MAIN_FRAME_HPP
+#define SHRIMP_VIEWS_DETAIL_WX_MAIN_FRAME_HPP
 
 #include "shrimp/views/detail/wx/gl_canvas.hpp"
 #include "shrimp/views/detail/wx/wx.hpp"
@@ -12,7 +12,7 @@ namespace shrimp {
 namespace views {
 namespace detail {
 
-class frame : public wxFrame {
+class main_frame : public wxFrame {
 private:
   class map_editor_drawer {
   public:
@@ -33,7 +33,7 @@ private:
   };
   std::unique_ptr<map_editor_drawer> map_editor_drawer_;
 public:
-  frame()
+  main_frame()
     : wxFrame(nullptr,
               wxID_ANY,
               wxT("Shrimp"),
@@ -108,8 +108,8 @@ private:
   wxDECLARE_EVENT_TABLE();
 };
 
-wxBEGIN_EVENT_TABLE(frame, wxFrame)
-EVT_MENU(wxID_EXIT, frame::on_exit)
+wxBEGIN_EVENT_TABLE(main_frame, wxFrame)
+EVT_MENU(wxID_EXIT, main_frame::on_exit)
 wxEND_EVENT_TABLE()
 
 }
