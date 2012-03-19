@@ -3,20 +3,24 @@
 
 #define wxNO__T
 
-#pragma clang diagnostic push
+#ifdef __clang__
+# pragma clang diagnostic push
 // TODO: Ignore -pedantic
-#pragma clang diagnostic ignored "-Wall"
-#pragma clang diagnostic ignored "-Wextra"
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-#pragma clang diagnostic ignored "-Wlong-long"
-#pragma clang diagnostic ignored "-Wmissing-prototypes"
-#pragma clang diagnostic ignored "-Wshorten-64-to-32"
+# pragma clang diagnostic ignored "-Wall"
+# pragma clang diagnostic ignored "-Wextra"
+# pragma clang diagnostic ignored "-Wdeprecated-declarations"
+# pragma clang diagnostic ignored "-Wlong-long"
+# pragma clang diagnostic ignored "-Wmissing-prototypes"
+# pragma clang diagnostic ignored "-Wshorten-64-to-32"
+#endif
 #include <wx/wxprec.h>
 #ifndef WX_PRECOMP
 # include <wx/wx.h>
 #endif
 #include <wx/glcanvas.h>
 #include <wx/toolbar.h>
-#pragma clang diagnostic pop
+#ifdef __clang__
+# pragma clang diagnostic pop
+#endif
 
 #endif
