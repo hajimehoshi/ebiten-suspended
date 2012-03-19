@@ -2,20 +2,12 @@
 #define EBITEN_GRAPHICS_DETAIL_OPENGL_DEVICE_HPP
 
 #include "ebiten/graphics/detail/opengl/graphics_context.hpp"
+#include "ebiten/graphics/detail/opengl/opengl.hpp"
 #include "ebiten/graphics/detail/opengl/opengl_initializer.hpp"
 #include "ebiten/graphics/detail/opengl/texture_factory.hpp"
 #include "ebiten/graphics/detail/opengl/texture_pointer.hpp"
 #include "ebiten/graphics/native_view.hpp"
 #include "ebiten/noncopyable.hpp"
-#include "ebiten/platform.hpp"
-
-#ifdef EBITEN_MACOSX
-# include <OpenGL/gl.h>
-#endif
-#ifdef EBITEN_IOS
-# import <GLKit/GLKit.h>
-#endif
-
 #include <cassert>
 #include <functional>
 #include <memory>

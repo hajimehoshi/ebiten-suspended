@@ -1,16 +1,8 @@
 #ifndef EBITEN_GRAPHICS_DETAIL_OPENGL_SHADERS_HPP
 #define EBITEN_GRAPHICS_DETAIL_OPENGL_SHADERS_HPP
 
+#include "ebiten/graphics/detail/opengl/opengl.hpp"
 #include "ebiten/noncopyable.hpp"
-#include "ebiten/platform.hpp"
-
-#ifdef EBITEN_MACOSX
-# include <OpenGL/gl.h>
-#endif
-#ifdef EBITEN_IOS
-# import <GLKit/GLKit.h>
-#endif
-
 #include <iostream>
 #include <regex>
 #include <sstream>

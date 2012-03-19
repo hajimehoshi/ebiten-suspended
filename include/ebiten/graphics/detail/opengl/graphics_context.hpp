@@ -1,6 +1,7 @@
 #ifndef EBITEN_GRAPHICS_DETAIL_OPENGL_GRAPHICS_CONTEXT_HPP
 #define EBITEN_GRAPHICS_DETAIL_OPENGL_GRAPHICS_CONTEXT_HPP
 
+#include "ebiten/graphics/detail/opengl/opengl.hpp"
 #include "ebiten/graphics/detail/opengl/texture_factory.hpp"
 #include "ebiten/graphics/detail/opengl/texture_pointer.hpp"
 #include "ebiten/graphics/detail/opengl/shaders.hpp"
@@ -8,15 +9,6 @@
 #include "ebiten/graphics/geometry_matrix.hpp"
 #include "ebiten/graphics/texture.hpp"
 #include "ebiten/noncopyable.hpp"
-#include "ebiten/platform.hpp"
-
-#ifdef EBITEN_MACOSX
-# include <OpenGL/gl.h>
-#endif
-#ifdef EBITEN_IOS
-# import <GLKit/GLKit.h>
-#endif
-
 #include <array>
 #include <algorithm>
 #include <cassert>
