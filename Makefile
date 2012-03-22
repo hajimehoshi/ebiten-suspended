@@ -1,3 +1,5 @@
+# TODO: Check include guards
+
 PROG_SHRIMP  := shrimp
 PROG_SAMPLES := ebiten
 PROG_TEST    := ebiten_test
