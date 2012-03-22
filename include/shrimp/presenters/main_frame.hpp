@@ -4,6 +4,7 @@
 #include "shrimp/views/main_frame.hpp"
 #include "ebiten/ebiten.hpp"
 #include "ebiten/noncopyable.hpp"
+#include <functional>
 
 namespace shrimp {
 namespace presenters {
@@ -18,6 +19,10 @@ public:
   main_frame(views::main_frame& main_frame)
     : view_(main_frame),
       source_(SOURCE_MAP) {
+    this->view_.set_draw_map_editor_func(std::bind(&main_frame::on_draw_map_editor,
+                                                   this,
+                                                   std::placeholders::_1,
+                                                   std::placeholders::_2));
     this->refresh_view();
   }
 private:

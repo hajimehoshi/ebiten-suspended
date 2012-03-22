@@ -6,7 +6,6 @@
 #include "ebiten/ebiten.hpp"
 #include <wx/splitter.h>
 #include <functional>
-#include <memory>
 
 namespace shrimp {
 namespace views {
@@ -14,19 +13,8 @@ namespace detail {
 
 class main_frame : public wxFrame {
 private:
-  class map_editor_drawer {
-  public:
-    bool
-    update(ebiten::graphics::texture_factory&,
-           ebiten::input const&) {
-      return false;
-    }
-    void
-    draw(ebiten::graphics::graphics_context& g,
-         ebiten::graphics::texture&) {
-    }
-  };
-  std::unique_ptr<map_editor_drawer> map_editor_drawer_;
+  std::function<void(ebiten::graphics::graphics_context&,
+                     ebiten::graphics::texture&)> draw_map_editor_func_;
 public:
   main_frame()
     : wxFrame(nullptr,
@@ -78,12 +66,12 @@ public:
                                         120);
         // map editor
         {
-          auto update = std::bind(&map_editor_drawer::update,
-                                  this->map_editor_drawer_.get(),
+          auto update = std::bind(&main_frame::on_update_map_editor,
+                                  this,
                                   std::placeholders::_1,
                                   std::placeholders::_2);
-          auto draw = std::bind(&map_editor_drawer::draw,
-                                this->map_editor_drawer_.get(),
+          auto draw = std::bind(&main_frame::on_draw_map_editor,
+                                this,
                                 std::placeholders::_1,
                                 std::placeholders::_2);
           auto c = new gl_canvas(editor_panel,
@@ -96,13 +84,32 @@ public:
     }
   }
   void
+  set_draw_map_editor_func(std::function<void(ebiten::graphics::graphics_context&,
+                                              ebiten::graphics::texture&)> const &func) {
+    this->draw_map_editor_func_ = func;
+  }
+  void
   on_exit(wxCommandEvent&) {
+    this->draw_map_editor_func_ = nullptr;
     this->Close(true);
   }
   void
   set_source_map() {
   }
 private:
+  bool
+  on_update_map_editor(ebiten::graphics::texture_factory&,
+                       ebiten::input const&) {
+    return false;
+  }
+  void
+  on_draw_map_editor(ebiten::graphics::graphics_context& g,
+                     ebiten::graphics::texture& offscreen) {
+    if (!this->draw_map_editor_func_) {
+      return;
+    }
+    this->draw_map_editor_func_(g, offscreen);
+  }
   wxDECLARE_EVENT_TABLE();
 };
 
