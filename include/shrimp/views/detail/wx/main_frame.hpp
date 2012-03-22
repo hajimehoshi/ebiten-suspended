@@ -24,11 +24,6 @@ private:
     void
     draw(ebiten::graphics::graphics_context& g,
          ebiten::graphics::texture&) {
-      //g.set_offscreen(main_offscreen);
-      g.clear();
-      g.fill(0, 128, 255, 255);
-      g.draw_rect(20, 40, 500, 100,
-                  0, 255, 255, 255);
     }
   };
   std::unique_ptr<map_editor_drawer> map_editor_drawer_;
@@ -103,6 +98,9 @@ public:
   void
   on_exit(wxCommandEvent&) {
     this->Close(true);
+  }
+  void
+  set_source_map() {
   }
 private:
   wxDECLARE_EVENT_TABLE();
