@@ -15,10 +15,20 @@ private:
   enum source_type {
     SOURCE_MAP,
   } source_;
+  int map_editor_scroll_x_;
+  int map_editor_scroll_y_;
+  std::size_t map_editor_scale_;
+  std::size_t map_width_;
+  std::size_t map_height_;
 public:
   main_frame(views::main_frame& main_frame)
     : view_(main_frame),
-      source_(SOURCE_MAP) {
+      source_(SOURCE_MAP),
+      map_editor_scroll_x_(0),
+      map_editor_scroll_y_(0),
+      map_editor_scale_(1),
+      map_width_(20),
+      map_height_(15) {
     this->view_.set_draw_map_editor_func(std::bind(&main_frame::on_draw_map_editor,
                                                    this,
                                                    std::placeholders::_1,
@@ -40,9 +50,13 @@ private:
   on_draw_map_editor(ebiten::graphics::graphics_context& g,
                      ebiten::graphics::texture&) {
     g.clear();
-    g.fill(0, 128, 255, 255);
-    g.draw_rect(20, 40, 500, 100,
-                0, 255, 255, 255);
+    g.fill(128, 128, 128, 255);
+    int const x = this->map_editor_scroll_x_;
+    int const y = this->map_editor_scroll_y_;
+    std::size_t const width  = this->map_editor_scale_ * 16 * this->map_width_;
+    std::size_t const height = this->map_editor_scale_ * 16 * this->map_height_;
+    g.draw_rect(x, y, width, height,
+                255, 255, 255, 255);
   }
 };
 
