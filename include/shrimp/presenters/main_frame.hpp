@@ -29,6 +29,10 @@ public:
       map_editor_scale_(1),
       map_width_(20),
       map_height_(15) {
+    this->view_.set_update_map_editor_func(std::bind(&main_frame::on_update_map_editor,
+                                                     this,
+                                                     std::placeholders::_1,
+                                                     std::placeholders::_2));
     this->view_.set_draw_map_editor_func(std::bind(&main_frame::on_draw_map_editor,
                                                    this,
                                                    std::placeholders::_1,
@@ -45,6 +49,10 @@ private:
     default:
       break;
     }
+  }
+  void
+  on_update_map_editor(ebiten::graphics::texture_factory&,
+                       ebiten::input const&) {
   }
   void
   on_draw_map_editor(ebiten::graphics::graphics_context& g,

@@ -13,6 +13,8 @@ namespace detail {
 
 class main_frame : public wxFrame {
 private:
+  std::function<void(ebiten::graphics::texture_factory&,
+                     ebiten::input const&)> update_map_editor_func_;
   std::function<void(ebiten::graphics::graphics_context&,
                      ebiten::graphics::texture&)> draw_map_editor_func_;
 public:
@@ -84,13 +86,19 @@ public:
     }
   }
   void
+  set_update_map_editor_func(std::function<void(ebiten::graphics::texture_factory&,
+                                                ebiten::input const&)> const& func) {
+    this->update_map_editor_func_ = func;
+  }
+  void
   set_draw_map_editor_func(std::function<void(ebiten::graphics::graphics_context&,
-                                              ebiten::graphics::texture&)> const &func) {
+                                              ebiten::graphics::texture&)> const& func) {
     this->draw_map_editor_func_ = func;
   }
   void
   on_exit(wxCommandEvent&) {
-    this->draw_map_editor_func_ = nullptr;
+    this->update_map_editor_func_ = nullptr;
+    this->draw_map_editor_func_   = nullptr;
     this->Close(true);
   }
   void
@@ -98,8 +106,12 @@ public:
   }
 private:
   bool
-  on_update_map_editor(ebiten::graphics::texture_factory&,
-                       ebiten::input const&) {
+  on_update_map_editor(ebiten::graphics::texture_factory& tf,
+                       ebiten::input const& i) {
+    if (!this->update_map_editor_func_) {
+      return false;
+    }
+    this->update_map_editor_func_(tf, i);
     return false;
   }
   void
