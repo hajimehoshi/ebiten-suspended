@@ -84,6 +84,15 @@ public:
   }
   // TODO: double -> int
   void
+  draw_texture(texture_pointer const& texture_pointer,
+               double src_x, double src_y, double src_width, double src_height,
+               geometry_matrix const& geometry_matrix,
+               color_matrix const& color_matrix) {
+    this->draw_texture(*texture_pointer,
+                       src_x, src_y, src_width, src_height,
+                       geometry_matrix, color_matrix);
+  }
+  void
   draw_texture(texture const& texture,
                double src_x, double src_y, double src_width, double src_height,
                geometry_matrix const& geometry_matrix,
@@ -134,6 +143,10 @@ public:
     ::glDisableVertexAttribArray(vertex_attr_location);
     ::glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     ::glDisableClientState(GL_VERTEX_ARRAY);
+  }
+  void
+  set_offscreen(texture_pointer& p) {
+    this->set_offscreen(p.get());
   }
   void
   set_offscreen(class texture& texture) {
