@@ -95,6 +95,9 @@ private:
       }
       assert(static_cast<bool>(this->offscreen_texture_));
       bool const terminated = this->update_func_(this->texture_factory_);
+      if (terminated) {
+        return true;
+      }
       detail::graphics_context& g = this->graphics_context_;
       ::glEnable(GL_TEXTURE_2D);
       ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);

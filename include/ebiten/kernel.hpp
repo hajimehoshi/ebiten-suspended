@@ -53,6 +53,10 @@ public:
       is_terminated_(false) {
     graphics::detail::native_view_set_input(native_view, this->input_);
   }
+  void
+  terminate() {
+    this->is_terminated_ = true;
+  }
   bool
   is_terminated() const {
     return this->is_terminated_;
@@ -65,14 +69,14 @@ public:
 private:
   bool
   update(ebiten::graphics::texture_factory& tf) {
-    if (this->is_terminated_) {
+    if (this->is_terminated()) {
       return true;
     }
     uint64_t const now = timers::timer::now_nsec() * this->fps_;
     while (this->before_ + 1000 * 1000 * 1000 < now) {
       bool const terminated = this->game_update_(tf, this->input_);
       if (terminated) {
-        this->is_terminated_ = true;
+        this->terminate();
         return true;
       }
       this->before_ += 1000 * 1000 * 1000;
@@ -82,7 +86,7 @@ private:
   void
   draw(ebiten::graphics::graphics_context& g,
        ebiten::graphics::texture& offscreen_texture) {
-    if (this->is_terminated_) {
+    if (this->is_terminated()) {
       return;
     }
     this->game_draw_(g, offscreen_texture);

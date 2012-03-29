@@ -33,6 +33,10 @@ public:
                      this) {
   }
   void
+  on_close(wxCloseEvent&) {
+    this->ebiten_kernel_.terminate();
+  }
+  void
   on_idle(wxIdleEvent&) {
     this->Refresh(false);
   }
@@ -46,6 +50,7 @@ private:
 };
 
 wxBEGIN_EVENT_TABLE(gl_canvas, wxGLCanvas)
+EVT_CLOSE(gl_canvas::on_close)
 EVT_IDLE(gl_canvas::on_idle)
 EVT_SIZE(gl_canvas::on_size)
 wxEND_EVENT_TABLE()
