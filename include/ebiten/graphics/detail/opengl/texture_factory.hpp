@@ -6,7 +6,9 @@
 #include "ebiten/image.hpp"
 #include "ebiten/noncopyable.hpp"
 #include <cassert>
+#include <functional>
 #include <memory>
+#include <unordered_set>
 
 namespace ebiten {
 namespace graphics {
@@ -33,16 +35,10 @@ class device;
 class texture_factory : private noncopyable {
   friend class texture;
   friend class device;
-private:
-  struct texture_deleter {
-    void
-    operator()(class texture* texture) const {
-      ::glDeleteTextures(1, &texture->id());
-      delete texture;
-    }
-  };
 public:
-  typedef std::unique_ptr<class texture, texture_deleter> texture_pointer;
+  typedef std::unique_ptr<class texture, std::function<void(class texture*)> > texture_pointer;
+private:
+  std::unordered_set<GLuint> textures_to_dispose_;
 private:
   texture_factory() {
   }
@@ -70,7 +66,10 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
     ::glBindTexture(GL_TEXTURE_2D, 0);
     typedef graphics::texture t;
-    texture_pointer p(new t(texture_id, width, height, texture_width, texture_height));
+    texture_pointer p(new t(texture_id, width, height, texture_width, texture_height),
+                      std::bind(&texture_factory::delete_texture,
+                                this,
+                                std::placeholders::_1));
     return p;
   }
 private:
@@ -110,8 +109,26 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
     ::glBindTexture(GL_TEXTURE_2D, 0);
     typedef graphics::texture t;
-    texture_pointer p(new t(texture_id, width, height, texture_width, texture_height));
+    texture_pointer p(new t(texture_id, width, height, texture_width, texture_height),
+                      std::bind(&texture_factory::delete_texture,
+                                this,
+                                std::placeholders::_1));
     return p;
+  }
+private:
+  void
+  delete_texture(class texture* texture) {
+    // TODO: Bug fix: this object could be broken
+    this->textures_to_dispose_.emplace(texture->id());
+    delete texture;
+  }
+public:
+  void
+  dispose_textures() {
+    for (GLuint id : this->textures_to_dispose_) {
+      ::glDeleteTextures(1, &id);
+    }
+    this->textures_to_dispose_.clear();
   }
 };
 

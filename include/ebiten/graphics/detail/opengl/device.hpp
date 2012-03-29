@@ -114,6 +114,7 @@ private:
                      0, 0, this->screen_width_, this->screen_height_,
                      geom_mat, color_matrix::identity());
       g.flush();
+      this->texture_factory_.dispose_textures();
       return terminated;
     } catch (std::runtime_error const& e) {
       // TODO: Logging
