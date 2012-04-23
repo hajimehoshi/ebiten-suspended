@@ -1,7 +1,6 @@
 #ifndef EBITEN_GRAPHICS_DETAIL_OPENGL_TEXTURE_HPP
 #define EBITEN_GRAPHICS_DETAIL_OPENGL_TEXTURE_HPP
 
-#include "ebiten/noncopyable.hpp"
 #include "ebiten/platform.hpp"
 
 #ifdef EBITEN_MACOSX
@@ -21,18 +20,25 @@ class texture_factory;
 
 typedef GLuint texture_id;
 
-class texture : private noncopyable {
+class texture {
 private:
-  texture_id const id_;
-  std::size_t const width_;
-  std::size_t const height_;
-  std::size_t const texture_width_;
-  std::size_t const texture_height_;
+  texture_id id_;
+  std::size_t width_;
+  std::size_t height_;
+  std::size_t texture_width_;
+  std::size_t texture_height_;
 private:
   friend class device;
   friend class graphics_context;
   friend class texture_factory;
 public:
+  texture()
+    : id_(0),
+      width_(0),
+      height_(0),
+      texture_width_(0),
+      texture_height_(0) {
+  }
   std::size_t
   width() const {
     return this->width_;
@@ -50,7 +56,7 @@ public:
     return this->texture_height_;
   }
 private:
-  texture(texture_id const& id_,
+  texture(texture_id id_,
           std::size_t width_,
           std::size_t height_,
           std::size_t texture_width_,
@@ -64,6 +70,10 @@ private:
   texture_id const&
   id() const {
     return this->id_;
+  }
+public:
+  operator bool() const {
+    return this->id() != 0;
   }
 };
 

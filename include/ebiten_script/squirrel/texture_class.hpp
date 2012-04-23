@@ -253,7 +253,11 @@ public:
       ::sq_getuserpointer(vm, 2, &p_texture);
       ebiten::graphics::texture* texture =
         reinterpret_cast<ebiten::graphics::texture*>(p_texture);
-      self.set_ebiten_texture(texture);
+      if (texture) {
+        self.set_ebiten_texture(*texture);
+      } else {
+        self.set_ebiten_texture(ebiten::graphics::texture());
+      }
       return 0;
     } catch (squirrel_error const& e) {
       return e.sq_value();

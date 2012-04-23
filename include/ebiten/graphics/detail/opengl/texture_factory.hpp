@@ -35,16 +35,22 @@ class device;
 class texture_factory : private noncopyable {
   friend class texture;
   friend class device;
-public:
-  typedef std::unique_ptr<class texture, std::function<void(class texture*)> > texture_pointer;
-  //typedef texture const& texture_pointer;
 private:
   std::unordered_set<GLuint> textures_to_dispose_;
 private:
   texture_factory() {
   }
 public:
-  texture_pointer
+  /*texture&
+  from_id(texture_id id) {
+    // impl
+  }*/
+  /*void
+  delete_texture(texture_id id) {
+    // impl
+  }*/
+public:
+  texture
   from_image(image const& img) {
     std::size_t const width  = img.width();
     std::size_t const height = img.height();
@@ -66,12 +72,7 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
     ::glBindTexture(GL_TEXTURE_2D, 0);
-    typedef graphics::texture t;
-    texture_pointer p(new t(texture_id, width, height, texture_width, texture_height),
-                      std::bind(&texture_factory::delete_texture,
-                                this,
-                                std::placeholders::_1));
-    return p;
+    return texture(texture_id, width, height, texture_width, texture_height);
   }
 private:
   void
@@ -87,7 +88,7 @@ private:
                    img_with_padding.pixels().data());
   }
 public:
-  texture_pointer
+  texture
   create(std::size_t width, std::size_t height) {
     std::size_t const texture_width  = clp2(width);
     std::size_t const texture_height = clp2(height);
@@ -110,12 +111,7 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
     ::glBindTexture(GL_TEXTURE_2D, 0);
     // これが滅びると同時にテクスチャも滅びる必要がある?
-    typedef graphics::texture t;
-    texture_pointer p(new t(texture_id, width, height, texture_width, texture_height),
-                      std::bind(&texture_factory::delete_texture,
-                                this,
-                                std::placeholders::_1));
-    return p;
+    return texture(texture_id, width, height, texture_width, texture_height);
   }
 private:
   void

@@ -5,7 +5,6 @@
 #include "ebiten/graphics/detail/opengl/opengl.hpp"
 #include "ebiten/graphics/detail/opengl/opengl_initializer.hpp"
 #include "ebiten/graphics/detail/opengl/texture_factory.hpp"
-#include "ebiten/graphics/detail/opengl/texture_pointer.hpp"
 #include "ebiten/graphics/native_view.hpp"
 #include "ebiten/noncopyable.hpp"
 #include <cassert>
@@ -25,7 +24,7 @@ private:
   std::function<void(graphics_context&, texture&)> draw_func_;
   texture_factory texture_factory_;
   graphics_context graphics_context_;
-  texture_pointer offscreen_texture_;
+  texture offscreen_texture_;
   opengl_initializer opengl_initializer_;
   bool to_destory_offscreen_texture_;
 public:
@@ -84,8 +83,8 @@ private:
       if (this->to_destory_offscreen_texture_) {
         if (this->offscreen_texture_) {
           // TODO: Should a texture include its framebuffer?
-          this->graphics_context_.delete_framebuffer(*this->offscreen_texture_);
-          this->offscreen_texture_ = nullptr;
+          this->graphics_context_.delete_framebuffer(this->offscreen_texture_);
+          this->offscreen_texture_ = texture();
         }
         this->to_destory_offscreen_texture_ = false;
       }
@@ -102,9 +101,9 @@ private:
       ::glEnable(GL_TEXTURE_2D);
       ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
       ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-      g.set_offscreen(*this->offscreen_texture_);
+      g.set_offscreen(this->offscreen_texture_);
       g.clear();
-      this->draw_func_(g, *this->offscreen_texture_);
+      this->draw_func_(g, this->offscreen_texture_);
       g.flush();
       ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
       ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -113,7 +112,7 @@ private:
       geometry_matrix geom_mat;
       geom_mat.set_a(this->screen_scale_);
       geom_mat.set_d(this->screen_scale_);
-      g.draw_texture(*this->offscreen_texture_,
+      g.draw_texture(this->offscreen_texture_,
                      0, 0, this->screen_width_, this->screen_height_,
                      geom_mat, color_matrix::identity());
       g.flush();

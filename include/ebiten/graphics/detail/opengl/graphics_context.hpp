@@ -3,7 +3,6 @@
 
 #include "ebiten/graphics/detail/opengl/opengl.hpp"
 #include "ebiten/graphics/detail/opengl/texture_factory.hpp"
-#include "ebiten/graphics/detail/opengl/texture_pointer.hpp"
 #include "ebiten/graphics/detail/opengl/shaders.hpp"
 #include "ebiten/graphics/color_matrix.hpp"
 #include "ebiten/graphics/geometry_matrix.hpp"
@@ -30,7 +29,7 @@ private:
   shaders shaders_;
   GLuint current_program_;
   std::array<float, 16> projection_matrix_;
-  texture_pointer empty_texture_;
+  texture empty_texture_;
   std::unordered_map<texture_id, GLuint> framebuffers_;
 private:
   graphics_context(std::size_t const screen_width,
@@ -67,8 +66,8 @@ public:
     assert(static_cast<bool>(this->empty_texture_));
 
     geometry_matrix geom_mat;
-    geom_mat.set_a(static_cast<double>(width)  / this->empty_texture_->width());
-    geom_mat.set_d(static_cast<double>(height) / this->empty_texture_->height());
+    geom_mat.set_a(static_cast<double>(width)  / this->empty_texture_.width());
+    geom_mat.set_d(static_cast<double>(height) / this->empty_texture_.height());
     geom_mat.set_tx(x);
     geom_mat.set_ty(y);
 
@@ -78,20 +77,11 @@ public:
     color_mat.set_element(2, 4, blue  / 255.0);
     color_mat.set_element(3, 4, alpha / 255.0);
 
-    this->draw_texture(*this->empty_texture_,
-                       0, 0, this->empty_texture_->width(), this->empty_texture_->height(),
+    this->draw_texture(this->empty_texture_,
+                       0, 0, this->empty_texture_.width(), this->empty_texture_.height(),
                        geom_mat, color_mat);
   }
   // TODO: double -> int
-  void
-  draw_texture(texture_pointer const& texture_pointer,
-               double src_x, double src_y, double src_width, double src_height,
-               geometry_matrix const& geometry_matrix,
-               color_matrix const& color_matrix) {
-    this->draw_texture(*texture_pointer,
-                       src_x, src_y, src_width, src_height,
-                       geometry_matrix, color_matrix);
-  }
   void
   draw_texture(texture const& texture,
                double src_x, double src_y, double src_width, double src_height,
@@ -143,10 +133,6 @@ public:
     ::glDisableVertexAttribArray(vertex_attr_location);
     ::glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     ::glDisableClientState(GL_VERTEX_ARRAY);
-  }
-  void
-  set_offscreen(texture_pointer& p) {
-    this->set_offscreen(p.get());
   }
   void
   set_offscreen(class texture& texture) {

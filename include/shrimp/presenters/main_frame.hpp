@@ -20,7 +20,7 @@ private:
   std::size_t map_editor_scale_;
   std::size_t map_width_;
   std::size_t map_height_;
-  ebiten::graphics::texture_pointer transparent_tile_;
+  ebiten::graphics::texture transparent_tile_;
   bool transparent_tile_rendered_;
 public:
   main_frame(views::main_frame& main_frame)
