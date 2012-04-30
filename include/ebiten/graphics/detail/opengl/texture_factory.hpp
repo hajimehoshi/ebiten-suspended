@@ -8,7 +8,6 @@
 #include <cassert>
 #include <functional>
 #include <memory>
-#include <unordered_set>
 
 namespace ebiten {
 namespace graphics {
@@ -36,19 +35,8 @@ class texture_factory : private noncopyable {
   friend class texture;
   friend class device;
 private:
-  std::unordered_set<GLuint> textures_to_dispose_;
-private:
   texture_factory() {
   }
-public:
-  /*texture&
-  from_id(texture_id id) {
-    // impl
-  }*/
-  /*void
-  delete_texture(texture_id id) {
-    // impl
-  }*/
 public:
   texture
   from_image(image const& img) {
@@ -72,7 +60,7 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
     ::glBindTexture(GL_TEXTURE_2D, 0);
-    return texture(texture_id, width, height, texture_width, texture_height);
+    return std::move(texture(texture_id, width, height, texture_width, texture_height));
   }
 private:
   void
@@ -111,22 +99,7 @@ public:
     ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
     ::glBindTexture(GL_TEXTURE_2D, 0);
     // これが滅びると同時にテクスチャも滅びる必要がある?
-    return texture(texture_id, width, height, texture_width, texture_height);
-  }
-private:
-  void
-  delete_texture(class texture* texture) {
-    // Don't call when destructed!
-    // TODO: Bug fix: this object could be broken
-    this->textures_to_dispose_.emplace(texture->id());
-    delete texture;
-  }
-  void
-  dispose_textures() {
-    for (GLuint id : this->textures_to_dispose_) {
-      ::glDeleteTextures(1, &id);
-    }
-    this->textures_to_dispose_.clear();
+    return std::move(texture(texture_id, width, height, texture_width, texture_height));
   }
 };
 

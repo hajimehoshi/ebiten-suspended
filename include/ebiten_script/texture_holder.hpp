@@ -75,8 +75,8 @@ public:
     return this->ebiten_texture_;
   }
   void
-  set_ebiten_texture(ebiten::graphics::texture const& ebiten_texture) {
-    this->external_ebiten_texture_ = ebiten_texture;
+  set_ebiten_texture(ebiten::graphics::texture&& ebiten_texture) {
+    this->external_ebiten_texture_ = std::move(ebiten_texture);
   }
   std::size_t
   width() const {

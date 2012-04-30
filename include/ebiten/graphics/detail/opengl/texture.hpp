@@ -1,6 +1,7 @@
 #ifndef EBITEN_GRAPHICS_DETAIL_OPENGL_TEXTURE_HPP
 #define EBITEN_GRAPHICS_DETAIL_OPENGL_TEXTURE_HPP
 
+#include "ebiten/noncopyable.hpp"
 #include "ebiten/platform.hpp"
 
 #ifdef EBITEN_MACOSX
@@ -20,7 +21,7 @@ class texture_factory;
 
 typedef GLuint texture_id;
 
-class texture {
+class texture : private noncopyable {
 private:
   texture_id id_;
   std::size_t width_;
@@ -70,6 +71,17 @@ private:
   texture_id const&
   id() const {
     return this->id_;
+  }
+  void
+  dispose() {
+    if (this->id_) {
+      ::glDeleteTextures(1, &this->id_);
+    }
+    this->id_             = 0;
+    this->width_          = 0;
+    this->height_         = 0;
+    this->texture_width_  = 0;
+    this->texture_height_ = 0;
   }
 public:
   operator bool() const {
