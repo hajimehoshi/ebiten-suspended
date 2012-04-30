@@ -10,8 +10,8 @@ public:
   noncopyable() = default;
   noncopyable(noncopyable const&) = delete;
   noncopyable& operator=(noncopyable const&) = delete;
-  noncopyable(noncopyable&&) {} // = default;
-  noncopyable& operator=(noncopyable&&) { return *this; } // = default;
+  noncopyable(noncopyable&&) = default;
+  noncopyable& operator=(noncopyable&&) = default;
 };
 
 }
