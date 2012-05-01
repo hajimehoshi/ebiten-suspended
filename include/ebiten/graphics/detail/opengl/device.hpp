@@ -82,7 +82,6 @@ private:
     try {
       if (this->to_destory_offscreen_texture_) {
         if (this->offscreen_texture_) {
-          // TODO: Should a texture include its framebuffer?
           this->graphics_context_.delete_framebuffer(this->offscreen_texture_);
           this->offscreen_texture_.dispose();
           this->offscreen_texture_ = texture();
@@ -117,7 +116,6 @@ private:
                      0, 0, this->screen_width_, this->screen_height_,
                      geom_mat, color_matrix::identity());
       g.flush();
-      //this->texture_factory_.dispose_textures();
       return terminated;
     } catch (std::runtime_error const& e) {
       // TODO: Logging
