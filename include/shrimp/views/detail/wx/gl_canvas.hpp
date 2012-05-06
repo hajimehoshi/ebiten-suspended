@@ -32,6 +32,9 @@ public:
                      1, 60,
                      this) {
   }
+  ~gl_canvas() {
+    this->ebiten_kernel_.terminate();
+  }
   void
   on_close(wxCloseEvent&) {
     this->ebiten_kernel_.terminate();

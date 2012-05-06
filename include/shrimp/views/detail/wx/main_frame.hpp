@@ -96,9 +96,13 @@ public:
     this->draw_map_editor_func_ = func;
   }
   void
-  on_exit(wxCommandEvent&) {
+  on_close(wxCloseEvent&) {
     this->update_map_editor_func_ = nullptr;
     this->draw_map_editor_func_   = nullptr;
+    ::wxExit();
+  }
+  void
+  on_exit(wxCommandEvent&) {
     this->Close(true);
   }
   void
@@ -126,6 +130,7 @@ private:
 };
 
 wxBEGIN_EVENT_TABLE(main_frame, wxFrame)
+EVT_CLOSE(main_frame::on_close)
 EVT_MENU(wxID_EXIT, main_frame::on_exit)
 wxEND_EVENT_TABLE()
 

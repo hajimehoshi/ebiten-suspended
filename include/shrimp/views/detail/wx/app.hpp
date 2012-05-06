@@ -21,7 +21,6 @@ public:
     ::wxEntryStart(argc, argv);
     wxTheApp->OnInit();
     {
-      wxTheApp->SetExitOnFrameDelete(true);
       this->main_frame_ = new class main_frame();
       this->main_frame_->Show(true);
       wxTheApp->SetTopWindow(this->main_frame_);
