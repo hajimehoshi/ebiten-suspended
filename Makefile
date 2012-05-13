@@ -1,6 +1,5 @@
 # TODO: Check include guards
 
-PROG_SHRIMP  := shrimp
 PROG_SAMPLES := ebiten
 PROG_TEST    := ebiten_test
 CXX := clang++
@@ -18,16 +17,12 @@ LDFLAGS := \
 	 -stdlib=libc++ -framework Cocoa -framework OpenGL -framework QuartzCore
 
 GTEST_DIR    := third_party/gtest-1.6.0
-SQUIRREL_DIR := third_party/squirrel-3.0.2
 
 SRC_INCLUDE := $(shell find include -name "*.hpp" -or -name "*.cpp" -or -name "*.mm")
 SRC_SAMPLES := $(shell find samples -name "*.hpp" -or -name "*.cpp" -or -name "*.mm")
 SRC_TEST    := $(shell find test    -name "*.hpp" -or -name "*.cpp" -or -name "*.mm")
 
-.PHONY: shrimp samples test clean
-
-shrimp: $(PROG_SHRIMP).app
-	open $<
+.PHONY: samples test clean
 
 samples: $(PROG_SAMPLES).app
 	open $<
@@ -35,12 +30,6 @@ samples: $(PROG_SAMPLES).app
 # TODO: add xcodebuild?
 test: bin/$(PROG_TEST)
 	./$<
-
-$(PROG_SHRIMP).app: bin/$(PROG_SHRIMP) samples/resources/*
-	mkdir -p $@/Contents/MacOS
-	cp $< $@/Contents/MacOS
-	mkdir -p $@/Contents/Resources
-	cp samples/resources/* $@/Contents/Resources
 
 $(PROG_SAMPLES).app: bin/$(PROG_SAMPLES) samples/resources/*
 	mkdir -p $@/Contents/MacOS
@@ -56,16 +45,6 @@ bin/$(PROG_SHRIMP): lib/$(PROG_SHRIMP).o
 		-O0 \
 		`wx-config --libs --gl-libs` \
 		$<
-
-lib/$(PROG_SHRIMP).o: $(SRC_INCLUDE) $(SRC_SAMPLES)
-	$(CXX) \
-		$(CXXFLAGS) \
-		-c \
-		-g \
-		-o $@ \
-		-O0 \
-		`wx-config --cppflags` \
-		samples/main_shrimp.cpp
 
 bin/$(PROG_SAMPLES): $(SRC_INCLUDE) $(SRC_SAMPLES) lib/libsquirrel.a lib/libsqstdlib.a
 	$(CXX) \
@@ -96,30 +75,6 @@ bin/$(PROG_TEST): $(SRC_INCLUDE) $(SRC_TEST) lib/libgtest_main.a lib/libsquirrel
 		-lpthread \
 		-Llib -lgtest_main -lsquirrel -lsqstdlib \
 		test/main.cpp
-
-lib/libsquirrel.a:
-	(cd $(SQUIRREL_DIR)/squirrel; \
-		$(CXX) \
-			-W -Wall -Wno-missing-field-initializers -Wno-unused-parameter \
-			-stdlib=libc++ \
-			-m64 -D_SQ64 \
-			-I../include \
-			-O2 \
-			-c \
-			*.cpp)
-	$(AR) $(ARFLAGS) $@ $(SQUIRREL_DIR)/squirrel/*.o
-
-lib/libsqstdlib.a:
-	(cd $(SQUIRREL_DIR)/sqstdlib; \
-		$(CXX) \
-			-W -Wall -Wno-missing-field-initializers -Wno-unused-parameter \
-			-stdlib=libc++ \
-			-m64 -D_SQ64 \
-			-I../include \
-			-O2 \
-			-c \
-			*.cpp)
-	$(AR) $(ARFLAGS) $@ $(SQUIRREL_DIR)/sqstdlib/*.o
 
 lib/libgtest_main.a:
 	(cd $(GTEST_DIR)/src; \

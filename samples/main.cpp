@@ -1,8 +1,21 @@
 #include "ebiten_application/run.hpp"
 #include "ebiten_frame/frame.hpp"
-#include "ebiten_script/squirrel/game.hpp"
 #include "ebiten/ebiten.hpp"
-#include "ebiten/resources.hpp"
+
+class game : private ebiten::noncopyable {
+public:
+  bool
+  update(ebiten::graphics::texture_factory&,
+         ebiten::input const&) {
+    return false;
+  }
+  void
+  draw(ebiten::graphics::graphics_context& g,
+       ebiten::graphics::texture& offscreen) {
+    g.set_offscreen(offscreen);
+    g.clear();
+  }
+};
 
 int
 main() {
@@ -11,19 +24,16 @@ main() {
               << "  Commit Date: " << ebiten::version::get_commit_time() << std::endl
               << "  Commit Hash: " << ebiten::version::get_commit_hash() << std::endl
               << "  Commit Modified: " << (ebiten::version::is_commit_modified() ? "Yes" : "No") << std::endl;
-
-    std::string script_path = ebiten::get_resource_path("sprites.nut");
-    ebiten_script::squirrel::game game(script_path);
-    auto game_update = std::bind(&ebiten_script::squirrel::game::update,
-                                 &game,
+    game g;
+    auto game_update = std::bind(&game::update,
+                                 &g,
                                  std::placeholders::_1,
                                  std::placeholders::_2);
-    auto game_draw = std::bind(&ebiten_script::squirrel::game::draw,
-                               &game,
+    auto game_draw = std::bind(&game::draw,
+                               &g,
                                std::placeholders::_1,
                                std::placeholders::_2);
-    ebiten_frame::frame frame(640, 480);
-    game.set_terminated_handler(std::bind(&ebiten_frame::frame::close, &frame));
+    ebiten_frame::frame::frame frame(640, 480);
     ebiten::kernel kernel(game_update,
                           game_draw,
                           320, 240, 2, 60,
