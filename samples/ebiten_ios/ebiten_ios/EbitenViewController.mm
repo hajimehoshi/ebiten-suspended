@@ -19,7 +19,7 @@ public:
     draw(ebiten::graphics::graphics_context& g,
          ebiten::graphics::texture& offscreen) {
         g.set_offscreen(offscreen);
-        g.clear();
+        g.fill(128, 128, 255, 255);
     }
 };
 
