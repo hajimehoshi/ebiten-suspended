@@ -12,7 +12,7 @@ typedef GLKView* native_view;
 namespace {
 
 void
-native_view_set_input(native_view* nv, class input& input) {
+native_view_set_input(native_view nv, class input& input) {
   // TODO: implement
   EbitenGLKViewDelegate* delegate = nv.delegate;
   [delegate setInput:input];

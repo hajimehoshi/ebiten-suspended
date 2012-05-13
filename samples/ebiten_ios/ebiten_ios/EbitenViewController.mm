@@ -7,12 +7,26 @@
 //
 
 #import "EbitenViewController.h"
-#include "ebiten_script/squirrel/game.hpp"
+
+class game : private ebiten::noncopyable {
+public:
+    bool
+    update(ebiten::graphics::texture_factory&,
+           ebiten::input const&) {
+        return false;
+    }
+    void
+    draw(ebiten::graphics::graphics_context& g,
+         ebiten::graphics::texture& offscreen) {
+        g.set_offscreen(offscreen);
+        g.clear();
+    }
+};
 
 @interface EbitenViewController () {
 @private
     ebiten::kernel* _kernel;
-    ebiten_script::squirrel::game* _game;
+    game* _game;
 }
 
 @end
@@ -53,12 +67,12 @@
     NSBundle* bundle = [NSBundle mainBundle];
     NSString* ns_path = [bundle pathForResource:@"sprites.nut" ofType:nil];
     std::string path([ns_path UTF8String]);
-    self->_game = new ebiten_script::squirrel::game(path);
-    auto game_update = std::bind(&ebiten_script::squirrel::game::update,
+    self->_game = new game();
+    auto game_update = std::bind(&game::update,
                                  self->_game,
                                  std::placeholders::_1,
                                  std::placeholders::_2);
-    auto game_draw = std::bind(&ebiten_script::squirrel::game::draw,
+    auto game_draw = std::bind(&game::draw,
                                self->_game,
                                std::placeholders::_1,
                                std::placeholders::_2);

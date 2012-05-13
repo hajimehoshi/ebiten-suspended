@@ -161,7 +161,7 @@ private:
       framebuffer = 0;
     }
     ::glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-    assert(::glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
+    assert(::glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
     ::glEnable(GL_BLEND);
     ::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     float width, height, tx, ty;
