@@ -152,26 +152,10 @@ public:
   }
   void
   set_offscreen(class texture& texture) {
-    this->set_offscreen(&texture);
-  }
-private:
-  void
-  set_screen_size(std::size_t screen_width,
-                  std::size_t screen_height) {
-    assert(0 < screen_width);
-    assert(0 < screen_height);
-    assert(screen_width  <= 4096);
-    assert(screen_height <= 4096);
-    this->screen_width_  = screen_width;
-    this->screen_height_ = screen_height;
-  }
-  // TODO: I don't wanna use pointers!
-  void
-  set_offscreen(class texture* texture) {
     // TODO: cache
     GLuint framebuffer;
     if (texture) {
-      framebuffer = this->get_framebuffer(*texture);
+      framebuffer = this->get_framebuffer(texture);
       assert(framebuffer != 0);
     } else {
       framebuffer = this->main_framebuffer_;
@@ -182,8 +166,8 @@ private:
     ::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     float width, height, tx, ty;
     if (framebuffer != this->main_framebuffer_) {
-      width  = texture->texture_width();
-      height = texture->texture_height();
+      width  = texture.texture_width();
+      height = texture.texture_height();
       tx     = -1;
       ty     = -1;
     } else {
@@ -205,9 +189,21 @@ private:
               std::end(projection_matrix),
               this->projection_matrix_.data());
   }
+private:
+  void
+  set_screen_size(std::size_t screen_width,
+                  std::size_t screen_height) {
+    assert(0 < screen_width);
+    assert(0 < screen_height);
+    assert(screen_width  <= 4096);
+    assert(screen_height <= 4096);
+    this->screen_width_  = screen_width;
+    this->screen_height_ = screen_height;
+  }
   void
   reset_offscreen() {
-    this->set_offscreen(nullptr);
+    texture t;
+    this->set_offscreen(t);
   }
   void
   flush() {
