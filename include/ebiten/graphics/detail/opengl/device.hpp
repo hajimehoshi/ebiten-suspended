@@ -98,6 +98,7 @@ private:
         return true;
       }
       detail::graphics_context& g = this->graphics_context_;
+      g.initialize();
       ::glEnable(GL_TEXTURE_2D);
       ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
       ::glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

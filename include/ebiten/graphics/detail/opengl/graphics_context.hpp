@@ -31,8 +31,8 @@ private:
   std::array<float, 16> projection_matrix_;
   texture empty_texture_;
   std::unordered_map<texture_id, GLuint> framebuffers_;
+  bool is_initialized_;
   GLuint main_framebuffer_;
-  bool main_framebuffer_initialized_;
 private:
   graphics_context(std::size_t const screen_width,
                    std::size_t const screen_height,
@@ -43,10 +43,22 @@ private:
       screen_scale_(screen_scale),
       texture_factory_(texture_factory),
       current_program_(0),
-      main_framebuffer_(0),
-      main_framebuffer_initialized_(false) {
+      is_initialized_(false),
+      main_framebuffer_(0) {
   }
 public:
+  void
+  initialize() {
+    if (this->is_initialized_) {
+      return;
+    }
+    GLint main_framebuffer = 0;
+    // The main framebuffer should be created sooner than any other framebuffers!
+    // TODO: Refactoring
+    ::glGetIntegerv(GL_FRAMEBUFFER_BINDING, &main_framebuffer);
+    this->main_framebuffer_ = main_framebuffer;
+    this->is_initialized_ = true;
+  }
   void
   clear() {
     ::glClearColor(0, 0, 0, 1);
@@ -156,14 +168,6 @@ private:
   // TODO: I don't wanna use pointers!
   void
   set_offscreen(class texture* texture) {
-    if (!this->main_framebuffer_initialized_) {
-      GLint main_framebuffer = 0;
-      // The main framebuffer should be created sooner than any other framebuffers!
-      // TODO: Refactoring
-      ::glGetIntegerv(GL_FRAMEBUFFER_BINDING, &main_framebuffer);
-      this->main_framebuffer_ = main_framebuffer;
-      this->main_framebuffer_initialized_ = true;
-    }
     // TODO: cache
     GLuint framebuffer;
     if (texture) {
