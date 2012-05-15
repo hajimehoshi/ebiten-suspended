@@ -7,8 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		EFD850A114B9C68300504763 /* sprites.nut in Resources */ = {isa = PBXBuildFile; fileRef = EFD8509F14B9C68300504763 /* sprites.nut */; };
-		EFD850A214B9C68300504763 /* test.png in Resources */ = {isa = PBXBuildFile; fileRef = EFD850A014B9C68300504763 /* test.png */; };
+		EFEBB66E1562D04E00797720 /* ebiten.png in Resources */ = {isa = PBXBuildFile; fileRef = EFEBB66D1562D04E00797720 /* ebiten.png */; };
 		EFEF2D6E14B9A20F00498699 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFEF2D6D14B9A20F00498699 /* UIKit.framework */; };
 		EFEF2D7014B9A20F00498699 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFEF2D6F14B9A20F00498699 /* Foundation.framework */; };
 		EFEF2D7214B9A20F00498699 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFEF2D7114B9A20F00498699 /* CoreGraphics.framework */; };
@@ -22,8 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		EFD8509F14B9C68300504763 /* sprites.nut */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = sprites.nut; sourceTree = "<group>"; };
-		EFD850A014B9C68300504763 /* test.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = test.png; sourceTree = "<group>"; };
+		EFEBB66D1562D04E00797720 /* ebiten.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ebiten.png; sourceTree = "<group>"; };
 		EFEF2D6914B9A20F00498699 /* ebiten_ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ebiten_ios.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EFEF2D6D14B9A20F00498699 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		EFEF2D6F14B9A20F00498699 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -60,8 +58,7 @@
 		EFD8509E14B9C68300504763 /* resources */ = {
 			isa = PBXGroup;
 			children = (
-				EFD8509F14B9C68300504763 /* sprites.nut */,
-				EFD850A014B9C68300504763 /* test.png */,
+				EFEBB66D1562D04E00797720 /* ebiten.png */,
 			);
 			name = resources;
 			path = ../resources;
@@ -173,8 +170,7 @@
 			files = (
 				EFEF2D7814B9A20F00498699 /* InfoPlist.strings in Resources */,
 				EFEF2D8714B9A2A300498699 /* MainStoryboard.storyboard in Resources */,
-				EFD850A114B9C68300504763 /* sprites.nut in Resources */,
-				EFD850A214B9C68300504763 /* test.png in Resources */,
+				EFEBB66E1562D04E00797720 /* ebiten.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
