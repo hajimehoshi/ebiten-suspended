@@ -25,8 +25,8 @@ namespace ebiten {
 
 TEST(image_loader, load_png) {
   {
-    std::unique_ptr<image> img = image_loader::load_png("samples/resources/test.png");
-    EXPECT_EQ(32u, img->width());
+    std::unique_ptr<image> img = image_loader::load_png("samples/resources/ebiten.png");
+    EXPECT_EQ(64u, img->width());
     EXPECT_EQ(32u, img->height());
   }
   {
