@@ -37,15 +37,6 @@ $(PROG_SAMPLES).app: bin/$(PROG_SAMPLES) samples/resources/*
 	mkdir -p $@/Contents/Resources
 	cp samples/resources/* $@/Contents/Resources
 
-bin/$(PROG_SHRIMP): lib/$(PROG_SHRIMP).o
-	$(CXX) \
-		$(LDFLAGS) \
-		-g \
-		-o $@ \
-		-O0 \
-		`wx-config --libs --gl-libs` \
-		$<
-
 bin/$(PROG_SAMPLES): $(SRC_INCLUDE) $(SRC_SAMPLES)
 	$(CXX) \
 		$(CXXFLAGS) \
