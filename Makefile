@@ -52,7 +52,6 @@ bin/$(PROG_SAMPLES): $(SRC_INCLUDE) $(SRC_SAMPLES)
 		-x objective-c++ \
 		-fobjc-arc \
 		$(LDFLAGS) \
-		-I$(SQUIRREL_DIR)/include \
 		-g \
 		-o $@ \
 		-O0 \
@@ -68,7 +67,6 @@ bin/$(PROG_TEST): $(SRC_INCLUDE) $(SRC_TEST) lib/libgtest_main.a
 		-Wno-variadic-macros \
 		$(LDFLAGS) \
 		-I$(GTEST_DIR)/include \
-		-I$(SQUIRREL_DIR)/include \
 		-g \
 		-o $@ \
 		-O0 \
