@@ -46,7 +46,7 @@ bin/$(PROG_SHRIMP): lib/$(PROG_SHRIMP).o
 		`wx-config --libs --gl-libs` \
 		$<
 
-bin/$(PROG_SAMPLES): $(SRC_INCLUDE) $(SRC_SAMPLES) lib/libsquirrel.a lib/libsqstdlib.a
+bin/$(PROG_SAMPLES): $(SRC_INCLUDE) $(SRC_SAMPLES)
 	$(CXX) \
 		$(CXXFLAGS) \
 		-x objective-c++ \
@@ -56,10 +56,10 @@ bin/$(PROG_SAMPLES): $(SRC_INCLUDE) $(SRC_SAMPLES) lib/libsquirrel.a lib/libsqst
 		-g \
 		-o $@ \
 		-O0 \
-		-Llib -lsquirrel -lsqstdlib \
+		-Llib \
 		samples/main.cpp
 
-bin/$(PROG_TEST): $(SRC_INCLUDE) $(SRC_TEST) lib/libgtest_main.a lib/libsquirrel.a lib/libsqstdlib.a
+bin/$(PROG_TEST): $(SRC_INCLUDE) $(SRC_TEST) lib/libgtest_main.a
 	$(CXX) \
 		$(CXXFLAGS) \
 		-x objective-c++ \
@@ -73,7 +73,7 @@ bin/$(PROG_TEST): $(SRC_INCLUDE) $(SRC_TEST) lib/libgtest_main.a lib/libsquirrel
 		-o $@ \
 		-O0 \
 		-lpthread \
-		-Llib -lgtest_main -lsquirrel -lsqstdlib \
+		-Llib -lgtest_main \
 		test/main.cpp
 
 lib/libgtest_main.a:
