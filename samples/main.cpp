@@ -1,21 +1,7 @@
+#include "game.hpp"
 #include "ebiten_application/run.hpp"
 #include "ebiten_frame/frame.hpp"
 #include "ebiten/ebiten.hpp"
-
-class game : private ebiten::noncopyable {
-public:
-  bool
-  update(ebiten::graphics::texture_factory&,
-         ebiten::input const&) {
-    return false;
-  }
-  void
-  draw(ebiten::graphics::graphics_context& g,
-       ebiten::graphics::texture& offscreen) {
-    g.set_offscreen(offscreen);
-    g.fill(128, 128, 255, 255);
-  }
-};
 
 int
 main() {
