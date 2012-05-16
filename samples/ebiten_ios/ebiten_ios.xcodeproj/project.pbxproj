@@ -254,7 +254,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ebiten_ios/ebiten_ios-Prefix.pch";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				HEADER_SEARCH_PATHS = "../../third_party/squirrel-3.0.2/include";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "ebiten_ios/ebiten_ios-Info.plist";
 				PRODUCT_NAME = ebiten_ios;
 				USER_HEADER_SEARCH_PATHS = ../../include;
@@ -270,7 +270,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ebiten_ios/ebiten_ios-Prefix.pch";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
-				HEADER_SEARCH_PATHS = "../../third_party/squirrel-3.0.2/include";
+				HEADER_SEARCH_PATHS = "";
 				INFOPLIST_FILE = "ebiten_ios/ebiten_ios-Info.plist";
 				PRODUCT_NAME = ebiten_ios;
 				USER_HEADER_SEARCH_PATHS = ../../include;

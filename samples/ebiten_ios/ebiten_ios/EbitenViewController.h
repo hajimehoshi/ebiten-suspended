@@ -6,7 +6,6 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import <GLKit/GLKit.h>
 #include "ebiten/ebiten.hpp"
 
 @interface EbitenViewController : EbitenGLKViewController
