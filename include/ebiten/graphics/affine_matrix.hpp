@@ -76,7 +76,7 @@ public:
     }
     return true;
   }
-  static Self
+  static Self const&
   identity() {
     static Self identity_;
     std::call_once(identity_once_flag_, initialize_identity, std::ref<Self>(identity_));
