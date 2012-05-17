@@ -14,12 +14,8 @@
 #import <QuartzCore/QuartzCore.h>
 #include <functional>
 
-@interface EbitenOpenGLView : NSOpenGLView {
-@private
-  CVDisplayLinkRef displayLink_;
-  std::function<bool()> updatingFunc_;
-  ebiten::input* input_;
-}
+__attribute__((visibility("hidden")))
+@interface EbitenOpenGLView : NSOpenGLView
 
 - (CVReturn)getFrameForTime:(CVTimeStamp const*)outputTime;
 - (void)setUpdatingFunc:(std::function<bool()> const&)updatingFunc;
@@ -44,7 +40,12 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
 }
 
 #ifndef EBITEN_WITHOUT_OBJC_IMPL
-@implementation EbitenOpenGLView
+@implementation EbitenOpenGLView {
+@private
+  CVDisplayLinkRef displayLink_;
+  std::function<bool()> updatingFunc_;
+  ebiten::input* input_;
+}
 
 - (void)dealloc {
   ::CVDisplayLinkRelease(self->displayLink_);

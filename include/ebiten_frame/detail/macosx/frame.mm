@@ -7,6 +7,7 @@
 #include <cstddef>
 #include <type_traits>
 
+__attribute__((visibility("hidden")))
 @interface EbitenWindow : NSWindow<NSWindowDelegate>
 
 - (id)initWithSize:(NSSize)size;

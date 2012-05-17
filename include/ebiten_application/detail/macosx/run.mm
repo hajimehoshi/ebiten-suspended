@@ -6,10 +6,8 @@
 
 #include <cassert>
 
-@interface EbitenController : NSObject<NSApplicationDelegate> {
-@private
-  NSWindow* window_;
-}
+__attribute__((visibility("hidden")))
+@interface EbitenController : NSObject<NSApplicationDelegate>
 
 - (id)initWithWindow:(NSWindow*)window;
 - (void)applicationDidFinishLaunching:(NSNotification*)aNotification;
@@ -17,7 +15,10 @@
 @end
 
 #ifndef EBITEN_WITHOUT_OBJC_IMPL
-@implementation EbitenController
+@implementation EbitenController {
+@private
+  NSWindow* window_;
+}
 
 - (id)initWithWindow:(NSWindow*)window {
   self = [super init];

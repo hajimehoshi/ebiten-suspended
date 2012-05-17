@@ -6,11 +6,8 @@
 #import <GLKit/GLKit.h>
 #include <functional>
 
-@interface EbitenGLKViewDelegate : NSObject<GLKViewDelegate> {
-@private
-  std::function<bool()> updatingFunc_;
-  ebiten::input* input_;
-}
+__attribute__((visibility("hidden")))
+@interface EbitenGLKViewDelegate : NSObject<GLKViewDelegate>
 
 - (void)setUpdatingFunc:(std::function<bool()> const&)updatingFunc;
 - (void)glkView:(GLKView*)view
@@ -32,7 +29,11 @@
 @end
 
 #ifndef EBITEN_WITHOUT_OBJC_IMPL
-@implementation EbitenGLKViewDelegate
+@implementation EbitenGLKViewDelegate {
+@private
+  std::function<bool()> updatingFunc_;
+  ebiten::input* input_;
+}
 
 - (void)setUpdatingFunc:(std::function<bool()> const&)updatingFunc {
   self->updatingFunc_ = updatingFunc;
@@ -111,6 +112,7 @@
 @end
 #endif
 
+__attribute__((visibility("hidden")))
 @interface EbitenGLKViewController : GLKViewController
 @end
 
