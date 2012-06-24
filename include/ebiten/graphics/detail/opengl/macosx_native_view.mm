@@ -92,7 +92,7 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
   }
   if (terminated) {
     //::CVDisplayLinkStop(self->displayLink_);
-    ::exit(0);
+    [NSApp terminate:nil];
     return kCVReturnSuccess;
   }
   return kCVReturnSuccess;
