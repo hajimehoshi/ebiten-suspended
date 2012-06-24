@@ -16,6 +16,11 @@ native_view_set_input(native_view nv, class input& input) {
   [nv setInput:input];
 }
 
+bool
+native_view_is_terminated(native_view nv) {
+  return [nv isTerminated];
+}
+
 }
 }
 }

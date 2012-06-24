@@ -68,9 +68,8 @@ __attribute__((visibility("hidden")))
   (void)alert;
   (void)contextInfo;
   if (returnCode == NSAlertDefaultReturn) {
-    [self performSelectorOnMainThread:@selector(close)
-                           withObject:nil
-                        waitUntilDone:NO];
+    ebiten::graphics::native_view glView = [self contentView];
+    [glView terminate];
   }
 }
 

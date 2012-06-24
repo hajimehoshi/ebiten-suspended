@@ -33,6 +33,7 @@ private:
   std::unordered_map<texture_id, GLuint> framebuffers_;
   bool is_initialized_;
   GLuint main_framebuffer_;
+  bool is_terminated_;
 private:
   graphics_context(std::size_t const screen_width,
                    std::size_t const screen_height,
@@ -44,9 +45,10 @@ private:
       texture_factory_(texture_factory),
       current_program_(0),
       is_initialized_(false),
-      main_framebuffer_(0) {
+      main_framebuffer_(0),
+      is_terminated_(false) {
   }
-public:
+private:
   void
   initialize() {
     if (this->is_initialized_) {
@@ -59,6 +61,15 @@ public:
     this->main_framebuffer_ = main_framebuffer;
     this->is_initialized_ = true;
   }
+  bool
+  is_terminated() const {
+    return this->is_terminated_;
+  }
+  void
+  terminate() {
+    this->is_terminated_ = true;
+  }
+public:
   void
   clear() {
     ::glClearColor(0, 0, 0, 1);
@@ -161,7 +172,8 @@ public:
       framebuffer = this->main_framebuffer_;
     }
     ::glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-    assert(::glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
+    assert(::glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE ||
+           this->is_terminated_);
     ::glEnable(GL_BLEND);
     ::glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     float width, height, tx, ty;

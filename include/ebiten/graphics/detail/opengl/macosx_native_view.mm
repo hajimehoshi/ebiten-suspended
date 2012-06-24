@@ -19,6 +19,8 @@ __attribute__((visibility("hidden")))
 
 - (CVReturn)getFrameForTime:(CVTimeStamp const*)outputTime;
 - (void)setUpdatingFunc:(std::function<bool()> const&)updatingFunc;
+- (void)terminate;
+- (bool)isTerminated;
 
 @end
 
@@ -45,6 +47,7 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
   CVDisplayLinkRef displayLink_;
   std::function<bool()> updatingFunc_;
   ebiten::input* input_;
+  bool isTerminated_;
 }
 
 - (void)dealloc {
@@ -54,6 +57,7 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
 
 - (void)prepareOpenGL {
   [super prepareOpenGL];
+  self->isTerminated_ = false;
   NSOpenGLContext* openGLContext = [self openGLContext];
   assert(openGLContext != nil);
   GLint const swapInterval = 1;
@@ -87,9 +91,8 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
     ::CGLUnlockContext((CGLContextObj)[context CGLContextObj]);
   }
   if (terminated) {
-    // It may cause problems when closing the window.
-    // TODO: Move it?
     //::CVDisplayLinkStop(self->displayLink_);
+    ::exit(0);
     return kCVReturnSuccess;
   }
   return kCVReturnSuccess;
@@ -140,6 +143,14 @@ EbitenDisplayLinkCallback(CVDisplayLinkRef displayLink,
                                             static_cast<int>(y));
     self->input_->set_touched(0, true);
   }
+}
+
+- (void)terminate {
+  self->isTerminated_ = true;
+}
+
+- (bool)isTerminated {
+  return self->isTerminated_;
 }
 
 @end

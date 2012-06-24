@@ -95,6 +95,9 @@ private:
       assert(static_cast<bool>(this->offscreen_texture_));
       bool const terminated = this->update_func_(this->texture_factory_);
       if (terminated) {
+        if (!this->graphics_context_.is_terminated()) {
+          this->graphics_context_.terminate();
+        }
         return true;
       }
       detail::graphics_context& g = this->graphics_context_;

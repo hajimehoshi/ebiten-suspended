@@ -21,6 +21,7 @@ private:
   std::size_t const fps_;
   uint64_t before_;
   graphics::device device_;
+  graphics::native_view native_view_;
   input input_;
   bool is_terminated_;
 public:
@@ -48,6 +49,7 @@ public:
                         this,
                         std::placeholders::_1,
                         std::placeholders::_2)),
+      native_view_(native_view),
       input_(screen_scale),
       is_terminated_(false) {
     graphics::detail::native_view_set_input(native_view, this->input_);
@@ -75,6 +77,10 @@ private:
     while (this->before_ + 1000 * 1000 * 1000 < now) {
       bool const terminated = this->game_update_(tf, this->input_);
       if (terminated) {
+        this->terminate();
+        return true;
+      }
+      if (graphics::detail::native_view_is_terminated(this->native_view_)) {
         this->terminate();
         return true;
       }
