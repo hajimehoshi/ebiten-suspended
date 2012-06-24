@@ -18,6 +18,11 @@ native_view_set_input(native_view nv, class input& input) {
   [delegate setInput:input];
 }
 
+bool
+native_view_is_terminated(native_view) {
+  return false;
+}
+
 }
 }
 }
