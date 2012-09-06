@@ -42,13 +42,12 @@ public:
               screen_height,
               screen_scale,
               native_view,
-              std::bind(&kernel::update,
-                        this,
-                        std::placeholders::_1),
-              std::bind(&kernel::draw,
-                        this,
-                        std::placeholders::_1,
-                        std::placeholders::_2)),
+              [this](ebiten::graphics::texture_factory& tf) {
+                return this->update(tf);
+              },
+              [this](ebiten::graphics::graphics_context& g, ebiten::graphics::texture& screen) {
+                this->draw(g, screen);
+              }),
       native_view_(native_view),
       input_(screen_scale),
       is_terminated_(false) {

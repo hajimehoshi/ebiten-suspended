@@ -54,7 +54,7 @@ public:
     assert(this->screen_scale_  <= 4);
     assert(this->update_func_);
     assert(this->draw_func_);
-    this->opengl_initializer_.initialize(std::bind(&device::update, this));
+    this->opengl_initializer_.initialize([this]{ return this->update(); });
   }
   ~device() {
     // TODO: implement
