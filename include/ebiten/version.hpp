@@ -4,9 +4,20 @@
 #include <ctime>
 #include <string>
 
+//preprocessor magic for the commit hash macro
+
+#define EBITEN_QUOTE(str) #str
+#define EBITEN_EXPAND_AND_QUOTE(str) EBITEN_QUOTE(str)
+
 #ifndef EBITEN_VERSION_COMMIT_UNIX_TIME
-# warning "EBITEN_VERSION_COMMIT_DATE is not defined!"
+# warning "EBITEN_VERSION_COMMIT_UNIX_TIME is not defined!"
 # define EBITEN_VERSION_COMMIT_UNIX_TIME (0)
+#endif
+
+//on Xcode, the commit hash (and others) are defined in an .xcconfig
+//generated at build time.
+#ifdef EBITEN_VERSION_COMMIT_HASH_XCODE
+#define EBITEN_VERSION_COMMIT_HASH EBITEN_EXPAND_AND_QUOTE(EBITEN_VERSION_COMMIT_HASH_XCODE)
 #endif
 
 #ifndef EBITEN_VERSION_COMMIT_HASH
