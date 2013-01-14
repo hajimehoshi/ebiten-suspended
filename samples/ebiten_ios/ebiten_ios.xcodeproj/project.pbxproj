@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DF432EFE16A3FCD7009B3D87 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = DF432EFD16A3FCD7009B3D87 /* Default-568h@2x.png */; };
+		DF432F0116A3FDF4009B3D87 /* ebiten.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = DF432F0016A3FDF4009B3D87 /* ebiten.xcconfig */; };
 		EFEBB66E1562D04E00797720 /* ebiten.png in Resources */ = {isa = PBXBuildFile; fileRef = EFEBB66D1562D04E00797720 /* ebiten.png */; };
 		EFEF2D6E14B9A20F00498699 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFEF2D6D14B9A20F00498699 /* UIKit.framework */; };
 		EFEF2D7014B9A20F00498699 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFEF2D6F14B9A20F00498699 /* Foundation.framework */; };
@@ -21,6 +23,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DF432EFD16A3FCD7009B3D87 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		DF432F0016A3FDF4009B3D87 /* ebiten.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = ebiten.xcconfig; sourceTree = SOURCE_ROOT; };
 		EFEBB66D1562D04E00797720 /* ebiten.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ebiten.png; sourceTree = "<group>"; };
 		EFEF2D6914B9A20F00498699 /* ebiten_ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ebiten_ios.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EFEF2D6D14B9A20F00498699 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -67,6 +71,7 @@
 		EFEF2D5E14B9A20F00498699 = {
 			isa = PBXGroup;
 			children = (
+				DF432EFD16A3FCD7009B3D87 /* Default-568h@2x.png */,
 				EFEF2D7314B9A20F00498699 /* ebiten_ios */,
 				EFEF2D6C14B9A20F00498699 /* Frameworks */,
 				EFEF2D6A14B9A20F00498699 /* Products */,
@@ -110,6 +115,7 @@
 		EFEF2D7414B9A20F00498699 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				DF432F0016A3FDF4009B3D87 /* ebiten.xcconfig */,
 				EFEF2D7514B9A20F00498699 /* ebiten_ios-Info.plist */,
 				EFEF2D7614B9A20F00498699 /* InfoPlist.strings */,
 				EFEF2D7914B9A20F00498699 /* main.m */,
@@ -125,6 +131,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = EFEF2D8114B9A20F00498699 /* Build configuration list for PBXNativeTarget "ebiten_ios" */;
 			buildPhases = (
+				DF432EFF16A3FCE4009B3D87 /* ShellScript */,
 				EFEF2D6514B9A20F00498699 /* Sources */,
 				EFEF2D6614B9A20F00498699 /* Frameworks */,
 				EFEF2D6714B9A20F00498699 /* Resources */,
@@ -171,10 +178,28 @@
 				EFEF2D7814B9A20F00498699 /* InfoPlist.strings in Resources */,
 				EFEF2D8714B9A2A300498699 /* MainStoryboard.storyboard in Resources */,
 				EFEBB66E1562D04E00797720 /* ebiten.png in Resources */,
+				DF432EFE16A3FCD7009B3D87 /* Default-568h@2x.png in Resources */,
+				DF432F0116A3FDF4009B3D87 /* ebiten.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		DF432EFF16A3FCE4009B3D87 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "EBITEN_XCCONFIG=\"ebiten.xcconfig\"\nEBITEN_VERSION_COMMIT_UNIX_TIME=\"`git log --pretty=\"%ct\" -1`\"\nEBITEN_VERSION_COMMIT_HASH_XCODE=\"\\\"`git log --pretty=\"%H\" -1`\\\"\"\nEBITEN_VERSION_COMMIT_MODIFIED=\"`git status --porcelain -uno | wc -l`\"\n\nrm $EBITEN_XCCONFIG\n\necho \"EBITEN_VERSION_COMMIT_UNIX_TIME=$EBITEN_VERSION_COMMIT_UNIX_TIME\" > $EBITEN_XCCONFIG\necho \"EBITEN_VERSION_COMMIT_HASH_XCODE=$EBITEN_VERSION_COMMIT_HASH_XCODE\" >> $EBITEN_XCCONFIG\necho \"EBITEN_VERSION_COMMIT_MODIFIED=$EBITEN_VERSION_COMMIT_MODIFIED\" >> $EBITEN_XCCONFIG\n\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		EFEF2D6514B9A20F00498699 /* Sources */ = {
@@ -215,6 +240,9 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
+					"EBITEN_VERSION_COMMIT_UNIX_TIME=$EBITEN_VERSION_COMMIT_UNIX_TIME",
+					"EBITEN_VERSION_COMMIT_HASH_XCODE=$EBITEN_VERSION_COMMIT_HASH_XCODE",
+					"EBITEN_VERSION_COMMIT_MODIFIED=$EBITEN_VERSION_COMMIT_MODIFIED",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -235,6 +263,11 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"EBITEN_VERSION_COMMIT_UNIX_TIME=$EBITEN_VERSION_COMMIT_UNIX_TIME",
+					"EBITEN_VERSION_COMMIT_HASH_XCODE=$EBITEN_VERSION_COMMIT_HASH_XCODE",
+					"EBITEN_VERSION_COMMIT_MODIFIED=$EBITEN_VERSION_COMMIT_MODIFIED",
+				);
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -248,6 +281,7 @@
 		};
 		EFEF2D8214B9A20F00498699 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DF432F0016A3FDF4009B3D87 /* ebiten.xcconfig */;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -264,6 +298,7 @@
 		};
 		EFEF2D8314B9A20F00498699 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DF432F0016A3FDF4009B3D87 /* ebiten.xcconfig */;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
